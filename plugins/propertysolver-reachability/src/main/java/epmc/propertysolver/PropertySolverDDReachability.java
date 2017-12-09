@@ -30,7 +30,7 @@ import epmc.algorithms.dd.ComponentsDD;
 import epmc.dd.DD;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderDD;
@@ -71,13 +71,11 @@ public final class PropertySolverDDReachability implements PropertySolver {
         this.modelChecker = modelChecker;
     }
 
-    private DD doSolve(Expression property, StateSet forStates)
-    {
-
+    private DD doSolve(Expression property, StateSet forStates) {
         DD nodeSpace = graph.getNodeSpace();
-        ExpressionTemporal propertyTemporal = (ExpressionTemporal) property;
+        ExpressionTemporalFinally propertyTemporal = ExpressionTemporalFinally.as(property);
         // get a out of F a
-        Expression innerProposition = propertyTemporal.getOperand1();
+        Expression innerProposition = propertyTemporal.getOperand();
         // translate a to a BDD representation
         DD rightDD = expressionToDD.translate(innerProposition);
         DD oneStatesDD = rightDD.and(nodeSpace);
@@ -164,10 +162,10 @@ public final class PropertySolverDDReachability implements PropertySolver {
             return false;
         }
 
-        if (!(property instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(property)) {
             return false;
         }
-        ExpressionQuantifier propertyQuantifier = (ExpressionQuantifier) property;
+        ExpressionQuantifier propertyQuantifier = ExpressionQuantifier.as(property);
         if (!UtilReachability.isReachability(propertyQuantifier.getQuantified())) {
             return false;
         }

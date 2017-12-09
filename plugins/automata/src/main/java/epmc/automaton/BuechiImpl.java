@@ -42,10 +42,11 @@ import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -261,6 +262,15 @@ public class BuechiImpl implements Buechi {
         return Boolean.valueOf(getValue(expressionLiteral));
     }
 
+    private static boolean isFalse(Expression expression) {
+        assert expression != null;
+        if (!ExpressionLiteral.is(expression)) {
+            return false;
+        }
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
+        return !Boolean.valueOf(getValue(expressionLiteral));
+    }
+
     private static String getValue(Expression expression) {
         assert expression != null;
         assert ExpressionLiteral.is(expression);
@@ -274,7 +284,7 @@ public class BuechiImpl implements Buechi {
         assert expr2str != null;
         for (Entry<Expression, String> entry : expr2str.entrySet()) {
             assert entry.getKey() != null;
-            assert entry.getValue() != null;
+            assert entry.getValue() != null : entry.getKey();
         }
         String result = expr2str.get(expression);
         if (result != null) {
@@ -315,38 +325,40 @@ public class BuechiImpl implements Buechi {
             }
         } else if (ExpressionIdentifier.is(expression)) {
             assert false;
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal temp = (ExpressionTemporal) expression;
-            if (isUntil(temp)) {
-                String left = expr2spot(temp.getOperand1(), expr2str);
-                String right = expr2spot(temp.getOperand2(), expr2str);
-                if (isTrue(temp.getOperand1())) {
-                    result = "(F " + right + ")";
-                } else {
-                    result = "(" + left + " U " + right + ")";
-                }
-            } else if (isRelease(temp)) {
-                String left = expr2spot(temp.getOperand1(), expr2str);
-                String right = expr2spot(temp.getOperand2(), expr2str);
-                if (isFalse(temp.getOperand1())) {
-                    result = "(G " + right + ")";
-                } else {
-                    result = "(" + left + " R " + right + ")";
-                }
-            } else if (isNext(temp)) {
-                String left = expr2spot(temp.getOperand1(), expr2str);
-                result = "(X " + left + ")";
-            } else if (isFinally(temp)) {
-                String inner = expr2spot(temp.getOperand1(), expr2str);
-                result = "(F " + inner + ")";
-            } else if (isGlobally(temp)) {
-                String inner = expr2spot(temp.getOperand1(), expr2str);
-                result = "(G " + inner + ")";
+        } else if (isUntil(expression)) {
+            ExpressionTemporalUntil temp = ExpressionTemporalUntil.as(expression);
+            String left = expr2spot(temp.getOperandLeft(), expr2str);
+            String right = expr2spot(temp.getOperandRight(), expr2str);
+            if (isTrue(temp.getOperandLeft())) {
+                result = "(F " + right + ")";
             } else {
-                assert false;
+                result = "(" + left + " U " + right + ")";
             }
-        } else if (expression instanceof ExpressionQuantifier) {
+        } else if (isRelease(expression)) {
+            ExpressionTemporalRelease temp = ExpressionTemporalRelease.as(expression);
+            String left = expr2spot(temp.getOperandLeft(), expr2str);
+            String right = expr2spot(temp.getOperandRight(), expr2str);
+            if (isFalse(temp.getOperandLeft())) {
+                result = "(G " + right + ")";
+            } else {
+                result = "(" + left + " R " + right + ")";
+            }
+        } else if (isNext(expression)) {
+            ExpressionTemporalNext temp = ExpressionTemporalNext.as(expression);
+            String left = expr2spot(temp.getOperand(), expr2str);
+            result = "(X " + left + ")";
+        } else if (isFinally(expression)) {
+            ExpressionTemporalFinally temp = ExpressionTemporalFinally.as(expression);
+            String inner = expr2spot(temp.getOperand(), expr2str);
+            result = "(F " + inner + ")";
+        } else if (isGlobally(expression)) {
+            ExpressionTemporalGlobally temp = ExpressionTemporalGlobally.as(expression);
+            String inner = expr2spot(temp.getOperand(), expr2str);
+            result = "(G " + inner + ")";
+        } else if (ExpressionQuantifier.is(expression)) {
             assert false;
+        } else {
+            assert false : expression.getClass();
         }
         expr2str.put(expression,  result);
         return result;
@@ -366,7 +378,7 @@ public class BuechiImpl implements Buechi {
     }
 
     private static boolean isFinally(Expression expression) {
-        return ExpressionTemporal.is(expression);
+        return ExpressionTemporalFinally.is(expression);
     }
 
     private static boolean isGlobally(Expression expression) {
@@ -374,41 +386,24 @@ public class BuechiImpl implements Buechi {
     }
 
     private static boolean isRelease(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
+        return ExpressionTemporalRelease.is(expression);
     }
 
     private static boolean isUntil(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
-    }
-
-    private static boolean isFalse(Expression expression) {
-        assert expression != null;
-        if (!ExpressionLiteral.is(expression)) {
-            return false;
-        }
-        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
-        return !Boolean.valueOf(getValue(expressionLiteral));
+        return ExpressionTemporalUntil.is(expression);
     }
 
     private static boolean isNot(Expression expression) {
         if (!(expression instanceof ExpressionOperator)) {
             return false;
         }
-        ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
     }
 
     private static boolean isIff(Expression expression) {
-        if (!(expression instanceof ExpressionOperator)) {
+        if (!ExpressionOperator.is(expression)) {
             return false;
         }
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;

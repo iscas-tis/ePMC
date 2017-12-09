@@ -27,11 +27,11 @@ import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionPropositional;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.TimeBound;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAnd;
@@ -69,15 +69,30 @@ public final class UtilLTL {
             Set<Expression> result = new LinkedHashSet<>();
             result.addAll(collectLTLInner(expressionTemporal.getOperand()));
             return result;
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectLTLInner(inner));
-            }
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
             return result;
-        } else if (expression instanceof ExpressionOperator) {
-            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionOperator.is(expression)) {
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
                 result.addAll(collectLTLInner(inner));
@@ -250,19 +265,15 @@ public final class UtilLTL {
         if (ExpressionTemporalFinally.is(prop)) {
             ExpressionTemporalFinally propTemporal = ExpressionTemporalFinally.as(prop);
             return isFairLTL(propTemporal.getOperand(), isStable, true);
-        } else if (ExpressionTemporalFinally.is(prop)) {
+        } else if (ExpressionTemporalGlobally.is(prop)) {
             ExpressionTemporalGlobally propTemporal = ExpressionTemporalGlobally.as(prop);
             return isFairLTL(propTemporal.getOperand(), true, isAbsolute);
-        } else if (prop instanceof ExpressionTemporal) {
-            ExpressionTemporal propTemporal = (ExpressionTemporal)prop;
-            switch (propTemporal.getTemporalType()) {
-            case RELEASE: // do not allow R
-                return false;
-            case UNTIL: // not UXLTL, should not be valid
-                return false;
-            default: // default is X, X p
-                return false;
-            }
+        } else if (ExpressionTemporalRelease.is(prop)) {
+            return false;
+        } else if (ExpressionTemporalNext.is(prop)) {
+            return false;
+        } else if (ExpressionTemporalUntil.is(prop)) {
+            return false;
         } else if (ExpressionOperator.is(prop)) {
             // actually only AND , OR allowed
 
@@ -301,18 +312,15 @@ public final class UtilLTL {
                 return false;
             }
             ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
-            return isValidLTL(expressionTemporal.getOperand(), false);            
-        } else if (ExpressionTemporal.is(expression)) {
-            ExpressionTemporal expressionTemporal = ExpressionTemporal.as(expression);
-            switch(expressionTemporal.getTemporalType()) {
-            case UNTIL:
-                if (flag) {
-                    return false;
-                }
-                return isValidLTL(expressionTemporal.getOperand1(), false);
-            case RELEASE:
-                return false;				
+            return isValidLTL(expressionTemporal.getOperand(), false); 
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            return false;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            if (flag) {
+                return false;
             }
+            return isValidLTL(expressionTemporal.getOperandLeft(), false);
         } else if (ExpressionTemporalNext.is(expression)) {
             ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
             return isValidLTL(expressionTemporal.getOperand(), true);
@@ -337,15 +345,12 @@ public final class UtilLTL {
             return false;
         } else if (ExpressionTemporalGlobally.is(expression)) {
             return false;
-        } else if (ExpressionTemporal.is(expression)) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal)expression;
-            switch(expressionTemporal.getTemporalType()) {
-            case UNTIL:
-                return isUXLTL(expressionTemporal.getOperand1())
-                        && isUXLTL(expressionTemporal.getOperand2());
-            case RELEASE:
-                return false;
-            }
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            return false;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = (ExpressionTemporalUntil)expression;
+            return isUXLTL(expressionTemporal.getOperandLeft())
+                    && isUXLTL(expressionTemporal.getOperandRight());
         } else if (ExpressionTemporalNext.is(expression)) {
             ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
             return isUXLTL(expressionTemporal.getOperand());
@@ -381,13 +386,6 @@ public final class UtilLTL {
                 .setOperator(operator)
                 .setOperands(Arrays.asList(operands))
                 .build();
-    }
-
-    public static ExpressionTemporal newTemporal
-    (TemporalType type, Expression operand, Positional positional) {
-        assert type != null;
-        return new ExpressionTemporal
-                (operand, type, positional);
     }
 
     public static ExpressionTemporalFinally newFinally(Expression inner, Positional positional) {
@@ -436,7 +434,7 @@ public final class UtilLTL {
     // only allowed AND,OR
     private static Expression getNormForm(Expression prop, Set<Expression> stateLabels,
             boolean sig) {
-        if (prop instanceof ExpressionIdentifier || prop instanceof ExpressionLiteral) {
+        if (ExpressionIdentifier.is(prop) || ExpressionLiteral.is(prop)) {
             return prop; // this could not happen
         }
 
@@ -469,29 +467,40 @@ public final class UtilLTL {
                         sig);
                 return newGlobally(op1, prop.getPositional()); // F !b
             }
-        } else if (prop instanceof ExpressionTemporal) { //
-            ExpressionTemporal ltlExpr = (ExpressionTemporal) prop;
-            TemporalType type = ltlExpr.getTemporalType();
-
-            if ((type == TemporalType.RELEASE && sig) // F a = 1 U a
-                    || (type == TemporalType.UNTIL && !sig)) {
-                Expression op2 = getNormForm(ltlExpr.getOperand2(), stateLabels,
+        } else if (ExpressionTemporalRelease.is(prop)) {
+            ExpressionTemporalRelease ltlExpr = ExpressionTemporalRelease.as(prop);
+            if (sig) {
+                Expression op2 = getNormForm(ltlExpr.getOperandRight(), stateLabels,
                         sig);
                 return newFinally(op2, prop.getPositional()); // F !b
-            } else if ((type == TemporalType.RELEASE && !sig) // F a = 1 U a
-                    || (type == TemporalType.UNTIL && sig)) { // G b = 0 R b
-                Expression op2 = getNormForm(ltlExpr.getOperand2(), stateLabels,
+            } else {
+                Expression op2 = getNormForm(ltlExpr.getOperandRight(), stateLabels,
+                        sig);
+                return new ExpressionTemporalGlobally.Builder()
+                        .setOperand(op2)
+                        .setPositional(prop.getPositional())
+                        .build();
+            }
+        } else if (ExpressionTemporalUntil.is(prop)) { //
+            ExpressionTemporalUntil ltlExpr = ExpressionTemporalUntil.as(prop);
+
+            if (!sig) {
+                Expression op2 = getNormForm(ltlExpr.getOperandRight(), stateLabels,
+                        sig);
+                return newFinally(op2, prop.getPositional()); // F !b
+            } else if (sig) { // G b = 0 R b
+                Expression op2 = getNormForm(ltlExpr.getOperandRight(), stateLabels,
                         sig);
                 return new ExpressionTemporalGlobally.Builder()
                         .setOperand(op2)
                         .setPositional(prop.getPositional())
                         .build();
             } else {
-                Expression op1 = getNormForm(ltlExpr.getOperand1(), stateLabels,
+                Expression op1 = getNormForm(ltlExpr.getOperandLeft(), stateLabels,
                         sig);
                 return newGlobally(op1, prop.getPositional()); // F !b
             }
-        } else if (prop instanceof ExpressionOperator) { /* only AND , NOT and OR allowed */
+        } else if (ExpressionOperator.is(prop)) { /* only AND , NOT and OR allowed */
             ExpressionOperator expressionOperator = (ExpressionOperator) prop;
             List<? extends Expression> ops = expressionOperator.getOperands();
             List<Expression> exprList = new ArrayList<>();

@@ -1,19 +1,17 @@
 package epmc.prism.expression;
 
-import java.util.List;
-
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionReward;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.RewardType;
-import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAddInverse;
@@ -171,20 +169,6 @@ public final class UtilPrismExpressionParser {
                 .build();
     }
 
-    static ExpressionTemporal newTemporal
-    (TemporalType type, List<Expression> operands,
-            List<TimeBound> timeBounds) {
-        assert type != null;
-        assert operands != null;
-        assert operands != null;
-        assert timeBounds != null;
-        for (TimeBound timeBound : timeBounds) {
-            assert timeBound != null;
-        }
-        return new ExpressionTemporal
-                (operands, type, timeBounds, null);
-    }
-
     static ExpressionTemporalNext newTemporalNext(Expression operand,
             TimeBound timeBound) {
         assert operand != null;
@@ -211,6 +195,32 @@ public final class UtilPrismExpressionParser {
         assert timeBound != null;
         return new ExpressionTemporalGlobally.Builder()
                 .setOperand(operand)
+                .setTimeBound(timeBound)
+                .build();
+    }
+
+    static ExpressionTemporalRelease newTemporalRelease(Expression operandLeft,
+            Expression operandRight,
+            TimeBound timeBound) {
+        assert operandLeft != null;
+        assert operandRight != null;
+        assert timeBound != null;
+        return new ExpressionTemporalRelease.Builder()
+                .setOperandLeft(operandLeft)
+                .setOperandRight(operandRight)
+                .setTimeBound(timeBound)
+                .build();
+    }
+
+    static ExpressionTemporalUntil newTemporalUntil(Expression operandLeft,
+            Expression operandRight,
+            TimeBound timeBound) {
+        assert operandLeft != null;
+        assert operandRight != null;
+        assert timeBound != null;
+        return new ExpressionTemporalUntil.Builder()
+                .setOperandLeft(operandLeft)
+                .setOperandRight(operandRight)
                 .setTimeBound(timeBound)
                 .build();
     }
@@ -256,23 +266,6 @@ public final class UtilPrismExpressionParser {
                 .setDiscount(discount)
                 .setPositional(info.toPositional())
                 .build();
-    }
-
-    static ExpressionTemporal newTemporal
-    (TemporalType type, Expression operand, TimeBound bound) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (operand, type, bound, null);
-    }
-
-    static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, null);
     }
 
     static Positional newPositional(long line, long column) {

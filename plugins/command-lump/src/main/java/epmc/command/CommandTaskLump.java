@@ -20,8 +20,6 @@
 
 package epmc.command;
 
-import static epmc.expression.standard.ExpressionPropositional.is;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -34,11 +32,15 @@ import java.util.concurrent.TimeUnit;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
-import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
+import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.RewardSpecification;
-import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.CommonProperties;
 import epmc.graph.dd.GraphDD;
@@ -108,12 +110,13 @@ public class CommandTaskLump implements CommandTask {
             Expression expression = model.getPropertyList().getParsedProperty(property);
             ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
             expression = expressionQuantifier.getQuantified();
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-            if (isUntil(expression)) {
-                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
-                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand2()));
-            } else if (isFinally(expression)) {
-                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand1()));
+            if (ExpressionTemporalUntil.is(expression)) {
+                ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperandLeft()));
+                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperandRight()));
+            } else if (ExpressionTemporalFinally.is(expression)) {
+                ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
+                stateLabels.addAll(UtilExpressionStandard.collectIdentifiers(expressionTemporal.getOperand()));                
             }
         }
         nodeProperties.addAll(stateLabels);
@@ -170,16 +173,36 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private static Set<Expression> collectLTLPropositional(Expression expression) {
-        if (is(expression)) {
+        if (ExpressionPropositional.is(expression)) {
             return Collections.singleton(expression);
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectLTLPropositional(inner));
-            }
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperand()));
             return result;
-        } else if (expression instanceof ExpressionOperator) {
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLPropositional(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionOperator.is(expression)) {
             ExpressionOperator expressionOperator = (ExpressionOperator) expression;
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
@@ -273,11 +296,7 @@ public class CommandTaskLump implements CommandTask {
     }
 
     private static boolean isUntil(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
+        return ExpressionTemporalUntil.is(expression);
     }
 
     static Set<RewardSpecification> collectRewards(Model model, Expression property)

@@ -20,29 +20,52 @@
 
 package epmc.multiobjective;
 
-import static epmc.expression.standard.ExpressionPropositional.is;
-
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.expression.standard.ExpressionTemporal;
+import epmc.expression.standard.ExpressionPropositional;
+import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
+import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 
 public final class UtilLTL {
     public static Set<Expression> collectLTLInner(Expression expression) {
-        if (is(expression)) {
+        if (ExpressionPropositional.is(expression)) {
             return Collections.singleton(expression);
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectLTLInner(inner));
-            }
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
             return result;
-        } else if (expression instanceof ExpressionOperator) {
-            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionOperator.is(expression)) {
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
                 result.addAll(collectLTLInner(inner));

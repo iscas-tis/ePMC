@@ -20,8 +20,6 @@
 
 package epmc.automaton;
 
-import static epmc.expression.standard.ExpressionPropositional.is;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -34,12 +32,13 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.messages.Message;
@@ -151,8 +150,7 @@ public final class UtilAutomaton {
         return newBuechi(property, expressions, true, negate);
     }
 
-    public static Expression bounded2next(Expression expression)
-    {
+    public static Expression bounded2next(Expression expression) {
         assert expression != null;
         List<Expression> newChildren = new ArrayList<>();
         for (Expression child : expression.getChildren()) {
@@ -161,15 +159,20 @@ public final class UtilAutomaton {
         expression = expression.replaceChildren(newChildren);
 
         TimeBound timeBound = null;
-        if (isUntil(expression) || isRelease(expression)) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        Expression leftExpr = null;
+        Expression rightExpr = null;
+        if (isUntil(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
             timeBound = expressionTemporal.getTimeBound();
+            leftExpr = expressionTemporal.getOperandLeft();
+            rightExpr = expressionTemporal.getOperandRight();
+        } else if (isRelease(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            timeBound = expressionTemporal.getTimeBound();
+            leftExpr = expressionTemporal.getOperandLeft();
+            rightExpr = expressionTemporal.getOperandRight();
         }
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
-            // TODO handle multi-until
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-            Expression leftExpr = expressionTemporal.getOperand1();
-            Expression rightExpr = expressionTemporal.getOperand2();
             int boundLeft = ValueInteger.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getInt();
             int bound;
             Expression result;
@@ -204,17 +207,37 @@ public final class UtilAutomaton {
     }
 
     static Set<Expression> collectLTLInner(Expression expression) {
-        if (is(expression)) {
+        if (ExpressionPropositional.is(expression)) {
             return Collections.singleton(expression);
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionTemporal = ExpressionTemporalFinally.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
-            for (Expression inner : expressionTemporal.getOperands()) {
-                result.addAll(collectLTLInner(inner));
-            }
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
             return result;
-        } else if (expression instanceof ExpressionOperator) {
-            ExpressionOperator expressionOperator = (ExpressionOperator) expression;
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionTemporal = ExpressionTemporalGlobally.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionTemporal = ExpressionTemporalNext.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperand()));
+            return result;
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
+            Set<Expression> result = new LinkedHashSet<>();
+            result.addAll(collectLTLInner(expressionTemporal.getOperandLeft()));
+            result.addAll(collectLTLInner(expressionTemporal.getOperandRight()));
+            return result;
+        } else if (ExpressionOperator.is(expression)) {
+            ExpressionOperator expressionOperator = ExpressionOperator.as(expression);
             Set<Expression> result = new LinkedHashSet<>();
             for (Expression inner : expressionOperator.getOperands()) {
                 result.addAll(collectLTLInner(inner));
@@ -296,19 +319,11 @@ public final class UtilAutomaton {
     }
 
     private static boolean isRelease(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.RELEASE;
+        return ExpressionTemporalRelease.is(expression);
     }
 
     private static boolean isUntil(Expression expression) {
-        if (!(expression instanceof ExpressionTemporal)) {
-            return false;
-        }
-        ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
-        return expressionTemporal.getTemporalType() == TemporalType.UNTIL;
+        return ExpressionTemporalUntil.is(expression);
     }
 
     private static ExpressionTemporalNext newNext(Expression operand, Positional positional) {
@@ -351,17 +366,24 @@ public final class UtilAutomaton {
             }
         } else if (ExpressionIdentifier.is(expression)) {
             result = "ap" + numAPs[0];
-            numAPs[0]++;            
-        } else if (expression instanceof ExpressionTemporal) {
-            ExpressionTemporal temp = (ExpressionTemporal) expression;
-            if (isUntil(temp) || isRelease(temp)) {
-                expr2string(temp.getOperand1(), expr2str, numAPs, subsumeAPs);
-                expr2string(temp.getOperand2(), expr2str, numAPs, subsumeAPs);
-            } else if (isNext(temp) || isFinally(temp) || isGlobally(temp)) {
-                expr2string(temp.getOperand1(), expr2str, numAPs, subsumeAPs);
-            } else {
-                assert false : expression;
-            }
+            numAPs[0]++;
+        } else if (ExpressionTemporalNext.is(expression)) {
+            ExpressionTemporalNext expressionNext = ExpressionTemporalNext.as(expression);
+            expr2string(expressionNext.getOperand(), expr2str, numAPs, subsumeAPs);
+        } else if (ExpressionTemporalFinally.is(expression)) {
+            ExpressionTemporalFinally expressionNext = ExpressionTemporalFinally.as(expression);
+            expr2string(expressionNext.getOperand(), expr2str, numAPs, subsumeAPs);
+        } else if (ExpressionTemporalGlobally.is(expression)) {
+            ExpressionTemporalGlobally expressionNext = ExpressionTemporalGlobally.as(expression);
+            expr2string(expressionNext.getOperand(), expr2str, numAPs, subsumeAPs);
+        } else if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionNext = ExpressionTemporalRelease.as(expression);
+            expr2string(expressionNext.getOperandLeft(), expr2str, numAPs, subsumeAPs);
+            expr2string(expressionNext.getOperandRight(), expr2str, numAPs, subsumeAPs);
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionNext = ExpressionTemporalUntil.as(expression);
+            expr2string(expressionNext.getOperandLeft(), expr2str, numAPs, subsumeAPs);
+            expr2string(expressionNext.getOperandRight(), expr2str, numAPs, subsumeAPs);
         } else if (expression instanceof ExpressionQuantifier) {
             result = "ap" + numAPs[0];
             numAPs[0]++;
@@ -449,18 +471,6 @@ public final class UtilAutomaton {
         ExpressionOperator expressionOperator = (ExpressionOperator) expression;
         return expressionOperator.getOperator()
                 .equals(OperatorNot.NOT);
-    }
-
-    private static boolean isNext(Expression expression) {
-        return ExpressionTemporalNext.is(expression);
-    }
-
-    private static boolean isFinally(Expression expression) {
-        return ExpressionTemporalFinally.is(expression);
-    }
-
-    private static boolean isGlobally(Expression expression) {
-        return ExpressionTemporalGlobally.is(expression);
     }
 
     /**

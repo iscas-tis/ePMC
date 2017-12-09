@@ -28,8 +28,9 @@ import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
-import epmc.expression.standard.ExpressionTemporal;
-import epmc.expression.standard.TemporalType;
+import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.modelchecker.Property;
 import epmc.modelchecker.RawProperties;
 import epmc.modelchecker.TestHelper;
@@ -76,25 +77,22 @@ public class LTLHelper {
     private static boolean isFairLTL(Expression prop, boolean isStable,
             boolean isAbsolute) {
         // TODO Auto-generated method stub
-        if (prop instanceof ExpressionIdentifier || prop instanceof ExpressionLiteral) {
+        if (ExpressionIdentifier.is(prop) || ExpressionLiteral.is(prop)) {
             return (isStable && isAbsolute);       //if it is s op value,like s = 2
         } // else must be temperal
-        if (prop instanceof ExpressionTemporal) {
-            ExpressionTemporal ltlExpr = (ExpressionTemporal) prop;
-            TemporalType type = ltlExpr.getTemporalType();
-            switch (type) {
-            case RELEASE: // G b = 0 R b,
-                //Assert.isTrue(ltlExpr.getOperand1().isFalse());   //not assert 
-                return isFalse(ltlExpr.getOperand1()) &&
-                        isFairLTL(ltlExpr.getOperand2(), true, isAbsolute);
-            case UNTIL: // F a = 1 U a
-                //Assert.isTrue(ltlExpr.getOperand1().isTrue());    //not assert
-                return isTrue(ltlExpr.getOperand1()) && 
-                        isFairLTL(ltlExpr.getOperand2(), isStable, true);
-            default: // default is X, X p 
-                return false;
-            }
-        } else if (prop instanceof ExpressionOperator) {//only && and | could be allowed between formulas
+        if (ExpressionTemporalRelease.is(prop)) {
+            ExpressionTemporalRelease ltlExpr = ExpressionTemporalRelease.as(prop);
+            //Assert.isTrue(ltlExpr.getOperand1().isFalse());   //not assert 
+            return isFalse(ltlExpr.getOperandLeft()) &&
+                    isFairLTL(ltlExpr.getOperandRight(), true, isAbsolute);
+        } else if (ExpressionTemporalUntil.is(prop)) {
+            ExpressionTemporalUntil ltlExpr = ExpressionTemporalUntil.as(prop);
+                return isTrue(ltlExpr.getOperandLeft()) && 
+                        isFairLTL(ltlExpr.getOperandRight(), isStable, true);
+        } else if (ExpressionTemporalNext.is(prop)) {
+            // default is X, X p 
+            return false;
+        } else if (ExpressionOperator.is(prop)) {//only && and | could be allowed between formulas
             ExpressionOperator propOperator = (ExpressionOperator) prop;
             List<Expression> exprArr = propOperator.getOperands();
             for(int i = 0; i < exprArr.size(); i ++) {

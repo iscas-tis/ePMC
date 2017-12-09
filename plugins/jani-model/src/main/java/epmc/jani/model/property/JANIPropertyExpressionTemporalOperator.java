@@ -21,8 +21,6 @@
 package epmc.jani.model.property;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -38,12 +36,12 @@ import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionReward;
-import epmc.expression.standard.ExpressionTemporal;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
+import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.RewardSpecification;
-import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.graph.SemanticsContinuousTime;
@@ -74,16 +72,6 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
     private final static String STEP_BOUNDS = "step-bounds";
     private final static String TIME_BOUNDS = "time-bounds";
     private final static String REWARD_BOUNDS = "reward-bounds";
-
-    private final static Map<String,TemporalType> STRING_TO_TEMPORAL_TYPE;
-
-    static {
-        Map<String,TemporalType> temporalTypes = new LinkedHashMap<>();
-        temporalTypes.put(U, TemporalType.UNTIL);
-        temporalTypes.put(W, TemporalType.RELEASE);
-        STRING_TO_TEMPORAL_TYPE = Collections.unmodifiableMap(temporalTypes);
-    }
-
 
     private Map<String, ? extends JANIIdentifier> validIdentifiers;
     private ModelJANI model;
@@ -223,23 +211,20 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         assert model != null;
         assert validIdentifiers != null;
         resetFields();
-        if (ExpressionTemporal.is(expression)) {
-            ExpressionTemporal expressionTemporal = (ExpressionTemporal) expression;
+        if (ExpressionTemporalRelease.is(expression)) {
+            ExpressionTemporalRelease expressionTemporal = ExpressionTemporalRelease.as(expression);
+            ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
+            opValue = W;
+            //op1 R op2 = op2 W (op2 /\ op1)
+            left = parser.matchExpression(model, expressionTemporal.getOperandRight());
+            right = parser.matchExpression(model, UtilExpressionStandard.opAdd(expressionTemporal.getOperandLeft(), expressionTemporal.getOperandRight()));
+        } else if (ExpressionTemporalUntil.is(expression)) {
+            ExpressionTemporalUntil expressionTemporal = ExpressionTemporalUntil.as(expression);
 
             ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
-            switch (expressionTemporal.getTemporalType()) {
-            case RELEASE:
-                opValue = W;
-                //op1 R op2 = op2 W (op2 /\ op1)
-                left = parser.matchExpression(model, expressionTemporal.getOperand2());
-                right = parser.matchExpression(model, UtilExpressionStandard.opAdd(expressionTemporal.getOperand1(), expressionTemporal.getOperand2()));
-                break;
-            case UNTIL:
-                opValue = U;
-                left = parser.matchExpression(model, expressionTemporal.getOperand1());
-                right = parser.matchExpression(model, expressionTemporal.getOperand2());
-                break;
-            }
+            opValue = U;
+            left = parser.matchExpression(model, expressionTemporal.getOperandLeft());
+            right = parser.matchExpression(model, expressionTemporal.getOperandRight());
             TimeBound tb = expressionTemporal.getTimeBound();
             if (tb != null && !tb.isUnbounded()) {
                 JANIPropertyInterval interval = new JANIPropertyInterval();
@@ -333,15 +318,23 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
                 tb = new TimeBound.Builder().build();
             }
         }
-        switch (STRING_TO_TEMPORAL_TYPE.get(opValue)) {
-        case UNTIL :
-            composed = newTemporal(TemporalType.UNTIL, left, right, tb)
-            .replacePositional(positional);
+        switch (opValue) {
+        case U:
+            composed = new ExpressionTemporalUntil.Builder()
+            .setOperandLeft(left)
+            .setOperandRight(right)
+            .setTimeBound(tb)
+            .setPositional(positional).build();
             break;
-        case RELEASE:
+        case W:
             //phi W psi = psi R (phi \/ psi)
-            composed = newTemporal(TemporalType.RELEASE, right, UtilExpressionStandard.opOr(left, right), tb)
-            .replacePositional(positional);
+            composed = new ExpressionTemporalRelease.Builder()
+            .setOperandLeft(right)
+            .setOperandRight(UtilExpressionStandard.opOr(left, right))
+            .setTimeBound(tb)
+            .setPositional(positional)
+            .build();
+           break; // !
         default: //it should never happen
             composed = null;
             break;
@@ -375,15 +368,6 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         return model;
     }
 
-    private static ExpressionTemporal newTemporal
-    (TemporalType type, Expression op1, Expression op2,
-            TimeBound bound) {
-        assert type != null;
-        assert bound != null;
-        return new ExpressionTemporal
-                (op1, op2, type, bound, null);
-    }
-    
     @Override
     public void setPositional(Positional positional) {
         this.positional = positional;

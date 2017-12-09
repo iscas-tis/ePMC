@@ -40,7 +40,6 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.expression.standard.TemporalType;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.CmpType;
@@ -1711,12 +1710,12 @@ private Expression parseTemporalBinary(boolean parseExp)  :
 		} else {
 			switch (type) {
 			case RELEASE:
-				return newTemporal(TemporalType.RELEASE, expressions, timeBounds);
+				return newTemporalRelease(expressions.get(0), expressions.get(1), timeBounds.get(0));
 			case UNTIL:
-				return newTemporal(TemporalType.UNTIL, expressions, timeBounds);
+				return newTemporalUntil(expressions.get(0), expressions.get(1), timeBounds.get(0));
 			case WEAK: {
 				Expression or = or(expressions.get(0), expressions.get(1), null);
-				return newTemporal(TemporalType.RELEASE, expressions.get(1), or, timeBounds.get(0));
+				return newTemporalRelease(expressions.get(1), or, timeBounds.get(0));
 			}
 			default:
 				assert(false);
