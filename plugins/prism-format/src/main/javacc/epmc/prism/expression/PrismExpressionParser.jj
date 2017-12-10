@@ -373,11 +373,8 @@ private Expression ExpressionITE(boolean parseExp)  :
 		<COLON>
 		propElse = ExpressionITE(parseExp)
     	{ endExpression(info); }
-		{ prop = new ExpressionOperator.Builder()
-			.setOperator(OperatorIte.ITE)
-			.setOperands(prop, propThen, propElse)
-			.setPositional(info.toPositional())
-			.build(); }
+		{ prop = newOperator(OperatorIte.ITE,
+		prop, propThen, propElse, info); }
 	)?
 	{ return prop; }
 }
@@ -619,7 +616,7 @@ private Expression ExpressionUnaryMinus(boolean parseExp)  :
 		<MINUS> 
 		p = ExpressionUnaryMinus(parseExp)
 		{ endExpression(info);
-		  p = addInverse(p); }
+		  p = addInverse(p, info); }
 	| 
 		p = parseBasic(parseExp)
 	)
@@ -733,10 +730,8 @@ private Expression parseSqrt(boolean parseExp)  :
 	<RPAR>
 	{ endExpression(info);
 	  return newOperator(OperatorPRISMPow.PRISM_POW, e,
-		new ExpressionLiteral.Builder()
-			.setValue("0.5")
-			.setType(ExpressionTypeReal.TYPE_REAL)
-			.build(), info); }
+		newLiteral("0.5", ExpressionTypeReal.TYPE_REAL),
+		info); }
 }
 
 private Expression parseFunctionN(boolean parseExp, Operator type)  :
@@ -849,9 +844,7 @@ private Expression parseIdentifier()  :
   { beginExpression(info); }
 	literal = <IDENTIFIER>
 	{ endExpression(info);
-	  return new ExpressionIdentifierStandard.Builder()
-		.setName(literal.toString())
-		.build(); }
+	  return newIdentifier(literal, info); }
 }
 
 private Expression parseLabel()  :
@@ -869,10 +862,7 @@ private Expression parseLabel()  :
 	)
 	<QUOTE>
   { endExpression(info); }
-	{ return new ExpressionIdentifierStandard.Builder()
-		.setName("\"" + literal.toString() + "\"")
-//		.setPositional(info.toPositional())
-		.build(); }
+	{ return newIdentifier("\"" + literal.toString() + "\"", info);  }
 }
 
 private Expression parseReal()  :
@@ -884,11 +874,7 @@ private Expression parseReal()  :
   { beginExpression(info); }
 	real = <NUM_REAL>
 	{ endExpression(info);
-	return new ExpressionLiteral.Builder()
-		.setValue(real.toString())
-		.setType(ExpressionTypeReal.TYPE_REAL)
-		.setPositional(info.toPositional())
-		.build(); }
+	return newLiteral(real, ExpressionTypeReal.TYPE_REAL, info); }
 }
 
 private Expression parseInt()  :
@@ -900,11 +886,7 @@ private Expression parseInt()  :
   { beginExpression(info); }
 	intg = <NUM_INT>
 	{ endExpression(info);
-	    return new ExpressionLiteral.Builder()
-	    .setValue(intg.toString())
-	    .setType(ExpressionTypeInteger.TYPE_INTEGER)
-		.setPositional(info.toPositional())
-		.build(); }
+	    return newLiteral(intg, ExpressionTypeInteger.TYPE_INTEGER, info); }
 }
 
 private Expression parseBoolean()  :
@@ -915,19 +897,13 @@ private Expression parseBoolean()  :
 	( { beginExpression(info); }
 		<TRUE> 
 		{ endExpression(info);
-		  return new ExpressionLiteral.Builder()
-		  	.setValue("true")
-		  	.setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
-			.setPositional(info.toPositional())
-			.build();  } 
+		  return newLiteral("true", ExpressionTypeBoolean.TYPE_BOOLEAN, info);
+		  } 
 	| { beginExpression(info); }
 		<FALSE> 
 		{ endExpression(info);
-		return new ExpressionLiteral.Builder()
-		  	.setValue("false")
-		  	.setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
-			.setPositional(info.toPositional())
-			.build(); }
+		return newLiteral("false", ExpressionTypeBoolean.TYPE_BOOLEAN, info);
+		}
 	)
 }
 
@@ -1010,10 +986,7 @@ private Expression parseCoalition(boolean parseExp)  :
 		innerFormula = parseRewQuant(parseExp)
 	)
 	{ endExpression(info);
-	  return new ExpressionCoalition.Builder()
-		.setQuantifier(innerFormula).setPlayers(players)
-		.setPositional(info.toPositional())
-		.build();
+	  return newCoalition(innerFormula, players, info);
 	}
 }
 
@@ -1265,9 +1238,7 @@ private Expression parseRewardStructure(boolean parseExp)  :
 		<QUOTE> 
 		literal = <IDENTIFIER> 
 		<QUOTE>
-		{ rewardStructure = new ExpressionIdentifierStandard.Builder()
-			.setName("\"" + literal.toString() + "\"")
-			.build(); }
+		{ rewardStructure = newIdentifier("\"" + literal.toString() + "\""); }
 	| 
 		rewardStructure = parseExp(true)
 	)
@@ -1675,8 +1646,10 @@ private Expression parseTemporalBinary(boolean parseExp)  :
 	BinType lastType = null;
 	BinType type = null;
 	Token oper;
+	InfoExpression info = new InfoExpression(string);
 }
 {
+	{ beginExpression(info); }
 	p = parseTemporalUnary(parseExp)
 	{ expressions.add(p); }
 	(
@@ -1704,18 +1677,19 @@ private Expression parseTemporalBinary(boolean parseExp)  :
 //		<RPAR>
 		{ expressions.add(p); }
 	)?
+	{ endExpression(info); }
 	{
 		if (expressions.size() == 1) {
 			return p;
 		} else {
 			switch (type) {
 			case RELEASE:
-				return newTemporalRelease(expressions.get(0), expressions.get(1), timeBounds.get(0));
+				return newTemporalRelease(expressions.get(0), expressions.get(1), timeBounds.get(0), info);
 			case UNTIL:
-				return newTemporalUntil(expressions.get(0), expressions.get(1), timeBounds.get(0));
+				return newTemporalUntil(expressions.get(0), expressions.get(1), timeBounds.get(0), info);
 			case WEAK: {
 				Expression or = or(expressions.get(0), expressions.get(1), null);
-				return newTemporalRelease(expressions.get(1), or, timeBounds.get(0));
+				return newTemporalRelease(expressions.get(1), or, timeBounds.get(0), info);
 			}
 			default:
 				assert(false);
@@ -1746,9 +1720,11 @@ private Expression parseTemporalUnary(boolean parseExp)  :
 	Expression p;
 	UnType type;
 	TimeBound timeBound;
+	InfoExpression info = new InfoExpression(string);
 }
 {
 	(
+	{ beginExpression(info); }
 		{ 
 			if (parseExp) {
 				Token errorToken = getToken(1);
@@ -1761,16 +1737,18 @@ private Expression parseTemporalUnary(boolean parseExp)  :
 //		<LPAR>
 		p = parseTemporalUnary(parseExp)
 //		<RPAR>
+	{ endExpression(info); }
+
 		{
 			switch (type) {
 			case NEXT:
-				p = newTemporalNext(p, timeBound);
+				p = newTemporalNext(p, timeBound, info);
 				break;
 			case FINALLY:
-				p = newTemporalFinally(p, timeBound);
+				p = newTemporalFinally(p, timeBound, info);
 				break;
 			case GLOBALLY:
-				p = newTemporalGlobally(p, timeBound);
+				p = newTemporalGlobally(p, timeBound, info);
 				break;
 			}
 		}

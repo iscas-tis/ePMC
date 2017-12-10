@@ -487,7 +487,11 @@ public final class TestHelper {
         Map<String,Value> result = new LinkedHashMap<>();
         for (RawProperty property : mcr.getProperties()) {
             if (mcr.get(property) instanceof Value) {
-                result.put(property.getDefinition(), (Value) mcr.get(property));
+                String definition = property.getDefinition();
+                if (definition == null) {
+                    throw new RuntimeException((Exception) mcr.get(property));
+                }
+                result.put(definition, (Value) mcr.get(property));
             } else if (mcr.get(property) instanceof Exception) {
                 throw new RuntimeException((Exception) mcr.get(property));
             }
