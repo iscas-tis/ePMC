@@ -20,14 +20,12 @@
 
 package epmc.expression.standard.evaluatorexplicit;
 
-import java.util.Map;
-
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAdd;
@@ -45,7 +43,7 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private EvaluatorCache cache;
         private ExpressionToType expressionToType;
 
         @Override
@@ -74,12 +72,12 @@ public final class EvaluatorExplicitOperatorBinaryIntegerToInteger implements Ev
         }
 
         @Override
-        public Builder setCache(Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+        public Builder setCache(EvaluatorCache cache) {
             this.cache = cache;
             return this;
         }
 
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
+        private EvaluatorCache getCache() {
             return cache;
         }
 

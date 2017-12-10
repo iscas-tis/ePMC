@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionTypeBoolean;
@@ -33,7 +34,6 @@ import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.ExpressionTypeReal;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
@@ -44,7 +44,7 @@ import epmc.value.ValueReal;
 public final class ExpressionSimplifierConstant implements ExpressionSimplifier {
     public final static class Builder implements ExpressionSimplifier.Builder {
         private ExpressionToType expressionToType;
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private EvaluatorCache cache;
         private ContextExpressionSimplifier simplifier;
 
         @Override
@@ -55,7 +55,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
 
         @Override
         public Builder setEvaluatorCache(
-                Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+                EvaluatorCache cache) {
             this.cache = cache;
             return this;
         }
@@ -75,7 +75,7 @@ public final class ExpressionSimplifierConstant implements ExpressionSimplifier 
 
     public final static String IDENTIFIER = "constant";
     private final ExpressionToType expressionToType;
-    private final Map<EvaluatorCacheEntry, EvaluatorExplicit> evaluatorCache;
+    private final EvaluatorCache evaluatorCache;
     private final Map<Expression,Expression> alreadyKnown = new HashMap<>();
     private final Expression[] variables = new Expression[0];
     private final Value[] values = new Value[0];

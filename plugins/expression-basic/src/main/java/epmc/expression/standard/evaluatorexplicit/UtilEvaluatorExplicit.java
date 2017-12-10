@@ -21,11 +21,11 @@
 package epmc.expression.standard.evaluatorexplicit;
 
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 
 import epmc.error.UtilError;
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
 import epmc.expression.standard.ProblemsExpression;
@@ -81,22 +81,22 @@ public final class UtilEvaluatorExplicit {
         }
     }
 
-    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression[] variables, Map<EvaluatorCacheEntry,EvaluatorExplicit> cache) {
+    public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression[] variables, EvaluatorCache cache) {
         return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, variables, cache, expressionToType);
     }
 
     public static EvaluatorExplicitBoolean newEvaluatorBoolean(Expression expression, ExpressionToType expressionToType, Expression... variables) {
-        Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
+        EvaluatorCache cache = new EvaluatorCache();
         return (EvaluatorExplicitBoolean) newEvaluator(boolean.class, expression, variables, cache, expressionToType);
     }
 
     public static EvaluatorExplicit newEvaluator(Class<?> returnType, Expression expression, ExpressionToType expressionToType, Expression... variables) {
-        Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
+        EvaluatorCache cache = new EvaluatorCache();
         return newEvaluator(returnType, expression, variables, cache, expressionToType);
     }
 
     public static EvaluatorExplicit newEvaluator(Expression expression, ExpressionToType expressionToType, Expression... variables) {
-        Map<EvaluatorCacheEntry,EvaluatorExplicit> cache = new HashMap<>();
+        EvaluatorCache cache = new EvaluatorCache();
         return newEvaluator(null, expression, variables, cache, expressionToType);
     }
 
@@ -123,7 +123,7 @@ public final class UtilEvaluatorExplicit {
             Class<?> returnType,
             Expression expression,
             Expression[] variables,
-            Map<EvaluatorCacheEntry,EvaluatorExplicit> cache,
+            EvaluatorCache cache,
             ExpressionToType expressionToType) {
         //        UtilEvaluatorExplicitCompile.compile(returnType, expression, variables);
         assert expression != null;

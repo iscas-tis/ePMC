@@ -20,13 +20,10 @@
 
 package epmc.expression.standard.simplify;
 
-import java.util.Map;
-
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorOr;
@@ -45,7 +42,7 @@ public final class ExpressionSimplifierImplies implements ExpressionSimplifier {
 
         @Override
         public Builder setEvaluatorCache(
-                Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+                EvaluatorCache cache) {
             return this;
         }
 

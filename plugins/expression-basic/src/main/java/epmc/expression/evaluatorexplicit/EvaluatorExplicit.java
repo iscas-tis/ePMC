@@ -20,10 +20,7 @@
 
 package epmc.expression.evaluatorexplicit;
 
-import java.util.Map;
-
 import epmc.expression.Expression;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.value.Type;
 import epmc.value.Value;
@@ -38,7 +35,7 @@ public interface EvaluatorExplicit {
 
         Builder setExpressionToType(ExpressionToType expressionToType);
 
-        default Builder setCache(Map<EvaluatorCacheEntry,EvaluatorExplicit> cache) {
+        default Builder setCache(EvaluatorCache cache) {
             return this;
         }
 
