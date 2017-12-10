@@ -20,11 +20,8 @@
 
 package epmc.expression.standard.simplify;
 
-import java.util.Map;
-
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expressionevaluator.ExpressionToType;
 
 /**
@@ -35,7 +32,7 @@ import epmc.expressionevaluator.ExpressionToType;
 public interface ExpressionSimplifier {
     interface Builder {
         Builder setExpressionToType(ExpressionToType expressionToType);
-        Builder setEvaluatorCache(Map<EvaluatorCacheEntry,EvaluatorExplicit> cache);
+        Builder setEvaluatorCache(EvaluatorCache cache);
         Builder setSimplifier(ContextExpressionSimplifier simplifier);
         ExpressionSimplifier build();
     }

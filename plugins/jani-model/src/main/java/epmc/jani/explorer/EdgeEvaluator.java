@@ -24,11 +24,11 @@ import java.util.Map;
 import java.util.Map.Entry;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Action;
@@ -59,7 +59,7 @@ public final class EdgeEvaluator {
         private Map<Expression, Expression> autVarToLocal;
         private Map<Action, Integer> actionNumbers;
         private ExpressionToType expressionToType;
-        private Map<EvaluatorCacheEntry,EvaluatorExplicit> evaluatorCache;
+        private EvaluatorCache evaluatorCache;
         private ContextExpressionSimplifier simplifier;
 
         public Builder setActionNumbers(Map<Action,Integer> actionNumbers) {
@@ -134,12 +134,12 @@ public final class EdgeEvaluator {
             return expressionToType;
         }
 
-        public Builder setEvaluatorCache(Map<EvaluatorCacheEntry, EvaluatorExplicit> evaluatorCache) {
+        public Builder setEvaluatorCache(EvaluatorCache evaluatorCache) {
             this.evaluatorCache = evaluatorCache;
             return this;
         }
         
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> getEvaluatorCache() {
+        private EvaluatorCache getEvaluatorCache() {
             return evaluatorCache;
         }
 

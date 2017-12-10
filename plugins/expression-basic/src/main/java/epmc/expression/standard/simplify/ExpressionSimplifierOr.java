@@ -20,16 +20,13 @@
 
 package epmc.expression.standard.simplify;
 
-import java.util.Map;
-
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionTypeBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorNot;
 import epmc.operator.OperatorOr;
@@ -48,7 +45,7 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
         
         @Override
         public Builder setEvaluatorCache(
-                Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+                EvaluatorCache cache) {
             return this;
         }
 

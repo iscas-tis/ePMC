@@ -20,15 +20,13 @@
 
 package epmc.expression.standard.simplify;
 
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.standard.OptionsExpressionBasic;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.options.Options;
 import epmc.util.Util;
@@ -38,14 +36,14 @@ public final class ContextExpressionSimplifier {
     private final Set<Expression> couldntSimplify = new HashSet<>();
 
     public ContextExpressionSimplifier(ExpressionToType expressionToType,
-            Map<EvaluatorCacheEntry,EvaluatorExplicit> evaluatorCache) {
+            EvaluatorCache evaluatorCache) {
         Options options = Options.get();
         Map<String,Class<? extends ExpressionSimplifier.Builder>> simplifiers =
                 options.get(OptionsExpressionBasic.EXPRESSION_SIMPLIFIER_CLASS);
         this.simplifiers = new ExpressionSimplifier[simplifiers.size()];
         int simplifierNr = 0;
         if (evaluatorCache == null) {
-            evaluatorCache = new HashMap<>();
+            evaluatorCache = new EvaluatorCache();
         }
         for (Class<? extends ExpressionSimplifier.Builder> clazz : simplifiers.values()) {
             this.simplifiers[simplifierNr] = Util.getInstance(clazz)

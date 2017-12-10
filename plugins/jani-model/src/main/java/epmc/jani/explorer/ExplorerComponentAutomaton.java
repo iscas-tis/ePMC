@@ -23,17 +23,15 @@ package epmc.jani.explorer;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.UtilExpressionStandard;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.graph.CommonProperties;
@@ -325,7 +323,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
             edgeEvaluators[locNr] = new EdgeEvaluator[locationsNumEdges[locNr]];
         }
         Arrays.fill(locationsNumEdges, 0);
-        Map<EvaluatorCacheEntry,EvaluatorExplicit> evaluatorCache = new HashMap<>();
+        EvaluatorCache evaluatorCache = new EvaluatorCache();
         ExpressionToTypeAutomaton expressionToType = new ExpressionToTypeAutomaton(this.variableToNumber.keySet());
         ContextExpressionSimplifier simplifier = new ContextExpressionSimplifier(expressionToType, evaluatorCache);
         for (Edge edge : edges) {
@@ -351,7 +349,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     private void buildTransientValueEvaluators() {
         locationEvaluators = new AssignmentsEvaluator[automaton.getLocations().size()];
         int index = 0;
-        Map<EvaluatorCacheEntry, EvaluatorExplicit> evaluatorCache = new HashMap<>();        
+        EvaluatorCache evaluatorCache = new EvaluatorCache();        
         ExpressionToTypeAutomaton expressionToType = new ExpressionToTypeAutomaton(this.variableToNumber.keySet());
         ContextExpressionSimplifier simplifier = new ContextExpressionSimplifier(expressionToType, evaluatorCache);
         for (Location location : automaton.getLocations()) {

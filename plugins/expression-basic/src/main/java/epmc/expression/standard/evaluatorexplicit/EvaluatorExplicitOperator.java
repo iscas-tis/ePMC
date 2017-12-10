@@ -23,15 +23,14 @@ package epmc.expression.standard.evaluatorexplicit;
 import static epmc.error.UtilError.fail;
 
 import java.util.Arrays;
-import java.util.Map;
 
 import epmc.value.ValueBoolean;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ProblemsExpression;
-import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.Operator;
 import epmc.value.ContextValue;
@@ -44,7 +43,7 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     public final static class Builder implements EvaluatorExplicit.Builder {
         private Expression[] variables;
         private Expression expression;
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> cache;
+        private EvaluatorCache cache;
         private ExpressionToType expressionToType;
 
         @Override
@@ -73,12 +72,12 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
         }
 
         @Override
-        public Builder setCache(Map<EvaluatorCacheEntry, EvaluatorExplicit> cache) {
+        public Builder setCache(EvaluatorCache cache) {
             this.cache = cache;
             return this;
         }
 
-        private Map<EvaluatorCacheEntry, EvaluatorExplicit> getCache() {
+        private EvaluatorCache getCache() {
             return cache;
         }
 
