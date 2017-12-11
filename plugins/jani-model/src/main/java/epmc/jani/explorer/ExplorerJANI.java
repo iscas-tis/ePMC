@@ -34,6 +34,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.RewardSpecification;
+import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
@@ -435,7 +436,8 @@ public final class ExplorerJANI implements Explorer {
         if (property instanceof Expression) {
             if (model.getConstants().containsKey(property)) {
                 ensure(model.getConstants().get(property) != null,
-                        ProblemsJANIExplorer.JANI_EXPLORER_UNDEFINED_CONSTANT);
+                        ProblemsJANIExplorer.JANI_EXPLORER_UNDEFINED_CONSTANT,
+                        UtilExpressionStandard.niceForm((Expression) property));
                 return getConstantExpressionNodeProperty((Expression) property);
             }
             PropertyNodeExpression result = expressionProperties.get(property);
