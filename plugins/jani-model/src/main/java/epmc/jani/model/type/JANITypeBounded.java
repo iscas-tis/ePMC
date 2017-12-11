@@ -141,28 +141,31 @@ public final class JANITypeBounded implements JANIType {
     public TypeInteger toType() {
         int lowerInt = Integer.MIN_VALUE;
         int upperInt = Integer.MAX_VALUE;
-        System.out.println(" " + !model.containsUndefinedConstants());
         if (lowerBound != null) {
             if (model != null) {
                 lowerBound = UtilExpressionStandard.replace(lowerBound, model.getConstants());
             }
             // TODO HACK
-            if (model == null || !model.containsUndefinedConstants()) {
+            try {
                 Value lowerValue = UtilEvaluatorExplicit.evaluate(lowerBound);
                 if (ValueInteger.is(lowerValue)) {
                     lowerInt = ValueInteger.as(lowerValue).getInt();
                 }
+            } catch (Throwable e) {
+                
             }
         }
         if (upperBound != null) {
             if (model != null) {
                 upperBound = UtilExpressionStandard.replace(upperBound, model.getConstants());
             }
-            if (model == null || !model.containsUndefinedConstants()) {
+            try {
                 Value upperValue = UtilEvaluatorExplicit.evaluate(upperBound);
                 if (ValueInteger.is(upperValue)) {
                     upperInt = ValueInteger.as(upperValue).getInt();
                 }
+            } catch (Throwable e) {
+                
             }
         }
         return TypeInteger.get(lowerInt, upperInt);
