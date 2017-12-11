@@ -112,6 +112,7 @@ public final class UtilEvaluatorExplicit {
     }
 
     public static Value evaluate(Expression expression) {
+        assert expression != null;
         return evaluate(expression, new ExpressionToType() {
             
             @Override
