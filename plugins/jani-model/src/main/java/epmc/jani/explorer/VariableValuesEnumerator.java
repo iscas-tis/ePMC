@@ -453,8 +453,6 @@ public final class VariableValuesEnumerator {
         int varNr = 0;
         for (Variable variable : variables.values()) {
             Type variableType = variable.getType().toType();
-            System.out.println("V " + variable);
-            System.out.println("T " + variableType);
             assert TypeBounded.is(variableType) : variable;
             VariableDD variableDD = contextDD.newVariable(variable.getName(),
                     variableType, 1);
