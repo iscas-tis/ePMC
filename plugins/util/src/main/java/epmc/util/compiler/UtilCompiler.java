@@ -13,11 +13,12 @@ import javax.tools.*;
  * @param <MemoryClassLoader>
  */
 public class UtilCompiler  {
-    public static Class<?> compile(final String className,
+    public static <T> Class<T> compile(final String className,
             final String source) throws ClassNotFoundException {
         final Map<String, byte[]> classBytes = compile(className + ".java", source, new PrintWriter(System.err), null, null);        
         final MemoryClassLoader classLoader = new MemoryClassLoader(classBytes);
-        final Class<?> clazz = classLoader.loadClass(className);
+        @SuppressWarnings("unchecked")
+        final Class<T> clazz = (Class<T>) classLoader.loadClass(className);
         try {
             classLoader.close();
         } catch (IOException e) {
