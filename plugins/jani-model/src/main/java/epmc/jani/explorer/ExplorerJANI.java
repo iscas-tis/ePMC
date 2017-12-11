@@ -129,6 +129,7 @@ public final class ExplorerJANI implements Explorer {
         assert graphProperties != null;
         assert nodeProperties != null;
         assert edgeProperties != null;
+        // TODO check validity of node properties already here
         getLog().send(MessagesJANIExplorer.START_BUILDING_EXPLORER);
         this.model = model;
         semantics = new TypeObject.Builder()
@@ -433,14 +434,18 @@ public final class ExplorerJANI implements Explorer {
         }
         if (property instanceof Expression) {
             if (model.getConstants().containsKey(property)) {
+                ensure(model.getConstants().get(property) != null,
+                        ProblemsJANIExplorer.JANI_EXPLORER_UNDEFINED_CONSTANT);
                 return getConstantExpressionNodeProperty((Expression) property);
             }
             PropertyNodeExpression result = expressionProperties.get(property);
+            /*
             if (result == null) {
                 Type type = stateVariables.get((Expression) property).getType();
                 result = new PropertyNodeExpression(this, stateVariables.getIdentifiersArray(), (Expression) property, type);
                 expressionProperties.put((Expression) property, result);
             }
+            */
             return result;
         }
         if (property instanceof RewardSpecification) {
@@ -457,7 +462,9 @@ public final class ExplorerJANI implements Explorer {
             return result;
         }
         Map<Expression,Expression> constants = model.getConstants();
-        Value value = UtilEvaluatorExplicit.evaluate(constants.get(property));
+        Expression constantValue = constants.get(property);
+        assert constantValue != null : property;
+        Value value = UtilEvaluatorExplicit.evaluate(constantValue);
         result = new PropertyNodeConstant(this, value);
         constantProperies.put(property, result);
         return result;

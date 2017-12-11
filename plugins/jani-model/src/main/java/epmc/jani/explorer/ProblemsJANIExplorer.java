@@ -48,7 +48,9 @@ public final class ProblemsJANIExplorer {
     public static final Problem JANI_EXPLORER_INFINITELY_MANY_INITIAL_STATES = newProblem("jani-explorer-infinitely-many-initial-states");
     /** Cannot use brute-force enumerator because of unbounded variable values. */
     public static final Problem JANI_EXPLORER_INITIAL_STATES_BRUTE_FORCE_UNBOUNDED = newProblem("jani-explorer-initial-states-brute-force-unbounded-variables");
-
+    /** A certain constant should be defined for analysis but is not */
+    public static final Problem JANI_EXPLORER_UNDEFINED_CONSTANT = newProblem("jani-explorer-undefined-constant");
+    
     /**
      * Create new problem object using plugin resource file.
      * The name parameter must not be {@code null}.
