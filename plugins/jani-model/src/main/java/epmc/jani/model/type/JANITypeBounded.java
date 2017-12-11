@@ -141,6 +141,7 @@ public final class JANITypeBounded implements JANIType {
     public TypeInteger toType() {
         int lowerInt = Integer.MIN_VALUE;
         int upperInt = Integer.MAX_VALUE;
+        System.out.println(" " + (model == null));
         if (lowerBound != null) {
             if (model != null) {
                 lowerBound = UtilExpressionStandard.replace(lowerBound, model.getConstants());
