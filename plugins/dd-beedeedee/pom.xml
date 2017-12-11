@@ -68,7 +68,7 @@
           }</option>
           <option>-keep,allowobfuscation class * implements epmc.plugin.** {
           }</option>
-          <option>-keep,allowobfuscation class * implements epmc.value.Operator {
+          <option>-keep,allowobfuscation class * implements epmc.operator.Operator {
           }</option>
           <option>-keepclassmembers class * implements java.io.Serializable {
           static final long serialVersionUID;
