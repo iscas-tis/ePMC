@@ -209,6 +209,7 @@ public final class PRISM2JANIConverter {
 
         convertExtensions();
 
+        globalVariablesArray = new Expression[0]; // avoid null pointer exception
         Variables globalVariables = buildGlobalVariables();
         globalVariablesArray = new Expression[globalVariables.size()];
         int varNr = 0;
