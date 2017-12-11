@@ -439,13 +439,11 @@ public final class ExplorerJANI implements Explorer {
                 return getConstantExpressionNodeProperty((Expression) property);
             }
             PropertyNodeExpression result = expressionProperties.get(property);
-            /*
             if (result == null) {
                 Type type = stateVariables.get((Expression) property).getType();
                 result = new PropertyNodeExpression(this, stateVariables.getIdentifiersArray(), (Expression) property, type);
                 expressionProperties.put((Expression) property, result);
             }
-            */
             return result;
         }
         if (property instanceof RewardSpecification) {
