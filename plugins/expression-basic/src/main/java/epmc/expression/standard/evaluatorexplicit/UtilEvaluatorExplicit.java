@@ -96,6 +96,8 @@ public final class UtilEvaluatorExplicit {
     }
 
     public static EvaluatorExplicit newEvaluator(Expression expression, ExpressionToType expressionToType, Expression... variables) {
+        assert expressionToType != null;
+        assert variables != null;
         EvaluatorCache cache = new EvaluatorCache();
         return newEvaluator(null, expression, variables, cache, expressionToType);
     }
