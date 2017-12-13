@@ -277,8 +277,7 @@ public final class BoundedReachabilityNative implements GraphSolverExplicit {
     }
 
     private static void dtmcBoundedNative(int bound,
-            GraphExplicitSparse graph, Value values)
-    {
+            GraphExplicitSparse graph, Value values) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();

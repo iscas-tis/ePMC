@@ -41,6 +41,8 @@ import epmc.value.ValueContentIntArray;
 // for MDPs, CTMDPs, EDTMCs, ECTMCs, turn-based two-player games;
 // for value iteration
 
+// TODO clean up this class, way too chaotic
+
 public class GraphExplicitSparseAlternate implements GraphExplicit {
     public final class NodePropertySparseNondetConstant implements NodeProperty {
         private final GraphExplicit graph;
@@ -216,10 +218,18 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
     }
 
-    public final class EdgePropertySparseNondetOnlyNondet implements EdgePropertySparseNondet {
-        private final GraphExplicit graph;
+    public final static class EdgePropertySparseNondetOnlyNondet implements EdgePropertySparseNondet {
+        private final GraphExplicitSparseAlternate graph;
         private final Value value;
         private ValueArray content;
+
+        public EdgePropertySparseNondetOnlyNondet(GraphExplicitSparseAlternate graph, ValueArray content) {
+            assert graph != null;
+            assert content != null;
+            this.graph = graph;
+            this.content = content;
+            this.value = content.getType().getEntryType().newValue();
+        }
 
         EdgePropertySparseNondetOnlyNondet(GraphExplicitSparseAlternate graph, Type type) {
             assert graph != null;
@@ -227,27 +237,27 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
             this.graph = graph;
             this.value = type.newValue();
             TypeArray typeArray = type.getTypeArray();
-            this.content = UtilValue.newArray(typeArray, numProb);
+            this.content = UtilValue.newArray(typeArray, graph.numProb);
         }
 
         private int getEntryNumber(int currentNode, int successor) {
             assert successor >= 0;
-            assert nondetBounds.getInt(currentNode - numStates) + successor
-            < nondetBounds.getInt(currentNode - numStates + 1)
+            assert graph.nondetBounds.getInt(currentNode - graph.numStates) + successor
+            < graph.nondetBounds.getInt(currentNode - graph.numStates + 1)
             : currentNode + " " + successor + " " +
-            nondetBounds.getInt(currentNode - numStates) + " " +
-            nondetBounds.getInt(currentNode - numStates + 1) + " " +
-            numStates;
-            return nondetBounds.getInt(currentNode - numStates) + successor;
+            graph.nondetBounds.getInt(currentNode - graph.numStates) + " " +
+            graph.nondetBounds.getInt(currentNode - graph.numStates + 1) + " " +
+            graph.numStates;
+            return graph.nondetBounds.getInt(currentNode - graph.numStates) + successor;
         }
 
         @Override
         public Value get(int currentNode, int successor) {
-            if (currentNode < numStates) {
+            if (currentNode < graph.numStates) {
                 ValueAlgebra.as(value).set(-1);
             } else {
                 int entryNr = getEntryNumber(currentNode, successor);
-                content = ensureSize(content, entryNr + 1);
+                content = graph.ensureSize(content, entryNr + 1);
                 content.get(value, entryNr);
             }
             return value;
@@ -255,11 +265,11 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
 
         @Override
         public void set(int currentNode, int successor, Value value) {
-            if (currentNode < numStates) {
+            if (currentNode < graph.numStates) {
 
             } else {
                 int entryNr = getEntryNumber(currentNode, successor);
-                content = ensureSize(content, entryNr + 1);
+                content = graph.ensureSize(content, entryNr + 1);
                 content.set(value, entryNr);
             }
         }
@@ -285,8 +295,8 @@ public class GraphExplicitSparseAlternate implements GraphExplicit {
         @Override
         public void setForNonDet(Value value, int successor) {
             //            int entryNr = getEntryNumber(successor);
-            int entryNr = nondetBounds.getInt(numNondet - 1) + successor;
-            content = ensureSize(content, entryNr + 1);
+            int entryNr = graph.nondetBounds.getInt(graph.numNondet - 1) + successor;
+            content = graph.ensureSize(content, entryNr + 1);
             content.set(value, entryNr);
         }
     }

@@ -10,14 +10,23 @@ import javax.tools.*;
 
 /**
  * Simple interface to Java compiler using JSR 199 Compiler API.
- * @param <MemoryClassLoader>
  */
 public class UtilCompiler  {
+    private final static String JAVA_EXTENSION = ".java";
+    private final static String UNCHECKED = "unchecked";
+    private final static String JDK_UNAVAILABLE
+    = "Could not get Java compiler. Please, ensure that JDK is used instead of JRE.";
+    private final static String XLINT_ALL = "-Xlint:all";
+    private final static String DEPRECATION = "-deprecation";
+    private final static String SOURCEPATH = "-sourcepath";
+    private final static String CLASSPATH = "-classpath";
+//    private final static String G_NONE = "-g:none";
+    
     public static <T> Class<T> compile(final String className,
             final String source) throws ClassNotFoundException {
-        final Map<String, byte[]> classBytes = compile(className + ".java", source, new PrintWriter(System.err), null, null);        
+        final Map<String, byte[]> classBytes = compile(className + JAVA_EXTENSION, source, new PrintWriter(System.err), null, null);        
         final MemoryClassLoader classLoader = new MemoryClassLoader(classBytes);
-        @SuppressWarnings("unchecked")
+        @SuppressWarnings(UNCHECKED)
         final Class<T> clazz = (Class<T>) classLoader.loadClass(className);
         try {
             classLoader.close();
@@ -38,10 +47,9 @@ public class UtilCompiler  {
      */
     private static Map<String, byte[]> compile(String fileName, String source,
             Writer err, String sourcePath, String classPath) {
-        System.out.println("AAA");
         javax.tools.JavaCompiler tool = ToolProvider.getSystemJavaCompiler();
         if (tool == null) {
-            throw new RuntimeException("Could not get Java compiler. Please, ensure that JDK is used instead of JRE.");
+            throw new RuntimeException(JDK_UNAVAILABLE);
         }
         StandardJavaFileManager stdManager = tool.getStandardFileManager(null, null, null);
 
@@ -51,7 +59,6 @@ public class UtilCompiler  {
         // prepare the compilation unit
         List<JavaFileObject> compUnits = new ArrayList<>(1);
         compUnits.add(MemoryJavaFileManager.makeStringSource(fileName, source));
-        System.out.println("BBBcc");
 
         return compile(compUnits, fileManager, err, sourcePath, classPath);
     }
@@ -65,21 +72,21 @@ public class UtilCompiler  {
 
         // javac options
         List<String> options = new ArrayList<>();
-        options.add("-Xlint:all");
-        //      options.add("-g:none");
-        options.add("-deprecation");
+        options.add(XLINT_ALL);
+        //      options.add(G_NONE);
+        options.add(DEPRECATION);
         if (sourcePath != null) {
-            options.add("-sourcepath");
+            options.add(SOURCEPATH);
             options.add(sourcePath);
         }
 
         if (classPath != null) {
-            options.add("-classpath");
+            options.add(CLASSPATH);
             options.add(classPath);
         }
         javax.tools.JavaCompiler tool = ToolProvider.getSystemJavaCompiler();
         if (tool == null) {
-            throw new RuntimeException("Could not get Java compiler. Please, ensure that JDK is used instead of JRE.");
+            throw new RuntimeException(JDK_UNAVAILABLE);
         }
 
         // create a compilation task
