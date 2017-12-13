@@ -114,8 +114,7 @@ public final class ModelChecker implements Closeable {
         return result;
     }
 
-    public PropertySolver getSolverFor(Expression property, StateSet states)
-    {
+    public PropertySolver getSolverFor(Expression property, StateSet states) {
         return getSolverFor(property, states, false);
     }
 
@@ -132,8 +131,7 @@ public final class ModelChecker implements Closeable {
      * @return solver for given property and state set
      */
     public PropertySolver getSolverFor(Expression property, StateSet states,
-            boolean computeScheduler)
-    {
+            boolean computeScheduler) {
         assert property != null;
         PropertySolver foundWithoutScheduler = null;
         for (Class<? extends PropertySolver> solverClass : solvers) {
@@ -210,10 +208,7 @@ public final class ModelChecker implements Closeable {
         Set<Object> graphProperties = solver.getRequiredGraphProperties();
         Set<Object> nodeProperties = solver.getRequiredNodeProperties();
         Set<Object> edgeProperties = solver.getRequiredEdgeProperties();
-        Options options = Options.get();
-        Engine engine = UtilOptions.getSingletonInstance(options,
-                OptionsModelChecker.ENGINE);
-        return model.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
+        return lowLevel = UtilModelChecker.buildLowLevel(model, graphProperties, nodeProperties, edgeProperties);
     }
 
     /**

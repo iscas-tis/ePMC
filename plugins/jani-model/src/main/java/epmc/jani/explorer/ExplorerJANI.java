@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -37,6 +38,7 @@ import epmc.expression.standard.RewardSpecification;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
+import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.explorer.Explorer;
@@ -50,7 +52,10 @@ import epmc.jani.model.Variable;
 import epmc.jani.model.property.ExpressionDeadlock;
 import epmc.jani.model.property.ExpressionInitial;
 import epmc.messages.OptionsMessages;
+import epmc.modelchecker.Engine;
+import epmc.modelchecker.EngineExplorer;
 import epmc.modelchecker.Log;
+import epmc.modelchecker.Model;
 import epmc.options.Options;
 import epmc.util.Util;
 import epmc.value.EvaluatorCache;
@@ -59,7 +64,7 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
 import epmc.value.Value;
 
-// TODO should implement flattening, because of large performance gain
+// TODO should implement flattening, because of potential performance gain
 // TODO improve robustness, e.g. check constants, duplicate variables, etc
 // TODO improve special case check for initial states
 // TODO integrate expression simplification (partly done)
@@ -74,6 +79,57 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 public final class ExplorerJANI implements Explorer {
+    public final static class Builder implements LowLevel.Builder {
+        private Model model;
+        private Engine engine;
+        private final Set<Object> graphProperties = new LinkedHashSet<>();
+        private final Set<Object> nodeProperties = new LinkedHashSet<>();
+        private final Set<Object> edgeProperties = new LinkedHashSet<>();
+
+        @Override
+        public Builder setModel(Model model) {
+            this.model = model;
+            return this;
+        }
+
+        @Override
+        public Builder setEngine(Engine engine) {
+            this.engine = engine;
+            return this;
+        }
+
+        @Override
+        public Builder addGraphProperties(Set<Object> graphProperties) {
+            this.graphProperties.addAll(graphProperties);
+            return this;
+        }
+
+        @Override
+        public Builder addNodeProperties(Set<Object> nodeProperties) {
+            this.nodeProperties.addAll(nodeProperties);
+            return this;
+        }
+
+        @Override
+        public Builder addEdgeProperties(Set<Object> edgeProperties) {
+            this.edgeProperties.addAll(edgeProperties);
+            return this;
+        }
+
+        @Override
+        public ExplorerJANI build() {
+            if (!(engine instanceof EngineExplorer)) {
+                return null;
+            }
+            if (!(model instanceof ModelJANI)) {
+                return null;
+            }
+            return new ExplorerJANI(this);
+        }
+    }
+    
+    public final static String IDENTIFIER = "jani-explorer";
+    
     private final static String INITIAL_IDENTIFIER = "\"init\"";
 
     /** Model which this explorer is supposed to explore. */
@@ -111,6 +167,10 @@ public final class ExplorerJANI implements Explorer {
     private final PropertyNodeState stateProp;
 
     private boolean state;
+
+    private ExplorerJANI(Builder builder) {
+        this((ModelJANI) builder.model, builder.graphProperties, builder.nodeProperties, builder.edgeProperties);
+    }
 
     /**
      * Construct new model explorer.

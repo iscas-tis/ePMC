@@ -29,6 +29,7 @@ import java.util.concurrent.TimeUnit;
 import epmc.dd.DD;
 import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
+import epmc.graph.LowLevel;
 import epmc.graph.SemanticsSMG;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.explicit.GraphExplicit;
@@ -43,6 +44,7 @@ import epmc.modelchecker.Log;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.ModelCheckerResult;
+import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
 
 public class CommandTaskExplore implements CommandTask {
@@ -73,9 +75,15 @@ public class CommandTaskExplore implements CommandTask {
         Model model = modelChecker.getModel();
         Engine engine = modelChecker.getEngine();
         Log log = getLog();
+        
+        Set<Object> graphProperties = Collections.singleton(CommonProperties.SEMANTICS);
+        Set<Object> nodeProperties = prepareNodeProperties(model);
+        Set<Object> edgeProperties = prepareEdgeProperties(model);
+        long time = System.nanoTime();
+        LowLevel lowLevel = UtilModelChecker.buildLowLevel(modelChecker.getModel(), graphProperties, nodeProperties, edgeProperties);
+        time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
         if (engine instanceof EngineExplicit) {
-            long time = System.nanoTime();
-            GraphExplicit modelGraph = exploreToGraph();
+            GraphExplicit modelGraph = (GraphExplicit) lowLevel;
             int numStates = 0;
             int numTransitions = 0;
             NodeProperty isState = modelGraph.getNodeProperty(CommonProperties.STATE);
@@ -85,16 +93,12 @@ public class CommandTaskExplore implements CommandTask {
                 }
                 numTransitions += modelGraph.getNumSuccessors(node);
             }
-            time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
             log.send(MessagesCommandExplore.EXPLORING_DONE, time);
             ExploreStatistics exploreStatistics = new ExploreStatistics(modelGraph.getNumNodes(), numStates, numTransitions);
             ModelCheckerResult result = new ModelCheckerResult(null, exploreStatistics);
             log.send(result);
         } else if (engine instanceof EngineDD) {
-            Set<Object> graphProperties = Collections.singleton(CommonProperties.SEMANTICS);
-            Set<Object> nodeProperties = prepareNodeProperties(model);
-            Set<Object> edgeProperties = prepareEdgeProperties(model);
-            GraphDD modelGraphDD = (GraphDD) model.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
+            GraphDD modelGraphDD = (GraphDD) lowLevel;
             DD space = modelGraphDD.getNodeSpace();
             BigInteger numNodes = space.countSat(modelGraphDD.getPresCube());
             DD states = modelGraphDD.getNodeProperty(CommonProperties.STATE);
@@ -112,29 +116,7 @@ public class CommandTaskExplore implements CommandTask {
         }
     }
 
-    public GraphExplicit exploreToGraph() {
-        Log log = getLog();
-        log.send(MessagesCommandExplore.EXPLORING);
-        Set<Object> graphProperties = new LinkedHashSet<>();
-        graphProperties.add(CommonProperties.SEMANTICS);
-        Set<Object> nodeProperties = new LinkedHashSet<>();
-        nodeProperties.add(CommonProperties.STATE);
-        Set<Object> edgeProperties = new LinkedHashSet<>();
-        edgeProperties.add(CommonProperties.WEIGHT);
-        GraphExplicit result = buildModelGraphExplicit(graphProperties, nodeProperties, edgeProperties);
-        result.explore();
-        return result;
-    }
-
-    private GraphExplicit buildModelGraphExplicit(Set<Object> graphProperties,
-            Set<Object> nodeProperties,
-            Set<Object> edgeProperties) {
-        Model model = modelChecker.getModel();
-        return (GraphExplicit) model.newLowLevel(EngineExplicit.getInstance(), graphProperties, nodeProperties, edgeProperties);
-    }
-
-    private Set<Object> prepareNodeProperties(Model model)
-    {
+    private Set<Object> prepareNodeProperties(Model model) {
         assert model != null;
         Set<Object> result = new LinkedHashSet<>();
         result.add(CommonProperties.STATE);

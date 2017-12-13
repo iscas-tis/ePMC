@@ -21,7 +21,6 @@
 package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
-import static epmc.error.UtilError.fail;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -30,7 +29,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 
 import javax.json.Json;
 import javax.json.JsonArray;
@@ -49,13 +47,8 @@ import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.ExpressionTypeReal;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expressionevaluator.ExpressionToType;
-import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
-import epmc.graph.explicit.GraphBuilderExplorer;
-import epmc.graph.explorer.Explorer;
-import epmc.jani.dd.GraphDDJANI;
 import epmc.jani.error.ProblemsJANI;
-import epmc.jani.explorer.ExplorerJANI;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.SystemParser;
 import epmc.jani.model.expression.JANIExpression;
@@ -84,10 +77,6 @@ import epmc.jani.model.type.JANITypeBounded;
 import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
 import epmc.jani.plugin.StandardJANIOperators;
-import epmc.modelchecker.Engine;
-import epmc.modelchecker.EngineDD;
-import epmc.modelchecker.EngineExplicit;
-import epmc.modelchecker.EngineExplorer;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.Properties;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -518,32 +507,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
             assert clazz != null : semantics;
             this.semantics = Util.getInstance(clazz);
             this.semantics.setModel(this);
-        }
-    }
-
-    @Override
-    public LowLevel newLowLevel(Engine engine,
-            Set<Object> graphProperties,
-            Set<Object> nodeProperties,
-            Set<Object> edgeProperties) {
-        //		assert !containsUndefinedConstants() : findSomeUndefinedConstant(); // TODO
-        if (engine instanceof EngineExplorer) {
-            return new ExplorerJANI(this, graphProperties, nodeProperties, edgeProperties);
-        } else if (engine instanceof EngineExplicit) {
-            Explorer explorer = (Explorer) newLowLevel(EngineExplorer.getInstance(),
-                    graphProperties, nodeProperties, edgeProperties);
-            GraphBuilderExplorer builder = new GraphBuilderExplorer();
-            builder.setExplorer(explorer);
-            builder.addDerivedGraphProperties(graphProperties);
-            builder.addDerivedNodeProperties(nodeProperties);
-            builder.addDerivedEdgeProperties(edgeProperties);
-            builder.build();
-            return builder.getGraph();
-        } else if (engine instanceof EngineDD) {
-            return new GraphDDJANI(this, nodeProperties, edgeProperties);
-        } else {
-            fail(ProblemsJANI.JANI_UNSUPPORTED_ENGINE, engine);
-            return null;
         }
     }
 

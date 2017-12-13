@@ -173,14 +173,6 @@ public final class PropertiesImpl implements Properties {
         expand();
         checkNonConstantConst();
         checkUndefinedConst();
-        checkTypes();
-    }
-
-    private void checkTypes() {
-        //        for (Entry<Property,Expression> entry : properties.entrySet()) {
-        // TODO temporarily disabled
-        //            entry.getValue().computeType();
-        //       }
     }
 
     // private methods
@@ -330,7 +322,7 @@ public final class PropertiesImpl implements Properties {
     }
 
     /**
-     * Checks whether there are cyclic const or formula definitions.
+     * Checks whether there are cyclic constants or formula definitions.
      * 
      */
     private void checkCyclic() {

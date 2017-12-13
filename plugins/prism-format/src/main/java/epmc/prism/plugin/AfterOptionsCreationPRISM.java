@@ -22,11 +22,13 @@ package epmc.prism.plugin;
 
 import java.util.Map;
 
+import epmc.graph.LowLevel;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeMap;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
+import epmc.prism.model.LowLevelPRISMBuilder;
 import epmc.prism.model.ModelPRISM;
 import epmc.prism.model.PropertyPRISM;
 import epmc.prism.model.convert.UtilPrismConverter;
@@ -54,6 +56,10 @@ public final class AfterOptionsCreationPRISM implements AfterOptionsCreation {
         .setIdentifier(OptionsPRISM.PRISM_FLATTEN)
         .setType(typeBoolean).setDefault(true)
         .setCommandLine().setGui().setWeb().build();
+        
+        Map<String,Class<? extends LowLevel.Builder>> map = 
+                options.get(OptionsModelChecker.LOW_LEVEL_ENGINE_CLASS);
+        map.put(LowLevelPRISMBuilder.IDENTIFIER, LowLevelPRISMBuilder.class);
         UtilPrismConverter.addOptions(options);
     }
 }

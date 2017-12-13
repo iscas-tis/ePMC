@@ -22,9 +22,13 @@ package epmc.jani.plugin;
 
 import java.util.Map;
 
+import epmc.graph.LowLevel;
+import epmc.jani.dd.GraphDDJANI;
 import epmc.jani.explorer.AssignmentEvaluator;
 import epmc.jani.explorer.AssignmentSimpleEvaluator;
 import epmc.jani.explorer.ExplorerExtension;
+import epmc.jani.explorer.ExplorerJANI;
+import epmc.jani.explorer.LowLevelExplicitBuilder;
 import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.explorer.VariableValuesEnumerator;
 import epmc.jani.model.ModelExtension;
@@ -68,7 +72,8 @@ public final class AfterOptionsCreationJANI implements AfterOptionsCreation {
         addOptions(options);
         addSemantics(options);
         addExtensions(options);
-
+        addLowLevels(options);
+        
         Map<String,Class<? extends ModelExtension>> modelExtensions = options.get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         if (modelExtensions == null) {
             modelExtensions = new OrderedMap<>();
@@ -128,5 +133,14 @@ public final class AfterOptionsCreationJANI implements AfterOptionsCreation {
         assert options != null;
         // TODO Auto-generated method stub
 
+    }
+    
+    private void addLowLevels(Options options) {
+        assert options != null;
+        Map<String,Class<? extends LowLevel.Builder>> map = 
+                options.get(OptionsModelChecker.LOW_LEVEL_ENGINE_CLASS);
+        map.put(ExplorerJANI.IDENTIFIER, ExplorerJANI.Builder.class);
+        map.put(LowLevelExplicitBuilder.IDENTIFIER, LowLevelExplicitBuilder.class);
+        map.put(GraphDDJANI.IDENTIFIER, GraphDDJANI.Builder.class);
     }
 }

@@ -21,9 +21,7 @@
 package epmc.modelchecker;
 
 import java.io.InputStream;
-import java.util.Set;
 
-import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 
 /**
@@ -68,31 +66,6 @@ public interface Model {
      * @return semantics type of the model
      */
     Semantics getSemantics();
-
-    /**
-     * Create a low-level representation of the model for analysis.
-     * Creating a low-level representation might fail for many reasons. For
-     * instance, symbolic analysis might just not be supported for this model
-     * type. The exception thrown should state the exact cause. In contrast to
-     * {@link #newExplorer() newExplorer}, for this method it is necessary to
-     * specify the required graph, node, and edge attributes. None of the
-     * parameters may be <code>null</code>.
-     * 
-     * Remark: the number of parameters is a bit high, and it is also not nice
-     * that once has to know the graph, node, and edge properties beforehand.
-     * Thus, this might be changed in the future, if this is possible without
-     * affecting the performance.
-     * 
-     * @param engine engine to use
-     * @param graphProperties graph properties to use
-     * @param nodeProperties node properties to use
-     * @param edgeProperties edge properties to use
-     * @return symbolic graph representation of model
-     */
-    LowLevel newLowLevel(Engine engine,
-            Set<Object> graphProperties,
-            Set<Object> nodeProperties,
-            Set<Object> edgeProperties);
 
     /**
      * Returns the list of properties associated to this model.

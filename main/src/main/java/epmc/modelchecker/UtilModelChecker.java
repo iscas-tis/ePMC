@@ -23,8 +23,11 @@ package epmc.modelchecker;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.util.Map;
+import java.util.Set;
 
 import epmc.expression.Expression;
+import epmc.graph.LowLevel;
+import epmc.graph.LowLevel.Builder;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeConstList;
@@ -33,6 +36,7 @@ import epmc.options.OptionTypeStringListSubset;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.util.OrderedMap;
+import epmc.util.Util;
 import epmc.value.Type;
 
 /**
@@ -92,6 +96,8 @@ public final class UtilModelChecker {
 
         Map<String,Class<?>> propertySolvers = new OrderedMap<>();
         options.set(OptionsModelChecker.PROPERTY_SOLVER_CLASS, propertySolvers);
+        Map<String,Class<?>> lowLevelBuilders = new OrderedMap<>();
+        options.set(OptionsModelChecker.LOW_LEVEL_ENGINE_CLASS, lowLevelBuilders);
         Map<String,Class<?>> schedulerPrinters = new OrderedMap<>();
         options.set(OptionsModelChecker.SCHEDULER_PRINTER_CLASS, schedulerPrinters);
         OptionTypeStringListSubset<Class<?>> propertySolverType = new OptionTypeStringListSubset<>(propertySolvers);
@@ -122,6 +128,41 @@ public final class UtilModelChecker {
         .setBundleName(OptionsModelChecker.OPTIONS_MODEL_CHECKER)
         .setType(OptionTypeBoolean.getInstance())
         .setCommandLine().setGui().setWeb().build();
+    }
+
+    public static LowLevel buildLowLevel(
+            Model model,
+            Engine engine,
+            Set<Object> graphProperties,
+            Set<Object> nodeProperties,
+            Set<Object> edgeProperties) {
+        Options options = Options.get();
+        Map<String,Class<LowLevel.Builder>> lowLevelBuilders = options.get(OptionsModelChecker.LOW_LEVEL_ENGINE_CLASS);
+        for (Class<LowLevel.Builder> clazz : lowLevelBuilders.values()) {
+            Builder builder = Util.getInstance(clazz);
+            LowLevel lowLevel = builder.setEngine(engine)
+                    .setModel(model)
+                    .addGraphProperties(graphProperties)
+                    .addNodeProperties(nodeProperties)
+                    .addEdgeProperties(edgeProperties)
+                    .build();
+            if (lowLevel != null) {
+                return lowLevel;
+            }
+        }
+        assert false;
+        return null;
+    }
+
+    public static LowLevel buildLowLevel(
+            Model model,
+            Set<Object> graphProperties,
+            Set<Object> nodeProperties,
+            Set<Object> edgeProperties) {
+        Options options = Options.get();
+        Engine engine = UtilOptions.getSingletonInstance(options,
+                OptionsModelChecker.ENGINE);
+        return buildLowLevel(model, engine, graphProperties, nodeProperties, edgeProperties);
     }
 
     /**

@@ -34,7 +34,6 @@ public final class ProblemsJANI {
 
     /** More than one model input file was given. */
     public static final Problem JANI_ONE_MODEL_FILE = newProblem("jani-one-input-file");
-    public static final Problem JANI_UNSUPPORTED_ENGINE = newProblem("jani-unsupported-engine");
 
     /**
      * Create new problem object using plugin resource file.
