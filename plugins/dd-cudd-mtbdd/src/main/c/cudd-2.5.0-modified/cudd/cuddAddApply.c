@@ -63,6 +63,7 @@
 ******************************************************************************/
 
 #include <stdlib.h>
+#include <stdint.h>
 #include "util.h"
 #include "cuddInt.h"
 
