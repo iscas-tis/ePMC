@@ -30,7 +30,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionPropositional;
 import epmc.expression.standard.ExpressionQuantifier;
@@ -55,13 +54,13 @@ import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.Engine;
 import epmc.modelchecker.EngineDD;
 import epmc.modelchecker.EngineExplicit;
-import epmc.modelchecker.EngineExplorer;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.ModelCheckerResult;
 import epmc.modelchecker.Properties;
 import epmc.modelchecker.RawProperty;
+import epmc.modelchecker.UtilModelChecker;
 import epmc.options.Options;
 import epmc.util.Util;
 
@@ -125,7 +124,7 @@ public class CommandTaskLump implements CommandTask {
         edgeProperties.add(CommonProperties.WEIGHT);
 
 
-        GraphExplicit modelGraph = (GraphExplicit) model.newLowLevel(EngineExplorer.getInstance(), graphProperties, nodeProperties, edgeProperties);
+        GraphExplicit modelGraph = (GraphExplicit) UtilModelChecker.buildLowLevel(model, graphProperties, nodeProperties, edgeProperties);
         time = TimeUnit.NANOSECONDS.toSeconds(System.nanoTime() - time);
         log.send(MessagesCommandLump.EXPLORING_DONE, time);
 
@@ -235,7 +234,7 @@ public class CommandTaskLump implements CommandTask {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
 
-        GraphDD modelGraph = (GraphDD) model.newLowLevel(EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
+        GraphDD modelGraph = (GraphDD) UtilModelChecker.buildLowLevel(model, graphProperties, nodeProperties, edgeProperties);
         //        GraphBuilderDD build = new GraphBuilderDD(modelGraph, new ArrayList<>());
         //        GraphExplicit graph = build.buildGraph();
         //        build.close();
@@ -291,16 +290,7 @@ public class CommandTaskLump implements CommandTask {
         return null;
     }
 
-    private static boolean isFinally(Expression expression) {
-        return ExpressionFilter.is(expression);
-    }
-
-    private static boolean isUntil(Expression expression) {
-        return ExpressionTemporalUntil.is(expression);
-    }
-
-    static Set<RewardSpecification> collectRewards(Model model, Expression property)
-    {
+    static Set<RewardSpecification> collectRewards(Model model, Expression property) {
         assert model != null;
         assert property != null;
         Set<RewardSpecification> result = new LinkedHashSet<>();

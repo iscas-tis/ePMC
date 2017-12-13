@@ -21,9 +21,6 @@
 package epmc.modelchecker;
 
 import java.io.InputStream;
-import java.util.Set;
-
-import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 
 /**
@@ -52,13 +49,6 @@ public final class ModelDummy implements Model {
 
     @Override
     public Semantics getSemantics() {
-        return null;
-    }
-
-    @Override
-    public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties,
-            Set<Object> nodeProperties, Set<Object> edgeProperties)
-    {
         return null;
     }
 

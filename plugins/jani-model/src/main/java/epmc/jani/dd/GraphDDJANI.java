@@ -38,16 +38,20 @@ import epmc.expression.Expression;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatordd.ExpressionToDD;
 import epmc.graph.CommonProperties;
+import epmc.graph.LowLevel;
 import epmc.graph.Player;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDiscreteTime;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.dd.GraphDDProperties;
+import epmc.graph.explorer.Explorer;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.Variable;
+import epmc.modelchecker.Engine;
+import epmc.modelchecker.Model;
 import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeEnum;
@@ -66,6 +70,57 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 public final class GraphDDJANI implements GraphDD {
+    public final static String IDENTIFIER = "jani-dd";
+    
+    public final static class Builder implements LowLevel.Builder {
+        private Model model;
+        private Engine engine;
+        private final Set<Object> graphProperties = new LinkedHashSet<>();
+        private final Set<Object> nodeProperties = new LinkedHashSet<>();
+        private final Set<Object> edgeProperties = new LinkedHashSet<>();
+
+        @Override
+        public Builder setModel(Model model) {
+            this.model = model;
+            return this;
+        }
+
+        @Override
+        public Builder setEngine(Engine engine) {
+            this.engine = engine;
+            return this;
+        }
+
+        @Override
+        public Builder addGraphProperties(Set<Object> graphProperties) {
+            this.graphProperties.addAll(graphProperties);
+            return this;
+        }
+
+        @Override
+        public Builder addNodeProperties(Set<Object> nodeProperties) {
+            this.nodeProperties.addAll(nodeProperties);
+            return this;
+        }
+
+        @Override
+        public Builder addEdgeProperties(Set<Object> edgeProperties) {
+            this.edgeProperties.addAll(edgeProperties);
+            return this;
+        }
+
+        @Override
+        public GraphDDJANI build() {
+            if (!(engine instanceof Explorer)) {
+                return null;
+            }
+            if (!(model instanceof ModelJANI)) {
+                return null;
+            }
+            return new GraphDDJANI(this);
+        }
+    }
+    
     /** Encoding marker of present state variables. */
     private final static int PRES_STATE = 0;
     /** Encoding marker of next state variables. */
@@ -115,6 +170,10 @@ public final class GraphDDJANI implements GraphDD {
     private final GraphDDProperties properties = new GraphDDProperties(this);
     /** Converter from expressions to their symbolic representations. */
     private ExpressionToDD expressionToDD;
+
+    private GraphDDJANI(Builder builder) {
+        this((ModelJANI) builder.model, builder.nodeProperties, builder.edgeProperties);
+    }
 
     /**
      * Construct a new symbolic graph from the given JANI model.

@@ -21,8 +21,11 @@
 package epmc.graph;
 
 import java.io.Closeable;
+import java.util.Set;
 
 import epmc.expressionevaluator.ExpressionToType;
+import epmc.modelchecker.Engine;
+import epmc.modelchecker.Model;
 
 /**
  * Low-level representation of a model.
@@ -31,6 +34,20 @@ import epmc.expressionevaluator.ExpressionToType;
  *
  */
 public interface LowLevel extends Closeable, ExpressionToType {
+    public interface Builder {
+        Builder setModel(Model model);
+        
+        Builder setEngine(Engine engine);
+
+        Builder addGraphProperties(Set<Object> graphProperties);
+        
+        Builder addNodeProperties(Set<Object> nodeProperties);
+        
+        Builder addEdgeProperties(Set<Object> edgeProperties);
+        
+        LowLevel build();
+    }
+    
     /**
      * Create new set of initial states of this low-level model.
      * 

@@ -46,10 +46,8 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionTypeInteger;
 import epmc.expression.standard.RewardSpecification;
-import epmc.expression.standard.RewardSpecificationImpl;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
-import epmc.graph.LowLevel;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsCTMC;
 import epmc.graph.SemanticsDTMC;
@@ -66,8 +64,6 @@ import epmc.jani.model.type.JANITypeInt;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Engine;
 import epmc.modelchecker.EngineDD;
-import epmc.modelchecker.EngineExplicit;
-import epmc.modelchecker.EngineExplorer;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.RawProperty;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -207,15 +203,8 @@ public final class ModelPRISM implements ModelJANIConverter {
     private final static String DTMC = "dtmc";
     private final static String MDP = "mdp";
     private final static String NEWLINE = "\n";
-    private final static String CONST = "const";
-    private final static String INT = "int";
-    private final static String DOUBLE = "double";
-    private final static String LABEL = "label";
-    private final static String EQUALS = "=";
-    private final static String COMMENT = "//";
     private final static String _PAR_ = "_PAR_";
     private final static String UNDERSCORE = "_";
-    private final static char EQUALS_C = '=';
 
     private Semantics semanticsType;
     private final List<Module> modules = new ArrayList<>();
@@ -337,6 +326,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         replaceRewardsConstants(formulas.getFormulas(), specifiedConsts);
         //        checkExpressionConsistency();
+        // TODO following should be handled by DD engine itself
         if (engine instanceof EngineDD) {
             fixUnchangedVariables();
         }
@@ -703,57 +693,6 @@ public final class ModelPRISM implements ModelJANIConverter {
     }
 
     @Override
-    public LowLevel newLowLevel(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
-            Set<Object> edgeProperties) {
-        Map<Expression,JANIType>  allVariables = new HashMap<>();
-        graphProperties = fixProperties(graphProperties);
-        nodeProperties = fixProperties(nodeProperties);
-        edgeProperties = fixProperties(edgeProperties);
-        allVariables.putAll(globalVariables);
-        for (Module module : this.modules) {
-            allVariables.putAll(module.getVariables());
-        }
-        if (engine instanceof EngineExplorer) {
-            ModelJANI jani = toJANI(false);
-            return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
-        } else if (engine instanceof EngineExplicit) {
-            ModelJANI jani = toJANI(false);
-            return jani.newLowLevel(engine, graphProperties, nodeProperties, edgeProperties);
-        } else {
-            return newLowLevelInternal(engine, graphProperties, nodeProperties, edgeProperties);
-        }
-    }
-
-    private Set<Object> fixProperties(Set<Object> properties) {
-        Set<Object> fixed = new LinkedHashSet<>(properties.size());
-        for (Object property : properties) {
-            if (property instanceof RewardSpecification) {
-                RewardSpecification rewardSpecification = (RewardSpecification) property;
-                RewardStructure rewardStructure = getReward(rewardSpecification);
-                ExpressionIdentifier rewardName = new ExpressionIdentifierStandard.Builder()
-                        .setName(rewardStructure.getName())
-                        .build();
-                RewardSpecification fixedRewardSpecification = new RewardSpecificationImpl(rewardName);				
-                fixed.add(fixedRewardSpecification);
-            } else {
-                fixed.add(property);
-            }
-        }
-        return fixed;
-    }
-
-    private LowLevel newLowLevelInternal(Engine engine, Set<Object> graphProperties, Set<Object> nodeProperties,
-            Set<Object> edgeProperties) {
-        if (engine instanceof EngineDD) {
-            prepareAndCheckReady();
-            return new GraphDDPRISM(this, nodeProperties, edgeProperties);
-        } else {
-            assert false; // TODO user exception
-            return null;
-        }
-    }
-
-    @Override
     public PropertiesImpl getPropertyList() {
         return properties;
     }
@@ -1043,15 +982,6 @@ public final class ModelPRISM implements ModelJANIConverter {
         return system;
     }
 
-    private void ensureNoUndefinedConstants() {
-        if (formulas != null) {
-            formulas.ensureNoUndefinedConstants();
-        }
-        if (properties != null) {
-            properties.ensureNoUndefinedConstants();
-        }
-    }
-
     public Formulas getFormulas() {
         return formulas;
     }
@@ -1109,9 +1039,8 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
     }
 
-    private void prepareAndCheckReady() {
+    void prepareAndCheckReady() {
         properties.expandAndCheckWithDefinedCheck();
-        ensureNoUndefinedConstants();
         checkPropertiesCompatible();
     }
 

@@ -39,6 +39,7 @@ public enum OptionsModelChecker {
     PROPERTY_SOLVER,
     /** List of all property solver classes. */
     PROPERTY_SOLVER_CLASS,
+    LOW_LEVEL_ENGINE_CLASS,
     SCHEDULER_PRINTER_CLASS,
     /** constant definitions from command line ({@link Map Map&ltString,Object&gt;}) */
     CONST,
