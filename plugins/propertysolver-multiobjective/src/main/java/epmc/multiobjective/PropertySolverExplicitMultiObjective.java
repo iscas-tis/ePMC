@@ -32,6 +32,7 @@ import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionSteadyState;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Scheduler;
 import epmc.graph.StateMap;
@@ -48,7 +49,6 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.operator.OperatorEq;
-import epmc.operator.OperatorIsPosInf;
 import epmc.operator.OperatorIsZero;
 import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
@@ -59,7 +59,6 @@ import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
-import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
@@ -180,7 +179,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 .setOriginalProperty(propertyMultiObjective)
                 .build();
         property = propertyMultiObjective = normaliser.getNormalisedProperty();
-        Value subtractNumericalFrom = normaliser.getSubtractNumericalFrom();
+        Expression subtractNumericalFrom = normaliser.getSubtractNumericalFrom();
         BitSet invertedRewards = normaliser.getInvertedRewards();
         prepareRequiredPropositionals();
         GraphExplicit graph = modelChecker.getLowLevel();
@@ -217,14 +216,12 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         allStates.close();
     }
 
-    private StateMap mainLoop(Product product, Value subtractNumericalFrom) {
+    private StateMap mainLoop(Product product, Expression subtractNumericalFrom) {
         assert product != null;
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
-        OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
         ValueBoolean cmp = TypeBoolean.get().newValue();
-        isPosInf.apply(cmp, subtractNumericalFrom);
-        ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, !cmp.getBoolean());
+        ValueArrayAlgebra bounds = MultiObjectiveUtils.computeQuantifierBoundsArray(modelChecker, propertyMultiObjective, subtractNumericalFrom != null);
         int numAutomata = product.getNumAutomata();
         DownClosure down = new DownClosure(numAutomata);
         ValueArrayAlgebra weights;
@@ -333,7 +330,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         return new SchedulerInitialRandomisedImpl(probabilities, schedulers);
     }
 
-    private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Value subtractNumericalFrom, Scheduler scheduler) {
+    private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Expression subtractNumericalFrom, Scheduler scheduler) {
         ValueArray resultValues;
         if (numerical) {
             //            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
@@ -341,11 +338,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             ValueAlgebra entry = newValueWeight();
             bounds.get(entry, 0);
             OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(),  TypeWeight.get());
-            OperatorEvaluator isPosInf = ContextValue.get().getEvaluator(OperatorIsPosInf.IS_POS_INF, subtractNumericalFrom.getType());
-            ValueBoolean cmp = TypeBoolean.get().newValue();
-            isPosInf.apply(cmp, subtractNumericalFrom);
-            if (!cmp.getBoolean()) {
-                subtract.apply(entry, subtractNumericalFrom, entry);
+            if (subtractNumericalFrom != null) {
+                subtract.apply(entry, UtilEvaluatorExplicit.evaluate(subtractNumericalFrom), entry);
             }
             for (int i = 0; i < forStates.size(); i++) {
                 resultValues.set(entry, i);
