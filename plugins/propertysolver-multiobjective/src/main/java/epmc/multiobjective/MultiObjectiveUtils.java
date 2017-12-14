@@ -112,8 +112,7 @@ final class MultiObjectiveUtils {
     }
 
     static ValueArrayAlgebra computeQuantifierBoundsArray(ModelChecker modelChecker,
-            ExpressionMultiObjective property, boolean invert)
-    {
+            ExpressionMultiObjective property, boolean invert) {
         assert property != null;
         ValueAlgebra numMinValue = null;
         if (isNumericalQuery(property)) {
@@ -166,8 +165,7 @@ final class MultiObjectiveUtils {
 
     static IterationResult iterate(ValueArrayAlgebra weights,
             GraphExplicit graph,
-            IterationRewards rewards)
-    {
+            IterationRewards rewards) {
         assert weights != null;
         assert graph != null;
         assert rewards != null;

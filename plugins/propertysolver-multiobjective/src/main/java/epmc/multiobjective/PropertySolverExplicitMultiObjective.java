@@ -136,9 +136,9 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         for (Expression objective : propertyMultiObjective.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (quantified instanceof ExpressionReward) {
+            if (ExpressionReward.is(quantified)) {
                 required.add(((ExpressionReward) quantified).getReward());
-            } else if (quantified instanceof ExpressionSteadyState) {
+            } else if (ExpressionSteadyState.is(quantified)) {
                 for (Expression inner : UtilLTL.collectLTLInner(ExpressionSteadyState.as(quantified).getOperand1())) {
                     required.addAll(modelChecker.getRequiredNodeProperties(inner, forStates));
                 }
@@ -178,7 +178,6 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         ensure(initialStates.size() == 1, ProblemsMultiObjective.MULTI_OBJECTIVE_INITIAL_NOT_SINGLETON);
         PropertyNormaliser normaliser = new PropertyNormaliser()
                 .setOriginalProperty(propertyMultiObjective)
-                .setExpressionToType(modelChecker.getLowLevel())
                 .build();
         property = propertyMultiObjective = normaliser.getNormalisedProperty();
         Value subtractNumericalFrom = normaliser.getSubtractNumericalFrom();
