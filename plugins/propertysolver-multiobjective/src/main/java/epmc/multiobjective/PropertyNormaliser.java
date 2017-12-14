@@ -34,17 +34,12 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionSteadyState;
+import epmc.expression.standard.ExpressionTypeReal;
 import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorNot;
-import epmc.operator.OperatorSet;
 import epmc.operator.OperatorSubtract;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
-import epmc.value.ContextValue;
-import epmc.value.OperatorEvaluator;
-import epmc.value.TypeWeight;
-import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 
 /**
  * Class to compute normalised form of multi-objective property.
@@ -56,8 +51,11 @@ import epmc.value.ValueAlgebra;
  * @author Ernst Moritz Hahn
  */
 final class PropertyNormaliser {
+    private final static String ONE = "1";
+    private final static String ZERO = "0";
+    
     private ExpressionMultiObjective property;
-    private ValueAlgebra subtractNumericalFrom;
+    private Expression subtractNumericalFrom;
     private BitSet invertedRewards;
     private ExpressionMultiObjective normalisedProperty;
 
@@ -70,12 +68,8 @@ final class PropertyNormaliser {
     }
 
     PropertyNormaliser build() {
-        subtractNumericalFrom = newValueWeight();
         invertedRewards = UtilBitSet.newBitSetUnbounded();
         assert property != null;
-        assert subtractNumericalFrom != null;
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
-        set.apply(subtractNumericalFrom, TypeWeight.as(subtractNumericalFrom.getType()).getPosInf());
         List<Expression> newQuantifiersQuantitative = new ArrayList<>();
         List<Expression> newQuantifiersQualitative = new ArrayList<>();
         Set<Expression> invert = new HashSet<>();
@@ -100,7 +94,10 @@ final class PropertyNormaliser {
                         .setCondition(objectiveQuantifier.getCondition())
                         .build();
                 newQuantifiersQuantitative.add(newQuantifier);
-                set.apply(subtractNumericalFrom, subtractNumericalFrom.getType().getOne());
+                subtractNumericalFrom = new ExpressionLiteral.Builder()
+                        .setType(ExpressionTypeReal.TYPE_REAL)
+                        .setValue(ONE)
+                        .build();
             } else if (isQuantLe(objectiveQuantifier) && !ExpressionReward.is(quantified)) {
                 Expression newCompare = subtract(ExpressionLiteral.getOne(), objectiveQuantifier.getCompare());
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
@@ -120,7 +117,10 @@ final class PropertyNormaliser {
                         .build();
                 invert.add(newQuantifier);
                 newQuantifiersQuantitative.add(newQuantifier);
-                set.apply(subtractNumericalFrom, TypeWeight.get().getZero());
+                subtractNumericalFrom = new ExpressionLiteral.Builder()
+                        .setType(ExpressionTypeReal.TYPE_REAL)
+                        .setValue(ZERO)
+                        .build();
             } else if (isQuantLe(objectiveQuantifier) && ExpressionReward.is(quantified)) {
                 Expression newCompare = new ExpressionOperator.Builder()
                         .setOperator(OperatorAddInverse.ADD_INVERSE)
@@ -155,16 +155,12 @@ final class PropertyNormaliser {
         return normalisedProperty;
     }
 
-    Value getSubtractNumericalFrom() {
+    Expression getSubtractNumericalFrom() {
         return subtractNumericalFrom;
     }
 
     BitSet getInvertedRewards() {
         return invertedRewards;
-    }
-
-    private ValueAlgebra newValueWeight() {
-        return TypeWeight.get().newValue();
     }
 
     private Expression subtract(Expression a, Expression b) {
@@ -198,7 +194,7 @@ final class PropertyNormaliser {
         if (!ExpressionReward.is(expression)) {
             return false;
         }
-        ExpressionReward expressionReward = (ExpressionReward) expression;
+        ExpressionReward expressionReward = ExpressionReward.as(expression);
         return expressionReward.getRewardType().isCumulative();
     }
 
@@ -207,7 +203,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getDirType() == DirType.MAX;
     }
 
@@ -216,7 +212,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getCompareType() == CmpType.IS;
     }
 
@@ -233,7 +229,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getCompareType().isLe();
     }
 
@@ -241,7 +237,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getCompareType().isGe();
     }
 
@@ -249,7 +245,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getCompareType().isGt();
     }
 
@@ -257,7 +253,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getCompareType().isLt();
     }
 
@@ -265,7 +261,7 @@ final class PropertyNormaliser {
         if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
-        ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
+        ExpressionQuantifier expressionQuantifier = ExpressionQuantifier.as(expression);
         return expressionQuantifier.getCompareType().isEq();
     }
 
