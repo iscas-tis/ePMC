@@ -34,7 +34,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionSteadyState;
-import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorNot;
 import epmc.operator.OperatorSet;
@@ -61,14 +60,8 @@ final class PropertyNormaliser {
     private ValueAlgebra subtractNumericalFrom;
     private BitSet invertedRewards;
     private ExpressionMultiObjective normalisedProperty;
-    private ExpressionToType expressionToType;
 
     PropertyNormaliser() {
-    }
-
-    PropertyNormaliser setExpressionToType(ExpressionToType expressionToType) {
-        this.expressionToType = expressionToType;
-        return this;
     }
 
     PropertyNormaliser setOriginalProperty(ExpressionMultiObjective property) {
@@ -93,13 +86,13 @@ final class PropertyNormaliser {
             assert !isQuantGt(objectiveQuantifier) : objectiveQuantifier;
             assert !isQuantLt(objectiveQuantifier) : objectiveQuantifier;
             assert isTrue(objectiveQuantifier.getCondition());
-            assert !(quantified instanceof ExpressionReward)
+            assert !ExpressionReward.is(quantified)
             || isRewardCumulative(quantified);
             if (isIs(objectiveQuantifier) && isDirMax(objectiveQuantifier)) {
                 newQuantifiersQuantitative.add(objective);
             } else if (isQuantGe(objectiveQuantifier)) {
                 newQuantifiersQualitative.add(objective);
-            } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
+            } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && !ExpressionReward.is(quantified)) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.MAX)
                         .setCmpType(CmpType.IS)
@@ -108,13 +101,8 @@ final class PropertyNormaliser {
                         .build();
                 newQuantifiersQuantitative.add(newQuantifier);
                 set.apply(subtractNumericalFrom, subtractNumericalFrom.getType().getOne());
-            } else if (isQuantLe(objectiveQuantifier) && !(quantified instanceof ExpressionReward)) {
+            } else if (isQuantLe(objectiveQuantifier) && !ExpressionReward.is(quantified)) {
                 Expression newCompare = subtract(ExpressionLiteral.getOne(), objectiveQuantifier.getCompare());
-                /*
-                newCompare = new ExpressionLiteral.Builder()
-                        .setValue(evaluateValue(newCompare))
-                        .build();
-                        */
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.NONE)
                         .setCmpType(CmpType.GE)
@@ -123,7 +111,7 @@ final class PropertyNormaliser {
                         .setCondition(objectiveQuantifier.getCondition())
                         .build();
                 newQuantifiersQualitative.add(newQuantifier);
-            } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && quantified instanceof ExpressionReward) {
+            } else if (isIs(objectiveQuantifier) && !isDirMax(objectiveQuantifier) && ExpressionReward.is(quantified)) {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.MAX)
                         .setCmpType(CmpType.IS)
@@ -133,16 +121,10 @@ final class PropertyNormaliser {
                 invert.add(newQuantifier);
                 newQuantifiersQuantitative.add(newQuantifier);
                 set.apply(subtractNumericalFrom, TypeWeight.get().getZero());
-                set.apply(subtractNumericalFrom, TypeWeight.get().getZero());
-            } else if (isQuantLe(objectiveQuantifier) && quantified instanceof ExpressionReward) {
+            } else if (isQuantLe(objectiveQuantifier) && ExpressionReward.is(quantified)) {
                 Expression newCompare = new ExpressionOperator.Builder()
                         .setOperator(OperatorAddInverse.ADD_INVERSE)
                         .setOperands(objectiveQuantifier.getCompare()).build();
-                /*
-                newCompare = new ExpressionLiteral.Builder()
-                        .setValue(evaluateValue(newCompare))
-                        .build();
-                        */
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.NONE)
                         .setCmpType(CmpType.GE)
@@ -213,7 +195,7 @@ final class PropertyNormaliser {
     }
 
     private static boolean isRewardCumulative(Expression expression) {
-        if (!(expression instanceof ExpressionReward)) {
+        if (!ExpressionReward.is(expression)) {
             return false;
         }
         ExpressionReward expressionReward = (ExpressionReward) expression;
@@ -222,7 +204,7 @@ final class PropertyNormaliser {
 
     private static boolean isDirMax(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
@@ -231,7 +213,7 @@ final class PropertyNormaliser {
 
     private static boolean isIs(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
@@ -240,15 +222,15 @@ final class PropertyNormaliser {
 
     private static boolean isTrue(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionLiteral)) {
+        if (!ExpressionLiteral.is(expression)) {
             return false;
         }
-        ExpressionLiteral expressionLiteral = (ExpressionLiteral) expression;
+        ExpressionLiteral expressionLiteral = ExpressionLiteral.as(expression);
         return Boolean.valueOf(expressionLiteral.getValue());
     }
 
     private static boolean isQuantLe(Expression expression) {
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
@@ -256,7 +238,7 @@ final class PropertyNormaliser {
     }
 
     private static boolean isQuantGe(Expression expression) {
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
@@ -264,7 +246,7 @@ final class PropertyNormaliser {
     }
 
     private static boolean isQuantGt(Expression expression) {
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
@@ -272,7 +254,7 @@ final class PropertyNormaliser {
     }
 
     private static boolean isQuantLt(Expression expression) {
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
@@ -280,7 +262,7 @@ final class PropertyNormaliser {
     }
 
     private static boolean isQuantEq(Expression expression) {
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;

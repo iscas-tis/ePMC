@@ -34,6 +34,7 @@ final class ValueArrayBoolean implements ValueArray {
     private int size;
 
     ValueArrayBoolean(TypeArrayBoolean type) {
+        assert type != null;
         this.type = type;
         int numLongs = ((size() - 1) >> LOG2LONGSIZE) + 1;
         this.content = new long[numLongs];
