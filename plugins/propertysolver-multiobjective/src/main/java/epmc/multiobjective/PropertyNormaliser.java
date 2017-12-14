@@ -33,6 +33,7 @@ import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorNot;
@@ -88,9 +89,9 @@ final class PropertyNormaliser {
         for (Expression objective : property.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            assert !isQuantEq(objectiveQuantifier);
-            assert !isQuantGt(objectiveQuantifier);
-            assert !isQuantLt(objectiveQuantifier);
+            assert !isQuantEq(objectiveQuantifier) : objectiveQuantifier;
+            assert !isQuantGt(objectiveQuantifier) : objectiveQuantifier;
+            assert !isQuantLt(objectiveQuantifier) : objectiveQuantifier;
             assert isTrue(objectiveQuantifier.getCondition());
             assert !(quantified instanceof ExpressionReward)
             || isRewardCumulative(quantified);
@@ -102,7 +103,7 @@ final class PropertyNormaliser {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.MAX)
                         .setCmpType(CmpType.IS)
-                        .setQuantified(not(quantified))
+                        .setQuantified(negate(quantified))
                         .setCondition(objectiveQuantifier.getCondition())
                         .build();
                 newQuantifiersQuantitative.add(newQuantifier);
@@ -117,7 +118,7 @@ final class PropertyNormaliser {
                 Expression newQuantifier = new ExpressionQuantifier.Builder()
                         .setDirType(DirType.NONE)
                         .setCmpType(CmpType.GE)
-                        .setQuantified(not(quantified))
+                        .setQuantified(negate(quantified))
                         .setCompare(newCompare)
                         .setCondition(objectiveQuantifier.getCondition())
                         .build();
@@ -191,6 +192,19 @@ final class PropertyNormaliser {
                 .build();
     }
 
+    private static Expression negate(Expression expression) {
+        if (ExpressionSteadyState.is(expression)) {
+            ExpressionSteadyState expressionSteadyState = ExpressionSteadyState.as(expression);
+            Expression operand = expressionSteadyState.getOperand1();
+            return new ExpressionSteadyState.Builder()
+                    .setStates(not(operand))
+                    .setPositional(expression.getPositional())
+                    .build();
+        } else {
+            return not(expression);
+        }
+    }
+    
     private static Expression not(Expression expression) {
         return new ExpressionOperator.Builder()
                 .setOperator(OperatorNot.NOT)
