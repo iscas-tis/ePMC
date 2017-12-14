@@ -202,17 +202,12 @@ final class MultiObjectiveUtils {
             weightedRewards = rewardsToWeighted(rewards, propWeights);
             GraphSolverObjectiveExplicitMultiObjectiveScheduled objectiveSched = new GraphSolverObjectiveExplicitMultiObjectiveScheduled();
             objectiveSched.setGraph(graph);
-            // ??
-            //            iterResult = useNative
-            //                  ? UtilValue.newArray(TypeHasNativeArray.getTypeNativeArray(TypeWeight.get(contextValue)), graph.computeNumStates())
-            //                : UtilValue.newArray(TypeWeight.get(contextValue).getTypeArray(), graph.computeNumStates());
             objectiveSched.setValues(iterResult);
             objectiveSched.setScheduler(scheduler);
             objectiveSched.setStopStateRewards(weightedCombinations);
             objectiveSched.setTransitionRewards(weightedRewards);
             configuration.setObjective(objectiveSched);
             configuration.solve();
-            //            iterResult = objective.getResult();
             iterResult.get(initValue, iterInit);
             q.set(initValue, prop);
         }
