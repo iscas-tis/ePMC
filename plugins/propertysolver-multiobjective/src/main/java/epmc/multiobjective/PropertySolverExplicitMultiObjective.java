@@ -256,9 +256,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         SchedulerInitialRandomisedImpl sched = null;
         if ((feasible || numerical) && Options.get().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
             sched = computeRandomizedScheduler(product, down, bounds);
-            //      printInitiallyRandomisedScheduler(sched);
         }
-        return prepareResult(numerical, feasible, bounds, subtractNumericalFrom, sched);
+        return prepareResult(feasible, bounds, subtractNumericalFrom, sched);
     }
 
     private SchedulerInitialRandomisedImpl computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) {
@@ -330,7 +329,8 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         return new SchedulerInitialRandomisedImpl(probabilities, schedulers);
     }
 
-    private StateMap prepareResult(boolean numerical, boolean feasible, ValueArray bounds, Expression subtractNumericalFrom, Scheduler scheduler) {
+    private StateMap prepareResult(boolean feasible, ValueArray bounds, Expression subtractNumericalFrom, Scheduler scheduler) {
+        boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
         ValueArray resultValues;
         if (numerical) {
             //            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
