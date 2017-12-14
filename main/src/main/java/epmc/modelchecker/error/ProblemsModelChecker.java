@@ -33,6 +33,8 @@ public final class ProblemsModelChecker {
     private final static String PROBLEMS_MODEL_CHECKER = "ProblemsModelChecker";
     /** No property solver for the given property is available. */
     public final static Problem NO_SOLVER_AVAILABLE = newProblem("no-solver-available");
+    /** No low-level builder available for combination of model and engine. */
+    public final static Problem NO_LOW_LEVEL_AVAILABLE = newProblem("no-low-level-available");
     /** Local model file not found. */
     public static final Problem FILE_NOT_EXISTS = newProblem("file-not-exists");
     // TODO probably split into problem for const, property, formula

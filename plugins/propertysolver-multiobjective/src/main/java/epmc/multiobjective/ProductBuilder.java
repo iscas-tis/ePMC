@@ -44,6 +44,7 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expression.standard.RewardSpecification;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
@@ -126,6 +127,8 @@ final class ProductBuilder {
             Expression quantified = objectiveQuantifier.getQuantified();
             if (ExpressionReward.is(quantified)) {
                 // TODO
+            } else if (ExpressionSteadyState.is(quantified)) {
+                // TODO
             } else {
                 Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
                 expressionsSet.addAll(inners);
@@ -136,7 +139,9 @@ final class ProductBuilder {
         for (Expression objective : property.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (quantified instanceof ExpressionReward) {
+            if (ExpressionReward.is(quantified)) {
+                quantified = ExpressionLiteral.getFalse();
+            } else if (ExpressionSteadyState.is(quantified)) {
                 quantified = ExpressionLiteral.getFalse();
             }
             AutomatonRabin automaton = UtilAutomaton.newAutomatonRabin(quantified, expressions);

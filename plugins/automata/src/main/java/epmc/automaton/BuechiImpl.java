@@ -85,8 +85,7 @@ public class BuechiImpl implements Buechi {
         return IDENTIFIER;
     }
 
-    public BuechiImpl(Expression expression, Expression[] expressions)
-    {
+    public BuechiImpl(Expression expression, Expression[] expressions) {
         assert expression != null;
         // TODO does not work if used there
         //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {

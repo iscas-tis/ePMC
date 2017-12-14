@@ -31,6 +31,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionSteadyState;
 import epmc.graph.CommonProperties;
 import epmc.graph.Scheduler;
 import epmc.graph.StateMap;
@@ -137,6 +138,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
             Expression quantified = objectiveQuantifier.getQuantified();
             if (quantified instanceof ExpressionReward) {
                 required.add(((ExpressionReward) quantified).getReward());
+            } else if (quantified instanceof ExpressionSteadyState) {
+                for (Expression inner : UtilLTL.collectLTLInner(ExpressionSteadyState.as(quantified).getOperand1())) {
+                    required.addAll(modelChecker.getRequiredNodeProperties(inner, forStates));
+                }
             } else {
                 for (Expression inner : UtilLTL.collectLTLInner(quantified)) {
                     required.addAll(modelChecker.getRequiredNodeProperties(inner, forStates));
@@ -199,8 +204,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         for (Expression objective : propertyMultiObjective.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();
-            if (quantified instanceof ExpressionReward) {
+            if (ExpressionReward.is(quantified)) {
                 continue;
+            } else if (ExpressionSteadyState.is(quantified)) {
+                quantified = ExpressionSteadyState.as(quantified).getOperand1();
             }
             Set<Expression> inners = UtilLTL.collectLTLInner(quantified);
             for (Expression inner : inners) {

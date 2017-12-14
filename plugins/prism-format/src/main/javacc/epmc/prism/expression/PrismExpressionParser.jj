@@ -1496,6 +1496,8 @@ private Expression parseMultiObjective(boolean parseExp)  :
 		formula = parseProbQuant(parseExp)
 	| 
 		formula = parseRewQuant(parseExp)
+	|
+		formula = parseSteadyQuant(parseExp)	
 	)
 	{ list.add(formula); }
 	(
@@ -1504,6 +1506,8 @@ private Expression parseMultiObjective(boolean parseExp)  :
 		formula = parseProbQuant(parseExp)
 	| 
 		formula = parseRewQuant(parseExp)
+	|
+		formula = parseSteadyQuant(parseExp)	
 	)
 		{ list.add(formula); }
 	)*

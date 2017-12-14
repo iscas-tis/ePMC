@@ -25,9 +25,11 @@ import java.io.InputStream;
 import java.util.Map;
 import java.util.Set;
 
+import epmc.error.UtilError;
 import epmc.expression.Expression;
 import epmc.graph.LowLevel;
 import epmc.graph.LowLevel.Builder;
+import epmc.modelchecker.error.ProblemsModelChecker;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeConstList;
@@ -150,6 +152,8 @@ public final class UtilModelChecker {
                 return lowLevel;
             }
         }
+        UtilError.fail(ProblemsModelChecker.NO_LOW_LEVEL_AVAILABLE,
+                model.getIdentifier(), engine);
         assert false;
         return null;
     }

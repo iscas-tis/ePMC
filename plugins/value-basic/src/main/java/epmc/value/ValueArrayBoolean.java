@@ -57,7 +57,7 @@ final class ValueArrayBoolean implements ValueArray {
     public void set(Value value, int index) {
         assert !isImmutable();
         assert value != null;
-        assert ValueBoolean.is(value);
+        assert ValueBoolean.is(value) : value + " " + value.getType();
         assert index >= 0;
         assert index < size();
         int offset = index >> LOG2LONGSIZE;
