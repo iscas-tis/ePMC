@@ -147,6 +147,7 @@ final class PropertyNormaliser {
         }
         normalisedProperty = new ExpressionMultiObjective.Builder()
                 .setOperands(newQuantifiers)
+                .setPositional(property.getPositional())
                 .build();
         return this;
     }

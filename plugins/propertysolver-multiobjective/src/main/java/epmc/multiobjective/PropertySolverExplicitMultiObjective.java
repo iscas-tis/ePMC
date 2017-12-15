@@ -32,6 +32,7 @@ import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
 import epmc.expression.standard.ExpressionSteadyState;
+import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Scheduler;
@@ -44,7 +45,9 @@ import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.SchedulerSimple;
 import epmc.graph.explicit.StateMapExplicit;
 import epmc.graph.explicit.StateSetExplicit;
+import epmc.messages.OptionsMessages;
 import epmc.modelchecker.EngineExplicit;
+import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -59,6 +62,7 @@ import epmc.value.TypeArray;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
+import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
@@ -173,15 +177,21 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
     public StateMap solve() {
         assert property != null;
         assert forStates != null;
+        getLog().send(MessagesMultiObjective.STARTING_MULTI_OBJECTIVE, UtilExpressionStandard.niceForm(property));
         StateSetExplicit initialStates = (StateSetExplicit) modelChecker.getLowLevel().newInitialStateSet();
         ensure(initialStates.size() == 1, ProblemsMultiObjective.MULTI_OBJECTIVE_INITIAL_NOT_SINGLETON);
+        getLog().send(MessagesMultiObjective.STARTING_NORMALISING_FORMULA);
         PropertyNormaliser normaliser = new PropertyNormaliser()
                 .setOriginalProperty(propertyMultiObjective)
                 .build();
         property = propertyMultiObjective = normaliser.getNormalisedProperty();
         Expression subtractNumericalFrom = normaliser.getSubtractNumericalFrom();
         BitSet invertedRewards = normaliser.getInvertedRewards();
+        getLog().send(MessagesMultiObjective.DONE_NORMALISING_FORMULA);
+        getLog().send(MessagesMultiObjective.STARTING_NESTED_FORMULAS);
         prepareRequiredPropositionals();
+        getLog().send(MessagesMultiObjective.DONE_NESTED_FORMULAS);
+        getLog().send(MessagesMultiObjective.STARTING_PRODUCT);
         GraphExplicit graph = modelChecker.getLowLevel();
         Product product = new ProductBuilder()
                 .setProperty(propertyMultiObjective)
@@ -189,7 +199,10 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 .setGraph(graph)
                 .setInvertedRewards(invertedRewards)
                 .build();
-        return mainLoop(product, subtractNumericalFrom);
+        getLog().send(MessagesMultiObjective.DONE_PRODUCT);
+        StateMap result = mainLoop(product, subtractNumericalFrom);
+        getLog().send(MessagesMultiObjective.DONE_MULTI_OBJECTIVE, UtilExpressionStandard.niceForm(property));
+        return result;
     }
 
     /**
@@ -200,7 +213,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         GraphExplicit graph = modelChecker.getLowLevel();
         StateSet allStates = UtilGraph.computeAllStatesExplicit(modelChecker.getLowLevel());
         for (Expression objective : propertyMultiObjective.getOperands()) {
-            ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
+            ExpressionQuantifier objectiveQuantifier = ExpressionQuantifier.as(objective);
             Expression quantified = objectiveQuantifier.getQuantified();
             if (ExpressionReward.is(quantified)) {
                 continue;
@@ -218,6 +231,13 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 
     private StateMap mainLoop(Product product, Expression subtractNumericalFrom) {
         assert product != null;
+        getLog().send(MessagesMultiObjective.STARTING_MAIN_LOOP);
+        boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
+        if (numerical) {
+            getLog().send(MessagesMultiObjective.QUANTITATIVE_PROPERTY);
+        } else {
+            getLog().send(MessagesMultiObjective.QUALITATIVE_PROPERTY);            
+        }
         GraphExplicit iterGraph = product.getGraph();
         IterationRewards combinations = product.getRewards();
         ValueBoolean cmp = TypeBoolean.get().newValue();
@@ -226,38 +246,54 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         DownClosure down = new DownClosure(numAutomata);
         ValueArrayAlgebra weights;
         boolean feasible = false;
-        boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
+        boolean steadyState = MultiObjectiveUtils.isSteadyState(propertyMultiObjective);
+        if (numerical) {
+            getLog().send(MessagesMultiObjective.CURRENT_BOUND_QUANTITATIVE,
+                    getQuantitativeBound(bounds, subtractNumericalFrom));
+        }
         OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        int iterationNumber = 0;
         do {
+            getLog().send(MessagesMultiObjective.STARTING_MAIN_LOOP_ITERATION, iterationNumber + 1);
             weights = down.findSeparating(bounds, numerical);
             if (weights == null) {
                 feasible = true;
+                getLog().send(MessagesMultiObjective.DONE_MAIN_LOOP_ITERATION, iterationNumber + 1);
                 break;
             }
             IterationResult iterResult = MultiObjectiveUtils.iterate(weights, iterGraph, combinations);
             eq.apply(cmp, iterResult.getQ(), bounds);
             if (cmp.getBoolean()) {
                 feasible = true;
+                getLog().send(MessagesMultiObjective.DONE_MAIN_LOOP_ITERATION, iterationNumber + 1);
                 break;
             }
             if (MultiObjectiveUtils.compareProductDistance(weights, iterResult.getQ(), bounds) < 0) {
                 feasible = false;
+                getLog().send(MessagesMultiObjective.DONE_MAIN_LOOP_ITERATION, iterationNumber + 1);
                 break;
             }
             down.add(iterResult);
             if (numerical) {
                 down.improveNumerical(bounds);
+                getLog().send(MessagesMultiObjective.CURRENT_BOUND_QUANTITATIVE,
+                            getQuantitativeBound(bounds, subtractNumericalFrom));
                 if (MultiObjectiveUtils.compareProductDistance(weights, iterResult.getQ(), bounds) <= 0) {
                     feasible = true;
+                    getLog().send(MessagesMultiObjective.DONE_MAIN_LOOP_ITERATION, iterationNumber + 1);
                     break;
                 }
             }
+            getLog().send(MessagesMultiObjective.DONE_MAIN_LOOP_ITERATION, iterationNumber + 1);
+            iterationNumber++;
         } while (true);
         SchedulerInitialRandomisedImpl sched = null;
         if ((feasible || numerical) && Options.get().getBoolean(OptionsModelChecker.COMPUTE_SCHEDULER)) {
             sched = computeRandomizedScheduler(product, down, bounds);
         }
-        return prepareResult(feasible, bounds, subtractNumericalFrom, sched);
+        StateMap result = prepareResult(feasible, bounds, subtractNumericalFrom, sched);
+        getLog().send(MessagesMultiObjective.DONE_MAIN_LOOP);
+        return result;
     }
 
     private SchedulerInitialRandomisedImpl computeRandomizedScheduler(Product product, DownClosure down, ValueArrayAlgebra bounds) {
@@ -363,5 +399,25 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
 
     private ValueAlgebra newValueWeight() {
         return TypeWeight.get().newValue();
+    }
+    
+    /**
+     * Get log used for analysis.
+     * 
+     * @return log used for analysis
+     */
+    private Log getLog() {
+        return Options.get().get(OptionsMessages.LOG);
+    }
+    
+    private static String getQuantitativeBound(ValueArrayAlgebra bounds, Expression subtractNumericalFrom) {
+        ValueAlgebra bound = bounds.getType().getEntryType().newValue();
+        bounds.get(bound, 0);
+        if (subtractNumericalFrom != null) {
+            Value subtractFrom = UtilEvaluatorExplicit.evaluate(subtractNumericalFrom);
+            OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, subtractFrom.getType(), bound.getType());
+            subtract.apply(bound, subtractFrom, bound);
+        }
+        return bound.toString();
     }
 }

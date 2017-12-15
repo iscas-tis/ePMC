@@ -26,6 +26,7 @@ import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionMultiObjective;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionReward;
+import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.Scheduler;
 import epmc.graph.explicit.EdgeProperty;
@@ -224,6 +225,22 @@ final class MultiObjectiveUtils {
         }
         return numQuantitative == 1;
     }
+    
+
+    public static boolean isSteadyState(ExpressionMultiObjective property) {
+        boolean foundSteadyState = false;
+        boolean allSteadyState = true;
+        for (Expression operand : property.getOperands()) {
+            assert ExpressionQuantifier.is(operand);
+            ExpressionQuantifier quantifier = ExpressionQuantifier.as(operand);
+            if (ExpressionSteadyState.is(quantifier.getQuantified())) {
+                foundSteadyState = true;
+            } else {
+                allSteadyState = false;
+            }
+        }
+        return foundSteadyState && allSteadyState;
+    }
 
     private static ValueArrayAlgebra rewardsToWeighted(
             IterationRewards rewards, ValueArrayAlgebra weights) {
@@ -333,7 +350,7 @@ final class MultiObjectiveUtils {
 
     private static boolean isIs(Expression expression) {
         assert expression != null;
-        if (!(expression instanceof ExpressionQuantifier)) {
+        if (!ExpressionQuantifier.is(expression)) {
             return false;
         }
         ExpressionQuantifier expressionQuantifier = (ExpressionQuantifier) expression;
