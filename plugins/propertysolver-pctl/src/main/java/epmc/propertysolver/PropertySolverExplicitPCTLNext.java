@@ -146,10 +146,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         assert pathTemporal != null;
         TypeAlgebra typeWeight = TypeWeight.get();
         Value one = UtilValue.newValue(typeWeight, 1);
-        ValueArray resultValues = newValueArrayWeight(computeForStates.size());
-        //        ValueArray result = typeArray.newValue(computeForStates.length());
-
-        solveNext(pathTemporal, inner, min);
+        ValueArray resultValues = solveNext(pathTemporal, inner, min);
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         if (negate) {
             ValueAlgebra entry = typeWeight.newValue();            
@@ -162,7 +159,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         return UtilGraph.newStateMap(computeForStates.clone(), resultValues);
     }
 
-    private void solveNext(ExpressionTemporalNext pathTemporal, StateMapExplicit inner, boolean min) {
+    private ValueArrayAlgebra solveNext(ExpressionTemporalNext pathTemporal, StateMapExplicit inner, boolean min) {
         TypeAlgebra typeWeight = TypeWeight.get();
         ValueAlgebra zero = UtilValue.newValue(typeWeight, 0);
         ValueAlgebra one = UtilValue.newValue(typeWeight, 1);
@@ -224,6 +221,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
                 values.set(entry, state);
             }
         }
+        return values;
     }
 
     @Override

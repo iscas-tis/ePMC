@@ -52,6 +52,8 @@ public final class ModelNamesOwn {
     
     public final static String PAUL_GAINER_SMALL = PREFIX + "model-mirollo-strogatz-6-10-0.1-1-0-False.prism";
     public final static String PAUL_GAINER_MEDIUM = PREFIX + "model-mirollo-strogatz-7-10-0.1-1-0-False.prism";
+    /** Model testing correct recognition of PCTL properties. */
+    public final static String PCTL_RECOGNITION_TEST = PREFIX + "pctl-recognition-test.prism";
     
     /**
      * Private constructor to prevent instantiation of this class.

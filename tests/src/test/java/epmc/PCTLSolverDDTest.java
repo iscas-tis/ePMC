@@ -243,4 +243,31 @@ public class PCTLSolverDDTest {
         System.out.println(valid.countNodes());
         close(options);
     }
+    
+    /**
+     * Test case by Andrea Turrini.
+     * Tests correctness of PCTL X operator.
+     */
+    // TODO PCTL next operator currently does not for for DD engine
+    @Ignore
+    @Test
+    public void pctlRecognition() {
+        Options options = prepareOptions();
+        double tolerance = 1E-10;
+        options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
+        options.set(OptionsModelChecker.ENGINE, EngineDD.class);
+        options.set(TestHelper.PRISM_FLATTEN, true);
+        Value result;
+        
+        result = computeResult(options, ModelNamesOwn.PCTL_RECOGNITION_TEST, "P=? [X y=1]");
+        assertEquals("1/5", result, tolerance);
+        
+        result = computeResult(options, ModelNamesOwn.PCTL_RECOGNITION_TEST, "P>=1[(x=1) U (P>=1 [X y=1])]");
+        assertEquals(false, result);
+        
+        result = computeResult(options, ModelNamesOwn.PCTL_RECOGNITION_TEST, "P>=1[(x=1) U (P=0.2 [X y=1])]");
+        assertEquals(true, result);
+
+        close(options);
+    }
 }
