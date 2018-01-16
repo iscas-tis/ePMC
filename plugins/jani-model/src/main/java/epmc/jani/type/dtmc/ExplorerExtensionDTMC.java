@@ -82,7 +82,7 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         zero = TypeWeightTransition.get().getZero();
         one = TypeWeightTransition.get().getOne();
         divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeightTransition.get(), TypeWeightTransition.get());
-        eq = ContextValue.get().getEvaluator(OperatorEq.EQ, TypeWeightTransition.get(), TypeWeightTransition.get());
+        eq = ContextValue.get().getEvaluatorOrNull(OperatorEq.EQ, TypeWeightTransition.get(), TypeWeightTransition.get());
         add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
         set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeightTransition.get(), TypeWeightTransition.get());
         cmp = TypeBoolean.get().newValue();
@@ -126,11 +126,13 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         for (int succ = 0; succ < numSuccessors; succ++) {
             add.apply(dtmcSum, dtmcSum, systemWeight.get(succ));
         }
-        eq.apply(cmp, dtmcSum, one);
-        if (!cmp.getBoolean()) {
-            for (int succ = 0; succ < numSuccessors; succ++) {
-                divide.apply(dtmcAligned, systemWeight.get(succ), dtmcSum);
-                systemWeight.set(succ, dtmcAligned);
+        if (eq != null) {
+            eq.apply(cmp, dtmcSum, one);
+            if (!cmp.getBoolean()) {
+                for (int succ = 0; succ < numSuccessors; succ++) {
+                    divide.apply(dtmcAligned, systemWeight.get(succ), dtmcSum);
+                    systemWeight.set(succ, dtmcAligned);
+                }
             }
         }
     }

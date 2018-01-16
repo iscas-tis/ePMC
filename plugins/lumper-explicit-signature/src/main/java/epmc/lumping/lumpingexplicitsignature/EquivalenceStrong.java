@@ -22,6 +22,7 @@ package epmc.lumping.lumpingexplicitsignature;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
@@ -56,7 +57,7 @@ public final class EquivalenceStrong implements Equivalence {
     private ValueArray successorWeights;
     private int[] predecessorsFromTo;
     private int[] predecessorStates;
-    private Map<Signature,TIntList> signatureToStates = new TreeMap<>();
+    private Map<Signature,TIntList> signatureToStates = new HashMap<>();
     private TIntIntMap blockToNumber = new TIntIntHashMap(10, 0.5f, -1, -1);
     private boolean[] blocksSeen;
     private int[] blocksArr;
@@ -117,8 +118,7 @@ public final class EquivalenceStrong implements Equivalence {
     }
 
     @Override
-    public List<int[]> splitBlock(int[] block, int[] partition)
-    {
+    public List<int[]> splitBlock(int[] block, int[] partition) {
         newBlocks.clear();
         signatureToStates.clear();
         int blockSize = block.length;
@@ -297,7 +297,7 @@ public final class EquivalenceStrong implements Equivalence {
         quotient.addSettableGraphProperty(CommonProperties.SEMANTICS,
                 original.getGraphProperty(CommonProperties.SEMANTICS).getType());
         quotient.setGraphProperty(CommonProperties.SEMANTICS,
-                original.getGraphPropertyObject(CommonProperties.SEMANTICS));
+                original.getGraphProperty(CommonProperties.SEMANTICS));
         return quotient;
     }
 

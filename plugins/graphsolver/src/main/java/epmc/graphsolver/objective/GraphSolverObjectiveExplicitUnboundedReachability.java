@@ -33,6 +33,7 @@ public final class GraphSolverObjectiveExplicitUnboundedReachability implements 
     private BitSet target;
     private ValueArrayAlgebra result;
     private BitSet zeroSet;
+    private BitSet computeFor;
 
     @Override
     public void setGraph(GraphExplicit graph) {
@@ -89,5 +90,13 @@ public final class GraphSolverObjectiveExplicitUnboundedReachability implements 
 
     public BitSet getZeroSet() {
         return zeroSet;
+    }
+
+    public void setComputeFor(BitSet computeFor) {
+        this.computeFor = computeFor;
+    }
+    
+    public BitSet getComputeFor() {
+        return computeFor;
     }
 }

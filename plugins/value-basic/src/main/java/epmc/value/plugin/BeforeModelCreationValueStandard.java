@@ -88,6 +88,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorNeDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorNeInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorNot;
 import epmc.value.operatorevaluator.OperatorEvaluatorOr;
+import epmc.value.operatorevaluator.OperatorEvaluatorOverflowDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorPowDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetAlgebraInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorSetArrayArray;
@@ -102,6 +103,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorSqrtDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorSubtractInterval;
+import epmc.value.operatorevaluator.OperatorEvaluatorUnderflowDouble;
 
 public final class BeforeModelCreationValueStandard implements BeforeModelCreation {
     private final static String IDENTIFIER = "before-model-creation-value-standard";
@@ -193,6 +195,8 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorSetEnumEnum.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorSetObjectObject.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorEqEnum.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorUnderflowDouble.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorOverflowDouble.Builder.class);
     }
 
     private static void addTypes() {

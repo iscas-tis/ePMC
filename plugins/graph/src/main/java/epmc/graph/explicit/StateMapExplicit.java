@@ -74,7 +74,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         this.helper = type.newValue();
         this.helper2 = type.newValue();
         this.scheduler = scheduler;
-        this.eq = ContextValue.get().getEvaluator(OperatorEq.EQ, type, type);
+        this.eq = ContextValue.get().getEvaluatorOrNull(OperatorEq.EQ, type, type);
         cmp = TypeBoolean.get().newValue();
     }
 
@@ -181,8 +181,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
     }
 
     @Override
-    public StateMap apply(Operator identifier, StateMap operand)
-    {
+    public StateMap apply(Operator identifier, StateMap operand) {
         assert !closed();
         assert identifier != null;
         assert operand != null;

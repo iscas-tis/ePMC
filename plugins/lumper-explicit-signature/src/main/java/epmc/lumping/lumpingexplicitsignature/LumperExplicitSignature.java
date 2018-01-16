@@ -219,11 +219,11 @@ final class LumperExplicitSignature implements LumperExplicit {
 
         comparator = new ComparatorSmallFirst();
 
-        refinementLoopMultiThread(this, equivalence, comparator);
-        //        refinementLoopSingleThread(this, equivalence, comparator);
+//        refinementLoopMultiThread(this, equivalence, comparator);
+        refinementLoopSingleThread(this, equivalence, comparator);
 
         quotientGraph = equivalence.computeQuotient(this.originalToQuotientState, blocks);
-        GraphSolverObjectiveExplicit quotient;
+        System.out.println("NN " + quotientGraph.getNumNodes());
         if (objective instanceof GraphSolverObjectiveExplicitLump) {
             GraphSolverObjectiveExplicitLump quotientLump = new GraphSolverObjectiveExplicitLump();
             quotientLump.setGraph(quotientGraph);
@@ -282,7 +282,7 @@ final class LumperExplicitSignature implements LumperExplicit {
     }
 
     private void refinementLoopSingleThread(LumperExplicitSignature lumper, Equivalence equivalence, Comparator<TodoElem> comparator) {
-        this.todo = new BlocksTodoSynchronised(comparator, blocks, original.getNumNodes());
+        this.todo = new BlocksTodoUnsynchronised(comparator, blocks, original.getNumNodes());
         int blocksSize = blocks.size();
         for (int i = 0; i < blocksSize; i++) {
             todo.add(i);
@@ -296,7 +296,6 @@ final class LumperExplicitSignature implements LumperExplicit {
             int[] block = blocks.get(blockNr);
 
             List<int[]> newBlocks = equivalence.splitBlock(block, this.originalToQuotientState);
-
             commit(blockNr, newBlocks);
         }
     }

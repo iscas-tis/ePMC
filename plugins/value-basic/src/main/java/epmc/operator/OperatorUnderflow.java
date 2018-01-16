@@ -18,22 +18,10 @@
 
  *****************************************************************************/
 
-package epmc.graphsolver.objective;
+package epmc.operator;
 
-import epmc.graph.explicit.GraphExplicit;
-import epmc.util.BitSet;
-import epmc.value.ValueArray;
+import epmc.operator.Operator;
 
-public interface GraphSolverObjectiveExplicit {
-    void setGraph(GraphExplicit graph);
-
-    GraphExplicit getGraph();
-
-    void setResult(ValueArray result);
-
-    ValueArray getResult();
-
-    default BitSet getComputeFor() {
-        return null;
-    }
+public enum OperatorUnderflow implements Operator {
+    UNDERFLOW
 }

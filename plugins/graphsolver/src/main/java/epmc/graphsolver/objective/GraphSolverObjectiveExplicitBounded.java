@@ -21,6 +21,7 @@
 package epmc.graphsolver.objective;
 
 import epmc.graph.explicit.GraphExplicit;
+import epmc.util.BitSet;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
@@ -31,6 +32,7 @@ public final class GraphSolverObjectiveExplicitBounded implements GraphSolverObj
     private ValueArrayAlgebra values;
     private Value time;
     private ValueArrayAlgebra result;
+    private BitSet computeFor;
 
     @Override
     public void setGraph(GraphExplicit graph) {
@@ -74,5 +76,13 @@ public final class GraphSolverObjectiveExplicitBounded implements GraphSolverObj
     @Override
     public ValueArrayAlgebra getResult() {
         return result;
+    }
+
+    public void setComputeFor(BitSet computeFor) {
+        this.computeFor = computeFor;
+    }
+    
+    public BitSet getComputeFor() {
+        return computeFor;
     }
 }

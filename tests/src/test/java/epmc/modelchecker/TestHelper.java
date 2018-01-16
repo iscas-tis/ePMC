@@ -134,6 +134,7 @@ public final class TestHelper {
             Object propertyIdentifier,
             Options options,
             List<InputStream> inputs, InputStream propertyStream) {
+        processBeforeModelLoading(options);
         assert options != null;
         assert inputs != null;
         for (InputStream input : inputs) {
@@ -302,7 +303,6 @@ public final class TestHelper {
         Log log = prepareLog(options, logType);
         options.set(OptionsMessages.LOG, log);
         ContextValue.set(new ContextValue());
-        processBeforeModelLoading(options);
     }
 
     public static Options prepareOptions(LogType logType,

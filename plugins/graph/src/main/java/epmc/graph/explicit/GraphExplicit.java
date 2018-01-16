@@ -287,7 +287,6 @@ public interface GraphExplicit extends LowLevel {
                 return succNr;
             }
         }
-        assert false;
         return -1;
     }
 

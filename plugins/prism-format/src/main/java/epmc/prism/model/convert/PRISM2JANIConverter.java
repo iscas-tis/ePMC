@@ -912,11 +912,11 @@ public final class PRISM2JANIConverter {
                     .build();
 
             if (allInteger) {
-                result = new ExpressionOperator.Builder()
-                        .setOperands(result)
-                        .setOperator(OperatorCeil.CEIL)
-                        .setPositional(positional)
-                        .build();
+//                result = new ExpressionOperator.Builder()
+  //                      .setOperands(result)
+    //                    .setOperator(OperatorCeil.CEIL)
+      //                  .setPositional(positional)
+        //                .build();
             }
             return result;
         } else {
