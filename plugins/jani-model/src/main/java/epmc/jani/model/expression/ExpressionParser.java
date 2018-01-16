@@ -197,7 +197,7 @@ public final class ExpressionParser implements JANINode {
      * @return JANI representation
      */
     public static JsonValue generateExpression(ModelJANI model, Expression expression) {
-        assert model != null;
+        assert model != null : expression;
         assert expression != null;
         ExpressionParser parser = new ExpressionParser(model, Collections.emptyMap(), false);
         return parser.matchExpression(model, expression).generate();

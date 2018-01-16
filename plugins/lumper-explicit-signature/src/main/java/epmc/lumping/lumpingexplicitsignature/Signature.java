@@ -41,6 +41,28 @@ final class Signature {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Signature)) {
+            return false;
+        }
+        Signature other = (Signature) obj;
+        if (this.size != other.size) {
+            return false;
+        }
+        for (int i = 0; i < size; i++) {
+            if (this.blocks[i] != other.blocks[i]) {
+                return false;
+            }
+        }
+        for (int i = 0; i < size; i++) {
+            if (!this.values[i].equals(other.values[i])) {
+                return false;
+            }
+        }
+        return true;
+    }
+    
+    @Override
     public String toString() {
         StringBuilder result = new StringBuilder();
         result.append("{");

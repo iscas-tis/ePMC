@@ -128,7 +128,7 @@ public final class OptionTypeMap<V> implements OptionType {
                 return entry.getKey();
             }
         }
-        assert false : value;
+        assert false : value + " " + map;
         return null;
     }
 

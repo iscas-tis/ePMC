@@ -21,17 +21,15 @@
 package epmc.value.operatorevaluator;
 
 import epmc.operator.Operator;
-import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorOverflow;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
-import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
-import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
 
-public final class OperatorEvaluatorDivideDouble implements OperatorEvaluator {
+public final class OperatorEvaluatorOverflowDouble implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {
         private boolean built;
         private Operator operator;
@@ -58,31 +56,30 @@ public final class OperatorEvaluatorDivideDouble implements OperatorEvaluator {
                 assert type != null;
             }
             built = true;
-            if (operator != OperatorDivide.DIVIDE) {
+            if (operator != OperatorOverflow.OVERFLOW) {
                 return null;
             }
-            if (types.length != 2) {
+            if (!(types.length == 1
+                    && TypeDouble.is(types[0])
+                    || types.length == 0
+                    && TypeDouble.is(TypeReal.get()))) {
                 return null;
             }
-            for (Type type : types) {
-                if (!TypeDouble.is(type) && !TypeInteger.is(type)) {
-                    return null;
-                }
-            }
-            if (!TypeDouble.is(types[0]) && !TypeDouble.is(types[1])
-                    && !TypeDouble.is(TypeReal.get())) {
-                return null;
-            }
-            return new OperatorEvaluatorDivideDouble(this);
+            return new OperatorEvaluatorOverflowDouble(this);
         }
     }
 
-    private OperatorEvaluatorDivideDouble(Builder builder) {
+    private final TypeDouble type;
+
+    private OperatorEvaluatorOverflowDouble(Builder builder) {
+        type = builder.types.length == 0
+                ? TypeDouble.get()
+                        : (TypeDouble) builder.types[0];
     }
 
     @Override
     public Type resultType() {
-        return TypeDouble.get();
+        return type;
     }
 
     @Override
@@ -92,12 +89,6 @@ public final class OperatorEvaluatorDivideDouble implements OperatorEvaluator {
         for (Value operand : operands) {
             assert operand != null;
         }
-        double op1 = UtilValue.getDoubleOrInt(operands[0]);
-        double op2 = UtilValue.getDoubleOrInt(operands[1]);
-        if (op2 == 0.0) {
-            ValueDouble.as(result).set(0);            
-        } else {
-            ValueDouble.as(result).set(op1 / op2);
-        }
+        ValueDouble.as(result).set(Double.MAX_VALUE);
     }
 }

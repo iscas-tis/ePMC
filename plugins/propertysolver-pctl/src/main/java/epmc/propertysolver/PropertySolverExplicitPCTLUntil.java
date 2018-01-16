@@ -33,7 +33,6 @@ import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalRelease;
 import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.TimeBound;
-import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
@@ -261,6 +260,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
             objective.setZeroSink(zeroSet);
             objective.setMin(min);
             objective.setGraph(graph);
+            objective.setComputeFor(computeForStates.getStatesExplicit());
             //                System.out.println(graph);
             //              System.out.println(oneSet);
             configuration.setObjective(objective);
@@ -310,6 +310,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
                 objective.setGraph(graph);
                 objective.setValues(values);
                 objective.setMin(min);
+                objective.setComputeFor(computeForStates.getStatesExplicit());
                 Value time = UtilValue.newValue(TypeInteger.get(), leftBound);
                 objective.setTime(time);
                 configuration.setObjective(objective);

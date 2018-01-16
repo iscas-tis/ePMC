@@ -33,9 +33,11 @@ import epmc.operator.OperatorGt;
 import epmc.operator.OperatorLog;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorOverflow;
 import epmc.operator.OperatorPow;
 import epmc.operator.OperatorSet;
 import epmc.operator.OperatorSubtract;
+import epmc.operator.OperatorUnderflow;
 import epmc.options.Options;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -428,19 +430,24 @@ public final class FoxGlynn {
         }
     }
 
-    public FoxGlynn(ValueReal lambda, ValueReal epsilon)
-    {
+    public FoxGlynn(ValueReal lambda, ValueReal epsilon) {
         this(lambda, getUnderflow(lambda), getOverflow(lambda), epsilon);
     }
 
     private static ValueReal getUnderflow(ValueReal value) {
         assert value != null;
-        return TypeReal.get().getUnderflow();
+        ValueReal underflow = TypeReal.get().newValue();
+        OperatorEvaluator operatorUnderflow = ContextValue.get().getEvaluator(OperatorUnderflow.UNDERFLOW);
+        operatorUnderflow.apply(underflow);
+        return underflow;
     }
 
     private static ValueReal getOverflow(ValueReal value) {
         assert value != null;
-        return TypeReal.get().getOverflow();
+        ValueReal overflow = TypeReal.get().newValue();
+        OperatorEvaluator operatorOverflow = ContextValue.get().getEvaluator(OperatorOverflow.OVERFLOW);
+        operatorOverflow.apply(overflow);
+        return overflow;
     }
 
     public int getLeft() {

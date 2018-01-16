@@ -57,8 +57,7 @@ public interface StateMap extends Closeable, Cloneable {
         getSomeValue(to, getStateSet());
     }
 
-    default StateMap applyWith(Operator operator, StateMap operand)
-    {
+    default StateMap applyWith(Operator operator, StateMap operand) {
         StateMap result = apply(operator, operand);
         close();
         operand.close();

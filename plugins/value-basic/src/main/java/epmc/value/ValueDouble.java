@@ -44,7 +44,9 @@ public final class ValueDouble implements ValueReal, ValueSetString {
     private final TypeDouble type;
     private double value;
     private boolean immutable;
-
+    private final boolean outputNative = Options.get().getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE);
+    private final String format = Options.get().getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
+    
     ValueDouble(TypeDouble type, double value) {
         assert type != null;
         this.type = type;
@@ -113,11 +115,9 @@ public final class ValueDouble implements ValueReal, ValueSetString {
         if (Double.isNaN(value)) {
             return NAN;
         } else {
-            Options options = Options.get();
-            if (options.getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE)) {
+            if (outputNative) {
                 return String.valueOf(value);
             } else {
-                String format = options.getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
                 assert format != null;
                 return String.format(format, value);
             }
