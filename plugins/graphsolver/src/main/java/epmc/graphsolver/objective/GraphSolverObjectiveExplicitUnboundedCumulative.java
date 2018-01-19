@@ -36,6 +36,7 @@ public final class GraphSolverObjectiveExplicitUnboundedCumulative implements Gr
     private List<BitSet> sinks;
     private ValueArrayAlgebra stateRewards;
     private ValueArrayAlgebra result;
+    private BitSet computeFor;
 
     @Override
     public void setGraph(GraphExplicit graph) {
@@ -87,7 +88,6 @@ public final class GraphSolverObjectiveExplicitUnboundedCumulative implements Gr
         return stateRewards;
     }
 
-
     @Override
     public void setResult(ValueArray result) {
         this.result = ValueArrayAlgebra.as(result);
@@ -96,5 +96,14 @@ public final class GraphSolverObjectiveExplicitUnboundedCumulative implements Gr
     @Override
     public ValueArrayAlgebra getResult() {
         return result;
+    }
+
+    public void setComputeFor(BitSet computeFor) {
+        this.computeFor = computeFor;
+    }
+    
+    @Override
+    public BitSet getComputeFor() {
+        return computeFor;
     }
 }

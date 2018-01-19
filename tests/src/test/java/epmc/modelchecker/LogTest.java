@@ -114,7 +114,7 @@ public final class LogTest implements Log {
     }
 
     private String translateTimeStamp(long time) {
-        assert time >= 0;
+        assert time >= 0 : time;
         return UtilMessages.translateTimeStamp(options, timeStarted, time);
     }
 
