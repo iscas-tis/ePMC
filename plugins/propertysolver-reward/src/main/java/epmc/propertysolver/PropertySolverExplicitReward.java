@@ -211,6 +211,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             objective.setGraph(graph);
             objective.setMin(min);
             objective.setSinks(sinks);
+            objective.setComputeFor(((StateSetExplicit) forStates).getStatesExplicit());
             configuration.setObjective(objective);
             configuration.solve();
             values = objective.getResult();
@@ -255,8 +256,8 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         ValueAlgebra weighted = TypeWeight.get().newValue();
         int numNodes = graph.getNumNodes();
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
-        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), transReward.getType());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, stateReward.getType(), TypeWeight.get());
         for (int graphNode = 0; graphNode < numNodes; graphNode++) {
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                 continue;
