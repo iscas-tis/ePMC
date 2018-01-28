@@ -24,7 +24,6 @@ import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.MessagesGraph;
 import epmc.graph.Semantics;
@@ -39,9 +38,13 @@ import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.BitStoreableToNumber;
+import epmc.util.RunningInfo;
+import epmc.util.RunningInfo.SendInformation;
 import epmc.util.StopWatch;
 import epmc.value.Type;
 import epmc.value.ValueObject;
+
+import static epmc.util.RunningInfo.startWithInfo;
 
 /**
  * Build a graph representation from an explorer.
@@ -49,6 +52,35 @@ import epmc.value.ValueObject;
  * @author Ernst Moritz Hahn
  */
 public final class GraphBuilderExplorer {
+    private final static class Info implements SendInformation {
+        private int lastState;
+        private int currentState;
+        private int sleepTime;
+        private Log log;
+        
+        private void setSleepTime(int sleepTime) {
+            this.sleepTime = sleepTime;
+        }
+        
+        private void setLog(Log log) {
+            this.log = log;
+        }
+        
+        private void setCurrentState(int currentState) {
+            this.currentState = currentState;
+        }
+        
+        @Override
+        public void call() {
+            int delta = currentState - lastState;
+            delta /= sleepTime;
+            lastState = currentState;
+            log.send(MessagesGraph.BUILD_MODEL_STATES_EXPLORED,
+                    currentState, delta);
+        }
+        
+    }
+    
     private Explorer explorer;
     private final Set<Object> graphProperties = new LinkedHashSet<>();
     private final Set<Object> nodeProperties = new LinkedHashSet<>();
@@ -57,9 +89,6 @@ public final class GraphBuilderExplorer {
     private GraphExplicitSparse graphStoch;
     private GraphExplicitSparseAlternate graphAlter;
     private Log log;
-    private int lastState;
-    private int currentState;
-    private boolean done;
 
     public void setExplorer(Explorer explorer) {
         assert explorer != null;
@@ -83,58 +112,25 @@ public final class GraphBuilderExplorer {
     }
 
     public void build() {
-        Thread observerThread = constructObserverThread();
-        try {
-            doBuild();
-        } catch (EPMCException e) {
-            done = true;
-            observerThread.interrupt();
-            throw e;
-        } catch (Throwable e) {
-            done = true;
-            observerThread.interrupt();
-            throw new RuntimeException(e);
-        }
-        done = true;
-        observerThread.interrupt();
+        startWithInfo(info -> build(info));
     }
 
-    private Thread constructObserverThread() {
-        Thread observerThread = new Thread(() -> {
-            int sleepTime = 5;
-            try {
-                Thread.sleep(sleepTime * 1000);
-            } catch (Exception e) {
-            }
-            while (!done) {
-                int delta = currentState - lastState;
-                delta /= sleepTime;
-                lastState = currentState;
-                try {
-                    log.send(MessagesGraph.BUILD_MODEL_STATES_EXPLORED, currentState, delta);
-                } catch (Exception e) {
-                }
-                try {
-                    Thread.sleep(sleepTime * 1000);
-                } catch (Exception e) {
-                }
-            }
-        });
-        observerThread.start();
-        return observerThread;
-    }
-
-    private void doBuild() {
+    private void build(RunningInfo runningInfo) {
         Semantics semantics = ValueObject.as(explorer.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean nondet = semantics != null && SemanticsNonDet.isNonDet(semantics);
+        Info info = new Info();
+        info.setSleepTime(5);
+        info.setLog(log);
+        runningInfo.setSleepTime(5000);
+        runningInfo.setInformationSender(info);
         if (nondet) {
-            doBuildAlternate();
+            doBuildAlternate(info);
         } else {
-            doBuildNonAlernate();
+            doBuildNonAlernate(info);
         }
     }
     
-    private void doBuildNonAlernate() {
+    private void doBuildNonAlernate(Info info) {
         assert this.explorer != null;
         assert this.graphProperties != null;
         assert this.nodeProperties != null;
@@ -153,7 +149,8 @@ public final class GraphBuilderExplorer {
         ExplorerNode currentNode = explorer.newNode();
         ExplorerNode[] successorNodes = new ExplorerNode[1];
         successorNodes[0] = explorer.newNode();
-        this.currentState = 0;
+        int currentState = 0;
+        info.setCurrentState(currentState);
         graphStoch = new GraphExplicitSparse();
         this.graph = graphStoch;
         for (Object property : graphProperties) {
@@ -189,8 +186,8 @@ public final class GraphBuilderExplorer {
             graphEdgeProperties[edgePropNr] = graph.addSettableEdgeProperty(property, type);
             edgePropNr++;
         }
-        lastState = 0;
-        this.currentState = 0;
+        currentState = 0;
+        info.setCurrentState(currentState);
         while (currentState <= lastNumber) {
             nodeStore.fromNumber(currentNode, currentState);
             explorer.queryNode(currentNode);
@@ -208,6 +205,7 @@ public final class GraphBuilderExplorer {
                 lastNumber = Math.max(numberSucc, lastNumber);
             }
             currentState++;
+            info.setCurrentState(currentState);
         }
         for (int initState = 0; initState < numInitStates; initState++) {
             this.graph.getInitialNodes().set(initState);
@@ -224,7 +222,7 @@ public final class GraphBuilderExplorer {
         }
     }
 
-    private void doBuildAlternate() {
+    private void doBuildAlternate(Info info) {
         assert this.explorer != null;
         assert this.graphProperties != null;
         assert this.nodeProperties != null;
@@ -243,8 +241,8 @@ public final class GraphBuilderExplorer {
         ExplorerNode currentNode = explorer.newNode();
         ExplorerNode[] successorNodes = new ExplorerNode[1];
         successorNodes[0] = explorer.newNode();
-        this.currentState = 0;
-
+        int currentState = 0;
+        info.setCurrentState(currentState);
         int numStates = lastNumber + 1;
         graphAlter = new GraphExplicitSparseAlternate();
         this.graph = graphAlter;
@@ -284,8 +282,8 @@ public final class GraphBuilderExplorer {
             edgePropNr++;
         }
         int nondetNr = numStates;
-        lastState = 0;
-        this.currentState = 0;
+        currentState = 0;
+        info.setCurrentState(currentState);
         while (currentState <= lastNumber) {
             nodeStore.fromNumber(currentNode, currentState);
             explorer.queryNode(currentNode);
@@ -321,6 +319,7 @@ public final class GraphBuilderExplorer {
                 nondetNr++;
             }
             currentState++;
+            info.setCurrentState(currentState);
         }
         for (int initState = 0; initState < numInitStates; initState++) {
             this.graph.getInitialNodes().set(initState);
