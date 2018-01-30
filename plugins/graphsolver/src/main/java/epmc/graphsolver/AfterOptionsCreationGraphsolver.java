@@ -25,6 +25,7 @@ import java.util.Map;
 import epmc.graphsolver.preprocessor.PreprocessorExplicitMCMDPOne;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
+import epmc.options.OptionTypeLong;
 import epmc.options.OptionTypeStringListSubset;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
@@ -90,6 +91,14 @@ public final class AfterOptionsCreationGraphsolver implements AfterOptionsCreati
         .setType(lumperDDType)
         .setCommandLine().setGui().setWeb()
         .setCategory(category).build();
+        
+        options.addOption().setBundleName(OptionsGraphsolver.OPTIONS_GRAPHSOLVER)
+        .setIdentifier(OptionsGraphsolver.GRAPHSOLVER_UPDATE_DELAY)
+        .setType(OptionTypeLong.getTypeLong())
+        .setDefault(1000L)
+        .setCommandLine().setGui().setWeb()
+        .setCategory(category)
+        .build();
     }
 
 }

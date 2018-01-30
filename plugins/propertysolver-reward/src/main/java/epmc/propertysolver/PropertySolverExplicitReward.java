@@ -290,14 +290,19 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         if (rewardType.isReachability()) {
             cumulRewIdx = sinks.size();
         }
-        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
-        for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        // TODO check this again
+        int numNodes = graph.getNumNodes();
+        for (int graphNode = 0; graphNode < numNodes; graphNode++) {
+            Player player = playerProp.getEnum(graphNode);
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
+                if (player == Player.ONE) {
+                    cumulRewIdx++;
+                }
                 continue;
             }
             int numSuccessors = graph.getNumSuccessors(graphNode);
             Value nodeRew = stateReward.get(graphNode);
-            Player player = playerProp.getEnum(graphNode);
             EdgeProperty weight = graph.getEdgeProperty(CommonProperties.WEIGHT);
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 set.apply(acc, nodeRew);

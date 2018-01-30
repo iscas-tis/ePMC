@@ -41,4 +41,6 @@ public enum OptionsGraphsolver {
 
     GRAPHSOLVER_LUMPER_DD,
     GRAPHSOLVER_DD_LUMPER_CLASS,
+    
+    GRAPHSOLVER_UPDATE_DELAY,
 }
