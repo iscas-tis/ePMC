@@ -24,7 +24,8 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_ctmc_bounded(double *fg, int left, int right,
         int numStates, int *stateBounds, int *targets, double *weights,
-        double *values) {
+        double *values,
+        volatile int *numIterationsFeedback) {
     double *presValues = malloc(sizeof(double) * numStates);
     if (presValues == NULL) {
         return OUT_OF_MEMORY;
@@ -38,6 +39,7 @@ epmc_error_t double_ctmc_bounded(double *fg, int left, int right,
         presValues[state] = 0.0;
         nextValues[state] = 0.0;
     }
+    *numIterationsFeedback = 0;
     for (int i = right - left; i >= 0; i--) {
         double fgWeight = fg[i];
         for (int state = 0; state < numStates; state++) {
@@ -56,6 +58,7 @@ epmc_error_t double_ctmc_bounded(double *fg, int left, int right,
         double *swap = presValues;
         presValues = nextValues;
         nextValues = swap;
+        (*numIterationsFeedback)++;
     }
     for (int i = left - 1; i >= 0; i--) {
         for (int state = 0; state < numStates; state++) {
@@ -73,6 +76,7 @@ epmc_error_t double_ctmc_bounded(double *fg, int left, int right,
         double *swap = presValues;
         presValues = nextValues;
         nextValues = swap;
+        (*numIterationsFeedback)++;
     }
     for (int state = 0; state < numStates; state++) {
         values[state] = presValues[state];

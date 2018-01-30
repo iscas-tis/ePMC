@@ -25,7 +25,8 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_mdp_bounded_cumulative_discounted(int bound, double discount, int numStates,
         int *stateBounds, int *nondetBounds, int *targets, double *weights,
-        int min, double *values, double *cumul) {
+        int min, double *values, double *cumul,
+        volatile int *numIterationsFeedback) {
     double optInitValue = min ? INFINITY : -INFINITY;
     double *presValues = values;
     double *nextValues = malloc(sizeof(double) * numStates);
@@ -38,6 +39,7 @@ epmc_error_t double_mdp_bounded_cumulative_discounted(int bound, double discount
         nextValues[state] = 0.0;
     }
     double nextStateProb;
+    *numIterationsFeedback = 0;
     for (int i = 0; i < bound; i++) {
         for (int state = 0; state < numStates; state++) {
             double presStateProb = presValues[state];
@@ -62,6 +64,7 @@ epmc_error_t double_mdp_bounded_cumulative_discounted(int bound, double discount
         double *swap = nextValues;
         nextValues = presValues;
         presValues = swap;
+        *numIterationsFeedback = i;
     }
     for (int state = 0; state < numStates; state++) {
         values[state] = presValues[state];

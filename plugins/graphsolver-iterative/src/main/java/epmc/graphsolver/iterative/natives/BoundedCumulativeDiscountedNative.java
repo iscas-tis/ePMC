@@ -36,11 +36,13 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
 import epmc.util.BitSet;
 import epmc.util.ProblemsUtil;
+import epmc.util.RunningInfo;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeWeight;
@@ -253,8 +255,12 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
         double discountDouble = discount.getDouble();
-
-        int code = IterationNative.double_dtmc_bounded_cumulative_discounted(bound, discountDouble, numStates, stateBounds, targets, weights, valuesMem, cumulMem);
+        int code = RunningInfo.startWithInfo(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            info.setTotalNumberIterations(bound);
+            return IterationNative.double_dtmc_bounded_cumulative_discounted(bound, discountDouble, numStates, stateBounds, targets, weights, valuesMem, cumulMem, info.createNumIterations());
+        });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -271,8 +277,13 @@ public final class BoundedCumulativeDiscountedNative implements GraphSolverExpli
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
         double discountDouble = discount.getDouble();
 
-        int code = IterationNative.double_mdp_bounded_cumulative_discounted(bound, discountDouble, numStates, stateBounds,
-                nondetBounds, targets, weights, min ? 1 : 0, valuesMem, cumulMem);
+        int code = RunningInfo.startWithInfo(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            info.setTotalNumberIterations(bound);
+            return IterationNative.double_mdp_bounded_cumulative_discounted(bound, discountDouble, numStates, stateBounds,
+                nondetBounds, targets, weights, min ? 1 : 0, valuesMem, cumulMem, info.createNumIterations());
+        });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
