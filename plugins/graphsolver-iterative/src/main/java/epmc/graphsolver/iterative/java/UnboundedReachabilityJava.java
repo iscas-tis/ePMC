@@ -35,6 +35,7 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
 import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
@@ -54,6 +55,7 @@ import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.util.BitSet;
+import epmc.util.RunningInfo;
 import epmc.util.StopWatch;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -226,17 +228,21 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
-        if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            dtmcUnboundedJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
-        } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
-        } else {
-            assert false : iterGraph.getClass();
-        }
+        RunningInfo.startWithInfoVoid(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
+                dtmcUnboundedJacobiJava(info, asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
+            } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
+                dtmcUnboundedGaussseidelJava(info, asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
+            } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
+                mdpUnboundedJacobiJava(info, asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
+            } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
+                mdpUnboundedGaussseidelJava(info, asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, numIterations);
+            } else {
+                assert false : iterGraph.getClass();
+            }
+        });
         log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
                 timer.getTimeSeconds());
     }
@@ -296,7 +302,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
 
     /* implementation of iteration algorithms */    
 
-    private void dtmcUnboundedJacobiJava(GraphExplicitSparse graph,
+    private void dtmcUnboundedJacobiJava(Info info, GraphExplicitSparse graph,
             ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance,
             int[] numIterationsResult) {
@@ -342,6 +348,8 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
             swap = presValues;
             presValues = nextValues;
             nextValues = swap;
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
@@ -349,7 +357,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         numIterationsResult[0] = iterations;
     }
 
-    private void dtmcUnboundedGaussseidelJava(GraphExplicitSparse graph,
+    private void dtmcUnboundedGaussseidelJava(Info info, GraphExplicitSparse graph,
             ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance,
             int[] numIterationsResult) {
@@ -388,6 +396,8 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
@@ -395,7 +405,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     }
 
     private void mdpUnboundedJacobiJava(
-            GraphExplicitSparseAlternate graph, boolean min,
+            Info info, GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double tolerance,
             int[] numIterationsResult) {
@@ -456,6 +466,8 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
             ValueArrayAlgebra swap = nextValues;
             nextValues = presValues;
             presValues = swap;
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
@@ -464,7 +476,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
     }
 
     private void mdpUnboundedGaussseidelJava(
-            GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
+            Info info, GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance,
             int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
@@ -518,6 +530,8 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());

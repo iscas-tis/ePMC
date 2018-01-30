@@ -20,22 +20,26 @@ final class IterationNative {
     native static int double_dtmc_unbounded_jacobi(int relative,
             double precision, int numStates, int[] stateBounds,
             int[] targets, double[] weights, double[] values,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_dtmc_unbounded_gaussseidel(int relative,
             double precision, int numStates, int[] stateBounds,
             int[] targets, double[] weights, double[] values,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_dtmc_unbounded_cumulative_jacobi(int relative,
             double precision, int numStates, int[] stateBounds,
             int[] targets, double[] weights, double[] values, double[] cumul,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_dtmc_unbounded_cumulative_gaussseidel(int relative,
             double precision, int numStates, int[] stateBounds,
             int[] targets, double[] weights, double[] values, double[] cumul,
-            int[] iterationsResult, Memory numIterations, Memory difference);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_ctmc_bounded(double[] fg, int left, int right,
             int numStates, int[] stateBounds, int[] targets,
@@ -51,25 +55,29 @@ final class IterationNative {
             double precision, int numStates,
             int[] stateBounds, int[] nondetBounds, int[] targets,
             double[] weights, int min, double[] values,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_mdp_unbounded_gaussseidel(int relative,
             double precision, int numStates,
             int[] stateBounds, int[] nondetBounds, int[] targets,
             double[] weights, int min, double[] values,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_mdp_unbounded_cumulative_jacobi(int relative,
             double precision, int numStates,
             int[] stateBounds, int[] nondetBounds, int[] targets,
             double[] weights, int min, double[] values, double[] cumul,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_mdp_unbounded_cumulative_gaussseidel(int relative,
             double precision, int numStates,
             int[] stateBounds, int[] nondetBounds, int[] targets,
             double[] weights, int min, double[] values, double[] cumul,
-            int[] iterationsResult);
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
 
     native static int double_mdp_bounded(int bound, int numStates,
             int[] stateBounds, int[] nondetBounds, int[] targets,
