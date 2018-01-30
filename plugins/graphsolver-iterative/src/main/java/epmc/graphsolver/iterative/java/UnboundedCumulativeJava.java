@@ -35,6 +35,7 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
 import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
@@ -54,6 +55,7 @@ import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.util.BitSet;
+import epmc.util.RunningInfo;
 import epmc.util.StopWatch;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -244,17 +246,21 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
-        if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            dtmcUnboundedCumulativeJacobiJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
-        } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            dtmcUnboundedCumulativeGaussseidelJava(asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
-            mdpUnboundedCumulativeJacobiJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
-        } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
-            mdpUnboundedCumulativeGaussseidelJava(asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
-        } else {
-            assert false;
-        }
+        RunningInfo.startWithInfoVoid(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
+                dtmcUnboundedCumulativeJacobiJava(info, asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
+            } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
+                dtmcUnboundedCumulativeGaussseidelJava(info, asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
+            } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
+                mdpUnboundedCumulativeJacobiJava(info, asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
+            } else if (isSparseMDPJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {
+                mdpUnboundedCumulativeGaussseidelJava(info, asSparseNondet(iterGraph), min, inputValues, stopCriterion, precision, cumulativeStateRewards, numIterations);
+            } else {
+                assert false;
+            }
+        });
         log.send(MessagesGraphSolverIterative.ITERATING_DONE, numIterations[0],
                 timer.getTimeSeconds());
     }
@@ -312,7 +318,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         return (GraphExplicitSparse) graph;
     }
 
-    private void dtmcUnboundedCumulativeJacobiJava(GraphExplicitSparse graph,
+    private void dtmcUnboundedCumulativeJacobiJava(Info info, GraphExplicitSparse graph,
             ValueArray values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul,
             int[] numIterationsResult) {
@@ -356,6 +362,8 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             swap = presValues;
             presValues = nextValues;
             nextValues = swap;
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
@@ -363,7 +371,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         setArray.apply(values, presValues);
     }
 
-    private void dtmcUnboundedCumulativeGaussseidelJava(GraphExplicitSparse graph,
+    private void dtmcUnboundedCumulativeGaussseidelJava(Info info, GraphExplicitSparse graph,
             ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul,
             int[] numIterations) {
@@ -400,6 +408,8 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
@@ -407,7 +417,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     }
 
     private void mdpUnboundedCumulativeJacobiJava(
-            GraphExplicitSparseAlternate graph, boolean min,
+            Info info, GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, IterationStopCriterion stopCriterion,
             double tolerance, ValueArrayAlgebra cumul,
             int[] numIterationsResult) {
@@ -467,6 +477,8 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             ValueArrayAlgebra swap = nextValues;
             nextValues = presValues;
             presValues = swap;
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());
@@ -475,10 +487,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
     }
 
     private void mdpUnboundedCumulativeGaussseidelJava(
-            GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
+            Info info, GraphExplicitSparseAlternate graph, boolean min, ValueArrayAlgebra values,
             IterationStopCriterion stopCriterion, double tolerance, ValueArrayAlgebra cumul,
-            int[] numIterationsResult)
-    {
+            int[] numIterationsResult) {
         TypeWeight typeWeight = TypeWeight.get();
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getStateBoundsJava();
@@ -529,6 +540,8 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
                 compDiff(distance, presStateProb, nextStateProb, stopCriterion);
                 values.set(nextStateProb, state);
             }
+            info.setNumIterations(iterations);
+            info.setDifference(distance);
             iterations++;
             gtEvaluator.apply(cmp, distance, precisionValue);
         } while (cmp.getBoolean());

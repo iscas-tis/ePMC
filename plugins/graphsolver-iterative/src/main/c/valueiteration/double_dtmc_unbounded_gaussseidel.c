@@ -25,7 +25,8 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_dtmc_unbounded_gaussseidel(int relative,
         double precision, int numStates, int *stateBounds, int *targets,
-        double *weights, double *values, int *iterationsResult) {
+        double *weights, double *values, int *iterationsResult,
+        volatile int *numIterationsFeedback, volatile double *differenceFeedback) {
     double maxDiff;
     int iterations = 0;
     do {
@@ -47,6 +48,8 @@ epmc_error_t double_dtmc_unbounded_gaussseidel(int relative,
             maxDiff = diff > maxDiff ? diff : maxDiff;
             values[state] = nextStateProb;
         }
+        *numIterationsFeedback = iterations;
+        *differenceFeedback = maxDiff;
         iterations++;
     } while (maxDiff > precision);
     iterationsResult[0] = iterations;

@@ -7,13 +7,14 @@ import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.StopWatch;
+import epmc.value.ValueReal;
 import epmc.util.RunningInfo.SendInformation;
 
 public final class Info implements SendInformation {
     private final StopWatch watch = new StopWatch(true);
     private final Log log = Options.get().get(OptionsMessages.LOG);
-    private int numIterations;
-    private double difference;
+    private Integer numIterations;
+    private Double difference;
     private Memory numIterationsMemory;
     private Memory differenceMemory;
     
@@ -32,6 +33,10 @@ public final class Info implements SendInformation {
     public void setDifference(Memory difference) {
         this.differenceMemory = difference;
     }
+    
+    public void setDifference(ValueReal distance) {
+        this.difference = distance.getDouble();
+    }
 
     public Memory createNumIterations() {
         numIterationsMemory = new Memory(Integer.BYTES);
@@ -45,14 +50,16 @@ public final class Info implements SendInformation {
     
     @Override
     public void call() {
-        int numIterations = numIterationsMemory != null
+        Integer numIterations = numIterationsMemory != null
                 ? numIterationsMemory.getInt(0)
                 : this.numIterations;
-        double difference = differenceMemory != null
+        Double difference = differenceMemory != null
                 ? differenceMemory.getDouble(0)
                 : this.difference;
-        log.send(MessagesGraphSolverIterative.ITERATING_PROGRESS,
-                numIterations, Double.toString(difference),
-                Math.round(watch.getTime() / 1000.0));
-    }    
+        if (numIterations != null && difference != null) {
+            log.send(MessagesGraphSolverIterative.ITERATING_PROGRESS,
+                    numIterations, Double.toString(difference),
+                    Math.round(watch.getTime() / 1000.0));
+        }
+    }
 }

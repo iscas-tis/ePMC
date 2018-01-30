@@ -271,8 +271,12 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
-
-        int code = IterationNative.double_dtmc_unbounded_cumulative_jacobi(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem, numIterations);
+        int code = RunningInfo.startWithInfo(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            return IterationNative.double_dtmc_unbounded_cumulative_jacobi(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem, numIterations,
+                    info.createNumIterations(), info.createDifference());
+        });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -311,9 +315,14 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
 
-        int code = IterationNative.double_mdp_unbounded_cumulative_jacobi(relative, tolerance,
+        int code = RunningInfo.startWithInfo(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            return IterationNative.double_mdp_unbounded_cumulative_jacobi(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                min ? 1 : 0, valuesMem, cumulMem, numIterations);
+                min ? 1 : 0, valuesMem, cumulMem, numIterations,
+                info.createNumIterations(), info.createDifference());
+        });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
@@ -331,9 +340,14 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
 
-        int code = IterationNative.double_mdp_unbounded_cumulative_gaussseidel(relative, tolerance,
+        int code = RunningInfo.startWithInfo(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            return IterationNative.double_mdp_unbounded_cumulative_gaussseidel(relative, tolerance,
                 numStates, stateBounds, nondetBounds, targets, weights,
-                min ? 1 : 0, valuesMem, cumulMem, numIterations);
+                min ? 1 : 0, valuesMem, cumulMem, numIterations,
+                info.createNumIterations(), info.createDifference());
+        });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }
