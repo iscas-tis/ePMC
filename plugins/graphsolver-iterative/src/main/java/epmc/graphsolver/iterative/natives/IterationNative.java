@@ -1,5 +1,7 @@
 package epmc.graphsolver.iterative.natives;
 
+import com.sun.jna.Memory;
+
 import epmc.util.JNATools;
 
 final class IterationNative {
@@ -33,7 +35,7 @@ final class IterationNative {
     native static int double_dtmc_unbounded_cumulative_gaussseidel(int relative,
             double precision, int numStates, int[] stateBounds,
             int[] targets, double[] weights, double[] values, double[] cumul,
-            int[] iterationsResult);
+            int[] iterationsResult, Memory numIterations, Memory difference);
 
     native static int double_ctmc_bounded(double[] fg, int left, int right,
             int numStates, int[] stateBounds, int[] targets,
