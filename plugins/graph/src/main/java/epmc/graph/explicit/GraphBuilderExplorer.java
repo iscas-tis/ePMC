@@ -44,7 +44,7 @@ import epmc.util.StopWatch;
 import epmc.value.Type;
 import epmc.value.ValueObject;
 
-import static epmc.util.RunningInfo.startWithInfo;
+import static epmc.util.RunningInfo.startWithInfoVoid;
 
 /**
  * Build a graph representation from an explorer.
@@ -112,7 +112,7 @@ public final class GraphBuilderExplorer {
     }
 
     public void build() {
-        startWithInfo(info -> build(info));
+        startWithInfoVoid(info -> build(info));
     }
 
     private void build(RunningInfo runningInfo) {

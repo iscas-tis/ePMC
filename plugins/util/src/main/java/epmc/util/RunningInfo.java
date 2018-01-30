@@ -32,7 +32,12 @@ import epmc.error.EPMCException;
  */
 public final class RunningInfo {
     @FunctionalInterface
-    public interface GuardedCall {
+    public interface GuardedCall <T> {
+        T call(RunningInfo info);
+    }
+
+    @FunctionalInterface
+    public interface GuardedCallVoid {
         void call(RunningInfo info);
     }
 
@@ -49,12 +54,17 @@ public final class RunningInfo {
     private SendInformation information;
     /** Time interval between sending user feedback. */
     private long sleepTime = 1000l;
+
+    public static void startWithInfoVoid(GuardedCallVoid call) {
+        startWithInfo(info -> {call.call(info); return (Object) null;});
+    }
     
-    public static void startWithInfo(GuardedCall call) {
+    public static <T> T startWithInfo(GuardedCall<T> call) {
         assert call != null;
         RunningInfo info = new RunningInfo();
+        T result = null;
         try {
-            call.call(info);
+            result = call.call(info);
         } catch (EPMCException e) {
             info.done();
             throw e;
@@ -62,7 +72,8 @@ public final class RunningInfo {
             info.done();
             throw new RuntimeException(e);
         }
-        info.done();        
+        info.done();
+        return result;
     }
 
     public void setInformationSender(SendInformation information) {

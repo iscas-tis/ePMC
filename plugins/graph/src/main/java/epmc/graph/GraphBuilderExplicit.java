@@ -517,7 +517,7 @@ public final class GraphBuilderExplicit {
         BitSet outputNodesInit = outputGraph.getInitialNodes();
         for (int inputNode = inputNodesInit.nextSetBit(0); inputNode >= 0; inputNode = inputNodesInit.nextSetBit(inputNode+1)) {
             int outputNode = inputToOutputNodes.getInt(inputNode);
-            assert outputNode >= 0 : outputNode;
+            assert outputNode >= 0 : outputNode + " " + inputNode;
             outputNodesInit.set(outputNode);
         }        
     }
