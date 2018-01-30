@@ -24,7 +24,8 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_dtmc_bounded_cumulative(int bound, int numStates,
         int *stateBounds, int *targets, double *weights, double *values,
-        double *cumul) {
+        double *cumul,
+        volatile int *numIterationsFeedback) {
     double *presValues = values;
     double *nextValues = malloc(sizeof(double) * numStates);
     if (nextValues == NULL) {
@@ -36,6 +37,7 @@ epmc_error_t double_dtmc_bounded_cumulative(int bound, int numStates,
         nextValues[state] = 0.0;
     }
     double nextStateProb;
+    *numIterationsFeedback = 0;
     for (int i = 0; i < bound; i++) {
         for (int state = 0; state < numStates; state++) {
             double value = values[state];
@@ -53,6 +55,7 @@ epmc_error_t double_dtmc_bounded_cumulative(int bound, int numStates,
         double *swap = presValues;
         presValues = nextValues;
         nextValues = swap;
+        *numIterationsFeedback = i;
     }
     for (int state = 0; state < numStates; state++) {
         values[state] = presValues[state];

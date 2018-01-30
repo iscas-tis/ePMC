@@ -33,6 +33,7 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
 import epmc.operator.OperatorAdd;
@@ -40,6 +41,7 @@ import epmc.operator.OperatorMax;
 import epmc.operator.OperatorMin;
 import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
+import epmc.util.RunningInfo;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
@@ -189,13 +191,18 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         assert discount != null;
         assert ValueReal.is(discount) || ValueInteger.is(discount);
         boolean min = objectiveBoundedCumulativeDiscounted.isMin();
-        if (isSparseMarkovJava(iterGraph)) {
-            dtmcBoundedCumulativeDiscountedJava(time.getInt(), discount, asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
-        } else if (isSparseMDPJava(iterGraph)) {
-            mdpBoundedCumulativeDiscountedJava(time.getInt(), discount, asSparseNondet(iterGraph), min, inputValues, cumulativeStateRewards);
-        } else {
-            assert false;
-        }
+        RunningInfo.startWithInfoVoid(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            info.setTotalNumberIterations(time.getInt());
+            if (isSparseMarkovJava(iterGraph)) {
+                dtmcBoundedCumulativeDiscountedJava(info, time.getInt(), discount, asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
+            } else if (isSparseMDPJava(iterGraph)) {
+                mdpBoundedCumulativeDiscountedJava(info, time.getInt(), discount, asSparseNondet(iterGraph), min, inputValues, cumulativeStateRewards);
+            } else {
+                assert false;
+            }
+        });
     }
 
     /* auxiliary methods */
@@ -234,7 +241,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         return (GraphExplicitSparse) graph;
     }
 
-    private void dtmcBoundedCumulativeDiscountedJava(int bound,
+    private void dtmcBoundedCumulativeDiscountedJava(Info info, int bound,
             Value discount, GraphExplicitSparse graph, ValueArray values, ValueArray cumul) {
         int numStates = graph.computeNumStates();
         ValueArray presValues = values;
@@ -251,6 +258,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, values.getType(), values.getType());
         for (int step = 0; step < bound; step++) {
+            info.setNumIterations(step);
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
@@ -273,7 +281,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         setArray.apply(values, presValues);
     }
 
-    private void mdpBoundedCumulativeDiscountedJava(int bound,
+    private void mdpBoundedCumulativeDiscountedJava(Info info, int bound,
             Value discount, GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values, ValueArray cumul) {
         TypeWeight typeWeight = TypeWeight.get();
@@ -298,6 +306,7 @@ public final class BoundedCumulativeDiscountedJava implements GraphSolverExplici
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
+            info.setNumIterations(step);
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];

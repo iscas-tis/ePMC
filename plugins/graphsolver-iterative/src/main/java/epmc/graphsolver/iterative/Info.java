@@ -17,6 +17,7 @@ public final class Info implements SendInformation {
     private Double difference;
     private Memory numIterationsMemory;
     private Memory differenceMemory;
+    private Integer totalNumberIterations;
     
     public void setNumIterations(int numIterations) {
         this.numIterations = numIterations;
@@ -24,6 +25,10 @@ public final class Info implements SendInformation {
     
     public void setDifference(double difference) {
         this.difference = difference;
+    }
+
+    public void setTotalNumberIterations(int totalNumIterations) {
+        this.totalNumberIterations = totalNumIterations;
     }
     
     public void setNumIterations(Memory numIterations) {
@@ -51,15 +56,20 @@ public final class Info implements SendInformation {
     @Override
     public void call() {
         Integer numIterations = numIterationsMemory != null
-                ? numIterationsMemory.getInt(0)
+                ? new Integer(numIterationsMemory.getInt(0))
                 : this.numIterations;
         Double difference = differenceMemory != null
-                ? differenceMemory.getDouble(0)
+                ? new Double(differenceMemory.getDouble(0))
                 : this.difference;
         if (numIterations != null && difference != null) {
-            log.send(MessagesGraphSolverIterative.ITERATING_PROGRESS,
+            log.send(MessagesGraphSolverIterative.ITERATING_PROGRESS_UNBOUNDED,
                     numIterations, Double.toString(difference),
                     Math.round(watch.getTime() / 1000.0));
+        } else if (numIterations != null && totalNumberIterations != null) {
+            double percentDone = ((double) numIterations) / totalNumberIterations;
+            log.send(MessagesGraphSolverIterative.ITERATING_PROGRESS_BOUNDED,
+                    numIterations, totalNumberIterations,
+                    percentDone, Math.round(watch.getTime() / 1000.0));
         }
     }
 }

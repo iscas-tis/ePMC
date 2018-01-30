@@ -25,7 +25,8 @@
 __attribute__ ((visibility("default")))
 epmc_error_t double_mdp_bounded(int bound, int numStates, int *stateBounds,
         int *nondetBounds, int *targets, double *weights, int min,
-        double *values) {
+        double *values,
+        volatile int *numIterationsFeedback) {
     double optInitValue = min ? INFINITY : -INFINITY;
     double *presValues = values;
     double *nextValues = malloc(sizeof(double) * numStates);
@@ -36,6 +37,7 @@ epmc_error_t double_mdp_bounded(int bound, int numStates, int *stateBounds,
     for (int state = 0; state < numStates; state++) {
         nextValues[state] = 0.0;
     }
+    *numIterationsFeedback = 0;
     double nextStateProb;
     for (int i = 0; i < bound; i++) {
         for (int state = 0; state < numStates; state++) {
@@ -58,6 +60,7 @@ epmc_error_t double_mdp_bounded(int bound, int numStates, int *stateBounds,
             }
             nextValues[state] = nextStateProb;
         }
+        *numIterationsFeedback = i;
         double *swap = nextValues;
         nextValues = presValues;
         presValues = swap;

@@ -33,6 +33,7 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
@@ -42,6 +43,7 @@ import epmc.operator.OperatorMin;
 import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
+import epmc.util.RunningInfo;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
@@ -178,13 +180,18 @@ public final class BoundedJava implements GraphSolverExplicit {
         assert time.getInt() >= 0;
         time.getInt();
         boolean min = objectiveBounded.isMin();
-        if (isSparseMarkovJava(iterGraph)) {
-            dtmcBoundedJava(time.getInt(), asSparseMarkov(iterGraph), inputValues);
-        } else if (isSparseMDPJava(iterGraph)) {
-            mdpBoundedJava(time.getInt(), asSparseNondet(iterGraph), min, inputValues);            
-        } else {
-            assert false : isSparseMarkov(iterGraph) + " " + isSparseNondet(iterGraph);
-        }
+        RunningInfo.startWithInfoVoid(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            info.setTotalNumberIterations(time.getInt());
+            if (isSparseMarkovJava(iterGraph)) {
+                dtmcBoundedJava(info, time.getInt(), asSparseMarkov(iterGraph), inputValues);
+            } else if (isSparseMDPJava(iterGraph)) {
+                mdpBoundedJava(info, time.getInt(), asSparseNondet(iterGraph), min, inputValues);            
+            } else {
+                assert false : isSparseMarkov(iterGraph) + " " + isSparseNondet(iterGraph);
+            }
+        });
     }
 
     private void ctBounded() {
@@ -302,9 +309,8 @@ public final class BoundedJava implements GraphSolverExplicit {
         setArray.apply(values, presValues);
     }
 
-    private static void dtmcBoundedJava(int bound,
-            GraphExplicitSparse graph, ValueArrayAlgebra values)
-    {
+    private static void dtmcBoundedJava(Info info, int bound,
+            GraphExplicitSparse graph, ValueArrayAlgebra values) {
         int numStates = graph.computeNumStates();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -321,6 +327,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
+            info.setNumIterations(step);
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
@@ -341,7 +348,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         setArray.apply(values, presValues);
     }
 
-    private void mdpBoundedJava(int bound,
+    private void mdpBoundedJava(Info info, int bound,
             GraphExplicitSparseAlternate graph, boolean min,
             ValueArrayAlgebra values) {
         TypeWeight typeWeight = TypeWeight.get();
@@ -367,6 +374,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
         for (int step = 0; step < bound; step++) {
+            info.setNumIterations(step);
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
