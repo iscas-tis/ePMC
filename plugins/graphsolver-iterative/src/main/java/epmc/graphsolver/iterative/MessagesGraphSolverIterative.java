@@ -34,6 +34,7 @@ public final class MessagesGraphSolverIterative {
     private final static String MESSAGES_GRAPHSOLVER_ITERATIVE = "MessagesGraphSolverIterative";
     public final static Message ITERATING = newMessage().setIdentifier("iterating").build();
     public final static Message ITERATING_DONE = newMessage().setIdentifier("iterating-done").build();
+    public final static Message ITERATING_PROGRESS = newMessage().setIdentifier("iterating-progress").build();
 
     private static Message.Builder newMessage() {
         return new Message.Builder().setBundle(MESSAGES_GRAPHSOLVER_ITERATIVE);

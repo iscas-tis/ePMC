@@ -36,6 +36,7 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
 import epmc.graphsolver.iterative.MessagesGraphSolverIterative;
@@ -47,6 +48,7 @@ import epmc.modelchecker.Log;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.ProblemsUtil;
+import epmc.util.RunningInfo;
 import epmc.util.StopWatch;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
@@ -277,8 +279,7 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
 
     private static void dtmcUnboundedCumulativeGaussseidelNative(
             GraphExplicitSparse graph, Value values,
-            IterationStopCriterion stopCriterion, double tolerance, Value cumul, int[] numIterations)
-    {
+            IterationStopCriterion stopCriterion, double tolerance, Value cumul, int[] numIterations) {
         int relative = stopCriterion == IterationStopCriterion.RELATIVE ? 1 : 0;
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
@@ -286,8 +287,13 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
         double[] cumulMem = ValueContentDoubleArray.getContent(cumul);
-
-        int code = IterationNative.double_dtmc_unbounded_cumulative_gaussseidel(relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem, numIterations);
+        int code = RunningInfo.startWithInfo(running -> {
+            Info info = new Info();
+            running.setInformationSender(info);
+            return IterationNative.double_dtmc_unbounded_cumulative_gaussseidel
+                    (relative, tolerance, numStates, stateBounds, targets, weights, valuesMem, cumulMem, numIterations,
+                    info.createNumIterations(), info.createDifference());
+        });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
     }

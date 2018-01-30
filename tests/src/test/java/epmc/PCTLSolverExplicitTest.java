@@ -32,6 +32,7 @@ import org.junit.Test;
 
 import epmc.graph.TestHelperGraph;
 import epmc.modelchecker.EngineExplicit;
+import epmc.modelchecker.Model;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
@@ -707,16 +708,19 @@ public final class PCTLSolverExplicitTest {
     }
     
     @Test
-    public void paulGainer() {
+    public void paulGainerMedium() {
         Options options = prepareOptions();
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.PRISM_FLATTEN, false);
         Map<String,String> constants = new HashMap<>();
-        constants.put("ML", "0.3");
+        constants.put("ML", "0.01");
         options.set(OptionsModelChecker.CONST, constants);
-        TestHelperGraph.exploreModel(options, ModelNamesOwn.PAUL_GAINER_MEDIUM);
+        Model model = loadModel(options, PAUL_GAINER_MEDIUM);
+        Value result = TestHelper.computeResult(model, "R{\"power_consumption\"}=?[F synchronised]");
+        System.out.println(result);
+//        TestHelperGraph.exploreModel(options, ModelNamesOwn.PAUL_GAINER_MEDIUM);
         close(options);
     }    
 
