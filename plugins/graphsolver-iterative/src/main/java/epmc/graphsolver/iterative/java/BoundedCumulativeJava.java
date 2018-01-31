@@ -41,7 +41,6 @@ import epmc.operator.OperatorMax;
 import epmc.operator.OperatorMin;
 import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
-import epmc.util.RunningInfo;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
@@ -54,6 +53,8 @@ import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
+
+import static epmc.graphsolver.iterative.UtilGraphSolverIterative.startWithInfoBoundedVoid;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -188,10 +189,7 @@ public final class BoundedCumulativeJava implements GraphSolverExplicit {
         assert time.getInt() >= 0;
         boolean min = objectiveBoundedCumulative.isMin();
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
-        RunningInfo.startWithInfoVoid(running -> {
-            Info info = new Info();
-            running.setInformationSender(info);
-            info.setTotalNumberIterations(time.getInt());
+        startWithInfoBoundedVoid(time.getInt(), info -> {
             if (isSparseMarkovJava(iterGraph)) {
                 dtmcBoundedCumulativeJava(info, time.getInt(), asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
             } else if (isSparseMDPJava(iterGraph)) {

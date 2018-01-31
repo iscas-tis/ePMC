@@ -43,7 +43,6 @@ import epmc.operator.OperatorMin;
 import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
-import epmc.util.RunningInfo;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
@@ -58,6 +57,8 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
+
+import static epmc.graphsolver.iterative.UtilGraphSolverIterative.startWithInfoBoundedVoid;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -180,10 +181,7 @@ public final class BoundedJava implements GraphSolverExplicit {
         assert time.getInt() >= 0;
         time.getInt();
         boolean min = objectiveBounded.isMin();
-        RunningInfo.startWithInfoVoid(running -> {
-            Info info = new Info();
-            running.setInformationSender(info);
-            info.setTotalNumberIterations(time.getInt());
+        startWithInfoBoundedVoid(time.getInt(), info -> {
             if (isSparseMarkovJava(iterGraph)) {
                 dtmcBoundedJava(info, time.getInt(), asSparseMarkov(iterGraph), inputValues);
             } else if (isSparseMDPJava(iterGraph)) {
@@ -203,11 +201,13 @@ public final class BoundedJava implements GraphSolverExplicit {
 
         ValueReal precision = UtilValue.newValue(TypeReal.get(), options.getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
         FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);
-        if (isSparseMarkovJava(iterGraph)) {
-            ctmcBoundedJava(asSparseMarkov(iterGraph), inputValues, foxGlynn);
-        } else {
-            assert false;
-        }
+        startWithInfoBoundedVoid(foxGlynn.getRight(), info -> {
+            if (isSparseMarkovJava(iterGraph)) {
+                ctmcBoundedJava(info, asSparseMarkov(iterGraph), inputValues, foxGlynn);
+            } else {
+                assert false;
+            }
+        });
     }
 
     /* auxiliary methods */
@@ -248,7 +248,7 @@ public final class BoundedJava implements GraphSolverExplicit {
 
     /* implementation of iteration algorithms */    
 
-    private void ctmcBoundedJava(GraphExplicitSparse graph,
+    private void ctmcBoundedJava(Info info, GraphExplicitSparse graph,
             ValueArray values, FoxGlynn foxGlynn) {
         ValueArrayAlgebra fg = foxGlynn.getArray();
         Value fgWeight = TypeReal.get().newValue();
@@ -268,7 +268,10 @@ public final class BoundedJava implements GraphSolverExplicit {
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        int iter = 0;
         for (int i = foxGlynn.getRight() - foxGlynn.getLeft(); i >= 0; i--) {
+            info.setNumIterations(iter);
+            iter++;
             fg.get(fgWeight, i);
             for (int state = 0; state < numStates; state++) {
                 values.get(value, state);
@@ -289,6 +292,8 @@ public final class BoundedJava implements GraphSolverExplicit {
             nextValues = swap;
         }
         for (int i = foxGlynn.getLeft() - 1; i >= 0; i--) {
+            info.setNumIterations(iter);
+            iter++;
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
