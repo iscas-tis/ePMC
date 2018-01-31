@@ -55,7 +55,6 @@ import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.util.BitSet;
-import epmc.util.RunningInfo;
 import epmc.util.StopWatch;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -73,6 +72,8 @@ import epmc.value.ValueBoolean;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
 import epmc.value.ValueSetString;
+
+import static epmc.graphsolver.iterative.UtilGraphSolverIterative.startWithInfoUnboundedVoid;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -228,9 +229,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         GraphSolverObjectiveExplicitUnboundedReachability graphSolverObjectiveUnbounded = (GraphSolverObjectiveExplicitUnboundedReachability) objective;
         boolean min = graphSolverObjectiveUnbounded.isMin();
         double precision = options.getDouble(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE);
-        RunningInfo.startWithInfoVoid(running -> {
-            Info info = new Info();
-            running.setInformationSender(info);
+        startWithInfoUnboundedVoid(info -> {
             if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.JACOBI) {
                 dtmcUnboundedJacobiJava(info, asSparseMarkov(iterGraph), inputValues, stopCriterion, precision, numIterations);
             } else if (isSparseMarkovJava(iterGraph) && iterMethod == IterationMethod.GAUSS_SEIDEL) {

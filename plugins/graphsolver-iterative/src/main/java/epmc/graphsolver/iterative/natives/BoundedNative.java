@@ -34,14 +34,12 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
-import epmc.graphsolver.iterative.Info;
 import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBounded;
 import epmc.operator.OperatorMultiply;
 import epmc.options.Options;
 import epmc.util.ProblemsUtil;
-import epmc.util.RunningInfo;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
@@ -57,6 +55,8 @@ import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 import epmc.value.ValueReal;
+
+import static epmc.graphsolver.iterative.UtilGraphSolverIterative.startWithInfoBounded;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -250,10 +250,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        int code = RunningInfo.startWithInfo(running -> {
-            Info info = new Info();
-            running.setInformationSender(info);
-            info.setTotalNumberIterations(right);
+        int code = startWithInfoBounded(right, info -> {
             return IterationNative.double_ctmc_bounded(fg, left, right, numStates, stateBounds, targets, weights, valuesMem, info.createNumIterations());
         });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
@@ -268,10 +265,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        int code = RunningInfo.startWithInfo(running -> {
-            Info info = new Info();
-            running.setInformationSender(info);
-            info.setTotalNumberIterations(bound);
+        int code = startWithInfoBounded(bound, info -> {
             return IterationNative.double_dtmc_bounded(bound, numStates, stateBounds, targets, weights, valuesMem, info.createNumIterations());
         });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
@@ -287,10 +281,7 @@ public final class BoundedNative implements GraphSolverExplicit {
         int[] targets = graph.getTargetsJava();
         double[] weights = ValueContentDoubleArray.getContent(graph.getEdgePropertySparseNondet(CommonProperties.WEIGHT).asSparseNondetOnlyNondet().getContent());
         double[] valuesMem = ValueContentDoubleArray.getContent(values);
-        int code = RunningInfo.startWithInfo(running -> {
-            Info info = new Info();
-            running.setInformationSender(info);
-            info.setTotalNumberIterations(bound);
+        int code = startWithInfoBounded(bound, info -> {
             return IterationNative.double_mdp_bounded(bound, numStates, stateBounds,
                 nondetBounds, targets, weights, min ? 1 : 0, valuesMem, info.createNumIterations());
         });
