@@ -71,7 +71,7 @@ public final class BitSetUnboundedIntArray implements BitSet {
 
     @Override
     public boolean get(int bitIndex) {
-        assert bitIndex >= 0;
+        assert bitIndex >= 0 : bitIndex;
         int size = content.length * WORD_SIZE;
         if (bitIndex >= size) {
             return false;
