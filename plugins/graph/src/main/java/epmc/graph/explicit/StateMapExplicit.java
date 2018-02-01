@@ -337,9 +337,10 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
         if (TypeReal.is(getType())) {
             return true;
         }
-        getRange(TypeInterval.get().newValue(),
-                getStateSet());
-        return true;
+        return false;
+  //      getRange(TypeInterval.get().newValue(),
+    //            getStateSet());
+//        return true;
     }
 
     @Override
