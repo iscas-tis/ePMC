@@ -68,6 +68,7 @@ import epmc.plugin.AfterModelCreation;
 import epmc.plugin.BeforeModelCreation;
 import epmc.plugin.OptionsPlugin;
 import epmc.plugin.UtilPlugin;
+import epmc.util.RunningInfo;
 import epmc.util.Util;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -103,6 +104,9 @@ public final class TestHelper {
     private final static String UNKNOWN_HOST = "Unknown";
     private final static String PLUGINLIST_NOT_FOUND = "Plugin list file "
             + "\"%s\" not found.";
+    private static String PLUGINS_LIST_FILENAME;
+    static {
+    }
 
     public enum LogType {
         TRANSLATE,
@@ -258,15 +262,30 @@ public final class TestHelper {
     }
 
     private static String getPluginsListFilename() {
-        String username = System.getProperty(USER_NAME_PROPERTY);
-        String hostname = UNKNOWN_HOST;
-        try {
-            InetAddress addr;
-            addr = InetAddress.getLocalHost();
-            hostname = addr.getHostName();
-        } catch (UnknownHostException e) {
+        if (PLUGINS_LIST_FILENAME != null) {
+            return PLUGINS_LIST_FILENAME;
         }
-        return String.format(PLUGIN_LIST_PATTERN, hostname, username);
+        String username = System.getProperty(USER_NAME_PROPERTY);
+        String hostname[] = new String[1];
+        hostname[0] = UNKNOWN_HOST;
+        RunningInfo.startWithInfoVoid(running -> {
+            running.setSleepTime(2000);
+            running.setInformationSender(() ->
+            System.out.println("Delay caused by calling "
+                    + "InetAddress.getLocalHost(). This call causes a delay"
+                    + "in certain versions of macOS. See "
+                    + "https://thoeni.io/post/macos-sierra-java/"
+                    + " on how to decrease this delay."));
+            try {
+                InetAddress addr;
+                addr = InetAddress.getLocalHost();
+                hostname[0] = addr.getHostName();
+            } catch (UnknownHostException e) {
+            }
+        });
+        PLUGINS_LIST_FILENAME = String.format(PLUGIN_LIST_PATTERN,
+                hostname[0], username);
+        return PLUGINS_LIST_FILENAME;
     }
 
     private static void exitPluginListNotFound() {
