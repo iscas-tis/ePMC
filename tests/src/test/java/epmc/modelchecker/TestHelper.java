@@ -69,6 +69,7 @@ import epmc.plugin.BeforeModelCreation;
 import epmc.plugin.OptionsPlugin;
 import epmc.plugin.UtilPlugin;
 import epmc.util.RunningInfo;
+import epmc.util.StopWatch;
 import epmc.util.Util;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
@@ -106,6 +107,25 @@ public final class TestHelper {
             + "\"%s\" not found.";
     private static String PLUGINS_LIST_FILENAME;
     static {
+        String username = System.getProperty(USER_NAME_PROPERTY);
+        String hostname[] = new String[1];
+        hostname[0] = UNKNOWN_HOST;
+        StopWatch watch = new StopWatch(true);
+        try {
+            InetAddress addr;
+            addr = InetAddress.getLocalHost();
+            hostname[0] = addr.getHostName();
+        } catch (UnknownHostException e) {
+        }
+        if (watch.getTimeSeconds() > 2) {
+            System.out.println("Delay caused by calling "
+                    + "InetAddress.getLocalHost(). This call causes a delay"
+                    + "in certain versions of macOS. See "
+                    + "https://thoeni.io/post/macos-sierra-java/"
+                    + " on how to decrease this delay.");
+        }
+        PLUGINS_LIST_FILENAME = String.format(PLUGIN_LIST_PATTERN,
+                hostname[0], username);
     }
 
     public enum LogType {
@@ -262,29 +282,6 @@ public final class TestHelper {
     }
 
     private static String getPluginsListFilename() {
-        if (PLUGINS_LIST_FILENAME != null) {
-            return PLUGINS_LIST_FILENAME;
-        }
-        String username = System.getProperty(USER_NAME_PROPERTY);
-        String hostname[] = new String[1];
-        hostname[0] = UNKNOWN_HOST;
-        RunningInfo.startWithInfoVoid(running -> {
-            running.setSleepTime(2000);
-            running.setInformationSender(() ->
-            System.out.println("Delay caused by calling "
-                    + "InetAddress.getLocalHost(). This call causes a delay"
-                    + "in certain versions of macOS. See "
-                    + "https://thoeni.io/post/macos-sierra-java/"
-                    + " on how to decrease this delay."));
-            try {
-                InetAddress addr;
-                addr = InetAddress.getLocalHost();
-                hostname[0] = addr.getHostName();
-            } catch (UnknownHostException e) {
-            }
-        });
-        PLUGINS_LIST_FILENAME = String.format(PLUGIN_LIST_PATTERN,
-                hostname[0], username);
         return PLUGINS_LIST_FILENAME;
     }
 
