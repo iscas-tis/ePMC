@@ -29,7 +29,6 @@ import java.util.Set;
 import epmc.algorithms.UtilAlgorithms;
 import epmc.algorithms.explicit.ComponentsExplicit;
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionQuantifier;
