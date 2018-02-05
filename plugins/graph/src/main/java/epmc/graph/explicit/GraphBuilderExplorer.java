@@ -155,7 +155,7 @@ public final class GraphBuilderExplorer {
         this.graph = graphStoch;
         for (Object property : graphProperties) {
             Type type = explorer.getGraphPropertyType(property);
-            assert type != null;
+            assert type != null : property;
             this.graph.addSettableGraphProperty(property, type);
             this.graph.setGraphProperty(property, explorer.getGraphProperty(property));
         }

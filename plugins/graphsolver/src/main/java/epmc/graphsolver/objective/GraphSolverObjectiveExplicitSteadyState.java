@@ -1,6 +1,7 @@
 package epmc.graphsolver.objective;
 
 import epmc.graph.explicit.GraphExplicit;
+import epmc.util.BitSet;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 
@@ -10,6 +11,7 @@ public final class GraphSolverObjectiveExplicitSteadyState implements GraphSolve
     private GraphExplicit graph;
     private ValueArray result;
     private ValueArrayAlgebra stateRewards;
+    private BitSet computeFor;
 
     public void setComputeScheduler(boolean computeScheduler) {
         this.computeScheduler = computeScheduler;
@@ -19,7 +21,7 @@ public final class GraphSolverObjectiveExplicitSteadyState implements GraphSolve
         return computeScheduler;
     }
 
-    void setMin(boolean min) {
+    public void setMin(boolean min) {
         this.min = min;
     }
 
@@ -53,5 +55,14 @@ public final class GraphSolverObjectiveExplicitSteadyState implements GraphSolve
     @Override
     public ValueArray getResult() {
         return result;
+    }
+
+    public void setComputeFor(BitSet computeFor) {
+        this.computeFor = computeFor;
+    }
+    
+    @Override
+    public BitSet getComputeFor() {
+        return computeFor;
     }
 }
