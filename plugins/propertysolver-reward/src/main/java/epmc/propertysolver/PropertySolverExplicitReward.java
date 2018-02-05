@@ -54,6 +54,7 @@ import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.UtilGraphSolver;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulativeDiscounted;
+import epmc.graphsolver.objective.GraphSolverObjectiveExplicitSteadyState;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
@@ -224,6 +225,14 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             configuration.setObjective(objective);
             configuration.solve();
             values = objective.getResult();
+        } else if (rewardType.isSteadystate()) {
+            GraphSolverObjectiveExplicitSteadyState objective = new GraphSolverObjectiveExplicitSteadyState();
+            objective.setGraph(graph);
+            objective.setMin(min);
+            objective.setStateRewards(cumulRewards);
+            configuration.setObjective(objective);
+            configuration.solve();
+            values = (ValueArrayAlgebra) objective.getResult();
         }
         if (rewardType.isReachability()) {
             for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {

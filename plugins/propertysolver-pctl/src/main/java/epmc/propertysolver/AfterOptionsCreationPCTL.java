@@ -40,6 +40,7 @@ public final class AfterOptionsCreationPCTL implements AfterOptionsCreation {
         Map<String,Class<?>> solvers = options.get(OptionsModelChecker.PROPERTY_SOLVER_CLASS);
         solvers.put(PropertySolverExplicitPCTLUntil.IDENTIFIER, PropertySolverExplicitPCTLUntil.class);
         solvers.put(PropertySolverExplicitPCTLNext.IDENTIFIER, PropertySolverExplicitPCTLNext.class);
+        solvers.put(PropertySolverExplicitSteadyState.IDENTIFIER, PropertySolverExplicitSteadyState.class);
         solvers.put(PropertySolverDDPCTL.IDENTIFIER, PropertySolverDDPCTL.class);
     }
 }
