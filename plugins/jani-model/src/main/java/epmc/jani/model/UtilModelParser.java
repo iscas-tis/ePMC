@@ -264,7 +264,8 @@ public final class UtilModelParser {
             return;
         }
         JsonObjectBuilder positionalBuilder = Json.createObjectBuilder();
-        positionalBuilder.add(POSITIONAL_PART, positional.getPart().toString());
+        positionalBuilder.add(POSITIONAL_PART, positional.getPart()
+                != null ? positional.getPart().toString() : null);
         if (positional.getLine() > 0) {
             positionalBuilder.add(POSITIONAL_LINE, positional.getLine());
         }
