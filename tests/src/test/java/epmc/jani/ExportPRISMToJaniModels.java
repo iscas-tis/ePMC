@@ -226,7 +226,7 @@ public final class ExportPRISMToJaniModels {
         jani.setName(modelName);
         System.out.println("Generating JSON");
         JsonValue json = jani.generate();
-        System.out.println("Writing");
+        System.out.println("Writing " + janiFilename);
         try (PrintWriter out = new PrintWriter(janiFilename)) {
             out.println(UtilJSON.prettyString(json));
         } catch (FileNotFoundException e) {
