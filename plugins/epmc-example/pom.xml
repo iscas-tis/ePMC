@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>epmc.example</groupId>
@@ -10,48 +10,23 @@
   <name>epmc-example</name>
   <url>http://maven.apache.org</url>
 
+  <parent>
+    <groupId>epmc.pluginbase</groupId>
+    <artifactId>epmc-plugin-base</artifactId>
+    <version>0</version>
+    <relativePath>../plugin-base/pom.xml</relativePath>
+  </parent>
+
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
- 
-
+  
   <dependencies>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>4.8.1</version>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-    	<groupId>epmc</groupId>
-    	<artifactId>epmc</artifactId>
-    	<scope>system</scope>
-    	<version>0</version>
-    	<systemPath>${project.basedir}/../../main/target/epmc-0-distribution.jar</systemPath>
-    </dependency>
   </dependencies>
   
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
-        </configuration>
-      </plugin>
-      <plugin>
-        <version>2.4</version>
-        <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-jar-plugin</artifactId>
-          <configuration>
-	    <archive>
-	      <manifestFile>src/main/resources/META-INF/MANIFEST.MF</manifestFile>
-            </archive>
-          </configuration>
-      </plugin>
- </plugins>
- </build>
+    </plugins>
+  </build>
   
 </project>

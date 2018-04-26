@@ -155,7 +155,12 @@ final class PluginLoader {
         for (int pluginNr = 0; pluginNr < pluginPaths.size(); pluginNr++) {
             Path pluginPath = pluginPaths.get(pluginNr);
             try {
-                urls[pluginNr] = pluginPath.toUri().toURL();
+		String urlString = pluginPath.toUri().toURL().toString();
+		/* since Java 9 or 10, separator at end might get lost :-| */
+		if (!urlString.endsWith(SEPARATOR)) {
+		    urlString = urlString + SEPARATOR;
+		}
+                urls[pluginNr] = new URL(urlString);
             } catch (MalformedURLException e) {
                 // should not happen, because the URL is automatically generated
                 throw new RuntimeException(e);
