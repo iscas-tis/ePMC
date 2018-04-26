@@ -26,6 +26,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 
 import epmc.error.EPMCException;
@@ -114,7 +115,7 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                 jani.setName(modelName);
                 log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION_DONE, modelName);
                 log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION, janiFilename);
-                try (PrintWriter out = new PrintWriter(janiFile, "UTF8")) {
+                try (PrintWriter out = new PrintWriter(janiFile, StandardCharsets.UTF_8.name())) {
                     out.println(UtilModelParser.prettyString(jani));
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
