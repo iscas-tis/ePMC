@@ -1,3 +1,4 @@
+#!/bin/bash
 # written by LI. Yi
 # created on Feb 23rd, 2017
 ROOT="$( cd "$( dirname "$0"  )" && pwd  )"
