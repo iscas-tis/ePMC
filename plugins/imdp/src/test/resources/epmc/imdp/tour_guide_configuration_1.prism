@@ -1,0 +1,131 @@
+// IMDP museum case study
+// This version by Ernst Moritz Hahn (hahn@ios.ac.cn)
+
+imdp
+
+const int size;
+const int mid = floor((size - 1) / 2);
+
+const bool x_cmp_y_restrict = false;
+
+formula size_div_5 = floor(size / 5);
+formula size_div_10 = floor(size / 10);
+
+formula x_w = x-1;
+formula x_e = x+1;
+formula y_n = y+1;
+formula y_s = y-1;
+
+formula abs_mid_m_x = (mid - x >= 0 ? mid - x : x - mid);
+formula abs_mid_m_y = (mid - y >= 0 ? mid - y : y - mid);
+
+formula abs_mid_m_x_w = (mid - x_w >= 0 ? mid - x_w : x_w - mid);
+formula abs_mid_m_x_e = (mid - x_e >= 0 ? mid - x_e : x_e - mid);
+formula abs_mid_m_y_n = (mid - y_n >= 0 ? mid - y_n : y_n - mid);
+formula abs_mid_m_y_s = (mid - y_s >= 0 ? mid - y_s : y_s - mid);
+
+formula weightLow_n = abs_mid_m_x <= size_div_10 & abs_mid_m_y_n <= size_div_10 ? 2.0
+                    : abs_mid_m_x <= size_div_5 & abs_mid_m_y_n <= size_div_5   ? 2.0
+                                                                                : 1.0;
+
+formula weightLow_w = abs_mid_m_x_w <= size_div_10 & abs_mid_m_y <= size_div_10 ? 2.0
+                    : abs_mid_m_x_w <= size_div_5 & abs_mid_m_y <= size_div_5   ? 2.0
+                                                                                : 1.0;
+                                                                                
+formula weightLow_s = abs_mid_m_x <= size_div_10 & abs_mid_m_y_s <= size_div_10 ? 2.0
+                    : abs_mid_m_x <= size_div_5 & abs_mid_m_y_s <= size_div_5   ? 2.0
+                                                                                : 1.0;
+
+formula weightLow_e = abs_mid_m_x_e <= size_div_10 & abs_mid_m_y <= size_div_10 ? 2.0
+                    : abs_mid_m_x_e <= size_div_5 & abs_mid_m_y <= size_div_5   ? 2.0
+                                                                                : 1.0;
+
+formula weightUp_n =  abs_mid_m_x <= size_div_10 & abs_mid_m_y_n <= size_div_10 ? 4.0
+                    : abs_mid_m_x <= size_div_5 & abs_mid_m_y_n <= size_div_5   ? 2.0
+                                                                                : 1.0;
+
+formula weightUp_w =  abs_mid_m_x_w <= size_div_10 & abs_mid_m_y <= size_div_10 ? 4.0
+                    : abs_mid_m_x_w <= size_div_5 & abs_mid_m_y <= size_div_5   ? 2.0
+                                                                                : 1.0;
+                                                                                
+formula weightUp_s =  abs_mid_m_x <= size_div_10 & abs_mid_m_y_s <= size_div_10 ? 4.0
+                    : abs_mid_m_x <= size_div_5 & abs_mid_m_y_s <= size_div_5   ? 2.0
+                                                                                : 1.0;
+
+formula weightUp_e =  abs_mid_m_x_e <= size_div_10 & abs_mid_m_y <= size_div_10 ? 4.0
+                    : abs_mid_m_x_e <= size_div_5 & abs_mid_m_y <= size_div_5   ? 2.0
+                                                                                : 1.0;
+formula probLow_nw_n = weightLow_n / (weightLow_n + weightUp_w);
+formula probLow_nw_w = weightLow_w / (weightLow_w + weightUp_n);
+formula probLow_ne_n = weightLow_n / (weightLow_n + weightUp_e);
+formula probLow_ne_e = weightLow_e / (weightLow_e + weightUp_n);
+formula probLow_sw_s = weightLow_s / (weightLow_s + weightUp_w);
+formula probLow_sw_w = weightLow_w / (weightLow_w + weightUp_s);
+formula probLow_se_s = weightLow_s / (weightLow_s + weightUp_e);
+formula probLow_se_e = weightLow_e / (weightLow_e + weightUp_s);
+
+formula probUp_nw_n = weightUp_n / (weightUp_n + weightLow_w);
+formula probUp_nw_w = weightUp_w / (weightUp_w + weightLow_n);
+formula probUp_ne_n = weightUp_n / (weightUp_n + weightLow_e);
+formula probUp_ne_e = weightUp_e / (weightUp_e + weightLow_n);
+formula probUp_sw_s = weightUp_s / (weightUp_s + weightLow_w);
+formula probUp_sw_w = weightUp_w / (weightUp_w + weightLow_s);
+formula probUp_se_s = weightUp_s / (weightUp_s + weightLow_e);
+formula probUp_se_e = weightUp_e / (weightUp_e + weightLow_s);
+
+formula target = x=size-1 & y=size-1;
+
+formula x_ge_y = x_cmp_y_restrict ? x>=y : true;
+formula x_le_y = x_cmp_y_restrict ? x<=y : true;
+
+module process1
+    x:[0..size-1] init 0;
+    y:[0..size-1] init 0;
+
+    [nw] !target & x_ge_y & (y<size-1) & (x>0)      ->
+        [probLow_nw_n,probUp_nw_n] : (y'=y_n)
+      + [probLow_nw_w,probUp_nw_w] : (x'=x_w);
+    [ne] !target & x_ge_y & (y<size-1) & (x<size-1) ->
+        [probLow_ne_n,probUp_ne_n] : (y'=y_n)
+      + [probLow_ne_e,probUp_ne_e] : (x'=x_e);
+    [sw] !target & x_le_y & (x>0) & (y>0)           ->
+        [probLow_sw_s,probUp_sw_s] : (y'=y_s)
+      + [probLow_sw_w,probUp_sw_w] : (x'=x_w);
+    [se] !target & x_le_y & (x<size-1) & (y>0)      ->
+        [probLow_se_s,probUp_se_s] : (y'=y_s)
+      + [probLow_se_e,probUp_se_e] : (x'=x_e);
+      // TODO this self loop should not be necessary, fix in EPMC code
+    [] target -> true;
+endmodule
+
+rewards "low"
+  !target : abs_mid_m_x <= size_div_10 & abs_mid_m_y <= size_div_10 ? 2 :
+             abs_mid_m_x <= size_div_5 & abs_mid_m_y <= size_div_5  ? 2
+                                                                    : 1;
+endrewards
+
+rewards "up"
+  !target : abs_mid_m_x <= size_div_10 & abs_mid_m_y <= size_div_10 ? 4 :
+             abs_mid_m_x <= size_div_5 & abs_mid_m_y <= size_div_5  ? 2
+                                                                    : 1;
+endrewards
+
+rewards "obstacle"
+// for size = 8
+// ----------
+// |.....^.%|
+// |.....^..|
+// |.....^..|
+// |..^..^..|
+// |..^..^..|
+// |..^.....|
+// |..^.....|
+// |@.^.....|
+// ----------
+   x=2&y=0 | x=2&y=1 | x=2&y=2 | x=2&y=3 | x=2&y=4
+ | x=5&y=3 | x=5&y=4 | x=5&y=5 | x=5&y=6 | x=5&y=7  : 1;
+endrewards
+
+rewards "steps"
+  !target : 1;
+endrewards
