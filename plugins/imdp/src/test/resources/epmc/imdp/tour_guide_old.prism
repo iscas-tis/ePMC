@@ -1,0 +1,92 @@
+imdp
+
+// ??
+// x >= y => NW, NE [x-1,y+1], [x+1,y+1]
+// y <= x => SW, SE [x-1,y-1], [x+1,y-1]
+
+// TODO interval computation needs fix
+
+const int size;
+const int mid = floor((size - 1) / 2);
+
+formula size_div_5 = floor(size / 5);
+formula size_div_10 = floor(size / 10);
+
+formula xNext = ((y>=x) & (x<size-1) & (y>0)) ? x+1 :
+                ((y>=x) & (x<size-1) & (y<size-1)) ? x+1 :
+                ((y<=x) & (y<size-1) & (x>0)) ? x-1 :
+                ((y<=x) & (y<size-1) & (x<size-1)) ? x+1 :
+                -1;
+
+formula yNext = ((y>=x) & (x<size-1) & (y>0)) ? y-1 :
+                ((y>=x) & (x<size-1) & (y<size-1)) ? y+1 :
+                ((y<=x) & (y<size-1) & (x>0)) ? y+1 :
+                ((y<=x) & (y<size-1) & (x<size-1)) ? y+1 :
+                -1;
+
+formula abs_mid_m_x = (mid - x >= 0 ? mid - x : x - mid);
+formula abs_mid_m_y = (mid - y >= 0 ? mid - y : y - mid);
+
+formula abs_mid_m_xNext = (mid - xNext >= 0 ? mid - xNext : xNext - mid);
+formula abs_mid_m_yNext = (mid - yNext >= 0 ? mid - yNext : yNext - mid);
+
+
+//formula weightLow = abs_mid_m_x <= size_div_10 & abs_mid_m_y <= size_div_10 ? 2.0/6 :
+//                             abs_mid_m_x <= size_div_5 & abs_mid_m_y <= size_div_5 ? 0.5 : 0.5;
+
+//formula weightUp = abs_mid_m_x <= size_div_10 & abs_mid_m_y <= size_div_10 ? 4.0/6 :
+//                             abs_mid_m_x <= size_div_5 & abs_mid_m_y <= size_div_5 ? 0.5 : 0.5;
+
+
+formula weightLow_x_yNext = abs_mid_m_x <= size_div_10 & abs_mid_m_yNext <= size_div_10 ? 2.0 :
+                             abs_mid_m_x <= size_div_5 & abs_mid_m_yNext <= size_div_5 ? 2.0 : 1.0;
+
+formula weightLow_xNext_y = abs_mid_m_xNext <= size_div_10 & abs_mid_m_y <= size_div_10 ? 2.0 :
+                             abs_mid_m_xNext <= size_div_5 & abs_mid_m_y <= size_div_5 ? 2.0 : 1.0;
+
+formula weightUp_x_yNext = abs_mid_m_x <= size_div_10 & abs_mid_m_yNext <= size_div_10 ? 4.0 :
+                             abs_mid_m_x <= size_div_5 & abs_mid_m_yNext <= size_div_5 ? 2.0 : 1.0;
+
+formula weightUp_xNext_y = abs_mid_m_xNext <= size_div_10 & abs_mid_m_y <= size_div_10 ? 4 :
+                             abs_mid_m_xNext <= size_div_5 & abs_mid_m_y <= size_div_5 ? 2.0 : 1.0;
+
+
+formula probLow_x_yNext = weightLow_x_yNext / (weightLow_x_yNext + weightUp_xNext_y);
+formula probUp_x_yNext  = weightUp_x_yNext  / (weightUp_x_yNext  + weightLow_xNext_y);
+formula probLow_xNext_y = weightLow_xNext_y / (weightLow_xNext_y + weightUp_x_yNext);
+formula probUp_xNext_y = weightUp_xNext_y / (weightUp_xNext_y + weightLow_x_yNext);
+
+module process1
+    x:[0..size-1] init 0;
+    y:[0..size-1] init 0;
+
+    [] (y>=x) & (x<size-1) & (y>0)      ->
+        [probLow_x_yNext,probUp_x_yNext] :(y'=y-1)
+      + [probLow_xNext_y,probUp_xNext_y]: (x'=x+1);
+    [] (y>=x) & (x<size-1) & (y<size-1) ->
+        [probLow_x_yNext,probUp_x_yNext] : (y'=y+1)
+      + [probLow_xNext_y,probUp_xNext_y] : (x'=x+1);
+    [] (y<=x) & (y<size-1) & (x>0)      ->
+        [probLow_x_yNext,probUp_x_yNext] : (y'=y+1)
+      + [probLow_xNext_y,probUp_xNext_y] : (x'=x-1);
+    [] (y<=x) & (y<size-1) & (x<size-1) ->
+        [probLow_x_yNext,probUp_x_yNext] : (y'=y+1)
+      + [probLow_xNext_y,probUp_xNext_y] : (x'=x+1);
+      // TODO this self loop should not be necessary, fix in EPMC code
+    [] (x=size-1) & (y=size-1) -> true;
+endmodule
+
+rewards "low"
+  x!=size-1 | y!=size-1 : (mid - x >= 0 ? mid - x : x - mid) <= size_div_10 & (mid - y >= 0 ? mid - y : y - mid) <= size_div_10 ? 2 :
+         (mid - x >= 0 ? mid - x : x - mid) <= size_div_5  & (mid - y >= 0 ? mid - y : y - mid) <= size_div_5  ? 2  : 1;
+endrewards
+
+rewards "up"
+  x!=size-1 | y!=size-1 : (mid - x >= 0 ? mid - x : x - mid) <= size_div_10 & (mid - y >= 0 ? mid - y : y - mid) <= size_div_10 ? 4 :
+         (mid - x >= 0 ? mid - x : x - mid) <= size_div_5  & (mid - y >= 0 ? mid - y : y - mid) <= size_div_5  ? 2
+	                                                                                                       : 1;
+endrewards
+
+rewards "mid"
+  x=floor(size/2) & y=floor(size/2) : 1;
+endrewards
