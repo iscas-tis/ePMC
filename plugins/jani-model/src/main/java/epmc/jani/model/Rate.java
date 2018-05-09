@@ -86,4 +86,12 @@ public final class Rate implements JANINode {
         return comment;
     }
 
+    @Override
+    public boolean equals(Object o) {
+    	if (o instanceof Rate) {
+    		Rate other = (Rate)o;
+    		return exp.equals(other.exp);
+    	}
+    	return false;
+    }
 }
