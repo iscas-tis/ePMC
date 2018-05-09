@@ -77,9 +77,9 @@ public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProce
                                 ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_HIDING,
                                 synched.getName());
                     }
-                    ensure(counter == 1, 
-                            ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION);
                 }
+                ensure(counter == 1, 
+                        ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_SYNCHRONIZATION_ON_HIDDEN_ACTION);
             } else {
                 int lenght = actions.size();
                 for (int index = 0; index < lenght; index++) {
