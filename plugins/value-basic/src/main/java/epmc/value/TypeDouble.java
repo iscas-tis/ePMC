@@ -36,6 +36,14 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     public static boolean is(Type type) {
         return type instanceof TypeDouble;
     }
+    
+    public static TypeDouble as(Type type) {
+        if (is(type)) {
+            return (TypeDouble) type;
+        } else {
+            return null;
+        }
+    }
 
     private final static String DOUBLE = "double";
 

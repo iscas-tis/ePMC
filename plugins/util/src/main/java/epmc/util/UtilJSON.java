@@ -555,6 +555,14 @@ public final class UtilJSON {
         }
     }
 
+    public static JsonArray getArrayObjectOrEmpty(JsonObject object, String key) {
+        try {
+            return getArrayObject(object, key);
+        } catch (EPMCException e) {
+            return Json.createArrayBuilder().build();
+        }
+    }
+
     public static JsonArray getArrayString(JsonObject object, String key) {
         assert object != null;
         assert key != null;
