@@ -77,7 +77,7 @@ public final class ComponentSynchronisationVectors implements Component {
             this.elements.add(element);
         }
         this.syncs = new ArrayList<>();
-        JsonArray syncs = UtilJSON.getArrayObject(object, SYNCS);
+        JsonArray syncs = UtilJSON.getArrayObjectOrEmpty(object, SYNCS);
         for (JsonValue syncValue : syncs) {
             SynchronisationVectorSync sync = new SynchronisationVectorSync();
             sync.setModel(model);
