@@ -250,8 +250,8 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
      * @author Ernst Moritz Hahn
      */
     public final class DdValueTable extends Structure {
-        public long zero = valueToNumber(TypeInteger.get().getZero());
-        public long one = valueToNumber(TypeInteger.get().getOne());
+        public long zero = valueToNumber(UtilValue.newValue(TypeInteger.get(), 0));
+        public long one = valueToNumber(UtilValue.newValue(TypeInteger.get(), 1));
         public long posInf = valueToNumber(TypeReal.get().getPosInf());
         public long negInf = valueToNumber(TypeReal.get().getNegInf());
         public long two = valueToNumber(UtilValue.newValue(TypeInteger.get(), 2));

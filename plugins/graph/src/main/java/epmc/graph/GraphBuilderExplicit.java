@@ -35,6 +35,7 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueObject;
 import gnu.trove.list.TIntList;
@@ -389,6 +390,10 @@ public final class GraphBuilderExplicit {
         }
         BitSet sinks = computeSinks(sinksList);
         int numOutputNodes = outputToInputNodes.size();
+        EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
+        TypeWeight typeWeight = TypeWeight.as(weight.getType());
+        ValueAlgebra one = typeWeight.newValue();
+        one.set(1);
         for (int outputNode = 0; outputNode < numOutputNodes; outputNode++) {
             int inputNode = outputToInputNodes.getInt(outputNode);
             assert inputNode >= 0;
@@ -399,9 +404,7 @@ public final class GraphBuilderExplicit {
                 int nextPartBegin = partsBegin.get(nextPart);
                 outputGraph.prepareNode(outputNode, 1);
                 outputGraph.setSuccessorNode(outputNode, 0, nextPartBegin + sinkNr);
-                EdgeProperty weight = outputGraph.getEdgeProperty(CommonProperties.WEIGHT);
-                TypeWeight typeWeight = TypeWeight.as(weight.getType());
-                weight.set(outputNode, 0, typeWeight.getOne());
+                weight.set(outputNode, 0, one);
             } else {
                 int numSuccessors = inputGraph.getNumSuccessors(inputNode);
                 outputGraph.prepareNode(outputNode, numSuccessors + (uniformise ? 1 : 0));
