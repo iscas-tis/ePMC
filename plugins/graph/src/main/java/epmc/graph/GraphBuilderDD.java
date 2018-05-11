@@ -458,8 +458,10 @@ public final class GraphBuilderDD implements Closeable {
         TypeBoolean typeBoolean = TypeBoolean.get();
         TypeEnum typePlayer = TypeEnum.get(Player.class);
         ValueAlgebra weight = typeWeight.newValue();
-        ValueAlgebra zero = typeWeight.getZero();
-        ValueAlgebra one = typeWeight.getOne();
+        ValueAlgebra zero = typeWeight.newValue();
+        zero.set(0);
+        ValueAlgebra one = typeWeight.newValue();
+        one.set(1);
         ValueAlgebra sum = typeWeight.newValue();
         OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, typeWeight, typeWeight);
         ValueBoolean cmp = TypeBoolean.get().newValue();
