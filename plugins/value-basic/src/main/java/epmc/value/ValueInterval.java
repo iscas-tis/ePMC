@@ -43,8 +43,7 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     private final ValueReal lower;
     private final ValueReal upper;
     private final TypeInterval type;
-    private boolean immutable;
-
+ 
     ValueInterval(TypeInterval type, ValueReal lower, ValueReal upper) {
         assert type != null;
         assert lower != null;
@@ -57,10 +56,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     ValueInterval(TypeInterval type) {
         this(type, UtilValue.clone(TypeReal.get().getZero()),
                 UtilValue.clone(TypeReal.get().getZero()));
-    }
-
-    void setImmutable() {
-        this.immutable = true;
     }
 
     public ValueReal getIntervalLower() {
@@ -131,10 +126,6 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     @Override
     public TypeInterval getType() {
         return type;
-    }
-
-    boolean isImmutable() {
-        return immutable;
     }
 
     public static ValueAlgebra getLower(Value operand) {
