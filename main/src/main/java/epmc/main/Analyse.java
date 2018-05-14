@@ -140,7 +140,7 @@ public final class Analyse {
             model.read(rawModel.getModelInputIdentifier(), inputs);
         }
         Properties properties = model.getPropertyList();
-        if (rawModel.getPropertyInputStreams() != null && properties != null) {
+        if (rawModel != null && rawModel.getPropertyInputStreams() != null && properties != null) {
             properties.parseProperties(rawModel.getPropertyInputIdentifier(), rawModel.getPropertyInputStreams());
         }
 
