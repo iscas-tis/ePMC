@@ -28,6 +28,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.function.Predicate;
@@ -251,6 +252,21 @@ public final class Util {
             assert entry.getValue() != null;
         }
         for (Class<T> entry : map.values()) {
+            T instance = getInstance(entry);
+            if (tester.test(instance)) {
+                return instance;
+            }
+        }
+        return null;
+    }
+
+    public static <T> T getInstance(List<Class<T>> list, Predicate<T> tester) {
+        assert list != null;
+        assert tester != null;
+        for (Class<T> entry : list) {
+            assert entry != null;
+        }
+        for (Class<T> entry : list) {
             T instance = getInstance(entry);
             if (tester.test(instance)) {
                 return instance;
