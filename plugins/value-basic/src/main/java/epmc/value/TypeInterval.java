@@ -40,6 +40,7 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     private final ValueInterval zero;
     private final ValueInterval posInf;
     private final ValueInterval negInf;
+    private final TypeReal typeReal;
 
     public static TypeInterval get() {
         return ContextValue.get().getType(TypeInterval.class);
@@ -51,12 +52,17 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
                 ContextValue.get().makeUnique(type));
     }
 
-    public TypeInterval() {
-        TypeReal typeReal = TypeReal.get();
+    public TypeInterval(TypeReal typeReal) {
+        assert typeReal != null;
+        this.typeReal = typeReal;
         one = new ValueInterval(this, typeReal.getOne(), typeReal.getOne());
         zero = new ValueInterval(this, typeReal.getZero(), typeReal.getZero());
         posInf = new ValueInterval(this, typeReal.getPosInf(), typeReal.getPosInf());
         negInf = new ValueInterval(this, typeReal.getNegInf(), typeReal.getNegInf());
+    }
+
+    public TypeInterval() {
+        this(TypeReal.get());
     }
 
     @Override
@@ -114,5 +120,9 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     @Override
     public ValueAlgebra getNegInf() {
         return negInf;
+    }
+    
+    public TypeReal getTypeReal() {
+        return typeReal;
     }
 }
