@@ -36,7 +36,7 @@ public final class CommandTaskJANIInteractionDeleteUser implements CommandTask {
     }
 
     @Override
-    public void executeOnClient() {
+    public void executeInClientBeforeServer() {
         Database storage = new Database();
         UserManager userManager = new UserManager(storage);
         String username = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_MODIFIED_USERNAME);

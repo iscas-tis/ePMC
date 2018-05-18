@@ -57,15 +57,15 @@ public interface CommandTask {
      * Run part of the task to be executed on the client.
      * 
      */
-    default void executeOnClient() {
+    default void executeInClientBeforeServer() {
     }
 
     /**
      * Whether the tasks shall run on a server.
      * In case the method returns {@code false}, only
-     * {@link #executeOnClient()} shall be executed and no server shall be
+     * {@link #executeInClientBeforeServer()} shall be executed and no server shall be
      * started if the tool is run from command line. If the method returns
-     * {@code true}, at first {@link #executeOnClient()} shall be executed,
+     * {@code true}, at first {@link #executeInClientBeforeServer()} shall be executed,
      * then a server shall be started on which then
      * {@link CommandTask#executeInServer()} shall be executed.
      * 
@@ -79,5 +79,8 @@ public interface CommandTask {
      * Run part of the task to be executed on the server.
      */
     default void executeInServer() {
+    }
+    
+    default void executeInClientAfterServer() {
     }
 }

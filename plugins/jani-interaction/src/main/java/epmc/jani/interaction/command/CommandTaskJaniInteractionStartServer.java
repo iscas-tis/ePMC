@@ -60,7 +60,7 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
     }
 
     @Override
-    public void executeOnClient() {
+    public void executeInClientBeforeServer() {
         JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
         switch (type) {
         case STDIO:
