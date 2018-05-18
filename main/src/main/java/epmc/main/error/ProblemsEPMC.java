@@ -33,7 +33,11 @@ public final class ProblemsEPMC {
     private final static String PROBLEMS_EPMC = "ProblemsEPMC";
     /** File to read properties from does not exist. */
     public static final Problem FILE_NOT_EXISTS = newProblem("file-not-exists");
-
+    /** Could not create a certain result output file. */
+    public static final Problem NOT_CREATE_RESULT_OUTPUT = newProblem("not-create-result-output");
+    /** Error writing result output. */
+    public static final Problem ERROR_WRITING_RESULT_OUTPUT = newProblem("error-writing-result-output");    
+    
     /**
      * Generate new problem reading descriptions from EPMC property bundle.
      * The parameter must not be {@code null}.

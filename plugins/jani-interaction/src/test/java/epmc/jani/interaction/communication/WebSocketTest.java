@@ -77,7 +77,7 @@ public class WebSocketTest {
         options.set(OptionsJANIInteraction.JANI_INTERACTION_START_GUI, true);
         options.set(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES, true);
         CommandTaskJaniInteractionStartServer task = new CommandTaskJaniInteractionStartServer();
-        task.executeOnClient();
+        task.executeInClientBeforeServer();
     }
 
     @Ignore
@@ -89,6 +89,6 @@ public class WebSocketTest {
         options.set(OptionsJANIInteraction.JANI_INTERACTION_WEBSOCKET_ANONYMOUS_LOGINS, true);
         options.set(OptionsJANIInteraction.JANI_INTERACTION_START_GUI, true);
         CommandTaskJaniInteractionStartServer task = new CommandTaskJaniInteractionStartServer();
-        task.executeOnClient();
+        task.executeInClientBeforeServer();
     }
 }

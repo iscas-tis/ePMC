@@ -76,17 +76,19 @@ public final class UtilOptionsEPMC {
         OptionTypeStringList typeFileList = new OptionTypeStringList(FILE);
 
         options.addOption().setIdentifier(OptionsEPMC.MODEL_INPUT_FILES)
-        .setType(typeFileList).setCommandLine().build();
+            .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PROPERTY_INPUT_FILES)
-        .setType(typeFileList).setCommandLine().build();
+            .setType(typeFileList).setCommandLine().build();
+        options.addOption().setIdentifier(OptionsEPMC.RESULT_OUTPUT_FILES)
+            .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PORT)
-        .setType(typeInteger).setDefault(DEFAULT_SERVER_PORT)
-        .setCommandLine().build();
+            .setType(typeInteger).setDefault(DEFAULT_SERVER_PORT)
+            .setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.SERVER_NAME)
-        .setType(typeString).setDefault(DEFAULT_SERVER_NAME)
-        .setCommandLine().setGui().build();
+            .setType(typeString).setDefault(DEFAULT_SERVER_NAME)
+            .setCommandLine().setGui().build();
         options.addOption().setIdentifier(OptionsEPMC.PRINT_STACKTRACE)
-        .setType(typeBoolean).setDefault(false).build();
+            .setType(typeBoolean).setDefault(false).build();
 
         Map<String,Class<?>> commands = new HashMap<>();
         String commandTaskClassString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, OptionsEPMC.COMMAND_CLASS.name());

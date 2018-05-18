@@ -36,7 +36,7 @@ public class CommandTaskHelp implements CommandTask {
     }
 
     @Override
-    public void executeOnClient() {
+    public void executeInClientBeforeServer() {
         System.out.println(UsagePrinter.getUsage());
     }
 

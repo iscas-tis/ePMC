@@ -25,19 +25,15 @@ import java.util.Locale;
 
 import epmc.error.EPMCException;
 import epmc.error.Positional;
-import epmc.graph.LowLevel;
-import epmc.graph.Scheduler;
 import epmc.main.options.OptionsEPMC;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.RawModel;
-import epmc.modelchecker.RawProperty;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
 import epmc.plugin.OptionsPlugin;
 import epmc.plugin.UtilPlugin;
-import epmc.util.Util;
 
 /**
  * Main class of EPMC.
@@ -47,8 +43,6 @@ import epmc.util.Util;
 public final class EPMC {
     /** Empty string. */
     private final static String EMPTY = "";
-    /** String ": ".*/
-    private final static String SPACE_COLON = ": ";
 
     /**
      * The {@code main} entry point of EPMC.
@@ -67,48 +61,54 @@ public final class EPMC {
             Options.set(options);
             startInConsole(options);
         } catch (EPMCException e) {
-            String message = e.getProblem().getMessage(options.getLocale());
-            MessageFormat formatter = new MessageFormat(EMPTY);
-            formatter.applyPattern(message);
-            String formattedMessage = formatter.format(e.getArguments(), new StringBuffer(), null).toString();
-            Positional positional = e.getPositional();
-            if (positional != null) {
-                if (positional.getContent() != null) {
-                    System.err.print(positional.getContent());
-                    if (positional.getPart() != null
-                            || positional.getLine() > 0
-                            || positional.getColumn() > 0) {
-                        System.err.print(", ");
-                    }
-                }
-                if (positional.getPart() != null) {
-                    System.err.print("part: " + positional.getPart());
-                    if (positional.getLine() > 0 || positional.getColumn() > 0) {
-                        System.err.print(", ");
-                    }
-                }
-                if (positional.getLine() > 0) {
-                    System.err.print("line: " + positional.getLine());
-                    if (positional.getColumn() > 0) {
-                        System.err.print(", ");
-                    }                    
-                }
-                if (positional.getColumn() > 0) {
-                    System.err.print("column: " + positional.getColumn());
-                }
-                if (positional.getContent() != null
-                        || positional.getPart() != null
+            handleException(e, options);
+        }
+    }
+
+    private static void handleException(EPMCException e, Options options) {
+        assert e != null;
+        assert options != null;
+        String message = e.getProblem().getMessage(options.getLocale());
+        MessageFormat formatter = new MessageFormat(EMPTY);
+        formatter.applyPattern(message);
+        String formattedMessage = formatter.format(e.getArguments(), new StringBuffer(), null).toString();
+        Positional positional = e.getPositional();
+        if (positional != null) {
+            if (positional.getContent() != null) {
+                System.err.print(positional.getContent());
+                if (positional.getPart() != null
                         || positional.getLine() > 0
                         || positional.getColumn() > 0) {
-                    System.err.print(": ");
+                    System.err.print(", ");
                 }
             }
-            System.err.println(formattedMessage);
-            if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
-                e.printStackTrace();
+            if (positional.getPart() != null) {
+                System.err.print("part: " + positional.getPart());
+                if (positional.getLine() > 0 || positional.getColumn() > 0) {
+                    System.err.print(", ");
+                }
             }
-            System.exit(1);
+            if (positional.getLine() > 0) {
+                System.err.print("line: " + positional.getLine());
+                if (positional.getColumn() > 0) {
+                    System.err.print(", ");
+                }                    
+            }
+            if (positional.getColumn() > 0) {
+                System.err.print("column: " + positional.getColumn());
+            }
+            if (positional.getContent() != null
+                    || positional.getPart() != null
+                    || positional.getLine() > 0
+                    || positional.getColumn() > 0) {
+                System.err.print(": ");
+            }
         }
+        System.err.println(formattedMessage);
+        if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
+            e.printStackTrace();
+        }
+        System.exit(1);
     }
 
     /**
@@ -158,10 +158,11 @@ public final class EPMC {
         assert command != null;
         LogCommandLine log = new LogCommandLine(options);
         options.set(OptionsMessages.LOG, log);
-        command.executeOnClient();
+        command.executeInClientBeforeServer();
         if (command.isRunOnServer()) {
             execute(options, log);
         }
+        command.executeInClientAfterServer();
     }
 
     /**
@@ -180,47 +181,6 @@ public final class EPMC {
         if (log.getException() != null) {
             throw log.getException();
         }
-        printResults(options, log);
     }
 
-    /**
-     * Print model checking result to command line.
-     * The options and result parameters must not be {@code null}.
-     * 
-     * @param options options to use
-     * @param log log used
-     */
-    private static void printResults(Options options, LogCommandLine log) {
-        assert options != null;
-        assert log != null;
-        for (RawProperty property : log.getProperties()) {
-            String exprString = property.getDefinition();
-            Object propResult = log.get(property);
-            if (propResult == null) {
-                continue;
-            }
-            String resultString = null;
-            if (propResult instanceof EPMCException) {
-                EPMCException e = (EPMCException) propResult;
-                String message = e.getProblem().getMessage(options.getLocale());
-                MessageFormat formatter = new MessageFormat(message);
-                formatter.applyPattern(message);
-                resultString = formatter.format(e.getArguments());
-                if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
-                    e.printStackTrace();
-                }
-            } else {
-                resultString = propResult.toString();
-            }
-            System.out.println(exprString + SPACE_COLON + resultString);
-            Scheduler scheduler = log.getScheduler(property);
-            LowLevel lowLevel = log.getLowLevel(property);
-            if (scheduler != null) {
-                Util.printScheduler(System.out, lowLevel, scheduler);
-            }
-        }
-        if (log.getCommonResult() != null) {
-            System.out.println(log.getCommonResult().toString());
-        }
-    }
 }

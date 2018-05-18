@@ -47,5 +47,7 @@ public enum OptionsEPMC {
     /** run mode of EPMC {@link OptionsTypesEPMC.RunMode}) */
     RUN_MODE,
     /** {@link Map} from command {@link String} to available command {@link Class} */
-    COMMAND_CLASS,    
+    COMMAND_CLASS,
+    /** file(s) to write result(s) to*/
+    RESULT_OUTPUT_FILES,
 }
