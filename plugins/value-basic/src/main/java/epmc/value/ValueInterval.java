@@ -54,8 +54,8 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     ValueInterval(TypeInterval type) {
-        this(type, UtilValue.clone(TypeReal.get().getZero()),
-                UtilValue.clone(TypeReal.get().getZero()));
+        this(type, UtilValue.clone(type.getTypeReal().getZero()),
+                UtilValue.clone(type.getTypeReal().getZero()));
     }
 
     public ValueReal getIntervalLower() {
@@ -100,16 +100,16 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
         assert string != null;
         string = string.trim();
         String[] parts = string.split(COMMA);
-        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, type.getTypeReal(), type.getTypeReal());
         if (parts.length == 1) {
-            Value point = UtilValue.newValue(TypeReal.get(), parts[0]);
+            Value point = UtilValue.newValue(type.getTypeReal(), parts[0]);
             setReal.apply(getIntervalLower(), point);
             setReal.apply(getIntervalUpper(), point);
         } else if (parts.length == 2) {
             String lowerString = parts[0].substring(1);
             String upperString = parts[1].substring(0, parts[1].length() - 1);
-            Value lower = UtilValue.newValue(TypeReal.get(), lowerString);
-            Value upper = UtilValue.newValue(TypeReal.get(), upperString);
+            Value lower = UtilValue.newValue(type.getTypeReal(), lowerString);
+            Value upper = UtilValue.newValue(type.getTypeReal(), upperString);
             setReal.apply(getIntervalLower(), lower);
             setReal.apply(getIntervalUpper(), upper);
         } else {

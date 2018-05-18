@@ -36,6 +36,7 @@ public interface ValueArrayAlgebra extends ValueArray {
         }
     }
 
+    // TODO get rid of this method
     void set(int entry, int index);
 
     @Override
