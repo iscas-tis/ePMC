@@ -70,7 +70,7 @@ public interface ValueArray extends Value {
 
     int size();
 
-    void get(Value presStateProb, int index);
+    void get(Value value, int index);
 
     void set(Value value, int index);
 }

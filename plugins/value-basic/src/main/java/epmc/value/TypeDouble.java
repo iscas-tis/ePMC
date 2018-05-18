@@ -54,6 +54,10 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     private final ValueDouble lower;
     private final ValueDouble upper;
 
+    public TypeDouble() {
+        this(null, null);
+    }
+    
     public TypeDouble(ValueDouble lower, ValueDouble upper) {
         valueOne.setImmutable();
         valueZero.setImmutable();
