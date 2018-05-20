@@ -23,7 +23,7 @@ package epmc.options;
 import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -71,7 +71,7 @@ public final class OptionTypeStringListSubsetDirect<V> implements OptionType {
             assert entry.getValue() != null;
         }
         this.choices = map;
-        this.reversed = new HashMap<>();
+        this.reversed = new LinkedHashMap<>();
         for (Entry<String, V> entry : map.entrySet()) {
             reversed.put(entry.getValue(), entry.getKey());
         }
