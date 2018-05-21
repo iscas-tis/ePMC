@@ -36,7 +36,6 @@ final class BackendTester {
         public void send(Object client, String message) {
             assert client != null;
             assert message != null;
-            assert client == this;
             pending.add(message);
         }
 
