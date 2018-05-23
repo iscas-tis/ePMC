@@ -170,10 +170,11 @@ public final class EPMC {
      * The options parameter must not be {@code null}.
      * 
      * @param options options to use
-     * @param log
+     * @param log log to use
      */
     private static void execute(Options options, LogCommandLine log) {
         assert options != null;
+        assert log != null;
         RawModel model = new RawModelLocalFiles(
                 options.getStringList(OptionsEPMC.MODEL_INPUT_FILES).toArray(new String[0]),
                 options.getStringList(OptionsEPMC.PROPERTY_INPUT_FILES).toArray(new String[0]));
