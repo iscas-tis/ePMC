@@ -73,7 +73,9 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder();
-        builder.append("interval");
+        builder.append("interval[");
+        builder.append(typeReal);
+        builder.append("]");
         return builder.toString();
     }
 
@@ -127,9 +129,5 @@ public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     @Override
     public ValueAlgebra getNegInf() {
         return negInf;
-    }
-    
-    public TypeReal getTypeReal() {
-        return typeReal;
     }
 }
