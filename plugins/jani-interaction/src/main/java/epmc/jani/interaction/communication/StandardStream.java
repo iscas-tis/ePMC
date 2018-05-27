@@ -22,6 +22,7 @@ package epmc.jani.interaction.communication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.Reader;
 import java.nio.channels.AsynchronousCloseException;
 import java.nio.channels.Channels;
@@ -48,17 +49,42 @@ public final class StandardStream implements BackendFeedback {
     private final LinkedBlockingDeque<String> output = new LinkedBlockingDeque<>();
     /** Backend handling the messages. */
     private final Backend backend;
-    private Thread handleThread;
-    private Thread outputThread;
-    private ReadableByteChannel in;
+    private final Thread handleThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (!done) {
+                String line = null;
+                try {
+                    line = input.take();
+                } catch (InterruptedException e) {
+                    break;
+                }
+                backend.handle(StandardStream.this, line);
+            }
+        }
+    });
+    private final Thread outputThread = new Thread(new Runnable() {
+        @Override
+        public void run() {
+            while (!done) {
+                String line = null;
+                try {
+                    line = output.take();
+                    System.out.println(line);
+                } catch (InterruptedException e) {
+                    break;
+                }
+            }
+        }
+    });
+    private final ReadableByteChannel inputChannel;
 
     /**
      * Construct new standard I/O interaction object.
-     * The options parameter must not be {@code null}
-     * 
      */
-    public StandardStream() {
-        this.backend = new Backend(this);
+    public StandardStream(InputStream inputStream) {
+        backend = new Backend(this);
+        inputChannel = Channels.newChannel(inputStream);
     }
 
     /**
@@ -70,8 +96,7 @@ public final class StandardStream implements BackendFeedback {
             @Override
             public void run() {
                 String line = null;
-                in = Channels.newChannel(System.in);
-                Reader reader = Channels.newReader(in, UTF_8);
+                Reader reader = Channels.newReader(inputChannel, UTF_8);
                 BufferedReader buf = new BufferedReader(reader);
                 while (!done) {
                     try {
@@ -97,36 +122,7 @@ public final class StandardStream implements BackendFeedback {
             }
         }).start();
 
-        handleThread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                while (!done) {
-                    String line = null;
-                    try {
-                        line = input.take();
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                    backend.handle(StandardStream.this, line);
-                }
-            }
-        });
         handleThread.start();
-        outputThread = new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                while (!done) {
-                    String line = null;
-                    try {
-                        line = output.take();
-                        System.out.println(line);
-                    } catch (InterruptedException e) {
-                        break;
-                    }
-                }
-            }
-        });
         outputThread.start();
     }
 
@@ -148,13 +144,13 @@ public final class StandardStream implements BackendFeedback {
         assert who == this;
         done = true;
         try {
-            in.close();
+            inputChannel.close();
         } catch (IOException e) {
         }
         handleThread.interrupt();
         outputThread.interrupt();
         try {
-            in.close();
+            inputChannel.close();
         } catch (IOException e) {
         }
     }
