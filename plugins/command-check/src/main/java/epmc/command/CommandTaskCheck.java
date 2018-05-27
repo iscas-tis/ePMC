@@ -120,11 +120,13 @@ public class CommandTaskCheck implements CommandTask {
         if (log.getCommonResult() != null) {
             System.out.println(log.getCommonResult().toString());
         }
-        for (OutputStream out : resultOutput) {
-            try {
-                out.close();
-            } catch (IOException e) {
-                UtilError.fail(ProblemsEPMC.ERROR_WRITING_RESULT_OUTPUT, e);
+        if (resultOutput != null) {
+            for (OutputStream out : resultOutput) {
+                try {
+                    out.close();
+                } catch (IOException e) {
+                    UtilError.fail(ProblemsEPMC.ERROR_WRITING_RESULT_OUTPUT, e);
+                }
             }
         }
     }

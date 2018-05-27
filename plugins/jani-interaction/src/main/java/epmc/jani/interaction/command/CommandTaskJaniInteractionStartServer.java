@@ -64,7 +64,7 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
         JANIInteractionIO type = Options.get().get(OptionsJANIInteraction.JANI_INTERACTION_TYPE);
         switch (type) {
         case STDIO:
-            StandardStream standard = new StandardStream();
+            StandardStream standard = new StandardStream(System.in);
             standard.start();
             break;
         case WEBSOCKETS:
