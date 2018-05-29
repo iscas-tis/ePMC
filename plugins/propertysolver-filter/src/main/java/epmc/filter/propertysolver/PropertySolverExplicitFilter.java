@@ -283,7 +283,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 @Override
                 public void apply(Value result, Value... operands) {
                     add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
-                            ? TypeAlgebra.as(resultValue.getType()).getOne()
+                            ? UtilValue.newValue(TypeAlgebra.as(resultValue.getType()), 1)
                                     : TypeAlgebra.as(resultValue.getType()).getZero());
                 }
             };

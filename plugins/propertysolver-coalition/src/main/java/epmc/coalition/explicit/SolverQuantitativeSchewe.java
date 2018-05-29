@@ -61,6 +61,7 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
@@ -534,7 +535,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         QuantitativeResult result = reach(induced, reach, computeStrategyP1);
         ValueArrayAlgebra probabilities = result.getProbabilities();
         ValueAlgebra value = probabilities.getType().getEntryType().newValue();
-        ValueAlgebra one = value.getType().getOne();
+        ValueAlgebra one = UtilValue.newValue(value.getType(), 1);
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, one.getType(), value.getType());
         for (int i = 0; i < probabilities.size(); i++) {
             probabilities.get(value, i);

@@ -32,6 +32,7 @@ import epmc.value.Type;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
@@ -92,8 +93,8 @@ public final class OperatorEvaluatorSgn implements OperatorEvaluator {
         assert operands != null;
         assert operands.length >= 1;
         assert operands[0] != null;
-        Value zero = TypeInteger.get().getZero();
-        Value one = TypeInteger.get().getOne();
+        Value zero = UtilValue.newValue(TypeInteger.get(), 0);
+        Value one = UtilValue.newValue(TypeInteger.get(), 1);
         OperatorEvaluator addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, TypeInteger.get());
         OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, operands[0].getType(), zero.getType());
         OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, operands[0].getType(), zero.getType());

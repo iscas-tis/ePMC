@@ -172,7 +172,7 @@ public final class SignatureManager {
 
     private void normaliseActionSignature() {
         int size = prepareActionSignature.getSize();
-        Value one = getTypeWeightTransition().getOne();
+        Value one = UtilValue.newValue(getTypeWeightTransition(), 1);
         set.apply(entry, getTypeWeightTransition().getZero());
         for (int index = 0; index < size; index++) {
             prepareActionSignature.getValue(index);

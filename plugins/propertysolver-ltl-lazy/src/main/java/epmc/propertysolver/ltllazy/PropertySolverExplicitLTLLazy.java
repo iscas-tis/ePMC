@@ -851,10 +851,11 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, innerResult.getType(), innerResult.getType());
         if (negate.getBoolean()) {
+            ValueAlgebra one = UtilValue.newValue(TypeAlgebra.as(innerResult.getType()), 1);
             ValueAlgebra entry = TypeAlgebra.as(innerResult.getType()).newValue();
             for (int i = 0; i < innerResult.size(); i++) {
                 innerResult.getExplicitIthValue(entry, i);
-                subtract.apply(entry, TypeAlgebra.as(innerResult.getType()).getOne(), entry);
+                subtract.apply(entry, one, entry);
                 innerResult.setExplicitIthValue(entry, i);
             }
         }

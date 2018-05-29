@@ -53,8 +53,8 @@ final class MinimalityChecker implements Closeable {
         numActions = polytopeSet.getNumActions();
         problem = contextConstraintSolver.newProblem();
         assert problem != null; // TODO replace by ensure
-        zero = TypeReal.get().getZero();
-        one = TypeReal.get().getOne();
+        zero = UtilValue.newValue(TypeReal.get(), 0);
+        one = UtilValue.newValue(TypeReal.get(), 1);
         mOne = TypeReal.get().newValue();
         addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, TypeReal.get());
         addInverse.apply(mOne, one);
@@ -149,7 +149,7 @@ final class MinimalityChecker implements Closeable {
     }
 
     private void prepareLambdaSum() {
-        Value one = getTypeReal().getOne();
+        Value one = UtilValue.newValue(getTypeReal(), 1);
         ValueArrayAlgebra values = newArrayReal(numActions - 1);
         int[] variables = new int[numActions - 1];
         int varNr = 0;

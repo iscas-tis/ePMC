@@ -428,7 +428,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         ValueArray resultValues = UtilValue.newArray(solverResult.getType(), forStates.size());
         // TODO check!
         ValueAlgebra entry = solverResult.getType().getEntryType().newValue();
-        ValueAlgebra one = TypeWeight.get().getOne();
+        ValueAlgebra one = UtilValue.newValue(TypeWeight.get(), 1);
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeight.get(), TypeWeight.get());
         for (int i = 0; i < forStates.size(); i++) {
             int node = forStates.getExplicitIthState(i);

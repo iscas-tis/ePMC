@@ -239,7 +239,7 @@ final class ProblemSetSolver {
 
     private void prepareVariables(ConstraintSolver problem, int numClasses, int numActions) {
         Value zero = getTypeReal().getZero();
-        Value one = getTypeReal().getOne();
+        Value one = UtilValue.newValue(getTypeReal(), 1);
         for (int actionNr = 0; actionNr < numActions; actionNr++) {
             for (int classNr = 0; classNr < numClasses; classNr++) {
                 problem.addVariable(VAR_PREFIX + UNDERSCORE + actionNr + UNDERSCORE + classNr,
@@ -256,7 +256,7 @@ final class ProblemSetSolver {
         int numActions = problemSet.getNumActions();
         Value entry = getTypeReal().newValue();
         ValueArray actionOnes = UtilValue.newArray(getTypeRealArray(), numActions);
-        Value one = getTypeReal().getOne();
+        Value one = UtilValue.newValue(getTypeReal(), 1);
         for (int actionNr = 0; actionNr < numActions; actionNr++) {
             actionOnes.set(one, actionNr);
         }
@@ -290,7 +290,7 @@ final class ProblemSetSolver {
         ValueReal entry = getTypeReal().newValue();
         ValueReal finalEntry = getTypeReal().newValue();
         ValueInterval iEntry = getTypeInterval().newValue();
-        ValueReal one = getTypeReal().getOne();
+        ValueReal one = UtilValue.newValue(getTypeReal(), 1);
         int[] variables = new int[numClasses];
         problemSet.getDefender(iEntry, actionNr, classNr);
         setReal.apply(entry, min ? iEntry.getIntervalLower() : iEntry.getIntervalUpper());

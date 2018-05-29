@@ -36,12 +36,6 @@ public final class TypeClock implements TypeAlgebra {
     }
 
     @Override
-    public ValueClock getOne() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    @Override
     public TypeArrayAlgebra getTypeArray() {
         // TODO Auto-generated method stub
         return null;

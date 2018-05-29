@@ -22,6 +22,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeEnum;
 import epmc.value.TypeReal;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
@@ -54,7 +55,7 @@ public final class ExplorerExtensionIMDP implements ExplorerExtension {
         systemState = (PropertyNodeGeneral) system.getNodeProperty(CommonProperties.STATE);
         systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
         this.realZero = TypeReal.get().getZero();
-        this.realOne = TypeReal.get().getOne();
+        this.realOne = UtilValue.newValue(TypeReal.get(), 1);
         this.explorer = explorer;
         le = ContextValue.get().getEvaluator(OperatorLe.LE, TypeReal.get(), TypeReal.get());
         ge = ContextValue.get().getEvaluator(OperatorGe.GE, TypeReal.get(), TypeReal.get());

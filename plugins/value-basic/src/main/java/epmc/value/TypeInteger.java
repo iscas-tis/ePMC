@@ -68,13 +68,11 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     private final ValueInteger lowerBound;
     private final ValueInteger upperBound;
     private final ValueInteger valueZero = new ValueInteger(this);
-    private final ValueInteger valueOne = new ValueInteger(this);
     private final ValueInteger valueMax = new ValueInteger(this);
     private final int numBits;
 
     public TypeInteger(int lowerBound, int upperBound) {
         valueZero.set(0);
-        valueOne.set(1);
         valueMax.set(Integer.MAX_VALUE);
         assert lowerBound <= upperBound;
         if (lowerBound != Integer.MIN_VALUE && upperBound != Integer.MAX_VALUE) {
@@ -84,7 +82,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
             numBits = Integer.SIZE;
         }
         valueZero.setImmutable();
-        valueOne.setImmutable();
         valueMax.setImmutable();
         this.lowerBound = newValue();
         this.lowerBound.set(lowerBound);
@@ -127,11 +124,6 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
     @Override
     public ValueInteger getZero() {
         return valueZero;
-    }
-
-    @Override
-    public ValueInteger getOne() {
-        return valueOne;
     }
 
     public int getLowerInt() {

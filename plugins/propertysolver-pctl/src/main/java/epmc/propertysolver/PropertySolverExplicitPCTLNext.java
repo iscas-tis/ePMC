@@ -186,7 +186,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
         objective.setGraph(graph);
         objective.setMin(min);
         objective.setValues(values);
-        objective.setTime(TypeInteger.get().getOne());
+        objective.setTime(UtilValue.newValue(TypeInteger.get(), 1));
         configuration.setObjective(objective);
         configuration.solve();
         values = objective.getResult();
