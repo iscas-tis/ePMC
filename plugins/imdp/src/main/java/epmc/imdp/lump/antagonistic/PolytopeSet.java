@@ -66,7 +66,7 @@ final class PolytopeSet implements Comparable<PolytopeSet>, Cloneable {
      * This method may be used to avoid frequent object creation.
      */
     void reset() {
-        Value zero = getTypeInterval().getZero();
+        Value zero = UtilValue.newValue(getTypeInterval(), 0);
         int totalSize = intervals.size();
         for (int entryNr = 0; entryNr < totalSize; entryNr++) {
             intervals.set(zero, entryNr);

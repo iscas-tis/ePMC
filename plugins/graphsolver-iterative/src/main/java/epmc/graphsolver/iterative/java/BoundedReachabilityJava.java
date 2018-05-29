@@ -289,7 +289,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
-        Value zero = TypeReal.get().getZero();
+        Value zero = UtilValue.newValue(TypeReal.get(), 0);
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
@@ -352,7 +352,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra weighted = newValueWeight();
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
@@ -394,7 +394,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);

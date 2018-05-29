@@ -274,6 +274,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case COUNT: {
             return new OperatorEvaluator() {
                 private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+                private Value zero = UtilValue.newValue(TypeAlgebra.as(resultValue.getType()), 0);
                 
                 @Override
                 public Type resultType() {
@@ -284,7 +285,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
                 public void apply(Value result, Value... operands) {
                     add.apply(resultValue, resultValue, ValueBoolean.as(value).getBoolean()
                             ? UtilValue.newValue(TypeAlgebra.as(resultValue.getType()), 1)
-                                    : TypeAlgebra.as(resultValue.getType()).getZero());
+                                    : zero);
                 }
             };
         }
@@ -344,7 +345,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         assert value != null;
         switch (type) {
         case COUNT:
-            return UtilValue.clone(TypeInteger.get().getZero());
+            return UtilValue.clone(UtilValue.newValue(TypeInteger.get(), 0));
         case EXISTS:
             return UtilValue.clone(TypeBoolean.get().getFalse());
         case FORALL:
@@ -356,9 +357,9 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
             set.apply(result.getIntervalUpper(), value);
             return result;
         case AVG:
-            return UtilValue.clone(TypeWeight.get().getZero());
+            return UtilValue.clone(UtilValue.newValue(TypeWeight.get(), 0));
         case SUM:
-            return UtilValue.clone(TypeWeight.get().getZero());
+            return UtilValue.clone(UtilValue.newValue(TypeWeight.get(), 0));
         default:
             return UtilValue.clone(UtilValue.clone(value));
         }

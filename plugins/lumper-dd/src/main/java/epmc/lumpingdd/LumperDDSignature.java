@@ -397,7 +397,7 @@ public class LumperDDSignature implements LumperDD {
             falseValue = tBoolean.getFalse();
         } else if (TypeReal.is(t) || TypeInteger.is(t)) {
             TypeReal tReal = TypeReal.as(t);
-            falseValue = tReal.getZero();
+            falseValue = UtilValue.newValue(tReal, 0);
         } else {
             falseValue = null;
             assert false;

@@ -82,7 +82,7 @@ final class DownClosure {
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
             boolean numerical) {
         assert outside != null;
-        ValueAlgebra zero = TypeWeight.get().getZero();
+        ValueAlgebra zero = UtilValue.newValue(TypeWeight.get(), 0);
         ValueAlgebra lowerBound = TypeWeight.get().newValue();
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         set.apply(lowerBound, zero);

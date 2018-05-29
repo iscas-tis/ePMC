@@ -74,7 +74,7 @@ final class ProblemSet implements Comparable<ProblemSet> {
      * This method may be used to avoid frequent object creation.
      */
     void reset() {
-        Value zero = getTypeInterval().getZero();
+        Value zero = UtilValue.newValue(getTypeInterval(), 0);
         int totalSize = numClasses + (numClasses * numActions);
         for (int entryNr = 0; entryNr < totalSize; entryNr++) {
             intervals.set(zero, entryNr);

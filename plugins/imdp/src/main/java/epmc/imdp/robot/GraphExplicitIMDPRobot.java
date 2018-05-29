@@ -85,7 +85,8 @@ final class GraphExplicitIMDPRobot implements GraphExplicit {
     }
 
     private final class NodePropertyZero implements NodeProperty {
-
+        Value zero = UtilValue.newValue(TypeWeight.get(), 0);
+        
         @Override
         public GraphExplicit getGraph() {
             return GraphExplicitIMDPRobot.this;
@@ -93,7 +94,7 @@ final class GraphExplicitIMDPRobot implements GraphExplicit {
 
         @Override
         public Value get(int queriedNode) {
-            return TypeWeight.get().getZero();
+            return zero;
         }
 
         @Override
@@ -118,7 +119,7 @@ final class GraphExplicitIMDPRobot implements GraphExplicit {
             TypeArrayAlgebra typeArray = array.getType();
             typeEntry = typeArray.getEntryType();
             this.array = array;
-            zero = typeEntry.getZero();
+            zero = UtilValue.newValue(typeEntry, 0);
             weight = typeEntry.newValue();
         }
 

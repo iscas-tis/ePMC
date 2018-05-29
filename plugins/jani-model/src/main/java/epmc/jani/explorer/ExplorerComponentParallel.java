@@ -41,6 +41,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeightTransition;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
@@ -308,6 +309,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
         state.set(true);
         int numLeftSuccessors = left.getNumSuccessors();
         int numRightSuccessors = right.getNumSuccessors();
+        ValueAlgebra realZero = UtilValue.newValue(TypeReal.get(), 0);
         for (int leftSuccNr = 0; leftSuccNr < numLeftSuccessors; leftSuccNr++) {
             int leftAction = leftLabel.getInt(leftSuccNr);
             if (!synchronisingActions[leftAction]) {
@@ -324,7 +326,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
                 successor.setAndMark(left.getSuccessorNode(leftSuccNr));
                 successor.setSet(right.getSuccessorNode(rightSuccNr));
                 label.set(numSuccessors, leftAction);
-                weight.set(numSuccessors, TypeReal.get().getZero());
+                weight.set(numSuccessors, realZero);
                 numSuccessors++;
             }
         }
@@ -338,7 +340,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
             successor.unmark();
             successor.setAndMark(left.getSuccessorNode(leftSuccNr));
             label.set(numSuccessors, leftAction);
-            weight.set(numSuccessors, TypeReal.get().getZero());
+            weight.set(numSuccessors, realZero);
             numSuccessors++;
         }
         for (int rightSuccNr = 0; rightSuccNr < numRightSuccessors; rightSuccNr++) {
@@ -351,7 +353,7 @@ public final class ExplorerComponentParallel implements ExplorerComponent {
             successor.unmark();
             successor.setAndMark(right.getSuccessorNode(rightSuccNr));
             label.set(numSuccessors, rightAction);
-            weight.set(numSuccessors, TypeReal.get().getZero());
+            weight.set(numSuccessors, realZero);
             numSuccessors++;
         }
     }

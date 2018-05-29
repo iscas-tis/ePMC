@@ -30,13 +30,14 @@ import epmc.operator.OperatorSubtract;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
 public final class GraphExplicitModifier {    
     public static void embed(GraphExplicit graph) {
         assert graph != null;
-        ValueAlgebra zero = TypeWeight.get().getZero();
+        ValueAlgebra zero = UtilValue.newValue(TypeWeight.get(), 0);
         ValueAlgebra sum = newValueWeight();
         ValueAlgebra weight = newValueWeight();
         NodeProperty playerProp = graph.getNodeProperty(CommonProperties.PLAYER);
@@ -67,7 +68,7 @@ public final class GraphExplicitModifier {
             OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, uniformisationRate.getType(), uniRate.getType());
             set.apply(uniRate, uniformisationRate);
         }
-        ValueAlgebra zero = TypeWeight.get().getZero();
+        ValueAlgebra zero = UtilValue.newValue(TypeWeight.get(), 0);
         ValueAlgebra sum = newValueWeight();
         OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueAlgebra weight = newValueWeight();

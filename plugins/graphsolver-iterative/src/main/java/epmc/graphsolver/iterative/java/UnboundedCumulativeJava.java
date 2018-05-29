@@ -272,7 +272,7 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
             return;
         }
         distanceEvaluator.apply(thisDistance, previous, current);
-        ValueAlgebra zero = previous.getType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(previous.getType(), 0);
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
             distanceEvaluator.apply(zeroDistance, previous, zero);
             isZeroEvaluator.apply(cmp, zeroDistance);
@@ -341,8 +341,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        ValueAlgebra realZero = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, realZero);
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
@@ -390,8 +391,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        ValueAlgebra realZero = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, realZero);
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int from = stateBounds[state];
@@ -446,8 +448,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        ValueReal realZero = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, realZero);
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
@@ -512,8 +515,9 @@ public final class UnboundedCumulativeJava implements GraphSolverExplicit {
         ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        ValueAlgebra realZero = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, realZero);
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];

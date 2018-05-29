@@ -67,6 +67,7 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.ValueInteger;
 import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.map.hash.TLongObjectHashMap;
 import gnu.trove.map.hash.TObjectLongHashMap;
@@ -74,6 +75,7 @@ import gnu.trove.strategy.IdentityHashingStrategy;
 
 public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public final static String IDENTIFIER = "cudd-mtbdd";
+    private final ValueInteger integerZero = UtilValue.newValue(TypeInteger.get(), 0);
 
     private final static class OperatorKey {
         private Operator operator;
@@ -160,7 +162,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get().getZero());
+                return valueToNumber(integerZero);
             }
         }
     }
@@ -181,7 +183,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get().getZero());
+                return valueToNumber(integerZero);
             }
         }
     }
@@ -204,7 +206,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get().getZero());
+                return valueToNumber(integerZero);
             }
         }
     }

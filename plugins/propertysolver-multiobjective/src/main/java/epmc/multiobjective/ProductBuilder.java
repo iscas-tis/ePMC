@@ -67,6 +67,7 @@ import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeWeight;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import gnu.trove.map.hash.THashMap;
@@ -201,7 +202,7 @@ final class ProductBuilder {
         NodeProperty[] stateRewards = new NodeProperty[property.getOperands().size()];
         EdgeProperty[] transRewards = new EdgeProperty[property.getOperands().size()];
         int propNr = 0;
-        Value zero = TypeWeight.get().getZero();
+        Value zero = UtilValue.newValue(TypeWeight.get(), 0);
         for (Expression objective : property.getOperands()) {
             ExpressionQuantifier objectiveQuantifier = (ExpressionQuantifier) objective;
             Expression quantified = objectiveQuantifier.getQuantified();

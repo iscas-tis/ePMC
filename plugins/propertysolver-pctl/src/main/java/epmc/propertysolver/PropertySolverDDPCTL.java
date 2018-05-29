@@ -300,7 +300,7 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         DD rightNotDD = rightDD.not();
         ValueBoolean cmp = TypeBoolean.get().newValue();
         OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, leftValue.getType(), leftValue.getType());
-        gt.apply(cmp, leftValue, leftValue.getType().getZero());
+        gt.apply(cmp, leftValue, UtilValue.newValue(leftValue.getType(), 0));
         if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             failDD = isUntil(inner) ? leftNotDD : rightNotDD;
             DD failNotDD = failDD.not();
@@ -363,11 +363,10 @@ public final class PropertySolverDDPCTL implements PropertySolver {
         return result;
     }
 
-    private DD checkUntilQualitative(DD targetDD, DD failDD)
-    {
+    private DD checkUntilQualitative(DD targetDD, DD failDD) {
         DD nodeSpace = modelGraph.getNodeSpace();
         Value oneHalf = UtilValue.newValue(TypeReal.get(), "1/2");
-        Value zero = TypeReal.get().getZero();
+        Value zero = UtilValue.newValue(TypeReal.get(), 0);
         DD rest = nodeSpace.andNot(targetDD, failDD).toMTWith(oneHalf, zero);
         DD result = targetDD.toMT().addWith(rest);
         return result;

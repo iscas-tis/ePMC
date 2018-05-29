@@ -54,8 +54,8 @@ public final class ValueInterval implements ValueAlgebra, ValueRange, ValueSetSt
     }
 
     ValueInterval(TypeInterval type) {
-        this(type, UtilValue.clone(type.getEntryType().getZero()),
-                UtilValue.clone(type.getEntryType().getZero()));
+        this(type, UtilValue.newValue(type.getEntryType(), 0),
+                UtilValue.newValue(type.getEntryType(), 0));
     }
 
     public ValueReal getIntervalLower() {

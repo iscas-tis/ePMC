@@ -174,7 +174,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
             return;
         }
         distanceEvaluator.apply(thisDistance, previous, current);
-        ValueAlgebra zero = previous.getType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(previous.getType(), 0);
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
             distanceEvaluator.apply(zeroDistance, previous, zero);
             isZeroEvaluator.apply(cmp, zeroDistance);
@@ -229,8 +229,8 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        ValueReal distance = TypeReal.get().getZero();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
+        ValueReal distance = UtilValue.newValue(TypeReal.get(), 0);
+        ValueAlgebra zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         ValueAlgebra optInitValue = typeWeight.getNegInf();
         int valuesTotalSize = values.size();
         for (int index = 0; index < valuesTotalSize; index++) {
@@ -248,8 +248,9 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         OperatorEvaluator setWeight = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, values.getType(), values.getType());
+        ValueReal zeroReal = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, zeroReal);
             for (int state = 0; state < numStates; state++) {
                 stopRewards.get(stopReward, state);
                 presValues.get(presStateProb, state);
@@ -320,7 +321,7 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
-        Value zero = values.getType().getEntryType().getZero();
+        Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         Value optInitValue = typeWeight.getNegInf();
         int valuesTotalSize = values.size();
         for (int index = 0; index < valuesTotalSize; index++) {
@@ -337,8 +338,9 @@ public final class GraphSolverIterativeMultiObjectiveWeightedJava implements Gra
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         OperatorEvaluator setWeight = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        ValueAlgebra zeroReal = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, zeroReal);
             for (int state = 0; state < numStates; state++) {
                 stopRewards.get(objWeight, state);
                 values.get(presStateProb, state);

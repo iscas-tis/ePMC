@@ -206,7 +206,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         }
 
         BitSet zeroNodes = UtilBitSet.newBitSetUnbounded();
-        Value zero = TypeWeight.get().getZero();
+        Value zero = UtilValue.newValue(TypeWeight.get(), 0);
         Value entry = newValueWeight();
         OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());

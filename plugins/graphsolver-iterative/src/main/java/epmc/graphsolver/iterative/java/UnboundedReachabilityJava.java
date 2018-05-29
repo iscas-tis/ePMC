@@ -254,7 +254,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
             return;
         }
         distanceEvaluator.apply(thisDistance, previous, current);
-        ValueAlgebra zero = previous.getType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(previous.getType(), 0);
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
             distanceEvaluator.apply(zeroDistance, previous, zero);
             isZeroEvaluator.apply(cmp, zeroDistance);
@@ -317,7 +317,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra succStateProb = newValueWeight();
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
-        ValueAlgebra zero = values.getType().getEntryType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         ValueReal distance = TypeReal.get().newValue();
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
@@ -327,8 +327,9 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        ValueReal realZero = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, realZero);
             for (int state = 0; state < numStates; state++) {
                 int from = stateBounds[state];
                 int to = stateBounds[state + 1];
@@ -370,7 +371,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra nextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
-        Value zero = values.getType().getEntryType().getZero();
+        Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         int iterations = 0;
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.as(precisionValue).set(Double.toString(tolerance / 2));
@@ -378,8 +379,9 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        ValueAlgebra realZero = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, realZero);
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int from = stateBounds[state];
@@ -421,7 +423,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
-        Value zero = values.getType().getEntryType().getZero();
+        Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
@@ -435,8 +437,9 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
         OperatorEvaluator setArray = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get().getTypeArray(), TypeWeight.get().getTypeArray());
+        ValueAlgebra zeroReal = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, zeroReal);
             for (int state = 0; state < numStates; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
@@ -491,7 +494,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
-        Value zero = values.getType().getEntryType().getZero();
+        Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
         OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator maxEv = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
@@ -502,8 +505,9 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         OperatorEvaluator setReal = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());
+        ValueAlgebra zeroReal = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            setReal.apply(distance, TypeReal.get().getZero());
+            setReal.apply(distance, zeroReal);
             for (int state = 0; state < numStates; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
