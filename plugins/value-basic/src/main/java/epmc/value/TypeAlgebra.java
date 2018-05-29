@@ -35,9 +35,6 @@ public interface TypeAlgebra extends Type {
         }
     }
 
-    // TODO get rid of this function
-    ValueAlgebra getZero();
-
     @Override
     TypeArrayAlgebra getTypeArray();
 

@@ -54,7 +54,7 @@ public final class ExplorerExtensionIMDP implements ExplorerExtension {
         system = explorer.getExplorerSystem();
         systemState = (PropertyNodeGeneral) system.getNodeProperty(CommonProperties.STATE);
         systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-        this.realZero = TypeReal.get().getZero();
+        this.realZero = UtilValue.newValue(TypeReal.get(), 0);
         this.realOne = UtilValue.newValue(TypeReal.get(), 1);
         this.explorer = explorer;
         le = ContextValue.get().getEvaluator(OperatorLe.LE, TypeReal.get(), TypeReal.get());

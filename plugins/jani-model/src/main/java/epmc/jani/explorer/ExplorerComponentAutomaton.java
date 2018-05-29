@@ -59,6 +59,7 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.TypeWeightTransition;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
@@ -204,7 +205,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         componentAutomaton = (ComponentAutomaton) component;
         nonDet = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics());
         stochastic = SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
-        weightZero = TypeWeightTransition.get().getZero();
+        weightZero = UtilValue.newValue(TypeWeightTransition.get(), 0);
         automaton = componentAutomaton.getAutomaton();
         typeLocation = TypeLocation.get(automaton.getLocations());
         buildTypeEdge();

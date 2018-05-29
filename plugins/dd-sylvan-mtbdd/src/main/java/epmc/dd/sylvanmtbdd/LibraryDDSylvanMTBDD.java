@@ -67,8 +67,11 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.ValueInteger;
 
 public class LibraryDDSylvanMTBDD implements LibraryDD {
+    private final ValueInteger integerZero = UtilValue.newValue(TypeInteger.get(), 0);
+    
     private static final Map<String,Operator> OPERATOR_TO_MTBDD;
     static {
         Map<String,Operator> mtbddToOperatorName = new LinkedHashMap<>();
@@ -180,7 +183,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get().getZero());
+                return valueToNumber(integerZero);
             }
         }
     }
@@ -201,7 +204,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 return valueToNumber(result);
             } catch (EPMCException e) {
                 valueProblem = e;
-                return valueToNumber(TypeInteger.get().getZero());
+                return valueToNumber(integerZero);
             }
         }
     }

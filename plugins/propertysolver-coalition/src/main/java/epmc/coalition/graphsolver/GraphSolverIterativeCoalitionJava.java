@@ -267,7 +267,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
             return;
         }
         distanceEvaluator.apply(thisDistance, previous, current);
-        ValueAlgebra zero = previous.getType().getZero();
+        ValueAlgebra zero = UtilValue.newValue(previous.getType(), 0);
         if (stopCriterion == IterationStopCriterion.RELATIVE) {
             distanceEvaluator.apply(zeroDistance, previous, zero);
             isZero.apply(cmp, zeroDistance);
@@ -316,7 +316,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
-        Value zero = values.getType().getEntryType().getZero();
+        Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         Value negInf = TypeWeight.as(values.getType().getEntryType()).getNegInf();
         Value posInf = TypeWeight.as(values.getType().getEntryType()).getPosInf();
         OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
@@ -326,8 +326,9 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.as(precisionValue).set(Double.toString(precision / 2));
+        ValueAlgebra zeroReal = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            set.apply(distance, TypeReal.get().getZero());
+            set.apply(distance, zeroReal);
             for (int state = 0; state < maxEnd; state++) {
                 values.get(presStateProb, state);
                 int stateFrom = stateBounds[state];
@@ -390,7 +391,7 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
-        Value zero = values.getType().getEntryType().getZero();
+        Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), minEnd);
         Value negInf = TypeWeight.as(values.getType().getEntryType()).getNegInf();
@@ -402,8 +403,9 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
         ValueReal precisionValue = TypeReal.get().newValue();
         ValueSetString.as(precisionValue).set(Double.toString(precision / 2));
+        ValueReal zeroReal = UtilValue.newValue(TypeReal.get(), 0);
         do {
-            set.apply(distance, TypeReal.get().getZero());
+            set.apply(distance, zeroReal);
             for (int state = 0; state < maxEnd; state++) {
                 presValues.get(presStateProb, state);
                 int stateFrom = stateBounds[state];

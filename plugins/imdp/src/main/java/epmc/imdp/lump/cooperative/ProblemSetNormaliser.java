@@ -112,7 +112,8 @@ final class ProblemSetNormaliser {
 
     private void normaliseIntervals(ValueArrayInterval intervals, int from, int to) {
         Value one = UtilValue.newValue(getTypeTransitionWeight(), 1);
-        setInterval.apply(entry, getTypeTransitionWeight().getZero());
+        Value zero = UtilValue.newValue(getTypeTransitionWeight(), 0);
+        setInterval.apply(entry, zero);
         OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, entry2.getIntervalUpper().getType(), entry3.getIntervalLower().getType());
         OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, entry2.getIntervalUpper().getType(), entry3.getIntervalLower().getType());
         OperatorEvaluator subtract = ContextValue.get().getEvaluator(OperatorSubtract.SUBTRACT, TypeWeightTransition.get(), TypeWeightTransition.get());

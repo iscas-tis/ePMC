@@ -208,7 +208,7 @@ public final class PropertySolverExplicitPCTLNext implements PropertySolver {
             OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, entry.getType(), jump.getType());
             OperatorEvaluator setW = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
             for (int state = 0; state < iterNumStates; state++) {
-                setW.apply(sum, TypeWeight.get().getZero());
+                setW.apply(sum, UtilValue.newValue(TypeWeight.get(), 0));
                 for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                     Value succWeight = weight.get(state, succNr);
                     add.apply(sum, sum, succWeight);

@@ -18,6 +18,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInterval;
@@ -218,7 +219,7 @@ public final class ViolatorCooperative implements Violator {
         EdgeProperty weights = original.getEdgeProperty(CommonProperties.WEIGHT);
         int numStateSuccessors = original.getNumSuccessors(compareState);
         this.numActions = 0;
-        Value realZero = getTypeReal().getZero();
+        Value realZero = UtilValue.newValue(getTypeReal(), 0);
         for (int succ = 0; succ < numStateSuccessors; succ++) {
             int succDistr = original.getSuccessorNode(compareState, succ);
             int numDistrSucc = original.getNumSuccessors(succDistr);
@@ -259,7 +260,7 @@ public final class ViolatorCooperative implements Violator {
     private boolean computeDefenderIntervals(int defenderState) {
         EdgeProperty weights = original.getEdgeProperty(CommonProperties.WEIGHT);
         int numStateSuccessors = original.getNumSuccessors(defenderState);
-        Value realZero = getTypeReal().getZero();
+        Value realZero = UtilValue.newValue(getTypeReal(), 0);
         int actionNr = 0;
         for (int succ = 0; succ < numStateSuccessors; succ++) {
             int succDistr = original.getSuccessorNode(defenderState, succ);

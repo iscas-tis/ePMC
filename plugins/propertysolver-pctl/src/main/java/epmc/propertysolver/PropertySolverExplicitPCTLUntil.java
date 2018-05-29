@@ -198,7 +198,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         ValueAlgebra transValue = typeWeight.newValue();
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, typeWeight, typeWeight);
-        set.apply(transValue, typeWeight.getZero());
+        set.apply(transValue, UtilValue.newValue(typeWeight, 0));
 
         BitSet zeroSet = UtilBitSet.newBitSetUnbounded();
         BitSet oneSet = UtilBitSet.newBitSetUnbounded();
@@ -269,7 +269,7 @@ public final class PropertySolverExplicitPCTLUntil implements PropertySolver {
         }
         ValueBoolean cmp = TypeBoolean.get().newValue();
         OperatorEvaluator gt = ContextValue.get().getEvaluator(OperatorGt.GT, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType(), ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType());
-        gt.apply(cmp, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())), ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType().getZero());
+        gt.apply(cmp, ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())), UtilValue.newValue(ValueAlgebra.as(UtilEvaluatorExplicit.evaluate(timeBound.getLeft())).getType(), 0));
         if (cmp.getBoolean() || timeBound.isLeftOpen()) {
             configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
             sinkSet.clear();

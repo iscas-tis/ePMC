@@ -174,7 +174,7 @@ public final class SupportWalker {
             index++;
         }
         if (stopAtZero) {
-            stopWhere[index] = TypeInteger.get().getZero();
+            stopWhere[index] = UtilValue.newValue(TypeInteger.get(), 0);
         }
         return stopWhere;
     }

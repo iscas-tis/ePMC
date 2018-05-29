@@ -208,8 +208,8 @@ final class ProblemSetSolver {
         assert classNr >= 0;
         int numActions = problemSet.getNumActions();
         problemSet.getChallenger(entry1, classNr);
-        setInterval.apply(entry2, entry2.getType().getZero());
-        setReal.apply(entry3, entry3.getType().getZero());
+        setInterval.apply(entry2, UtilValue.newValue(entry2.getType(), 0));
+        setReal.apply(entry3, UtilValue.newValue(entry3.getType(), 0));
         OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, entry3.getType(), entry2.getIntervalUpper().getType());
         for (int actionNr = 0; actionNr < numActions; actionNr++) {
             problemSet.getDefender(entry2, actionNr, classNr);
@@ -238,7 +238,7 @@ final class ProblemSetSolver {
     }
 
     private void prepareVariables(ConstraintSolver problem, int numClasses, int numActions) {
-        Value zero = getTypeReal().getZero();
+        Value zero = UtilValue.newValue(getTypeReal(), 0);
         Value one = UtilValue.newValue(getTypeReal(), 1);
         for (int actionNr = 0; actionNr < numActions; actionNr++) {
             for (int classNr = 0; classNr < numClasses; classNr++) {
@@ -302,7 +302,7 @@ final class ProblemSetSolver {
             }
             boundValues.set(finalEntry, otherClass);
         }
-        Value zero = getTypeReal().getZero();
+        Value zero = UtilValue.newValue(getTypeReal(), 0);
         ConstraintType constraintType = min ? ConstraintType.GE : ConstraintType.LE;
         problem.addConstraint(boundValues, variables, constraintType, zero);
     }

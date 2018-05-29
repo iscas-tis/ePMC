@@ -46,6 +46,7 @@ import epmc.lumpingdd.transrepresentation.TransitionRepresentation;
 import epmc.value.ContextValue;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeWeightTransition;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 
@@ -153,7 +154,7 @@ public class MDPOneStepSignature implements Signature {
 
         if (useStateDistribution) {
             TypeAlgebra typeWeightTransition = TypeWeightTransition.get();
-            ValueAlgebra zero = typeWeightTransition.getZero();
+            ValueAlgebra zero = UtilValue.newValue(typeWeightTransition, 0);
             DD oneStepReach = stateSpace.clone().andNotWith(
                     trans1.eqWith(contextDD.newConstant(zero))).toMTWith();
             DD twoStepReachMax = oneStepReach.multiply(transTuple.fst.permute(p).permuteWith(original.getSwapPresNext()));
