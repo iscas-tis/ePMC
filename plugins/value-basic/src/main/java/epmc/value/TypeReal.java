@@ -59,7 +59,4 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
 
     @Override
     ValueReal getZero();
-
-    @Override
-    ValueReal getOne();    
 }

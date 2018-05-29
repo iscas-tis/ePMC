@@ -121,8 +121,8 @@ final class DownClosure {
 
     private ValueArrayAlgebra findSeparatingNonEmptyEntries(ValueArray outside,
             boolean numerical, Value lowerBound) {
-        Value zero = TypeWeight.get().getZero();
-        Value one = TypeWeight.get().getOne();
+        Value zero = UtilValue.newValue(TypeWeight.get(), 0);
+        Value one = UtilValue.newValue(TypeWeight.get(), 1);
         ValueBoolean cmp = TypeBoolean.get().newValue();
         OperatorEvaluator isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeight.get());
         ConstraintSolver problem = contextSolver.newProblem();
@@ -281,8 +281,8 @@ final class DownClosure {
         assert current != null;
         assert current.size() == dimension;
         assert current.getType().getEntryType() == TypeWeight.get();
-        Value zero = TypeWeight.get().getZero();
-        Value one = TypeWeight.get().getOne();
+        Value zero = UtilValue.newValue(TypeWeight.get(), 0);
+        Value one = UtilValue.newValue(TypeWeight.get(), 1);
         Value negInf = TypeWeight.get().getNegInf();
         Value posInf = TypeWeight.get().getPosInf();
         ConstraintSolver problem = contextSolver.newProblem();
@@ -376,8 +376,8 @@ final class DownClosure {
         assert current.size() == dimension;
         assert current.getType().getEntryType() == TypeWeight.get();
         assert elements.size() > 0;
-        Value zero = TypeWeight.get().getZero();
-        Value one = TypeWeight.get().getOne();
+        Value zero = UtilValue.newValue(TypeWeight.get(), 0);
+        Value one = UtilValue.newValue(TypeWeight.get(), 1);
         ConstraintSolver problem = contextSolver.newProblem();
 
         int[] wLpVars = new int[elements.size()];

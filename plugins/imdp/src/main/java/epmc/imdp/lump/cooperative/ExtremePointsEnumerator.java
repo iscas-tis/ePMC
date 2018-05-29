@@ -90,7 +90,7 @@ final class ExtremePointsEnumerator {
      * The value context must not be {@code null}.
      */
     ExtremePointsEnumerator() {
-        oneReal = TypeReal.get().getOne();
+        oneReal = UtilValue.newValue(TypeReal.get(), 1);
         sum = UtilValue.newValue(TypeReal.get(), 0);
         distribution = UtilValue.newArray(TypeReal.get().getTypeArray(), 0);
         entryInterval = TypeInterval.get().newValue();

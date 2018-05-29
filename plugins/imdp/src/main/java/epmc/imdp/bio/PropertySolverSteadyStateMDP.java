@@ -21,6 +21,7 @@ import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
+import epmc.value.UtilValue;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
@@ -104,8 +105,8 @@ public final class PropertySolverSteadyStateMDP implements PropertySolver {
         GraphExplicit graph = modelChecker.getLowLevel();
         rewards.setSize(graph.computeNumStates());
         ValueBoolean value = TypeBoolean.get().newValue();
-        ValueAlgebra one = TypeWeight.get().getOne();
-        ValueAlgebra zero = TypeWeight.get().getZero();
+        ValueAlgebra one = UtilValue.newValue(TypeWeight.get(), 1);
+        ValueAlgebra zero = UtilValue.newValue(TypeWeight.get(), 0);
         for (int stateNr = 0; stateNr < innerResult.size(); stateNr++) {
             int state = innerResult.getExplicitIthState(stateNr);
             innerResult.getExplicitIthValue(value, stateNr);

@@ -51,6 +51,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
@@ -162,8 +163,8 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();
-        Value one = typeWeight.getOne();
-        Value zero = typeWeight.getZero();
+        Value one = UtilValue.newValue(typeWeight, 1);
+        Value zero = UtilValue.newValue(typeWeight, 0);
         this.numConstrints = 0;
         this.numVariables = 0;
         /** zero states calculation */
@@ -289,8 +290,8 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         Log log = options.get(OptionsMessages.LOG);
         log.send(MessagesGraphSolverLP.PREPARING_MDP_FOR_ITERATION);      
         TypeAlgebra typeWeight = TypeWeight.get();
-        Value one = typeWeight.getOne();
-        Value zero = typeWeight.getZero();
+        Value one = UtilValue.newValue(typeWeight, 1);
+        Value zero = UtilValue.newValue(typeWeight, 0);
 
         this.numConstrints = 0;
         this.numVariables = 0;
@@ -365,7 +366,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
 
                 Value[] row = new Value[numSuccessors + 1];         /** coefficient row */
                 int [] varsIndex = new int[numSuccessors + 1];      /** variables   row */
-                row[0] = typeWeight.getOne();
+                row[0] = one;
                 varsIndex[0] = node;                /* directly use this node index */
 
                 int jIndex = 1;

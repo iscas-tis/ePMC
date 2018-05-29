@@ -47,7 +47,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
 
     private final static String DOUBLE = "double";
 
-    private final ValueDouble valueOne = new ValueDouble(this, 1.0);
     private final ValueDouble valueZero = new ValueDouble(this, 0.0);
     private final ValueDouble valuePosInf = new ValueDouble(this, Double.POSITIVE_INFINITY);
     private final ValueDouble valueNegInf = new ValueDouble(this, Double.NEGATIVE_INFINITY);
@@ -59,7 +58,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     }
     
     public TypeDouble(ValueDouble lower, ValueDouble upper) {
-        valueOne.setImmutable();
         valueZero.setImmutable();
         valuePosInf.setImmutable();
         valueNegInf.setImmutable();
@@ -88,11 +86,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     @Override
     public ValueDouble getZero() {
         return valueZero;
-    }
-
-    @Override
-    public ValueDouble getOne() {
-        return valueOne;
     }
 
     @Override

@@ -127,7 +127,7 @@ final class PolytopeSetNormaliser {
         assert from >= 0;
         assert to >= 0;
         assert from <= to;
-        Value one = getTypeTransitionWeight().getOne();
+        Value one = UtilValue.newValue(getTypeTransitionWeight(), 1);
         set.apply(entry, getTypeTransitionWeight().getZero());
         for (int index = from; index < to; index++) {
             intervals.get(entry2, index);
