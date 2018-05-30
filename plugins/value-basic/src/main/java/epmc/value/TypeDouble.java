@@ -82,16 +82,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     }
 
     @Override
-    public ValueDouble getPosInf() {
-        return valuePosInf;
-    }
-
-    @Override
-    public ValueDouble getNegInf() {
-        return valueNegInf;
-    }
-
-    @Override
     public int getNumBits() {
         return Double.SIZE;
     }

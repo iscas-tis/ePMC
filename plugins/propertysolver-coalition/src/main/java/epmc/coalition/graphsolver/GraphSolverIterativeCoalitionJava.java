@@ -317,8 +317,8 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
         Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
-        Value negInf = TypeWeight.as(values.getType().getEntryType()).getNegInf();
-        Value posInf = TypeWeight.as(values.getType().getEntryType()).getPosInf();
+        Value negInf = UtilValue.newValue(values.getType().getEntryType(), UtilValue.NEG_INF);
+        Value posInf = UtilValue.newValue(values.getType().getEntryType(), UtilValue.POS_INF);
         OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
@@ -394,8 +394,8 @@ public final class GraphSolverIterativeCoalitionJava implements GraphSolverExpli
         Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), minEnd);
-        Value negInf = TypeWeight.as(values.getType().getEntryType()).getNegInf();
-        Value posInf = TypeWeight.as(values.getType().getEntryType()).getPosInf();
+        Value negInf = UtilValue.newValue(values.getType().getEntryType(), UtilValue.NEG_INF);
+        Value posInf = UtilValue.newValue(values.getType().getEntryType(), UtilValue.POS_INF);
         OperatorEvaluator min = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());

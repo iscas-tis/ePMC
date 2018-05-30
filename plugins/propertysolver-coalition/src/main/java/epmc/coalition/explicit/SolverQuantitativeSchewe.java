@@ -283,13 +283,15 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, newValue.getType(), weighted.getType());
         OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, succValue.getType(), weightProp.getType());
         OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        ValueAlgebra negInf = UtilValue.newValue(newValue.getType(), UtilValue.NEG_INF);
+        ValueAlgebra posInf = UtilValue.newValue(newValue.getType(), UtilValue.POS_INF);
         for (int node = 0; node < numStates; node++) {
             values.get(value, node);
             Player player = playerProp.getEnum(node);
             if (player == Player.ONE) {
-                set.apply(newValue, TypeWeight.as(newValue.getType()).getNegInf());
+                set.apply(newValue, negInf);
             } else if (player == Player.TWO) {
-                set.apply(newValue, TypeWeight.as(newValue.getType()).getPosInf());
+                set.apply(newValue, posInf);
             } else if (player == Player.STOCHASTIC) {
                 newValue.set(0);				
             }

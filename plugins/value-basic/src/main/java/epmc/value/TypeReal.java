@@ -50,10 +50,4 @@ public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
 
     @Override
     ValueReal newValue();
-
-    @Override
-    ValueReal getPosInf();
-
-    @Override
-    ValueReal getNegInf();
 }

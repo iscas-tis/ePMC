@@ -58,7 +58,7 @@ final class MinimalityChecker implements Closeable {
         mOne = TypeReal.get().newValue();
         addInverse = ContextValue.get().getEvaluator(OperatorAddInverse.ADD_INVERSE, TypeReal.get());
         addInverse.apply(mOne, one);
-        posInf = TypeReal.get().getPosInf();
+        posInf = UtilValue.newValue(TypeReal.get(), UtilValue.POS_INF);
         entryInterval = TypeInterval.get().newValue();
         entryReal = TypeReal.get().newValue();
         set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());

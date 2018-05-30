@@ -131,7 +131,7 @@ final class DownClosure {
             wLpVars[i] = problem.addVariable(String.format(WEIGHT_VARIABLE, i), TypeWeight.get());
         }
         int dLpVar = problem.addVariable(DIFFERENCE_VARIABLE, TypeWeight.get());
-        int vLpVar = problem.addVariable(SLACK_VARIABLE, TypeWeight.get(), TypeReal.get().getNegInf(), TypeReal.get().getPosInf());
+        int vLpVar = problem.addVariable(SLACK_VARIABLE, TypeWeight.get(), UtilValue.newValue(TypeReal.get(), UtilValue.NEG_INF), UtilValue.newValue(TypeReal.get(), UtilValue.POS_INF));
 
         ValueArrayAlgebra problemWeights;
         int[] problemVariables;
@@ -283,8 +283,8 @@ final class DownClosure {
         assert current.getType().getEntryType() == TypeWeight.get();
         Value zero = UtilValue.newValue(TypeWeight.get(), 0);
         Value one = UtilValue.newValue(TypeWeight.get(), 1);
-        Value negInf = TypeWeight.get().getNegInf();
-        Value posInf = TypeWeight.get().getPosInf();
+        Value negInf =UtilValue.newValue(TypeWeight.get(), UtilValue.NEG_INF);
+        Value posInf = UtilValue.newValue(TypeWeight.get(), UtilValue.POS_INF);
         ConstraintSolver problem = contextSolver.newProblem();
 
         int[] wLpVars = new int[elements.size() + 1];
