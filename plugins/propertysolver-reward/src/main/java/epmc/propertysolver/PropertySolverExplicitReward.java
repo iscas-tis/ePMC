@@ -235,9 +235,10 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             values = (ValueArrayAlgebra) objective.getResult();
         }
         if (rewardType.isReachability()) {
+            ValueAlgebra posInf = UtilValue.newValue(TypeWeight.get(), UtilValue.POS_INF);
             for (int graphNode = 0; graphNode < graph.getNumNodes(); graphNode++) {
                 if (statesProp.getBoolean(graphNode) && reachNotOneSink.get(graphNode)) {
-                    values.set(TypeWeight.get().getPosInf(), graphNode);
+                    values.set(posInf, graphNode);
                 }
             }
         }

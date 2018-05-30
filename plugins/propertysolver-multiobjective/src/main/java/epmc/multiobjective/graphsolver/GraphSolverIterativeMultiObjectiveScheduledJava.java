@@ -227,7 +227,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
         Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
-        Value optInitValue = typeWeight.getNegInf();
+        Value optInitValue = UtilValue.newValue(typeWeight, UtilValue.NEG_INF);
         int valuesTotalSize = values.size();
         for (int index = 0; index < valuesTotalSize; index++) {
             values.set(zero, index);
@@ -299,7 +299,7 @@ public final class GraphSolverIterativeMultiObjectiveScheduledJava implements Gr
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
         Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
-        Value optInitValue = typeWeight.getNegInf();
+        Value optInitValue = UtilValue.newValue(typeWeight, UtilValue.NEG_INF);
         int valuesTotalSize = values.size();
         for (int index = 0; index < valuesTotalSize; index++) {
             values.set(zero, index);

@@ -395,7 +395,7 @@ public final class BoundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra choiceNextStateProb = newValueWeight();
         ValueAlgebra presStateProb = newValueWeight();
         ValueAlgebra zero = UtilValue.newValue(values.getType().getEntryType(), 0);
-        Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
+        Value optInitValue = min ? UtilValue.newValue(typeWeight, UtilValue.POS_INF) : UtilValue.newValue(typeWeight, UtilValue.NEG_INF);
         ValueArray presValues = values;
         ValueArray nextValues = UtilValue.newArray(values.getType(), numStates);
         OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());

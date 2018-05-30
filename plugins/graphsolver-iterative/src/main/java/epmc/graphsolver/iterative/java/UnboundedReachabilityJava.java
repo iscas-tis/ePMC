@@ -424,7 +424,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
         Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
-        Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
+        Value optInitValue = min ? UtilValue.newValue(typeWeight, UtilValue.POS_INF) : UtilValue.newValue(typeWeight, UtilValue.NEG_INF);
         ValueArrayAlgebra presValues = values;
         ValueArrayAlgebra nextValues = UtilValue.newArray(values.getType(), numStates);
         OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
@@ -495,7 +495,7 @@ public final class UnboundedReachabilityJava implements GraphSolverExplicit {
         ValueAlgebra presStateProb = newValueWeight();
         ValueReal distance = TypeReal.get().newValue();
         Value zero = UtilValue.newValue(values.getType().getEntryType(), 0);
-        Value optInitValue = min ? typeWeight.getPosInf() : typeWeight.getNegInf();
+        Value optInitValue = min ? UtilValue.newValue(typeWeight, UtilValue.POS_INF) : UtilValue.newValue(typeWeight, UtilValue.NEG_INF);
         OperatorEvaluator minEv = ContextValue.get().getEvaluator(OperatorMin.MIN, nextStateProb.getType(), choiceNextStateProb.getType());
         OperatorEvaluator maxEv = ContextValue.get().getEvaluator(OperatorMax.MAX, nextStateProb.getType(), choiceNextStateProb.getType());
         int iterations = 0;

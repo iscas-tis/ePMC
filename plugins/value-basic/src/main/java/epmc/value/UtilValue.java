@@ -27,6 +27,8 @@ import epmc.value.Value;
 import epmc.value.ValueArray;
 
 public final class UtilValue {
+    public final static String POS_INF = "Infinity";
+    public final static String NEG_INF = "-Infinity";
     private final static String LBRACK = "[";
     private final static String RBRACK = "]";
     private final static String COMMA = ",";
