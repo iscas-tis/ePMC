@@ -23,6 +23,18 @@ package epmc.value;
 import epmc.value.Value;
 
 public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContentDoubleArray {
+    public static boolean is(Value value) {
+        return value instanceof ValueArrayInterval;
+    }
+    
+    public static ValueArrayInterval as(Value value) {
+        if (is(value)) {
+            return (ValueArrayInterval) value;
+        } else {
+            return null;
+        }
+    }
+    
     private final TypeArrayInterval type;
     private ValueArrayAlgebra content;
     private int size;
@@ -93,5 +105,9 @@ public final class ValueArrayInterval implements ValueArrayAlgebra, ValueContent
     @Override
     public String toString() {
         return UtilValue.arrayToString(this);
+    }
+    
+    public ValueArrayAlgebra getContent() {
+        return content;
     }
 }
