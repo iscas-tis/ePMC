@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.json.Json;
+import javax.json.JsonArray;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -40,6 +41,7 @@ import epmc.jani.interaction.communication.ClientInfo;
 import epmc.jani.interaction.database.Database;
 import epmc.jani.interaction.error.ProblemsJANIInteraction;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
+import epmc.options.Category;
 import epmc.options.Option;
 import epmc.options.OptionType;
 import epmc.options.OptionTypeBoolean;
@@ -56,6 +58,7 @@ import epmc.util.UtilJSON;
  * @author Ernst Moritz Hahn
  */
 public final class HandlerAuthenticate implements Handler {
+    private final static boolean ADD_EXTENDED_INFO = true;
     /** Type of messages this handler handles. */
     public final static String TYPE = "authenticate";
     private final static String AUTHENTICATE_LOGIN = "login";
@@ -80,9 +83,15 @@ public final class HandlerAuthenticate implements Handler {
     private final static String OPTION_TYPE_INT = "int";
     private final static String OPTION_TYPE_REAL = "real";
     private final static String OPTION_TYPE_STRING = "string";
+    private final static String OPTION_X_PRECISE_TYPE = "x-precise-type";
+    private final static String OPTION_X_PRECISE_CATEGORY = "x-precise-category";
     private final static String ENGINE = "engine";
     private static final String CATEGORY = "category";
     private final static String EXTENSIONS = "extensions";
+    private final static String X_PRECISE_CATEGORIES = "x-precise-categories";
+    private final static String CAT_IDENTIFIER = "id";
+    private final static String CAT_DESCRIPTION = "name";
+    private final static String CAT_PARENT = "parent";
 
     /**
      * Option to be excluded.
@@ -97,6 +106,7 @@ public final class HandlerAuthenticate implements Handler {
     }
 
     private final JsonValue capabilitiesParameters;
+    private final JsonArray extendedCategories;
     /** Backend in which this handler is used. */
     private final Backend backend;
     private final UserManager userManager;
@@ -104,9 +114,25 @@ public final class HandlerAuthenticate implements Handler {
     public HandlerAuthenticate(Backend backend) {
         assert backend != null;
         this.backend = backend;
-        capabilitiesParameters = buildCapabilitiesParameters();		
+        capabilitiesParameters = buildCapabilitiesParameters();
+        extendedCategories = ADD_EXTENDED_INFO
+                ? buildExtendedCategories() : null;
         Database authentification = backend.getPermanentStorage();
         userManager = new UserManager(authentification);
+    }
+
+    private JsonArray buildExtendedCategories() {
+        JsonArrayBuilder result = Json.createArrayBuilder();
+        for (Category category : Options.get().getAllCategories().values()) {
+            JsonObjectBuilder categoryObject = Json.createObjectBuilder();
+            categoryObject.add(CAT_IDENTIFIER, category.getIdentifier());
+            categoryObject.add(CAT_DESCRIPTION, category.getShortDescription());
+            if (category.getParent() != null) {
+                categoryObject.add(CAT_PARENT, category.getParent().getIdentifier());
+            }
+            result.add(categoryObject);
+        }
+        return result.build();
     }
 
     @Override
@@ -126,13 +152,19 @@ public final class HandlerAuthenticate implements Handler {
                 continue;
             }
             JsonObjectBuilder parameter = Json.createObjectBuilder();
-            parameter.add(ID, option.getIdentifier().replace('-', '_'));
+            parameter.add(ID, option.getIdentifier());
             parameter.add(NAME, option.getShortDescription());
             parameter.add(IS_GLOBAL, option.isWeb());
             parameter.add(OPTION_TYPE, buildType(option.getType()));
+            if (ADD_EXTENDED_INFO) {
+                parameter.add(OPTION_X_PRECISE_TYPE, option.getTypeInfo());
+            }
             parameter.add(DEFAULT_VALUE, buildDefault(option.getType(), option.getDefault()));
             if (option.getCategory() != null) {
                 parameter.add(CATEGORY, option.getCategory().getShortDescription());
+            }
+            if (ADD_EXTENDED_INFO && option.getCategory() != null) {
+                parameter.add(OPTION_X_PRECISE_CATEGORY, option.getCategory().getIdentifier());
             }
             result.add(parameter);
         }
@@ -263,14 +295,17 @@ public final class HandlerAuthenticate implements Handler {
         for (String extension: backend.getClientData(client).getExtensions()) {
             extensions.add(extension);
         }
-        return Json.createObjectBuilder()
-                .add(TYPE, CAPABILITIES)
-                .add(JANI_VERSION, ourJaniVersion)
-                .add(CAPABILITIES_EXTENSIONS, extensions.build())
-                .add(CAPABILITIES_METADATA, metadata)
-                .add(CAPABILITIES_PARAMETERS, capabilitiesParameters)
-                .add(CAPABILITIES_ROLES, Json.createArrayBuilder().add(CAPABILITIES_ROLES_ANALYSE).add(CAPABILITIES_ROLES_TRANSFORM))
-                .build();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(TYPE, CAPABILITIES)
+        .add(JANI_VERSION, ourJaniVersion)
+        .add(CAPABILITIES_EXTENSIONS, extensions.build())
+        .add(CAPABILITIES_METADATA, metadata);
+        if (ADD_EXTENDED_INFO) {
+            builder.add(X_PRECISE_CATEGORIES, this.extendedCategories);
+        }
+        builder.add(CAPABILITIES_PARAMETERS, capabilitiesParameters)
+        .add(CAPABILITIES_ROLES, Json.createArrayBuilder().add(CAPABILITIES_ROLES_ANALYSE).add(CAPABILITIES_ROLES_TRANSFORM));
+        return builder.build();
     }
 
 }

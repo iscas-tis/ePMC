@@ -20,11 +20,25 @@
 
 package epmc.command;
 
-import epmc.modelchecker.CommandTask;
-import epmc.modelchecker.ModelChecker;
+import javax.json.Json;
+import javax.json.JsonArray;
+import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 
-public class CommandTaskHelp implements CommandTask {
+import epmc.jani.interaction.command.CommandTaskJANIClient;
+import epmc.jani.interaction.commandline.CommandLineOptions;
+import epmc.jani.interaction.communication.BackendInterface;
+import epmc.modelchecker.ModelChecker;
+import epmc.util.UtilJSON;
+
+public class CommandTaskHelp implements CommandTaskJANIClient {
     public final static String IDENTIFIER = "help";
+    private final static String JANI_VERSIONS = "jani-versions";
+    private final static int JANI_VERSION = 1;
+    private final static String X_EPMC_CLIENT = "x-epmc-client";
+    private final static String PARAMETERS = "parameters";
+    private final static String X_PRECISE_CATEGORIES = "x-precise-categories";
+    private BackendInterface backend;
 
     @Override
     public String getIdentifier() {
@@ -43,5 +57,29 @@ public class CommandTaskHelp implements CommandTask {
     @Override
     public boolean isRunOnServer() {
         return false;
+    }
+
+    @Override
+    public void send(Object client, String message) {
+        JsonObject value = UtilJSON.toObject(UtilJSON.read(message));
+        JsonArray parameters = UtilJSON.getArray(value, PARAMETERS);
+        JsonArray preciseCategories = UtilJSON.getArrayOrNull(value, X_PRECISE_CATEGORIES);
+        CommandLineOptions options = new CommandLineOptions(parameters, preciseCategories);
+        System.out.println(UsagePrinterJANI.getUsage(options));
+    }
+
+    @Override
+    public void logOff(Object who) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    @Override
+    public void setBackend(Object client, BackendInterface backend) {
+        this.backend = backend;
+        JsonObjectBuilder request = Json.createObjectBuilder();
+        request.add(JANI_VERSIONS, Json.createArrayBuilder().add(JANI_VERSION));
+        request.add(X_EPMC_CLIENT, true);
+        backend.send(client, request.build().toString());
     }
 }

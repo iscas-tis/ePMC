@@ -79,7 +79,7 @@ final class JANIWebSocket extends WebSocket {
             return;
         }
         printMessage(message);
-        backend.handle(this, message.getTextPayload());
+        backend.send(this, message.getTextPayload());
     }
 
     private void printMessage(WebSocketFrame message) {

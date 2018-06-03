@@ -20,8 +20,6 @@
 
 package epmc.plugin;
 
-import epmc.options.Options;
-
 public interface StartInConsole extends PluginInterface {
-    void process(Options options);
+    void process(String[] args);
 }

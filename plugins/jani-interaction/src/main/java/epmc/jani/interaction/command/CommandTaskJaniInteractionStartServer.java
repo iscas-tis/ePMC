@@ -97,6 +97,11 @@ public final class CommandTaskJaniInteractionStartServer implements CommandTask 
         // TODO Auto-generated method stub
     }
 
+    @Override
+    public boolean isRunOnServer() {
+        return false;
+    }
+    
     private Log getLog() {
         return Options.get().get(OptionsMessages.LOG);
     }

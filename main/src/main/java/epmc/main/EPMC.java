@@ -20,15 +20,8 @@
 
 package epmc.main;
 
-import java.text.MessageFormat;
-import java.util.Locale;
-
-import epmc.error.EPMCException;
-import epmc.error.Positional;
-import epmc.main.options.OptionsEPMC;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.options.Options;
-import epmc.plugin.OptionsPlugin;
 import epmc.plugin.StartInConsole;
 import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
@@ -39,9 +32,6 @@ import epmc.util.Util;
  * @author Ernst Moritz Hahn
  */
 public final class EPMC {
-    /** Empty string. */
-    private final static String EMPTY = "";
-
     /**
      * The {@code main} entry point of EPMC.
      * 
@@ -54,91 +44,30 @@ public final class EPMC {
         }
         Options options = UtilOptionsEPMC.newOptions();
         Options.set(options);
-        try {
-            options = prepareOptions(args);
-            Options.set(options);
-            startInConsole(options);
-        } catch (EPMCException e) {
-            handleException(e, options);
-        }
-    }
-
-    private static void handleException(EPMCException e, Options options) {
-        assert e != null;
-        assert options != null;
-        String message = e.getProblem().getMessage(options.getLocale());
-        MessageFormat formatter = new MessageFormat(EMPTY);
-        formatter.applyPattern(message);
-        String formattedMessage = formatter.format(e.getArguments(), new StringBuffer(), null).toString();
-        Positional positional = e.getPositional();
-        if (positional != null) {
-            if (positional.getContent() != null) {
-                System.err.print(positional.getContent());
-                if (positional.getPart() != null
-                        || positional.getLine() > 0
-                        || positional.getColumn() > 0) {
-                    System.err.print(", ");
-                }
-            }
-            if (positional.getPart() != null) {
-                System.err.print("part: " + positional.getPart());
-                if (positional.getLine() > 0 || positional.getColumn() > 0) {
-                    System.err.print(", ");
-                }
-            }
-            if (positional.getLine() > 0) {
-                System.err.print("line: " + positional.getLine());
-                if (positional.getColumn() > 0) {
-                    System.err.print(", ");
-                }                    
-            }
-            if (positional.getColumn() > 0) {
-                System.err.print("column: " + positional.getColumn());
-            }
-            if (positional.getContent() != null
-                    || positional.getPart() != null
-                    || positional.getLine() > 0
-                    || positional.getColumn() > 0) {
-                System.err.print(": ");
-            }
-        }
-        System.err.println(formattedMessage);
-        if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
-            e.printStackTrace();
-        }
-        System.exit(1);
+        startInConsole(options, args);
     }
 
     /**
-     * Prepare options from command line arguments.
-     * The command line arguments parameters must not be {@code null} and must
-     * not contain {@code null} entries.
+     * Start the command to be executed with output shown in standard output.
+     * The command to be executed will be read for {@link Options#COMMAND}.
+     * Then, the client part of the command will be executed.
+     * Afterwards, a task server will be created and the server part of the
+     * command will be executed there.
+     * The options parameter must not be {@code null}.
+     * @param options 
      * 
-     * @param args command line arguments
-     * @return options parsed from command line arguments
+     * @param options options to use
      */
-    private static Options prepareOptions(String[] args) {
+    private static void startInConsole(Options options, String[] args) {
+        assert options != null;
         assert args != null;
         for (String arg : args) {
             assert arg != null;
         }
-        Locale locale = Locale.getDefault();
-        Options options = UtilOptionsEPMC.newOptions();
-        options.parseOptions(args, true);
-        options.reset();
-        UtilPlugin.loadPlugins(options);
-        options.getOption(OptionsPlugin.PLUGIN).reset();
-        options.getOption(OptionsPlugin.PLUGIN_LIST_FILE).reset();
-        options.parseOptions(args, false);
-        options.set(OptionsEPMC.LOCALE, locale);
-        return options;
-    }
-
-    private static void startInConsole(Options options) {
-        assert options != null;
         for (Class<? extends StartInConsole> clazz : UtilPlugin.getPluginInterfaceClasses(options, StartInConsole.class)) {
             StartInConsole object = Util.getInstance(clazz);
-            object.process(options);
+            object.process(args);
         }
     }
+
 }
