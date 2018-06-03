@@ -56,7 +56,7 @@ import epmc.util.UtilJSON;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class Backend {
+public final class Backend implements BackendInterface {
     /** Type field of JANI messages. */
     private final static String MESSAGE_TYPE = "type";
     /** Identifier of JSON field identifying reason to close connection. */
@@ -141,7 +141,7 @@ public final class Backend {
      * @param client client sending the message
      * @param message message to be handled
      */
-    synchronized void handle(Object client, String message) {
+    public synchronized void send(Object client, String message) {
         assert client != null;
         assert message != null;
         assert feedback != null;

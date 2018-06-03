@@ -59,7 +59,7 @@ public final class StandardStream implements BackendFeedback {
                 } catch (InterruptedException e) {
                     break;
                 }
-                backend.handle(StandardStream.this, line);
+                backend.send(StandardStream.this, line);
             }
         }
     });

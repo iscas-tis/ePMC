@@ -69,7 +69,7 @@ final class BackendTester {
 
     void send(String message) {
         assert message != null;
-        backend.handle(backend, message);
+        backend.send(backend, message);
     }
 
     int size() {
