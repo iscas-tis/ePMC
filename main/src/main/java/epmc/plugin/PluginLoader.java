@@ -48,7 +48,6 @@ import java.util.Set;
 import java.util.jar.Attributes;
 import java.util.jar.Manifest;
 
-import epmc.options.Options;
 import epmc.util.Util;
 
 // TODO continue documentation
@@ -128,17 +127,12 @@ final class PluginLoader {
     private final List<Plugin> plugins = new ArrayList<>();
     /** List of all plugin classes loaded. */
     private final List<Class<? extends PluginInterface>> classes = new ArrayList<>();
-    /** Options used. */
-    private final Options options;
 
-    PluginLoader(Options options, List<String> pluginPathStrings)
-    {
-        assert options != null;
+    PluginLoader(List<String> pluginPathStrings) {
         assert pluginPathStrings != null;
         for (String name : pluginPathStrings) {
             assert name != null;
         }
-        this.options = options;
         List<Path> pluginFiles = stringsToPaths(pluginPathStrings);
         List<Path> allPluginPaths = buildAllPluginPaths(pluginFiles);
         this.classLoader = buildClassLoader(allPluginPaths);
@@ -371,8 +365,7 @@ final class PluginLoader {
         return true;
     }
 
-    private List<Plugin> loadPlugins(ClassLoader classLoader, List<Path> pluginPaths)
-    {
+    private List<Plugin> loadPlugins(ClassLoader classLoader, List<Path> pluginPaths) {
         assert classLoader != null;
         assert pluginPaths != null;
         for (Path path : pluginPaths) {
@@ -385,7 +378,6 @@ final class PluginLoader {
          * its parent class loader if it does not find a certain resource).
          */
         Thread.currentThread().setContextClassLoader(this.classLoader);
-        assert this.options != null;
         for (Path path : pluginPaths) {
             Plugin plugin = new Plugin();
             plugin.setPath(path);
@@ -561,5 +553,4 @@ final class PluginLoader {
         }
         return builder.toString();
     }
-
 }

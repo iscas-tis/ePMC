@@ -104,7 +104,7 @@ public final class UtilPlugin {
         List<String> plugins = getPluginList(options);
 
         assert plugins != null;
-        PluginLoader pluginLoader = new PluginLoader(options, plugins);
+        PluginLoader pluginLoader = new PluginLoader(plugins);
 
         options.set(OptionsPlugin.PLUGIN_INTERFACE_CLASS, pluginLoader.getPluginInterfaceClasses());
 
