@@ -1,18 +1,28 @@
 package epmc.jani.interaction.commandline;
 
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.json.JsonArray;
 import javax.json.JsonNumber;
 import javax.json.JsonObject;
 import javax.json.JsonValue;
 
+import com.google.common.base.CaseFormat;
+
+import epmc.options.Category;
 import epmc.util.UtilJSON;
 
 public final class CommandLineOption {
     public final static class Builder {
         private JsonObject json;
         private Map<String, CommandLineCategory> categories;
+        private String bundleName;
+        private String identifier;
+        private String type;
+        private String defaultValue;
+        private String category;
 
         Builder setJSON(JsonObject json) {
             this.json = json;
@@ -22,6 +32,53 @@ public final class CommandLineOption {
         Builder setCategories(Map<String, CommandLineCategory> categories) {
             this.categories = categories;
             return this;
+        }
+        
+        public Builder setBundleName(String bundleName) {
+            this.bundleName = bundleName;
+            return this;
+        }
+
+        public Builder setBundleName(Enum<?> bundleName) {
+            this.bundleName = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, bundleName.name());
+            return this;
+        }
+
+        public Builder setIdentifier(String identifier) {
+            this.identifier = identifier;
+            return this;
+        }
+
+        public Builder setIdentifier(Enum<?> identifier) {
+            this.identifier = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, identifier.name());
+            return this;
+        }
+
+        public Builder setType(String type) {
+            this.type = type;
+            return this;
+        }
+
+        public Builder setDefault(String defaultValue) {
+            this.defaultValue = defaultValue;
+            return this;
+        }
+
+        public Builder setCategory(String category) {
+            this.category = category;
+            return this;
+        }
+
+        public Builder setCategory(Enum<?> category) {
+            this.category = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.UPPER_CAMEL, category.name());
+            return this;
+        }
+
+        public Builder setCategory(Category category) {
+            this.category = category != null
+                    ? category.getIdentifier()
+                            : null;
+                    return this;
         }
         
         CommandLineOption build() {
@@ -40,8 +97,9 @@ public final class CommandLineOption {
     private final static String CATEGORY = "category";
     private final static String X_PRECISE_TYPE = "x-precise-type";
     private final static String X_PRECISE_CATEGORY = "x-precise-category";
+    private final static String SHORT_PREFIX = "short-";
     
-    private final CommandLineOptionType where;
+    private final CommandLineOptionUsage usage;
     private final String identifier;
     private final String name;
     private final String type;
@@ -49,23 +107,50 @@ public final class CommandLineOption {
     private final String preciseType;
     private final Object defaultValue;
     private final CommandLineCategory category;
-    private CommandLineCategory preciseCategory;
+    private final CommandLineCategory preciseCategory;
+    
     private String value;
  
-    public CommandLineOption(Builder builder) {
-        assert builder.json != null;
+    private CommandLineOption(Builder builder) {
+        assert builder != null;
         assert builder.categories != null;
-        where = CommandLineOptionType.SERVER;
-        identifier = UtilJSON.getString(builder.json, ID);
-        name = UtilJSON.getString(builder.json, NAME);
-        description = UtilJSON.getStringOrNull(builder.json, DESCRIPTION);
-        type = parseType(builder.json);
-        preciseType = UtilJSON.getStringOrNull(builder.json, X_PRECISE_TYPE);
-        defaultValue = parseDefaultValue(builder.json);
-        category = parseCategory(builder.json, builder.categories);
-        preciseCategory = parsePreciseCategory(builder.json, builder.categories);
+        if (builder.json != null) {
+            usage = CommandLineOptionUsage.SERVER;
+            identifier = UtilJSON.getString(builder.json, ID);
+            name = UtilJSON.getString(builder.json, NAME);
+            description = UtilJSON.getStringOrNull(builder.json, DESCRIPTION);
+            type = parseType(builder.json);
+            preciseType = UtilJSON.getStringOrNull(builder.json, X_PRECISE_TYPE);
+            defaultValue = parseDefaultValue(builder.json);
+            category = parseCategory(builder.json, builder.categories);
+            preciseCategory = parsePreciseCategory(builder.json, builder.categories);
+        } else {
+            usage = CommandLineOptionUsage.CLIENT;
+            identifier = builder.identifier;
+            name = getResourceString(SHORT_PREFIX + builder.identifier,
+                    builder.bundleName);
+            description = null;
+            type = builder.type;
+            preciseType = builder.type;
+            defaultValue = builder.defaultValue;
+            category = builder.categories.get(builder.category);
+            preciseCategory = builder.categories.get(builder.category);
+        }
     }
 
+    private static String getResourceString(String string, String bundleName) {
+        ResourceBundle poMsg = getBundle(bundleName);
+        return poMsg.getString(SHORT_PREFIX + string);
+    }
+
+    private static ResourceBundle getBundle(String bundleName) {
+        ResourceBundle poMsg = null;
+        Locale locale = Locale.getDefault();
+        poMsg = ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
+        return poMsg;
+    }
+
+    
     private static String parseType(JsonObject object) {
         String typeString;
         JsonValue type = UtilJSON.get(object, TYPE);
@@ -176,5 +261,9 @@ public final class CommandLineOption {
     
     public String getDescription() {
         return description;
+    }
+    
+    public CommandLineOptionUsage getUsage() {
+        return usage;
     }
 }
