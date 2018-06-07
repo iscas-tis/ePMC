@@ -91,4 +91,17 @@ public final class JANIInteractionTest {
         System.out.println(feedback.popPending());
     }
 
+    @Test
+    public void blaTest() {
+        Options options = prepareJANIInteractionOptions();
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(OptionsJANIInteraction.JANI_INTERACTION_TYPE, JANIInteractionIO.WEBSOCKETS);
+        BackendTester feedback = new BackendTester(options);
+        JsonObjectBuilder request = Json.createObjectBuilder();
+        request.add("jani-versions", Json.createArrayBuilder().add(1));
+        feedback.send(request);
+        System.out.println(feedback.size());
+        System.out.println(feedback.popPending());
+    }
+
 }

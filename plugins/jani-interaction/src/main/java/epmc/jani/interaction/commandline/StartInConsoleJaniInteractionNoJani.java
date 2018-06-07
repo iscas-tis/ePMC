@@ -1,11 +1,8 @@
 package epmc.jani.interaction.commandline;
 
 import java.text.MessageFormat;
+import java.util.List;
 import java.util.Locale;
-
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
 
 import epmc.error.EPMCException;
 import epmc.error.Positional;
@@ -19,15 +16,17 @@ import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.RawModel;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
+import epmc.plugin.AfterOptionsCreation;
 import epmc.plugin.OptionsPlugin;
+import epmc.plugin.PluginInterface;
 import epmc.plugin.StartInConsole;
 import epmc.plugin.UtilPlugin;
+import epmc.util.Util;
 
-public final class StartInConsoleJaniInteraction implements StartInConsole {
+public final class StartInConsoleJaniInteractionNoJani implements StartInConsole {
     private final static String IDENTIFIER = "start-in-console-jani-interaction";
     /** Empty string. */
     private final static String EMPTY = "";
-    private final boolean janiMode = false;
 
     @Override
     public String getIdentifier() {
@@ -44,24 +43,16 @@ public final class StartInConsoleJaniInteraction implements StartInConsole {
      * @param options
      *            options to use
      */
-    // TODO use JANI for interaction
     @Override
-    public void process(String[] args) {
+    public void process(String[] args, List<Class<? extends PluginInterface>> plugins) {
+//        if (true) return;
         assert args != null;
         for (String arg : args) {
             assert arg != null;
         }
-        if (janiMode) {
-            processJaniMode(args);
-        } else {
-            processNonJaniMode(args);
-        }
-    }
-
-    private void processNonJaniMode(String[] args) {
         Options options = null;
         try {
-            options = prepareOptions(args);
+            options = prepareOptions(args, plugins);
             Options.set(options);
             if (options.getString(Options.COMMAND) == null) {
                 System.out.println(options.getShortUsage());
@@ -109,18 +100,24 @@ public final class StartInConsoleJaniInteraction implements StartInConsole {
      * 
      * @param args
      *            command line arguments
+     * @param plugins 
      * @return options parsed from command line arguments
      */
-    private static Options prepareOptions(String[] args) {
+    private static Options prepareOptions(String[] args, List<Class<? extends PluginInterface>> plugins) {
         assert args != null;
         for (String arg : args) {
             assert arg != null;
         }
         Locale locale = Locale.getDefault();
         Options options = UtilOptionsEPMC.newOptions();
+        options.set(OptionsPlugin.PLUGIN_INTERFACE_CLASS, plugins);
+        for (Class<? extends AfterOptionsCreation> clazz : UtilPlugin.getPluginInterfaceClasses(plugins, AfterOptionsCreation.class)) {
+            AfterOptionsCreation instance = Util.getInstance(clazz);
+            instance.process(options);
+        }
+        Options.set(options);
         options.parseOptions(args, true);
         options.reset();
-        UtilPlugin.loadPlugins(options);
         options.getOption(OptionsPlugin.PLUGIN).reset();
         options.getOption(OptionsPlugin.PLUGIN_LIST_FILE).reset();
         options.parseOptions(args, false);
@@ -174,40 +171,4 @@ public final class StartInConsoleJaniInteraction implements StartInConsole {
         System.exit(1);
     }
     
-    private void processJaniMode(String[] args) {
-        Options options = null;
-        options = prepareOptions(args);
-        Options.set(options);
-        if (options.getString(Options.COMMAND) == null) {
-            System.out.println(options.getShortUsage());
-            System.exit(1);
-        }
-        setupConnection(args);
-        if (options.getString(Options.COMMAND).equals("help")) {
-            JsonObjectBuilder request = Json.createObjectBuilder();
-            request.add("jani-versions", Json.createArrayBuilder().add(1));
-            send(request.build());
-            JsonValue result = getPending();
-            // TODO Auto-generated method stub
-        }
-
-    }
-
-    private void setupConnection(String[] args) {
-        
-        // TODO Auto-generated method stub
-        
-    }
-
-    private int numPending() {
-        return -1;
-    }
-    
-    private JsonValue getPending() {
-        return null;
-    }
-
-    private void send(JsonValue value) {
-
-    }
 }

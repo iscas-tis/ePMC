@@ -87,7 +87,7 @@ public final class CommandLineOption {
     }
     
     private final static String EMPTY = "";
-    private final static String SPACE = " ";
+    private final static String SEPARATOR = ",";
     private final static String PIPE = "|";
     private final static String ID = "id";
     private final static String NAME = "name";
@@ -113,8 +113,8 @@ public final class CommandLineOption {
  
     private CommandLineOption(Builder builder) {
         assert builder != null;
-        assert builder.categories != null;
         if (builder.json != null) {
+            assert builder.categories != null;
             usage = CommandLineOptionUsage.SERVER;
             identifier = UtilJSON.getString(builder.json, ID);
             name = UtilJSON.getString(builder.json, NAME);
@@ -133,14 +133,22 @@ public final class CommandLineOption {
             type = builder.type;
             preciseType = builder.type;
             defaultValue = builder.defaultValue;
-            category = builder.categories.get(builder.category);
-            preciseCategory = builder.categories.get(builder.category);
+            if (builder.categories != null) {
+                category = builder.categories.get(builder.category);
+            } else {
+                category = null;
+            }
+            if (builder.categories != null) {
+                preciseCategory = builder.categories.get(builder.category);
+            } else {
+                preciseCategory = null;
+            }
         }
     }
 
     private static String getResourceString(String string, String bundleName) {
         ResourceBundle poMsg = getBundle(bundleName);
-        return poMsg.getString(SHORT_PREFIX + string);
+        return poMsg.getString(string);
     }
 
     private static ResourceBundle getBundle(String bundleName) {
@@ -149,7 +157,6 @@ public final class CommandLineOption {
         poMsg = ResourceBundle.getBundle(bundleName, locale, Thread.currentThread().getContextClassLoader());
         return poMsg;
     }
-
     
     private static String parseType(JsonObject object) {
         String typeString;
@@ -161,7 +168,9 @@ public final class CommandLineOption {
             for (JsonValue entry : typeEnum) {
                 typeBuilder.append(entry.toString()).append(PIPE);
             }
-            typeBuilder.replace(typeBuilder.length() - 1, typeBuilder.length(), EMPTY);
+            if (typeBuilder.length() > 0) {
+                typeBuilder.replace(typeBuilder.length() - 1, typeBuilder.length(), EMPTY);
+            }
             typeString = typeBuilder.toString();
             break;
         case STRING:
@@ -227,7 +236,7 @@ public final class CommandLineOption {
         if (this.value == null) {
             this.value = value;
         } else {
-            this.value = this.value + SPACE + value;
+            this.value = this.value + SEPARATOR + value;
         }
     }
 
@@ -265,5 +274,13 @@ public final class CommandLineOption {
     
     public CommandLineOptionUsage getUsage() {
         return usage;
+    }
+    
+    public String getValue() {
+        return value;
+    }
+
+    public void clearValue() {
+        value = null;
     }
 }

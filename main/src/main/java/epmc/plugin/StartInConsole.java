@@ -20,6 +20,8 @@
 
 package epmc.plugin;
 
+import java.util.List;
+
 public interface StartInConsole extends PluginInterface {
-    void process(String[] args);
+    void process(String[] args, List<Class<? extends PluginInterface>> plugins);
 }

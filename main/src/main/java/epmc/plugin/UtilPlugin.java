@@ -114,6 +114,12 @@ public final class UtilPlugin {
         }
     }
 
+    public static List<Class<? extends PluginInterface>> loadPlugins(List<String> plugins) {
+        assert plugins != null;
+        PluginLoader pluginLoader = new PluginLoader(plugins);
+        return pluginLoader.getPluginInterfaceClasses();
+    }
+
     /**
      * Get list of classes implementing a particular plugin interface.
      * The set of available plugin classes are read from a given options set
@@ -136,6 +142,13 @@ public final class UtilPlugin {
         List<Class<? extends PluginInterface>> classes =
                 options.get(OptionsPlugin.PLUGIN_INTERFACE_CLASS);
         assert classes != null;
+        return getPluginInterfaceClasses(classes, shallImplement);
+    }
+
+    public static <T extends PluginInterface> List<Class<T>> getPluginInterfaceClasses(
+            List<Class<? extends PluginInterface>> classes, Class<T> shallImplement) {
+        assert classes != null;
+        assert shallImplement != null;
         List<Class<T>> result = new ArrayList<>();
         for (Class<? extends PluginInterface> clazz : classes) {
             if (shallImplement.isAssignableFrom(clazz)) {
@@ -148,6 +161,7 @@ public final class UtilPlugin {
         return result;
     }
 
+    
     /**
      * Get plugin filenames specified in options.
      * The list of plugins does not include the plugins embedded into the

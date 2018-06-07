@@ -33,7 +33,7 @@ import epmc.options.Options;
 final class BackendTester {
     private final class TestBackendFeedback implements BackendFeedback {
         @Override
-        public void send(Object client, String message) {
+        public void sendToClient(Object client, String message) {
             assert client != null;
             assert message != null;
             pending.add(message);
@@ -69,7 +69,7 @@ final class BackendTester {
 
     void send(String message) {
         assert message != null;
-        backend.send(backend, message);
+        backend.sendToBackend(backend, message);
     }
 
     int size() {

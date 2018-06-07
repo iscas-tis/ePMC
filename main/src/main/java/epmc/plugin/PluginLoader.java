@@ -199,7 +199,7 @@ final class PluginLoader {
         }
         List<Path> result = new ArrayList<>();
         for (int pluginNr = 0; pluginNr < plugins.size(); pluginNr++) {
-            String fileName = plugins.get(pluginNr);
+            String fileName = plugins.get(pluginNr).trim();
             Path path = Paths.get(fileName);
             ensure(path != null, ProblemsPlugin.PLUGIN_PLUGIN_FILE_NOT_FOUND, fileName);
             ensure(Files.exists(path), ProblemsPlugin.PLUGIN_PLUGIN_FILE_NOT_FOUND, fileName);
