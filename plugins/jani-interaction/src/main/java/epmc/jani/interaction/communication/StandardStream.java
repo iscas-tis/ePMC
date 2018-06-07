@@ -59,7 +59,7 @@ public final class StandardStream implements BackendFeedback {
                 } catch (InterruptedException e) {
                     break;
                 }
-                backend.send(StandardStream.this, line);
+                backend.sendToBackend(StandardStream.this, line);
             }
         }
     });
@@ -83,7 +83,7 @@ public final class StandardStream implements BackendFeedback {
      * Construct new standard I/O interaction object.
      */
     public StandardStream(InputStream inputStream) {
-        backend = new Backend(this);
+        backend = new Backend(this, null);
         inputChannel = Channels.newChannel(inputStream);
     }
 
@@ -127,7 +127,7 @@ public final class StandardStream implements BackendFeedback {
     }
 
     @Override
-    public void send(Object where, String message) {
+    public void sendToClient(Object where, String message) {
         assert where != null;
         assert where == this : where;
         assert message != null;

@@ -25,6 +25,7 @@ import java.text.MessageFormat;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -43,7 +44,11 @@ import epmc.jani.interaction.communication.handler.UtilHandler;
 import epmc.jani.interaction.database.Database;
 import epmc.jani.interaction.options.JANIInteractionIO;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
+import epmc.main.options.UtilOptionsEPMC;
 import epmc.options.Options;
+import epmc.plugin.AfterOptionsCreation;
+import epmc.plugin.PluginInterface;
+import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
 
@@ -105,10 +110,19 @@ public final class Backend implements BackendInterface {
      * Construct a new backend.
      * None of the parameters may be {@code null}.
      * @param feedback feedback channel
+     * @param plugins 
      * 
      */
-    Backend(BackendFeedback feedback) {
+    public Backend(BackendFeedback feedback, List<Class<? extends PluginInterface>> plugins) {
         assert feedback != null;
+        if (Options.get() == null) {
+            Options options = UtilOptionsEPMC.newOptions();
+            Options.set(options);
+            for (Class<? extends AfterOptionsCreation> clazz : UtilPlugin.getPluginInterfaceClasses(plugins, AfterOptionsCreation.class)) {
+                AfterOptionsCreation object = Util.getInstance(clazz);
+                object.process(options);
+            }
+        }
         this.feedback = feedback;
         permanentStorage = new Database();
         prepareExtensions();
@@ -141,7 +155,7 @@ public final class Backend implements BackendInterface {
      * @param client client sending the message
      * @param message message to be handled
      */
-    public synchronized void send(Object client, String message) {
+    public synchronized void sendToBackend(Object client, String message) {
         assert client != null;
         assert message != null;
         assert feedback != null;
@@ -220,7 +234,7 @@ public final class Backend implements BackendInterface {
     public void send(Object client, JsonValue reply) {
         assert client != null;
         assert reply != null;
-        feedback.send(client, reply.toString());
+        feedback.sendToClient(client, reply.toString());
     }
 
     public Map<Object, ClientInfo> getClients() {

@@ -50,7 +50,7 @@ public final class Server extends NanoWSD implements BackendFeedback  {
 
     public Server() {
         super(getPort());
-        backend = new Backend(this);
+        backend = new Backend(this, null);
         printMessages = Options.get().getBoolean(OptionsJANIInteraction.JANI_INTERACTION_PRINT_MESSAGES);
     }
 
@@ -66,7 +66,7 @@ public final class Server extends NanoWSD implements BackendFeedback  {
     /* methods of backend feedback */
 
     @Override
-    public void send(Object client, String message) {
+    public void sendToClient(Object client, String message) {
         assert client != null;
         assert message != null;
         assert client instanceof WebSocket;

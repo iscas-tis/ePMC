@@ -75,7 +75,9 @@ public final class HelpTest {
         JsonObject value = UtilJSON.toObject(UtilJSON.read(string));
         JsonArray parameters = UtilJSON.getArray(value, "parameters");
         JsonArray preciseCategories = UtilJSON.getArrayOrNull(value, "x-precise-categories");
-        CommandLineOptions options = new CommandLineOptions(parameters, preciseCategories);
+        CommandLineOptions options = new CommandLineOptions();
+        options.parsePreciseCategories(preciseCategories);
+        options.parseOptions(parameters);
         System.out.println(UsagePrinterJANI.getUsage(options));
     }
 }

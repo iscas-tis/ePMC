@@ -36,7 +36,7 @@ public interface BackendFeedback {
      * @param client to which instance to send message
      * @param message message to send to client
      */
-    void send(Object client, String message);
+    void sendToClient(Object client, String message);
 
     /**
      * Log off the client with the given identifier.

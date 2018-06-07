@@ -53,22 +53,23 @@ public final class CommandLineOptions {
     private final String defaultPattern;
     
     /** Available options in terms of map of option identifier to option. */
-    private final Map<String,CommandLineOption> options;
-    private final Map<String,CommandLineOption> optionsExternal;
+    private final Map<String,CommandLineOption> options = new LinkedHashMap<>();
+    private final Map<String,CommandLineOption> optionsExternal = Collections.unmodifiableMap(options);
     /** Available categories in terms of map of option identifier to category. */
-    private final Map<String,CommandLineCategory> categories;
+    private final Map<String,CommandLineCategory> categories = new LinkedHashMap<>();
     /** Available options in terms of map of option identifier to option for external usage. */
-    private final Map<String,CommandLineCategory> categoriesExternal;
+    private final Map<String,CommandLineCategory> categoriesExternal = Collections.unmodifiableMap(categories);
     /** The available commands for this option set. */
     private final Map<String,CommandLineCommand> commands = new LinkedHashMap<>();
     /** Write-protected available commands for external usage. */
     private final Map<String,CommandLineCommand> commandsExternal = Collections.unmodifiableMap(commands);
+    private final Map<String,CommandJANIClient.Builder> commandsJANI = new LinkedHashMap<>();
 
-    private boolean ignoreUnknown;
+    private boolean ignoreUnknownOptions;
+    private boolean ignoreUnknownCommands;
     private String command;
 
-    public CommandLineOptions(JsonValue parameters, JsonValue preciseCategories) {
-        assert parameters != null;
+    public CommandLineOptions() {
         Locale locale = Locale.getDefault();
         ResourceBundle poMsg = ResourceBundle.getBundle(RESOURCE_BUNDLE, locale);
         toolName = poMsg.getString(TOOL_NAME);
@@ -80,17 +81,11 @@ public final class CommandLineOptions {
         availableProgramOptionsPattern = poMsg.getString(AVAILABLE_PROGRAM_OPTIONS_PATTERN);
         typePattern = poMsg.getString(TYPE_PATTERN);
         defaultPattern = poMsg.getString(DEFAULT_PATTERN);
-        Map<String,CommandLineCategory> categories = new LinkedHashMap<>();
-        categories.putAll(parsePreciseCategories(preciseCategories));
-        options = parseOptions(parameters, categories);
-        optionsExternal = Collections.unmodifiableMap(options);
-        this.categories = categories;
-        this.categoriesExternal = Collections.unmodifiableMap(this.categories);
     }
 
-    private static Map<String,CommandLineCategory> parsePreciseCategories(JsonValue preciseCategories) {
+    public void parsePreciseCategories(JsonValue preciseCategories) {
         if (preciseCategories == null) {
-            return Collections.emptyMap();
+            return;
         }
         JsonArray categoriesArray = UtilJSON.toArrayObject(preciseCategories);
         Map<String,Set<String>> childrenMap = new LinkedHashMap<>();
@@ -109,28 +104,24 @@ public final class CommandLineOptions {
         }
         Deque<String> todo = new ArrayDeque<>();
         todo.addAll(childrenMap.get(null));
-        Map<String,CommandLineCategory> categoryMap = new LinkedHashMap<>();
         while (!todo.isEmpty()) {
             String id = todo.removeFirst();
             JsonObject jsonObject = categoriesJsonMap.get(id);
             String description = UtilJSON.getString(jsonObject, CAT_DESCRIPTION);
             String parentString = UtilJSON.getStringOrNull(jsonObject, CAT_PARENT);
-            CommandLineCategory parent = categoryMap.get(parentString);
+            CommandLineCategory parent = categories.get(parentString);
             CommandLineCategory category = new CommandLineCategory(id, description, parent);
-            categoryMap.put(id, category);
+            categories.put(id, category);
             Set<String> children = childrenMap.get(id);
             if (children != null) {
                 todo.addAll(children);
             }
         }
-        return categoryMap;
     }
 
-    private static Map<String,CommandLineOption> parseOptions(JsonValue parameters, Map<String, CommandLineCategory> categories) {
+    public void parseOptions(JsonValue parameters) {
         assert parameters != null;
-        assert categories != null;
         JsonArray jsonArray = UtilJSON.toArray(parameters);
-        Map<String,CommandLineOption> options = new LinkedHashMap<>();
         for (JsonValue entry : jsonArray) {
             CommandLineOption option = new CommandLineOption.Builder()
                     .setJSON(UtilJSON.toObject(entry))
@@ -138,13 +129,16 @@ public final class CommandLineOptions {
                     .build();
             options.put(option.getIdentifier(), option);
         }
-        return options;
     }
 
-    public void setIgnoreUnknown(boolean ignoreUnknown) {
-        this.ignoreUnknown = ignoreUnknown;
+    public void setIgnoreUnknownOptions(boolean ignoreUnknownOptions) {
+        this.ignoreUnknownOptions = ignoreUnknownOptions;
     }
-    
+
+    public void setIgnoreUnknownCommands(boolean ignoreUnknownCommands) {
+        this.ignoreUnknownCommands = ignoreUnknownCommands;
+    }
+
     public void parse(String[] args) {
         assert args != null;
         for (String arg : args) {
@@ -154,7 +148,7 @@ public final class CommandLineOptions {
             return;
         }
         String commandName = args[0];
-        UtilError.ensure(ignoreUnknown || commands.containsKey(commandName),
+        UtilError.ensure(ignoreUnknownCommands || commands.containsKey(commandName),
                 ProblemsOptions.OPTIONS_COMMAND_NOT_VALID, args[0]);
         this.command = commandName;
 
@@ -169,7 +163,7 @@ public final class CommandLineOptions {
             if (arg.length() >= 2 && arg.substring(0, 2).equals(OPTION_PREFIX)) {
                 option = arg.substring(2, arg.length());
             }
-            UtilError.ensure(ignoreUnknown || option == null
+            UtilError.ensure(ignoreUnknownOptions || option == null
                     || options.containsKey(option),
                     ProblemsOptions.OPTIONS_PROGRAM_OPTION_NOT_VALID, option);
             UtilError.ensure(lastOption == null || option == null,
@@ -177,7 +171,7 @@ public final class CommandLineOptions {
             UtilError.ensure(currentOption != null || option != null,
                     ProblemsOptions.OPTIONS_NO_OPTION_FOR_VALUE, arg);
             if (option == null) {
-                if (currentOption.equals(PLUGIN) || currentOption.equals(PLUGIN_LIST_FILE) || !ignoreUnknown) {
+                if (currentOption.equals(PLUGIN) || currentOption.equals(PLUGIN_LIST_FILE) || !ignoreUnknownOptions) {
                     String value = arg;
                     try {
                         parse(currentOption, value);
@@ -238,10 +232,21 @@ public final class CommandLineOptions {
         opt.parse(value);
     }
     
+    public void addCommand(CommandLineCommand command, CommandJANIClient.Builder jani) {
+        assert command != null;
+        assert jani != null;
+        commands.put(command.getIdentifier(), command);
+        commandsJANI.put(command.getIdentifier(), jani);
+    }
+    
     public String getCommand() {
         return command;
     }
 
+    public CommandJANIClient.Builder getCommandJANI() {
+        return commandsJANI.get(command);
+    }
+    
     public String getToolName() {
         return toolName;
     }
@@ -288,5 +293,32 @@ public final class CommandLineOptions {
     
     public String getDefaultPattern() {
         return defaultPattern;
+    }
+
+    public String getShortUsage() {
+        // TODO Auto-generated method stub
+        return null;
+    }
+    
+    public void addOption(CommandLineOption option) {
+        assert option != null;
+        options.put(option.getIdentifier(), option);
+    }
+
+    public String get(Enum<?> key) {
+        assert key != null;
+        String keyString = key.name().toLowerCase().replace('_', '-');
+        return getValue(keyString);
+    }
+
+    private String getValue(String keyString) {
+        assert keyString != null;
+        return options.get(keyString).getValue();
+    }
+
+    public void clearValues() {
+        for (CommandLineOption option : options.values()) {
+            option.clearValue();
+        }
     }
 }

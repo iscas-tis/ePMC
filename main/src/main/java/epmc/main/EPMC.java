@@ -20,8 +20,12 @@
 
 package epmc.main;
 
-import epmc.main.options.UtilOptionsEPMC;
-import epmc.options.Options;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
+
+import epmc.plugin.PluginInterface;
 import epmc.plugin.StartInConsole;
 import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
@@ -42,32 +46,67 @@ public final class EPMC {
         for (String arg : args) {
             assert arg != null;
         }
-        Options options = UtilOptionsEPMC.newOptions();
-        Options.set(options);
-        startInConsole(options, args);
+//        Options options = UtilOptionsEPMC.newOptions();
+  //      Options.set(options);
+    //    options.parseOptions(args, true);
+      //  UtilPlugin.loadPlugins(options);
+        List<Class<? extends PluginInterface>> plugins = getPlugins(args);
+        for (Class<? extends StartInConsole> clazz : UtilPlugin.getPluginInterfaceClasses(plugins, StartInConsole.class)) {
+            StartInConsole object = Util.getInstance(clazz);
+            object.process(args, plugins);
+        }
     }
-
-    /**
-     * Start the command to be executed with output shown in standard output.
-     * The command to be executed will be read for {@link Options#COMMAND}.
-     * Then, the client part of the command will be executed.
-     * Afterwards, a task server will be created and the server part of the
-     * command will be executed there.
-     * The options parameter must not be {@code null}.
-     * @param options 
-     * 
-     * @param options options to use
-     */
-    private static void startInConsole(Options options, String[] args) {
-        assert options != null;
+    
+    private static List<Class<? extends PluginInterface>> getPlugins(String[] args) {
+        return UtilPlugin.loadPlugins(getPluginList(args));
+    }
+    
+    private static List<String> getPluginList(String[] args) {
         assert args != null;
         for (String arg : args) {
             assert arg != null;
         }
-        for (Class<? extends StartInConsole> clazz : UtilPlugin.getPluginInterfaceClasses(options, StartInConsole.class)) {
-            StartInConsole object = Util.getInstance(clazz);
-            object.process(args);
+        List<String> result = new ArrayList<>();
+        String plugins = null;
+        String pluginsListFilename = null;
+        int index = 0;
+        while (index < args.length) {
+            if (args[index].trim().equals("--plugin")) {
+                index++;
+                while (index < args.length && !args[index].startsWith("--")) {
+                    if (plugins == null) {
+                        plugins = args[index].trim();
+                    } else {
+                        plugins += "," + args[index].trim();
+                    }
+                    index++;
+                }
+            } else if (args[index].equals("--plugin-list-file")) {
+                index++;
+                while (index < args.length && !args[index].startsWith("--")) {
+                    pluginsListFilename = args[index];
+                    index++;
+                }
+            }
+            index++;
         }
-    }
+        /* Read external plugins from plugin files list. */
+        if (pluginsListFilename != null) {
+            Path pluginsListPath = Paths.get(pluginsListFilename);
+            List<String> pluginsFromListFile = UtilPlugin.readPluginList(pluginsListPath);
+            result.addAll(pluginsFromListFile);
+        }
 
+        /* Read plugins from option (command line).  */
+        if (plugins == null) {
+            plugins = "";
+        }
+        for (String plugin : plugins.split(",")) {
+            if (plugin.equals("")) {
+                continue;
+            }
+            result.add(plugin);
+        }
+        return result;
+    }
 }
