@@ -306,7 +306,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
             Player player = playerProp.getEnum(graphNode);
             if (reachSink.get(graphNode) || reachNotOneSink.get(graphNode)) {
                 if (player == Player.ONE) {
-                    cumulRewIdx++;
+//                    cumulRewIdx++;
                 }
                 continue;
             }
