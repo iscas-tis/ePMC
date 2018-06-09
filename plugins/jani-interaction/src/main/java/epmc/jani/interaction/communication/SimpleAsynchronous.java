@@ -3,12 +3,14 @@ package epmc.jani.interaction.communication;
 import java.util.List;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.json.JsonValue;
+
 import epmc.plugin.PluginInterface;
 
 public final class SimpleAsynchronous implements BackendInterface, BackendFeedback {
     private final BackendInterface backend;
-    private final LinkedBlockingDeque<String> clientToBackend = new LinkedBlockingDeque<>();
-    private final LinkedBlockingDeque<String> backendToCliend = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<JsonValue> clientToBackend = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<JsonValue> backendToCliend = new LinkedBlockingDeque<>();
     private BackendFeedback client;
     private Thread clientToBackendThread;
     private Thread backendToClientThread;
@@ -27,7 +29,7 @@ public final class SimpleAsynchronous implements BackendInterface, BackendFeedba
             @Override
             public void run() {
                 while (!done) {
-                    String line = null;
+                    JsonValue line = null;
                     try {
                         line = clientToBackend.take();
                         backend.sendToBackend(this, line);
@@ -41,7 +43,7 @@ public final class SimpleAsynchronous implements BackendInterface, BackendFeedba
             @Override
             public void run() {
                 while (!done) {
-                    String line = null;
+                    JsonValue line = null;
                     try {
                         line = backendToCliend.take();
                         client.sendToClient(this, line);
@@ -56,7 +58,7 @@ public final class SimpleAsynchronous implements BackendInterface, BackendFeedba
     }
     
     @Override
-    public void sendToBackend(Object client, String message) {
+    public void sendToBackend(Object client, JsonValue message) {
         try {
             clientToBackend.put(message);
         } catch (InterruptedException e) {
@@ -65,7 +67,7 @@ public final class SimpleAsynchronous implements BackendInterface, BackendFeedba
     }
 
     @Override
-    public void sendToClient(Object client, String message) {
+    public void sendToClient(Object client, JsonValue message) {
         try {
             backendToCliend.put(message);
         } catch (InterruptedException e) {
