@@ -20,6 +20,8 @@
 
 package epmc.jani.interaction.communication;
 
+import javax.json.JsonValue;
+
 /**
  * Interface with which the backend sends messages.
  * 
@@ -36,7 +38,7 @@ public interface BackendFeedback {
      * @param client to which instance to send message
      * @param message message to send to client
      */
-    void sendToClient(Object client, String message);
+    void sendToClient(Object client, JsonValue message);
 
     /**
      * Log off the client with the given identifier.
