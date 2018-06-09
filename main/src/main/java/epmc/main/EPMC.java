@@ -46,10 +46,6 @@ public final class EPMC {
         for (String arg : args) {
             assert arg != null;
         }
-//        Options options = UtilOptionsEPMC.newOptions();
-  //      Options.set(options);
-    //    options.parseOptions(args, true);
-      //  UtilPlugin.loadPlugins(options);
         List<Class<? extends PluginInterface>> plugins = getPlugins(args);
         for (Class<? extends StartInConsole> clazz : UtilPlugin.getPluginInterfaceClasses(plugins, StartInConsole.class)) {
             StartInConsole object = Util.getInstance(clazz);

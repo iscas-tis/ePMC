@@ -22,6 +22,7 @@ package epmc.jani.interaction.communication;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
@@ -29,6 +30,8 @@ import javax.json.JsonValue;
 import epmc.jani.interaction.communication.Backend;
 import epmc.jani.interaction.communication.BackendFeedback;
 import epmc.options.Options;
+import epmc.plugin.OptionsPlugin;
+import epmc.plugin.PluginInterface;
 
 final class BackendTester {
     private final class TestBackendFeedback implements BackendFeedback {
@@ -53,7 +56,8 @@ final class BackendTester {
 
     BackendTester(Options options) {
         assert options != null;
-        backend = new Backend(feedback);
+        List<Class<? extends PluginInterface>> plugins = options.get(OptionsPlugin.PLUGIN_INTERFACE_CLASS);
+        backend = new Backend(feedback, plugins);
     }
 
     void send(JsonObjectBuilder request) {
