@@ -24,6 +24,7 @@ import javax.json.Json;
 import javax.json.JsonArray;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
 import epmc.jani.interaction.commandline.CommandJANIClient;
 import epmc.jani.interaction.commandline.CommandLineOptions;
@@ -84,13 +85,13 @@ public class CommandJANIHelp implements CommandJANIClient {
         JsonObjectBuilder request = Json.createObjectBuilder();
         request.add(JANI_VERSIONS, Json.createArrayBuilder().add(JANI_VERSION));
         request.add(X_EPMC_CLIENT, true);
-        builder.backend.sendToBackend(builder.client, request.build().toString());
+        builder.backend.sendToBackend(builder.client, request.build());
         args = builder.args;
     }
 
     @Override
-    public void sendToClient(Object client, String message) {
-        JsonObject value = UtilJSON.toObject(UtilJSON.read(message));
+    public void sendToClient(Object client, JsonValue message) {
+        JsonObject value = UtilJSON.toObject(message);
         JsonArray parameters = UtilJSON.getArray(value, PARAMETERS);
         JsonArray preciseCategories = UtilJSON.getArrayOrNull(value, X_PRECISE_CATEGORIES);
         options.clearValues();
