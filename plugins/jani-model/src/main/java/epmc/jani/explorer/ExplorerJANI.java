@@ -510,7 +510,14 @@ public final class ExplorerJANI implements Explorer {
         }
         if (property instanceof RewardSpecification) {
             RewardSpecification specification = (RewardSpecification) property;
-            return nodeTransientValuesMap.get(specification.getExpression());
+            ExplorerNodeProperty result = nodeTransientValuesMap.get(specification.getExpression());
+            if (result != null) {
+                return result;
+            } else {
+                result = new PropertyNodeExpression(this, stateVariables.getIdentifiersArray(), specification.getExpression(), null);
+                expressionProperties.put(specification.getExpression(), (PropertyNodeExpression) result);
+                return result;
+            }
         }
         return null;
     }
@@ -540,6 +547,7 @@ public final class ExplorerJANI implements Explorer {
             }
         }
         if (property instanceof RewardSpecification) {
+            // TODO fix for rewards not directly specified with transient vars
             RewardSpecification specification = (RewardSpecification) property;
             return transitionTransientValuesMap.get(specification.getExpression());
         }
