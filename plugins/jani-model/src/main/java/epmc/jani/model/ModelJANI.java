@@ -269,6 +269,9 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
         metadata = UtilModelParser.parseOptional(this, Metadata.class, object, METADATA);
         actions = UtilModelParser.parseOptional(this, Actions.class, object, ACTIONS);
+        if (actions == null) {
+            actions = new Actions();
+        }
         modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS);
         constants = computeConstants();
         variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES);
