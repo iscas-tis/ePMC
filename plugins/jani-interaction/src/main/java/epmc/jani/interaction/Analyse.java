@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.main;
+package epmc.jani.interaction;
 
 import java.io.InputStream;
 
