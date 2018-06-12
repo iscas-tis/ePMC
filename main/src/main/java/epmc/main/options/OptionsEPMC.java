@@ -38,10 +38,6 @@ public enum OptionsEPMC {
     MODEL_INPUT_FILES,
     /** {@link String} {@link List} of property input files */
     PROPERTY_INPUT_FILES,
-    /** port number ({@link Integer}) to use for analysis */
-    PORT,
-    /** RMI name used for server started */
-    SERVER_NAME,
     /** whether to print stack trace if user exception thrown */
     PRINT_STACKTRACE,
     /** run mode of EPMC {@link OptionsTypesEPMC.RunMode}) */

@@ -6,7 +6,7 @@ import java.util.Locale;
 
 import epmc.error.EPMCException;
 import epmc.error.Positional;
-import epmc.main.Analyse;
+import epmc.jani.interaction.Analyse;
 import epmc.main.LogCommandLine;
 import epmc.main.RawModelLocalFiles;
 import epmc.main.options.OptionsEPMC;
