@@ -402,9 +402,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
             int node = forStates.getExplicitIthState(i);
             //            int modelState = nodeAutomaton.getInt();
             boolean value = solverResult.get(node);
-            set.apply(entry, value
-                    ? TypeBoolean.get().getTrue()
-                            : TypeBoolean.get().getFalse());
+            set.apply(entry, UtilValue.newValue(TypeBoolean.get(), value));
             resultValues.set(entry, i);
         }
         StateMap result = UtilGraph.newStateMap(forStates, resultValues);

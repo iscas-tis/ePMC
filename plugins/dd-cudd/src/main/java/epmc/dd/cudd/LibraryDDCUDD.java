@@ -47,6 +47,7 @@ import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
@@ -311,8 +312,8 @@ public final class LibraryDDCUDD implements LibraryDD {
         if (!mtbdd) {
             complement(this.bddOne, this.bddZero);
         }
-        this.valueTrue = TypeBoolean.get().getTrue();
-        this.valueFalse = TypeBoolean.get().getFalse();
+        this.valueTrue = UtilValue.newValue(TypeBoolean.get(), true);
+        this.valueFalse = UtilValue.newValue(TypeBoolean.get(), false);
         this.addZero = mtbdd ? CUDD.Cudd_dd_zero(cuddManager) : null;
         this.addOne = mtbdd ? CUDD.Cudd_dd_one(cuddManager) : null;
     }
