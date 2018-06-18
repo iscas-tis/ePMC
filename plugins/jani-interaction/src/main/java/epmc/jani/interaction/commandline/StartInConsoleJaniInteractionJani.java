@@ -87,7 +87,7 @@ public final class StartInConsoleJaniInteractionJani implements StartInConsole {
         List<String> result = new ArrayList<>();
 
         /* Read external plugins from plugin files list. */
-        String pluginsListFilename = options.get(OptionsPlugin.PLUGIN_LIST_FILE);
+        String pluginsListFilename = options.get(OptionsPlugin.PLUGIN_LIST_FILE).toString();
         if (pluginsListFilename != null) {
             Path pluginsListPath = Paths.get(pluginsListFilename);
             List<String> pluginsFromListFile = UtilPlugin.readPluginList(pluginsListPath);
@@ -95,7 +95,7 @@ public final class StartInConsoleJaniInteractionJani implements StartInConsole {
         }
 
         /* Read plugins from option (command line).  */
-        String plugins = options.get(OptionsPlugin.PLUGIN);
+        String plugins = options.get(OptionsPlugin.PLUGIN).toString();
         if (plugins == null) {
             plugins = EMPTY;
         }
