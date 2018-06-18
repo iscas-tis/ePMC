@@ -212,9 +212,7 @@ public final class StateMapDD implements StateMap, Closeable, Cloneable {
             if (TypeBoolean.is(info)) {
                 boolean allTrue = true;
                 allTrue = isAllTrue(initialStates);
-                return allTrue
-                        ? TypeBoolean.get().getTrue()
-                                : TypeBoolean.get().getFalse();
+                return UtilValue.newValue(TypeBoolean.get(), allTrue);
             } else if (hasMinAndMaxElements(initialStates)) {
                 ValueInterval range = TypeInterval.get().newValue();
                 getRange(range, initialStates);

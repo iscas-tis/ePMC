@@ -27,9 +27,6 @@ import epmc.value.TypeArray;
 public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     private final static String BOOL = "bool";
     
-    private final ValueBoolean valueFalse = new ValueBoolean(this, false);
-    private final ValueBoolean valueTrue = new ValueBoolean(this, true);
-
     public static boolean is(Type type) {
         return type instanceof TypeBoolean;
     }
@@ -49,19 +46,6 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     public static void set(TypeBoolean type) {
         assert type != null;
         ContextValue.get().setType(TypeBoolean.class, ContextValue.get().makeUnique(type));
-    }
-
-    public TypeBoolean() {
-        valueFalse.setImmutable();
-        valueTrue.setImmutable();
-    }
-
-    public ValueBoolean getFalse() {
-        return valueFalse;
-    }
-
-    public ValueBoolean getTrue() {
-        return valueTrue;
     }
 
     @Override

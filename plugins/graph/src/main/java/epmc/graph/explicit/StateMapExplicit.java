@@ -319,9 +319,7 @@ public final class StateMapExplicit implements StateMap, Closeable, Cloneable {
             if (TypeBoolean.is(type)) {
                 boolean allTrue = true;
                 allTrue = isAllTrue(initialStates);
-                return allTrue
-                        ? TypeBoolean.get().getTrue()
-                                : TypeBoolean.get().getFalse();
+                UtilValue.newValue(TypeBoolean.get(), allTrue);
             } else if (hasMinAndMaxElements(initialStates)) {
                 Value range = TypeInterval.get().newValue();
                 getRange(range, initialStates);

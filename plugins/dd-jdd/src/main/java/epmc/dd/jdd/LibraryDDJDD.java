@@ -36,6 +36,7 @@ import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import gnu.trove.list.TIntList;
@@ -303,8 +304,8 @@ public final class LibraryDDJDD implements LibraryDD {
         int initCache = Options.get().getInteger(OptionsDDJDD.DD_JDD_INIT_CACHE_SIZE);
         int initSlots = Options.get().getInteger(OptionsDDJDD.DD_JDD_INIT_NODES);
         this.bdd = new BDD(initSlots, initCache);
-        this.zeroValue = TypeBoolean.get().getFalse();
-        this.oneValue = TypeBoolean.get().getTrue();
+        this.zeroValue = UtilValue.newValue(TypeBoolean.get(), false);
+        this.oneValue = UtilValue.newValue(TypeBoolean.get(), true);
         this.zeroNode = bdd.getZero();
         this.oneNode = bdd.getOne();
         this.alive = true;
