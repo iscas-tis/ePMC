@@ -33,6 +33,13 @@
       <systemPath>${project.basedir}/../expression-basic/target/epmc-expression-basic-0.jar</systemPath>
     </dependency>
     <dependency>
+      <groupId>epmc.jani.interaction</groupId>
+      <artifactId>epmc-jani-interaction</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../jani-interaction/target/epmc-jani-interaction-0.jar</systemPath>
+    </dependency>
+    <dependency>
       <groupId>epmc.util</groupId>
       <artifactId>epmc-util</artifactId>
       <version>0</version>
