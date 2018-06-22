@@ -51,10 +51,8 @@ public final class AfterOptionsCreationSpecialiseSMG implements AfterOptionsCrea
 	@Override
 	public void process(Options options) {
 		assert options != null;
-		options.disableOption(OptionsEPMC.PORT);
 		options.disableOption(OptionsModelChecker.MODEL_INPUT_TYPE);
 		options.disableOption(OptionsModelChecker.PROPERTY_INPUT_TYPE);
-		options.disableOption(OptionsEPMC.SERVER_NAME);
 		/* currently buggy */
 //		options.disableOption("iteration-method");
 	//	options.disableOption("iteration-stop-criterion");
