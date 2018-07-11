@@ -42,6 +42,7 @@ import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
@@ -156,8 +157,8 @@ public final class LibraryDDSylvan implements LibraryDD {
         Sylvan.sylvan_init_bdd(cacheGranularity);
         falseNode = Sylvan.Sylvan_false();
         trueNode = Sylvan.Sylvan_true();
-        this.valueTrue = TypeBoolean.get().getTrue();
-        this.valueFalse = TypeBoolean.get().getFalse();
+        this.valueTrue = UtilValue.newValue(TypeBoolean.get(), true);
+        this.valueFalse = UtilValue.newValue(TypeBoolean.get(), false);
     }
 
     @Override

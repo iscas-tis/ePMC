@@ -314,8 +314,6 @@ public final class TestHelper {
         pluginDir.addAll(oldPluginDir);        
         options.set(OptionsPlugin.PLUGIN, pluginDir);
         UtilPlugin.loadPlugins(options);
-        Locale locale = Locale.getDefault();
-        options.set(OptionsEPMC.LOCALE, locale);
         Log log = prepareLog(options, logType);
         options.set(OptionsMessages.LOG, log);
         ContextValue.set(new ContextValue());

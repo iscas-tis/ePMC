@@ -2,11 +2,10 @@ package epmc.jani.interaction.commandline;
 
 import java.text.MessageFormat;
 import java.util.List;
-import java.util.Locale;
 
 import epmc.error.EPMCException;
 import epmc.error.Positional;
-import epmc.main.Analyse;
+import epmc.jani.interaction.Analyse;
 import epmc.main.LogCommandLine;
 import epmc.main.RawModelLocalFiles;
 import epmc.main.options.OptionsEPMC;
@@ -108,7 +107,6 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
         for (String arg : args) {
             assert arg != null;
         }
-        Locale locale = Locale.getDefault();
         Options options = UtilOptionsEPMC.newOptions();
         options.set(OptionsPlugin.PLUGIN_INTERFACE_CLASS, plugins);
         for (Class<? extends AfterOptionsCreation> clazz : UtilPlugin.getPluginInterfaceClasses(plugins, AfterOptionsCreation.class)) {
@@ -121,7 +119,6 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
         options.getOption(OptionsPlugin.PLUGIN).reset();
         options.getOption(OptionsPlugin.PLUGIN_LIST_FILE).reset();
         options.parseOptions(args, false);
-        options.set(OptionsEPMC.LOCALE, locale);
         return options;
     }
 

@@ -257,8 +257,8 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         public long posInf = valueToNumber(UtilValue.newValue(TypeReal.get(), UtilValue.POS_INF));
         public long negInf = valueToNumber(UtilValue.newValue(TypeReal.get(), UtilValue.NEG_INF));
         public long two = valueToNumber(UtilValue.newValue(TypeInteger.get(), 2));
-        public long falseValue = valueToNumber(TypeBoolean.get().getFalse());
-        public long trueValue = valueToNumber(TypeBoolean.get().getTrue());
+        public long falseValue = valueToNumber(UtilValue.newValue(TypeBoolean.get(), false));
+        public long trueValue = valueToNumber(UtilValue.newValue(TypeBoolean.get(), true));
 
         @Override
         protected List<String> getFieldOrder() {

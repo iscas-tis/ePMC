@@ -29,6 +29,7 @@ import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 
 /**
@@ -82,7 +83,7 @@ public final class JANITypeBool implements JANIType {
 
     @Override
     public Value getDefaultValue() {
-        return TypeBoolean.get().getFalse();
+        return UtilValue.newValue(TypeBoolean.get(), false);
     }
 
     @Override

@@ -26,7 +26,7 @@ import java.rmi.RemoteException;
 import java.rmi.server.UnicastRemoteObject;
 
 import epmc.error.EPMCException;
-import epmc.main.Analyse;
+import epmc.jani.interaction.Analyse;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.RawModel;

@@ -347,9 +347,9 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         case COUNT:
             return UtilValue.clone(UtilValue.newValue(TypeInteger.get(), 0));
         case EXISTS:
-            return UtilValue.clone(TypeBoolean.get().getFalse());
+            return UtilValue.clone(UtilValue.newValue(TypeBoolean.get(), false));
         case FORALL:
-            return UtilValue.clone(TypeBoolean.get().getTrue());
+            return UtilValue.clone(UtilValue.newValue(TypeBoolean.get(), true));
         case RANGE:
             ValueInterval result = TypeInterval.get().newValue();
             OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeReal.get(), TypeReal.get());

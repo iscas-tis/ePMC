@@ -45,10 +45,6 @@ import epmc.plugin.UtilPlugin;
 public final class UtilOptionsEPMC {
     /** User-readable string indicating that we want to have filename there. */
     private final static String FILE = "file";
-    /** Default RMI server name. */
-    private final static String DEFAULT_SERVER_NAME = "EPMC";
-    /** Default RMI server port. */
-    private final static String DEFAULT_SERVER_PORT = "43333";
 
     /**
      * Create new {@link Options} with EPMC-specific options.
@@ -70,8 +66,6 @@ public final class UtilOptionsEPMC {
      */
     public static void prepareOptions(Options options) {
         assert options != null;
-        OptionTypeString typeString = OptionTypeString.getInstance();
-        OptionTypeInteger typeInteger = OptionTypeInteger.getInstance();
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         OptionTypeStringList typeFileList = new OptionTypeStringList(FILE);
 
@@ -81,12 +75,6 @@ public final class UtilOptionsEPMC {
             .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.RESULT_OUTPUT_FILES)
             .setType(typeFileList).setCommandLine().build();
-        options.addOption().setIdentifier(OptionsEPMC.PORT)
-            .setType(typeInteger).setDefault(DEFAULT_SERVER_PORT)
-            .setCommandLine().build();
-        options.addOption().setIdentifier(OptionsEPMC.SERVER_NAME)
-            .setType(typeString).setDefault(DEFAULT_SERVER_NAME)
-            .setCommandLine().setGui().build();
         options.addOption().setIdentifier(OptionsEPMC.PRINT_STACKTRACE)
             .setType(typeBoolean).setDefault(false).build();
 

@@ -29,6 +29,10 @@ import java.nio.channels.Channels;
 import java.nio.channels.ReadableByteChannel;
 import java.util.concurrent.LinkedBlockingDeque;
 
+import javax.json.JsonValue;
+
+import epmc.util.UtilJSON;
+
 // TODO continue
 // TODO documentation
 
@@ -44,16 +48,16 @@ public final class StandardStream implements BackendFeedback {
     /** Whether the main loops waiting for messages are to be terminated. */
     private boolean done;
     /** Incoming and not yet served messages. */
-    private final LinkedBlockingDeque<String> input = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<JsonValue> input = new LinkedBlockingDeque<>();
     /** Outgoing and not yet distributed messages. */
-    private final LinkedBlockingDeque<String> output = new LinkedBlockingDeque<>();
+    private final LinkedBlockingDeque<JsonValue> output = new LinkedBlockingDeque<>();
     /** Backend handling the messages. */
     private final Backend backend;
     private final Thread handleThread = new Thread(new Runnable() {
         @Override
         public void run() {
             while (!done) {
-                String line = null;
+                JsonValue line = null;
                 try {
                     line = input.take();
                 } catch (InterruptedException e) {
@@ -67,7 +71,7 @@ public final class StandardStream implements BackendFeedback {
         @Override
         public void run() {
             while (!done) {
-                String line = null;
+                JsonValue line = null;
                 try {
                     line = output.take();
                     System.out.println(line);
@@ -95,12 +99,12 @@ public final class StandardStream implements BackendFeedback {
 
             @Override
             public void run() {
-                String line = null;
+                JsonValue line = null;
                 Reader reader = Channels.newReader(inputChannel, UTF_8);
                 BufferedReader buf = new BufferedReader(reader);
                 while (!done) {
                     try {
-                        line = buf.readLine();
+                        line = UtilJSON.read(buf.readLine());
                     } catch (AsynchronousCloseException e) {
                         /* Will be thrown if converter closed. */
                         break;						
@@ -127,7 +131,7 @@ public final class StandardStream implements BackendFeedback {
     }
 
     @Override
-    public void sendToClient(Object where, String message) {
+    public void sendToClient(Object where, JsonValue message) {
         assert where != null;
         assert where == this : where;
         assert message != null;

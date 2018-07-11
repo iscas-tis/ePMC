@@ -23,6 +23,8 @@ package epmc.jani.interaction.communication;
 import java.io.IOException;
 import java.io.InputStream;
 
+import javax.json.JsonValue;
+
 import epmc.jani.interaction.messages.MessagesJANIInteraction;
 import epmc.jani.interaction.options.OptionsJANIInteraction;
 import epmc.messages.OptionsMessages;
@@ -66,7 +68,7 @@ public final class Server extends NanoWSD implements BackendFeedback  {
     /* methods of backend feedback */
 
     @Override
-    public void sendToClient(Object client, String message) {
+    public void sendToClient(Object client, JsonValue message) {
         assert client != null;
         assert message != null;
         assert client instanceof WebSocket;
@@ -77,7 +79,7 @@ public final class Server extends NanoWSD implements BackendFeedback  {
                     message);
         }
         try {
-            socket.send(message);
+            socket.send(message.toString());
         } catch (IOException e) {
         }
     }
