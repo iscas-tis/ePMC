@@ -155,13 +155,12 @@ public final class Backend implements BackendInterface {
      * @param client client sending the message
      * @param message message to be handled
      */
-    public synchronized void sendToBackend(Object client, String message) {
+    @Override
+    public synchronized void sendToBackend(Object client, JsonValue value) {
         assert client != null;
-        assert message != null;
+        assert value != null;
         assert feedback != null;
-        JsonValue value = null;
         try {
-            value = UtilJSON.read(message);
             handle(client, value);
         } catch (EPMCException e) {
             closeConnection(client, e);
@@ -234,7 +233,7 @@ public final class Backend implements BackendInterface {
     public void send(Object client, JsonValue reply) {
         assert client != null;
         assert reply != null;
-        feedback.sendToClient(client, reply.toString());
+        feedback.sendToClient(client, reply);
     }
 
     public Map<Object, ClientInfo> getClients() {

@@ -43,6 +43,7 @@ import epmc.operator.OperatorOr;
 import epmc.options.Options;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 import gnu.trove.list.TIntList;
@@ -88,8 +89,8 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         int initCache = Options.get().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_CACHE_SIZE);
         int initSlots = Options.get().getInteger(OptionsDDBeeDeeDee.DD_BEEDEEDEE_INIT_NODES);
         this.factory = Factory.mkResizingAndGarbageCollected(initSlots, initCache);
-        this.zeroValue = TypeBoolean.get().getFalse();
-        this.oneValue = TypeBoolean.get().getTrue();
+        this.zeroValue = UtilValue.newValue(TypeBoolean.get(), false);
+        this.oneValue = UtilValue.newValue(TypeBoolean.get(), true);
         this.zeroNode = factory.makeZero();
         this.oneNode = factory.makeOne();
         uniqueIdTable.put(zeroNode.hashCodeAux(), zeroNode);

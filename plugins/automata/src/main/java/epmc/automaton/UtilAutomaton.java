@@ -139,14 +139,13 @@ public final class UtilAutomaton {
         return buechi;
     }
 
-    public static Buechi computeBuechi(Expression property, Expression[] expressions)
-    {
+    public static Buechi computeBuechi(Expression property, Expression[] expressions) {
         assert property != null;
         assert expressions != null;
         for (Expression expression : expressions) {
             assert expression != null;
         }
-        ValueBoolean negate = UtilValue.clone(TypeBoolean.get().getFalse());
+        ValueBoolean negate = UtilValue.newValue(TypeBoolean.get(), false);
         return newBuechi(property, expressions, true, negate);
     }
 

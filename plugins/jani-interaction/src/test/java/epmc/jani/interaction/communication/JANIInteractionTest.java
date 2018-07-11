@@ -30,7 +30,6 @@ import epmc.main.options.UtilOptionsEPMC;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
-import epmc.plugin.OptionsPlugin;
 
 import static epmc.modelchecker.TestHelper.*;
 
@@ -38,9 +37,6 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 
 public final class JANIInteractionTest {
-    /** Location of plugin directory in file system. */
-    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
-
     /**
      * Set up the tests.
      */
@@ -56,7 +52,6 @@ public final class JANIInteractionTest {
      */
     private final static Options prepareJANIInteractionOptions() {
         Options options = UtilOptionsEPMC.newOptions();
-        options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options);
         options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_JAR, "lib/sqlite-jdbc-3.8.11.2.jar");
         options.set(OptionsJANIInteractionJDBC.JANI_INTERACTION_JDBC_DRIVER_CLASS, "org.sqlite.JDBC");

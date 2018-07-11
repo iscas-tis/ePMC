@@ -648,7 +648,7 @@ final class GraphDDPRISM implements GraphDD {
                 if (withWeights) {
                     value = UtilValue.newValue(TypeWeight.get(), 0);
                 } else {
-                    value = TypeBoolean.get().getFalse();
+                    value = UtilValue.newValue(TypeBoolean.get(), false);
                 }
                 actionCommands = ContextDD.get().newConstant(value);
                 result.put(action, actionCommands);

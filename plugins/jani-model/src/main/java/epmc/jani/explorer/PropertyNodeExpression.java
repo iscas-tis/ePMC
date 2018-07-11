@@ -38,6 +38,9 @@ final class PropertyNodeExpression implements ExplorerNodeProperty {
         assert expression != null;
         expression = UtilExpressionStandard.replace(expression, explorer.getModel().getConstants());
         this.evaluator = UtilEvaluatorExplicit.newEvaluator(expression, explorer, identifiers);
+        if (type == null) {
+            type = evaluator.getType();
+        }
         this.type = type;
         this.values = new Value[identifiers.length];
     }

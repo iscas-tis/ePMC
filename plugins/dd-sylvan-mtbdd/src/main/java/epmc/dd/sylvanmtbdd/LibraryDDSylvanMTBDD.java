@@ -399,8 +399,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         Sylvan.sylvan_init_package(initMem, 1 << 27, initCache, 1 << 26);
         Sylvan.sylvan_init_mtbdd(cacheGranularity);
 
-        this.valueTrue = TypeBoolean.get().getTrue();
-        this.valueFalse = TypeBoolean.get().getFalse();
+        this.valueTrue = UtilValue.newValue(TypeBoolean.get(), true);
+        this.valueFalse = UtilValue.newValue(TypeBoolean.get(), false);
         falseNode = newConstant(valueFalse);
         trueNode = newConstant(valueTrue);
         Sylvan.epmc_init_mtbdd(vop1, vop2, getOperatorNumber, trueNode, falseNode);

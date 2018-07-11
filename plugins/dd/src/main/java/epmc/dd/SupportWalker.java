@@ -170,7 +170,7 @@ public final class SupportWalker {
         Value[] stopWhere = new Value[(stopAtFalse ? 1 : 0) + (stopAtZero ? 1 : 0)];
         int index = 0;
         if (stopAtFalse) {
-            stopWhere[index] = TypeBoolean.get().getFalse();
+            stopWhere[index] = UtilValue.newValue(TypeBoolean.get(), false);
             index++;
         }
         if (stopAtZero) {

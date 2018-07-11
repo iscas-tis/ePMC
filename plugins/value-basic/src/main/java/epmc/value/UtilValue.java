@@ -66,6 +66,13 @@ public final class UtilValue {
         return value;
     }
 
+    public static ValueBoolean newValue(TypeBoolean typeBoolean, boolean b) {
+        assert typeBoolean != null;
+        ValueBoolean result = typeBoolean.newValue();
+        result.set(b);
+        return result;
+    }
+
     public static <T extends ValueArray, U extends TypeArray> T newArray(U type, int size) {
         assert type != null;
         assert size >= 0;

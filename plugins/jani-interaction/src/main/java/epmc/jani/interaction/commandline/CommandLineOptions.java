@@ -1,5 +1,7 @@
 package epmc.jani.interaction.commandline;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.text.MessageFormat;
 import java.util.ArrayDeque;
 import java.util.Collections;
@@ -11,8 +13,11 @@ import java.util.Map;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import javax.json.Json;
 import javax.json.JsonArray;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObject;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.error.EPMCException;
@@ -41,6 +46,11 @@ public final class CommandLineOptions {
     private final static String CAT_IDENTIFIER = "id";
     private final static String CAT_DESCRIPTION = "name";
     private final static String CAT_PARENT = "parent";
+    private final static String TYPE = "type";
+    private final static String SERVER_PARAMETERS = "server-parameters";
+    private final static String PARAMETERS = "parameters";
+    private final static String ID = "id";
+    private final static String VALUE = "value";
     
     private final String toolName;
     private final String toolDescription;
@@ -199,9 +209,28 @@ public final class CommandLineOptions {
 
     }
     
-    JsonValue getUpdateRequest() {
-        // TODO
-        return null;
+    public JsonValue getUpdateRequest(long id) {
+        JsonArrayBuilder values = Json.createArrayBuilder();
+        for (CommandLineOption option : options.values()) {
+            JsonObjectBuilder optionValue = Json.createObjectBuilder();
+            optionValue.add(ID, option.getIdentifier());
+            Object value = option.getValue();
+            if (value instanceof BigInteger) {
+                optionValue.add(VALUE, (BigInteger) value);
+            } else if (value instanceof BigDecimal) {
+                optionValue.add(VALUE, (BigDecimal) value);
+            } else if (value instanceof Boolean) {
+                optionValue.add(VALUE, (Boolean) value);
+            } else {
+                optionValue.add(VALUE, value.toString());
+            }
+            values.add(optionValue);
+        }
+        JsonObjectBuilder result = Json.createObjectBuilder();
+        result.add(TYPE, SERVER_PARAMETERS)
+        .add(ID, id)
+        .add(PARAMETERS, values);
+        return result.build();
     }
     
     /**
@@ -305,13 +334,13 @@ public final class CommandLineOptions {
         options.put(option.getIdentifier(), option);
     }
 
-    public String get(Enum<?> key) {
+    public Object get(Enum<?> key) {
         assert key != null;
         String keyString = key.name().toLowerCase().replace('_', '-');
         return getValue(keyString);
     }
 
-    private String getValue(String keyString) {
+    private Object getValue(String keyString) {
         assert keyString != null;
         return options.get(keyString).getValue();
     }

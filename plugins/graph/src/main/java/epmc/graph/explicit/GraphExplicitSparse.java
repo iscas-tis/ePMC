@@ -124,7 +124,7 @@ public final class GraphExplicitSparse implements GraphExplicit {
         successors = UtilValue.newArray(typeArrayInteger, numTotalOut);
 
         addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
-        addNodePropertyConstant(CommonProperties.STATE, TypeBoolean.get().getTrue());
+        addNodePropertyConstant(CommonProperties.STATE, UtilValue.newValue(TypeBoolean.get(), true));
     }
 
     public NodeProperty addNodePropertyConstant(Object name, Value constant) {

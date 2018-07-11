@@ -46,6 +46,7 @@ import epmc.options.Options;
 import epmc.util.JNATools;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
@@ -214,8 +215,8 @@ public final class LibraryDDBuDDy implements LibraryDD {
         this.trueNode = BuDDy.bdd_true();
         this.falseNode = BuDDy.bdd_false();
 
-        this.valueFalse = TypeBoolean.get().getFalse();
-        this.valueTrue = TypeBoolean.get().getTrue();
+        this.valueFalse = UtilValue.newValue(TypeBoolean.get(),  false);
+        this.valueTrue = UtilValue.newValue(TypeBoolean.get(), true);
 
         instancesRunning++;
     }

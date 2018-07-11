@@ -1,5 +1,7 @@
 package epmc.jani.interaction.commandline;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -98,6 +100,9 @@ public final class CommandLineOption {
     private final static String X_PRECISE_TYPE = "x-precise-type";
     private final static String X_PRECISE_CATEGORY = "x-precise-category";
     private final static String SHORT_PREFIX = "short-";
+    private final static String BOOL = "bool";
+    private final static String REAL = "real";
+    private final static String INT = "int";
     
     private final CommandLineOptionUsage usage;
     private final String identifier;
@@ -109,7 +114,7 @@ public final class CommandLineOption {
     private final CommandLineCategory category;
     private final CommandLineCategory preciseCategory;
     
-    private String value;
+    private Object value;
  
     private CommandLineOption(Builder builder) {
         assert builder != null;
@@ -234,7 +239,19 @@ public final class CommandLineOption {
 
     public void parse(String value) {
         if (this.value == null) {
-            this.value = value;
+            switch (type) {
+            case BOOL:
+                this.value = Boolean.parseBoolean(value);
+                break;
+            case REAL:
+                this.value = new BigDecimal(value);
+                break;
+            case INT:
+                this.value = new BigInteger(value);
+                break;
+            default:
+                this.value = value;
+            }
         } else {
             this.value = this.value + SEPARATOR + value;
         }
@@ -276,7 +293,7 @@ public final class CommandLineOption {
         return usage;
     }
     
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 

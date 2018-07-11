@@ -394,7 +394,7 @@ public class LumperDDSignature implements LumperDD {
         Value falseValue;
         if (TypeBoolean.is(t)) {
             TypeBoolean tBoolean = TypeBoolean.as(t);
-            falseValue = tBoolean.getFalse();
+            falseValue = UtilValue.newValue(tBoolean,false);
         } else if (TypeReal.is(t) || TypeInteger.is(t)) {
             TypeReal tReal = TypeReal.as(t);
             falseValue = UtilValue.newValue(tReal, 0);
@@ -951,7 +951,7 @@ public class LumperDDSignature implements LumperDD {
     }
 
     ExpressionLiteral getFalse() {
-        return newLiteral(TypeBoolean.get().getFalse());
+        return newLiteral(UtilValue.newValue(TypeBoolean.get(), false));
     }
 
 

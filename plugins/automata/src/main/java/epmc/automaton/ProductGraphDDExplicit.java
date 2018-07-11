@@ -43,6 +43,7 @@ import epmc.util.StopWatch;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
+import epmc.value.UtilValue;
 import epmc.value.Value;
 import gnu.trove.list.array.TIntArrayList;
 import gnu.trove.map.TIntObjectMap;
@@ -99,8 +100,8 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         this.model = model;
         this.automaton = automaton;
 
-        this.falseValue = TypeBoolean.get().getFalse();
-        this.trueValue = TypeBoolean.get().getTrue();
+        this.falseValue = UtilValue.newValue(TypeBoolean.get(), false);
+        this.trueValue = UtilValue.newValue(TypeBoolean.get(), true);
         ContextDD contextDD = ContextDD.get();
 
         numStatesReserved = Options.get().getInteger(OptionsAutomaton.AUTOMATON_DD_MAX_STATES);

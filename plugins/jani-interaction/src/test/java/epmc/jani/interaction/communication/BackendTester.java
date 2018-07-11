@@ -22,6 +22,7 @@ package epmc.jani.interaction.communication;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
+import java.util.List;
 
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
@@ -29,11 +30,13 @@ import javax.json.JsonValue;
 import epmc.jani.interaction.communication.Backend;
 import epmc.jani.interaction.communication.BackendFeedback;
 import epmc.options.Options;
+import epmc.plugin.OptionsPlugin;
+import epmc.plugin.PluginInterface;
 
 final class BackendTester {
     private final class TestBackendFeedback implements BackendFeedback {
         @Override
-        public void sendToClient(Object client, String message) {
+        public void sendToClient(Object client, JsonValue message) {
             assert client != null;
             assert message != null;
             pending.add(message);
@@ -48,12 +51,13 @@ final class BackendTester {
     }
     private final TestBackendFeedback feedback = new TestBackendFeedback();
     private final Backend backend;
-    private final Deque<String> pending = new ArrayDeque<>();
+    private final Deque<JsonValue> pending = new ArrayDeque<>();
     private boolean alive = true;
 
     BackendTester(Options options) {
         assert options != null;
-        backend = new Backend(feedback);
+        List<Class<? extends PluginInterface>> plugins = options.get(OptionsPlugin.PLUGIN_INTERFACE_CLASS);
+        backend = new Backend(feedback, plugins);
     }
 
     void send(JsonObjectBuilder request) {
@@ -64,19 +68,14 @@ final class BackendTester {
 
     void send(JsonValue request) {
         assert request != null;
-        send(request.toString());
-    }
-
-    void send(String message) {
-        assert message != null;
-        backend.sendToBackend(backend, message);
+        backend.sendToBackend(backend, request);
     }
 
     int size() {
         return pending.size();
     }
 
-    String popPending() {
+    JsonValue popPending() {
         return pending.pop();
     }
 
