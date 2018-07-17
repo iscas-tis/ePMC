@@ -115,10 +115,10 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
             instance.process(options);
         }
         Options.set(options);
-        options.parseOptions(args, true);
-        options.reset();
-        options.getOption(OptionsPlugin.PLUGIN).reset();
-        options.getOption(OptionsPlugin.PLUGIN_LIST_FILE).reset();
+//        options.parseOptions(args, true);
+  ////      options.reset();
+      //  options.getOption(OptionsPlugin.PLUGIN).reset();
+        //options.getOption(OptionsPlugin.PLUGIN_LIST_FILE).reset();
         options.parseOptions(args, false);
         return options;
     }
