@@ -2,6 +2,7 @@ package epmc.jani.interaction.commandline;
 
 import java.text.MessageFormat;
 import java.util.List;
+import java.util.Locale;
 
 import epmc.error.EPMCException;
 import epmc.error.Positional;
@@ -124,8 +125,11 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
 
     private static void handleException(EPMCException e, Options options) {
         assert e != null;
-        assert options != null;
-        String message = e.getProblem().getMessage(options.getLocale());
+        Locale locale = Locale.getDefault();
+        if (options != null) {
+            locale = options.getLocale();
+        }
+        String message = e.getProblem().getMessage(locale);
         MessageFormat formatter = new MessageFormat(EMPTY);
         formatter.applyPattern(message);
         String formattedMessage = formatter.format(e.getArguments(), new StringBuffer(), null).toString();
