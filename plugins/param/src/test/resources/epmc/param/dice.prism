@@ -1,0 +1,25 @@
+dtmc
+
+const double head;
+
+module die
+
+	// local state
+	s : [0..7] init 0;
+	// value of the die
+	d : [0..6] init 0;
+	
+	[] s=0 -> head : (s'=1) + (1-head) : (s'=2);
+	[] s=1 -> head : (s'=3) + (1-head) : (s'=4);
+	[] s=2 -> head : (s'=5) + (1-head) : (s'=6);
+	[] s=3 -> head : (s'=1) + (1-head) : (s'=7) & (d'=1);
+	[] s=4 -> head : (s'=7) & (d'=2) + (1-head) : (s'=7) & (d'=3);
+	[] s=5 -> head : (s'=7) & (d'=4) + (1-head) : (s'=7) & (d'=5);
+	[] s=6 -> (1-head) : (s'=2) + head : (s'=7) & (d'=6);
+	[] s=7 -> (s'=7);
+	
+endmodule
+
+rewards "coin_flips"
+	[] s<7 : 1;
+endrewards

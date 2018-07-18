@@ -1,0 +1,24 @@
+# Mac OS X part
+ifeq ($(OSDIRPART),darwin)
+	XCFLAGS := $(DARWIN_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),linux-x86)
+	XCFLAGS := $(LINUX_X86_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),linux-x86-64)
+	XCFLAGS := $(LINUX_X86_64_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),win32-x86)
+	XCFLAGS := $(WINDOWS_X86_XCFLAGS)
+endif
+ifeq ($(OSDIRPART),win32-x86-64)
+	XCFLAGS := $(WINDOWS_X86_64_XCFLAGS)
+endif
+
+ifeq ($(OSDIRPART),darwin)
+	START_LIB_ADD_ALL := -Wl,-all_load
+	END_LIB_ADD_ALL := 	-Wl,-noall_load
+else
+	START_LIB_ADD_ALL := -Wl,--whole-archive
+	END_LIB_ADD_ALL := -Wl,--no-whole-archive
+endif

@@ -1,0 +1,60 @@
+ctmc
+
+const double lambda; //  = 1.0
+const double mu; //  = 5.0
+const double theta; //  = 5.0
+const int User = 0;
+const int User1 = 1;
+const int User2 = 2;
+const int CheckOut = 0;
+const int CheckOut1 = 1;
+
+module User
+
+	User_STATE : [0..2] init User;
+
+	[cO_s] (User_STATE=User) -> lambda : (User_STATE'=User1);
+	[cO_f] (User_STATE=User) -> lambda : (User_STATE'=User2);
+	[cI] (User_STATE=User1) -> mu : (User_STATE'=User);
+	[cO_s] (User_STATE=User2) -> theta : (User_STATE'=User1);
+	[cO_f] (User_STATE=User2) -> theta : (User_STATE'=User2);
+
+endmodule
+
+module User_2
+
+	User_2_STATE : [0..2] init User;
+
+	[cO_s] (User_2_STATE=User) -> lambda : (User_2_STATE'=User1);
+	[cO_f] (User_2_STATE=User) -> lambda : (User_2_STATE'=User2);
+	[cI] (User_2_STATE=User1) -> mu : (User_2_STATE'=User);
+	[cO_s] (User_2_STATE=User2) -> theta : (User_2_STATE'=User1);
+	[cO_f] (User_2_STATE=User2) -> theta : (User_2_STATE'=User2);
+
+endmodule
+
+module User_3
+
+	User_3_STATE : [0..2] init User;
+
+	[cO_s] (User_3_STATE=User) -> lambda : (User_3_STATE'=User1);
+	[cO_f] (User_3_STATE=User) -> lambda : (User_3_STATE'=User2);
+	[cI] (User_3_STATE=User1) -> mu : (User_3_STATE'=User);
+	[cO_s] (User_3_STATE=User2) -> theta : (User_3_STATE'=User1);
+	[cO_f] (User_3_STATE=User2) -> theta : (User_3_STATE'=User2);
+
+endmodule
+
+module CheckOut
+
+	CheckOut_STATE : [0..1] init CheckOut;
+
+	[cO_s] (CheckOut_STATE=CheckOut) -> 1 : (CheckOut_STATE'=CheckOut1);
+	[cI] (CheckOut_STATE=CheckOut1) -> 1 : (CheckOut_STATE'=CheckOut);
+	[cO_f] (CheckOut_STATE=CheckOut1) -> 1 : (CheckOut_STATE'=CheckOut1);
+
+endmodule
+
+system
+((User ||| (User_2 ||| User_3)) |[cO_s,cO_f,cI]| CheckOut)
+endsystem

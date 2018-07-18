@@ -1,0 +1,124 @@
+// Workstation cluster [HHK00]
+// dxp/gxn 11/01/00
+
+// Moritz: modified by undefining constants
+
+ctmc
+
+const int N; // Number of workstations in each cluster
+const int left_mx = N; // Number of work stations in left cluster
+const int right_mx = N; // Number of work stations in right cluster
+
+// Failure rates
+const double ws_fail; // Single workstation: average time to fail = 500 hrs
+const double switch_fail; // Switch: average time to fail = 4000 hrs
+const double line_fail; // Backbone: average time to fail = 5000 hrs
+const double inspect_rate = 10; // 10 originally
+const double repair_cluster_rate = 2; // 2 originally
+const double repair_switch_rate = 0.25; // 0.25 originally
+const double repair_backbone_rate = 0.125; // 0.125 originally
+
+// Left cluster
+module Left 
+	
+	left_n : [0..left_mx] init left_mx; // Number of workstations operational
+	left : bool; // Being repaired?
+	
+	[startLeft] !left & (left_n<left_mx) -> 1 : (left'=true);
+	[repairLeft] left & (left_n<left_mx) -> 1 : (left'=false) & (left_n'=left_n+1);
+	[] (left_n>0) -> ws_fail*left_n : (left_n'=left_n-1);
+	
+endmodule
+
+// Right cluster
+module Right = Left[left_n=right_n,
+                    left=right,
+                    left_mx=right_mx,
+                    startLeft=startRight,
+                    repairLeft=repairRight ]
+endmodule
+
+// Repair unit
+module Repairman
+	
+	r : bool; // Repairing?
+	
+	[startLeft]    !r -> inspect_rate : (r'=true); // Inspect Left 
+	[startRight]   !r -> inspect_rate : (r'=true); // Inspect Right 
+	[startToLeft]  !r -> inspect_rate : (r'=true); // Inspect ToLeft
+	[startToRight] !r -> inspect_rate : (r'=true); // Inspect ToRight 
+	[startLine]    !r -> inspect_rate : (r'=true); // Inspect Line 
+	
+	[repairLeft]    r -> repair_cluster_rate     : (r'=false); // Repair Left 
+	[repairRight]   r -> repair_cluster_rate     : (r'=false); // Repair Right
+	[repairToLeft]  r -> repair_switch_rate  : (r'=false); // Repair ToLeft
+	[repairToRight] r -> repair_switch_rate  : (r'=false); // Repair ToRight
+	[repairLine]    r -> repair_backbone_rate : (r'=false); // Repair Line
+	
+endmodule
+
+// Line/backbone
+module Line 
+	
+	line :   bool; // Being repaired?
+	line_n : bool init true; // Working?
+	
+	[startLine] !line & !line_n -> 1 : (line'=true);
+	[repairLine] line & !line_n -> 1 : (line'=false) & (line_n'=true);
+	[] line_n -> line_fail : (line_n'=false);
+	
+endmodule
+
+// Left switch
+module ToLeft = Line[line=toleft,
+                     line_n=toleft_n,
+                     line_fail=switch_fail,
+                     startLine=startToLeft,
+                     repairLine=repairToLeft ]
+endmodule
+
+// Right switch
+module ToRight = Line[line=toright,
+                      line_n=toright_n,
+                      line_fail=switch_fail,
+                      startLine=startToRight,
+                      repairLine=repairToRight ]
+endmodule
+
+// Formulas + labels
+
+// Minimum QoS requires 3/4 connected workstations operational
+const int k = floor(0.75*N);
+// left_operational_i : left_n>=i & toleft_n
+// right_operational_i : right_n>=i & toright_n
+// operational_i : (left_n+right_n)>=i & toleft_n & line_n & toright_n
+// minimum_k : left_operational_k | right_operational_k | operational_k
+formula minimum = (left_n>=k & toleft_n) | 
+                  (right_n>=k & toright_n) | 
+                  ((left_n+right_n)>=k & toleft_n & line_n & toright_n);
+label "minimum" = (left_n>=k & toleft_n) | (right_n>=k & toright_n) | ((left_n+right_n)>=k & toleft_n & line_n & toright_n);
+// premium = minimum_N
+label "premium" = (left_n>=left_mx & toleft_n) | (right_n>=right_mx & toright_n) | ((left_n+right_n)>=left_mx & toleft_n & line_n & toright_n);
+
+// Reward structures
+
+// Percentage of operational workstations stations
+rewards "percent_op"
+	true : 100*(left_n+right_n)/(2*N);
+endrewards
+
+// Time that the system is not delivering at least minimum QoS
+rewards "time_not_min"
+	!minimum : 1; 
+endrewards
+
+// Number of repairs
+rewards "num_repairs"
+	[repairLeft]    true : 1;
+	[repairRight]   true : 1;
+	[repairToLeft]  true : 1;
+	[repairToRight] true : 1;
+	[repairLine]    true : 1;
+endrewards
+
+label "RP" = left_n<4;
