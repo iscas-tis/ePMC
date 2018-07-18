@@ -1,0 +1,55 @@
+// GRID WORLD MODEL OF ROBOT AND JANITOR
+// Hakan Younes/gxn/dxp 04/05/04
+
+ctmc
+
+// CONSTANTS
+const int n; // size of the grid
+const double mr; // 1// rate that the robot moves
+const double mj; // 2 // rate that the janitor moves
+const double cr1; // 1/10 // rate to send a signal to the base station
+const double cr2; // 1/2 // rate for communication completion
+
+// the following formulae return 1 or 0 depending on whether
+// the janitor can move in that direction or not
+formula right = min(1,max(n-x2,0));
+formula left = min(1,max(x2-1,0));
+formula up = min(1,max(n-y2,0));
+formula down = min(1,max(y2-1,0));
+
+// total number of moves the janitor randomly picks from
+formula moves = right+left+up+down;
+
+module robot
+	
+	x1 : [1..n] init 1; // x position of robot
+	y1 : [1..n] init 1; // y position of robot
+	c  : [0..1] init 0; // status of signal
+	
+	[rmove] x1<n & c=0 & !(x1+1=x2 & y1=y2) -> mr : (x1'=x1+1); // moves right
+	[rmove] x1=n & y1<n & c=0 & !(x1=x2 & y1+1=y2) -> mr : (y1'=y1+1); // moves up
+	
+	[rsend] c=0 -> cr1 : (c'=1); // send signal
+	[rsend] c=1 -> cr2 : (c'=0); // finish communicating
+	
+endmodule
+
+module janitor
+	
+	x2 : [1..n] init n; // x position of janitor
+	y2 : [1..n] init n; // y position of janitor
+	 
+	[jmove] !(y2=n | (y2+1=y1 & x2=x1)) -> mj/moves : (y2'=y2+1); // moves up 
+	[jmove] !(y2=1 | (y2-1=y1 & x2=x1))  -> mj/moves : (y2'=y2-1); // moves down
+	[jmove] !(x2=1 | (x2-1=x1 & y2=y1))  -> mj/moves : (x2'=x2-1); // moves left
+	[jmove] !(x2=n | (x2+1=x1 & y2=y1)) -> mj/moves : (x2'=x2+1); // moves right
+
+endmodule
+
+rewards "steps"
+  [jmove] true : 1;
+endrewards
+
+rewards "time"
+  true : 1;
+endrewards
