@@ -119,7 +119,7 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
   ////      options.reset();
       //  options.getOption(OptionsPlugin.PLUGIN).reset();
         //options.getOption(OptionsPlugin.PLUGIN_LIST_FILE).reset();
-        options.parseOptions(args, false);
+        options.parseOptions(args);
         return options;
     }
 
