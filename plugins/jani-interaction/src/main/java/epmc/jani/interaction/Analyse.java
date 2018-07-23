@@ -116,7 +116,9 @@ public final class Analyse {
             log.send(e);
         }
         Options.set(oldOptions);
-        ContextValue.set(oldContext);
+	if (oldContext != null) {
+	    ContextValue.set(oldContext);
+	}
     }
 
     /**
