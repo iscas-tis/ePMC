@@ -55,7 +55,7 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
         try {
             options = prepareOptions(args, plugins);
             Options.set(options);
-	    ContextValue.set(new ContextValue());
+	    //	    ContextValue.set(new ContextValue());
             if (options.getString(Options.COMMAND) == null) {
                 System.out.println(options.getShortUsage());
                 System.exit(1);
