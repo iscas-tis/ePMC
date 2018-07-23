@@ -22,6 +22,7 @@ import epmc.plugin.PluginInterface;
 import epmc.plugin.StartInConsole;
 import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
+import epmc.value.ContextValue;
 
 public final class StartInConsoleJaniInteractionNoJani implements StartInConsole {
     private final static String IDENTIFIER = "start-in-console-jani-interaction";
@@ -54,6 +55,7 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
         try {
             options = prepareOptions(args, plugins);
             Options.set(options);
+	    ContextValue.set(new ContextValue());
             if (options.getString(Options.COMMAND) == null) {
                 System.out.println(options.getShortUsage());
                 System.exit(1);
