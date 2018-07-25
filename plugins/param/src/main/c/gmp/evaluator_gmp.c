@@ -9,22 +9,27 @@ const int OP_MULTIPLY_INVERSE = 3;
 const int OP_ADD = 4;
 const int OP_MULTIPLY = 5;
 
+__attribute__ ((visibility("default")))
 static int get_operator(int *program, int statement) {
     return program[statement * 4];
 }
 
+__attribute__ ((visibility("default")))
 static int get_assigned_to(int *program, int statement) {
     return program[statement * 4 + 1];
 }
 
+__attribute__ ((visibility("default")))
 static int get_operand_left(int *program, int statement) {
     return program[statement * 4 + 2];
 }
 
+__attribute__ ((visibility("default")))
 static int get_operand_right(int *program, int statement) {
     return program[statement * 4 + 3];
 }
 
+__attribute__ ((visibility("default")))
 void evaluate_gmp(mpq_ptr variables, int *program, int num_statements, mpq_t numbers, mpq_t point) {
     for (int statement = 0; statement < num_statements; statement++) {
         int operator = get_operator(program, statement);
