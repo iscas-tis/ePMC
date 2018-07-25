@@ -28,6 +28,8 @@ LINK := libginac-$(OSDIRPART).a libcln-$(OSDIRPART).a ../epmc_polynomial/libepmc
 LIB_THERE:=$(CLASSDIR)/$(OSDIRPART)/$(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
 ifeq ("$(wildcard $(LIB_THERE))","")
 build: $(OBJECTS) $(HEADERS)
+	rm -f libginac-linux-x86-64.a
+	unzip libginac-linux-x86-64.a.zip
 	$(CPP) $(XCFLAGS) -shared *.o $(LINK) -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
 	$(STRIP) -x $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
 	mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
