@@ -84,23 +84,23 @@ public final class ModelCheckerPRISMModelsTest {
         Map<String,String> constants = new HashMap<>();
         constants.put("MaxGood", "10");
         constants.put("TotalRuns", "3");
-        constants.put("CrowdSize", "10");
+        constants.put("CrowdSize", "5");
 //        constants.put("CrowdSize", "15");
         options.set(OptionsModelChecker.CONST, constants);
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
-        options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
+        options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypePolynomialFraction.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_BITS, "16");
 //        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterCInterval.IDENTIFIER);
 
-        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGraphviz.IDENTIFIER);
-        options.set(OptionsParam.PARAM_DAG_NODE_STORE, NodeStoreDisk.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGraphviz.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_DAG_NODE_STORE, NodeStoreDisk.IDENTIFIER);
 
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_DOUBLE_PROB_LOOKUP, DoubleLookupBoundedHashMap.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_DOUBLE_PROB_STORAGE, DoubleStoreDisk.IDENTIFIER);
 
         options.set(OptionsParam.PARAM_ELIMINATION_SELF_LOOP_METHOD, NodeEliminator.WeighterMethod.SELF_LOOP);
-        options.set(OptionsParam.PARAM_FRACTION_EXPORTER, PolynomialFractionExporterPoints.IDENTIFIER);
-        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterPoints.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_FRACTION_EXPORTER, PolynomialFractionExporterPoints.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterPoints.IDENTIFIER);
         
         Model model = loadModel(options, ModelNames.CROWDS);
         processAfterModelLoading(options);
@@ -249,7 +249,7 @@ public final class ModelCheckerPRISMModelsTest {
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
-//        options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
+        options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypePolynomialFraction.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_BITS, "16");
         options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGraphviz.IDENTIFIER);
         
