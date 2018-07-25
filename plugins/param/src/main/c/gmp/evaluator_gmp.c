@@ -2,12 +2,12 @@
 #include <assert.h>
 #include "gmp.h"
 
-const int OP_PARAMETER = 0;
-const int OP_NUMBER = 1;
-const int OP_ADD_INVERSE = 2;
-const int OP_MULTIPLY_INVERSE = 3;
-const int OP_ADD = 4;
-const int OP_MULTIPLY = 5;
+#define OP_PARAMETER 0
+#define OP_NUMBER 1
+#define OP_ADD_INVERSE 2
+#define OP_MULTIPLY_INVERSE 3
+#define OP_ADD 4
+#define OP_MULTIPLY 5
 
 __attribute__ ((visibility("default")))
 static int get_operator(int *program, int statement) {
