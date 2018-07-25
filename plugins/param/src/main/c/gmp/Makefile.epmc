@@ -2,7 +2,7 @@
 .PHONY : build_all
 .PHONY : clean
 
-LIB_NAME=gmp
+LIB_NAME=gmpparam
 # specific flags for GMP
 DARWIN_XCFLAGS=-read_only_relocs suppress -fPIC -std=c++0x -ggdb -O0 -Wno-deprecated -fvisibility=hidden -I.
 LINUX_X86_XCFLAGS=-fPIC -std=c++0x -ggdb -O0 -Wno-deprecated -static -static-libgcc -static-libstdc++ -m32 -fvisibility=hidden -I.

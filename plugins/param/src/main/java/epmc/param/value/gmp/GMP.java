@@ -6,7 +6,7 @@ import com.sun.jna.Pointer;
 import epmc.util.JNATools;
 
 public final class GMP {
-    public final static boolean LOADED = JNATools.registerLibrary(GMP.class, "gmp");
+    public final static boolean LOADED = JNATools.registerLibrary(GMP.class, "gmpparam");
     public final static int MPQ_T_SIZE = GMP.gmp_util_size_of_mpq();
     public final static int MPFR_T_SIZE = GMP.gmp_util_size_of_mpfr();
     
