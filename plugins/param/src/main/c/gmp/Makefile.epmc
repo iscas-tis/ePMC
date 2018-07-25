@@ -16,7 +16,6 @@ include ../setosspecific
 OBJECTS := $(patsubst %.cpp,%.o,$(wildcard *.cpp))
 OBJECTS := $(filter-out main.o,$(OBJECTS))
 HEADERS := $(wildcard *.h)
-LINK := -L. -lcocoalib-$(OSDIRPART) -lgmp-$(OSDIRPART) -L../epmc_polynomial -lepmc_polynomial
 
 .cpp.o: $(OBJECTS) $(HEADERS)
 	$(CPP) -c  $< $(XCFLAGS)
@@ -27,7 +26,7 @@ build: $(OBJECTS) $(HEADERS)
 	$(CC) -o util_gmp.o -c util_gmp.c -I.
 	$(CC) -o evaluator_gmp.o -c evaluator_gmp.c -I.
 	mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
-	$(CC) -shared -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) util_gmp.o evaluator_gmp.o $(START_LIB_ADD_ALL) -L. -lgmp-$(OSDIRPART) -lmpfr-$(OSDIRPART) $(END_LIB_ADD_ALL)
+	$(CC) $(XCFLAGS) -shared -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) util_gmp.o evaluator_gmp.o $(START_LIB_ADD_ALL) -L. -lgmp-$(OSDIRPART) -lmpfr-$(OSDIRPART) $(END_LIB_ADD_ALL)
 	cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)/; \
 	rm $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
 endif
