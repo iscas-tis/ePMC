@@ -10,7 +10,9 @@ import epmc.param.value.gmp.TypeMPQ;
 import epmc.param.value.gmp.ValueMPQ;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
+import epmc.value.TypeInteger;
 import epmc.value.Value;
+import epmc.value.ValueInteger;
 import epmc.value.operatorevaluator.OperatorEvaluatorSimpleBuilder;
 
 public final class EvaluatorAddSubtractMultiplyDivideMPQ implements OperatorEvaluator {
@@ -44,26 +46,35 @@ public final class EvaluatorAddSubtractMultiplyDivideMPQ implements OperatorEval
             if (types.length != 2) {
                 return null;
             }
-            if (!TypeMPQ.is(types[0])) {
-                return null;
+            for (Type type : types) {
+                if (!TypeMPQ.is(type) && !TypeInteger.is(type)) {
+                    return null;
+                }
             }
-            if (!TypeMPQ.is(types[1])) {
+            if (!TypeMPQ.is(types[0]) && !TypeMPQ.is(types[1])) {
                 return null;
             }
             return new EvaluatorAddSubtractMultiplyDivideMPQ(this);
         }
-        
     }
 
     private final TypeMPQ resultType;
     private final Operator operator;
+    private final ValueMPQ importValue1;
+    private final ValueMPQ importValue2;
     
     private EvaluatorAddSubtractMultiplyDivideMPQ(Builder builder) {
         assert builder != null;
         assert builder.operator != null;
         assert builder.types != null;
         operator = builder.operator;
-        resultType = TypeMPQ.as(builder.types[0]);
+        if (TypeMPQ.is(builder.types[0])) {
+            resultType = TypeMPQ.as(builder.types[0]);
+        } else {
+            resultType = TypeMPQ.as(builder.types[1]);
+        }
+        importValue1 = resultType.newValue();
+        importValue2 = resultType.newValue();
     }
 
     @Override
@@ -78,8 +89,8 @@ public final class EvaluatorAddSubtractMultiplyDivideMPQ implements OperatorEval
         for (Value operand : operands) {
             assert operand != null;
         }
-        ValueMPQ op1 = ValueMPQ.as(operands[0]);
-        ValueMPQ op2 = ValueMPQ.as(operands[1]);
+        ValueMPQ op1 = getOperand(operands[0], importValue1);
+        ValueMPQ op2 = getOperand(operands[1], importValue2);
         ValueMPQ resultMPQ = ValueMPQ.as(result);
         if (operator == OperatorAdd.ADD) {
             GMP.__gmpq_add(resultMPQ.getContent(), op1.getContent(), op2.getContent());
@@ -90,6 +101,15 @@ public final class EvaluatorAddSubtractMultiplyDivideMPQ implements OperatorEval
         } else {
             assert operator == OperatorDivide.DIVIDE;
             GMP.__gmpq_div(resultMPQ.getContent(), op1.getContent(), op2.getContent());
+        }
+    }
+
+    private ValueMPQ getOperand(Value value, ValueMPQ buffer) {
+        if (ValueMPQ.is(value)) {
+            return ValueMPQ.as(value);
+        } else {
+            buffer.set(ValueInteger.as(value).getInt());
+            return buffer;
         }
     }
 }

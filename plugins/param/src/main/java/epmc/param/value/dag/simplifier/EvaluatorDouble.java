@@ -80,6 +80,17 @@ public final class EvaluatorDouble implements Evaluator {
     }
 
     private double evaluateDoubleNumber(int operandLeft, int operandRight) {
+        if (operandRight == 0) {
+            if (operandLeft > 0) {
+                return Double.POSITIVE_INFINITY;
+            } else if (operandLeft < 0) {
+                return Double.NEGATIVE_INFINITY;
+            } else {
+                System.out.println("HHHHH");
+                assert false;
+                return Double.NaN;
+            }
+        }
         BigDecimal numDecimal = new BigDecimal(dag.getValueFromNumber(operandLeft));
         BigDecimal denDecimal = new BigDecimal(dag.getValueFromNumber(operandRight));
         BigDecimal resDecimal = numDecimal.divide(denDecimal, MathContext.DECIMAL128);

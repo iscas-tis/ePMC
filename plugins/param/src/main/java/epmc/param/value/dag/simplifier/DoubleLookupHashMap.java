@@ -33,6 +33,7 @@ public final class DoubleLookupHashMap implements DoubleLookup {
 
     @Override
     public int get(double entry) {
+        assert !Double.isNaN(entry);
         return evalResultsMapDoubleHash.get(roundDouble(entry));
     }
 
@@ -43,9 +44,16 @@ public final class DoubleLookupHashMap implements DoubleLookup {
 
     // https://stackoverflow.com/questions/41583249/how-to-round-a-double-float-to-binary-precision
     private double roundDouble(double value) {
+        assert !Double.isNaN(value);
+        if (Double.isInfinite(value)) {
+            return value;
+        }
         double factor = (1 | (1 << numDigitsRoundOffHash)) * value;
+        assert !Double.isNaN(factor);
         value -= factor;
+        assert !Double.isNaN(value);
         value += factor;
+        assert !Double.isNaN(value);
         return value;
     }
 }

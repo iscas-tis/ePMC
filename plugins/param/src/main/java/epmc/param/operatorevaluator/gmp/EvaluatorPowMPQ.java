@@ -66,10 +66,11 @@ public final class EvaluatorPowMPQ implements OperatorEvaluator {
             if (types.length != 2) {
                 return null;
             }
-            for (Type type : types) {
-                if (!TypeMPQ.is(type) && !TypeInteger.is(type)) {
-                    return null;
-                }
+            if (!TypeMPQ.is(types[0])) {
+                return null;
+            }
+            if (!TypeInteger.is(types[1])) {
+                return null;
             }
             return new EvaluatorPowMPQ(this);
         }

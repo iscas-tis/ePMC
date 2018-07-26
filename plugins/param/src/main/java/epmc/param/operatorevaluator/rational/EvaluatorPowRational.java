@@ -64,10 +64,11 @@ public final class EvaluatorPowRational implements OperatorEvaluator {
             if (types.length != 2) {
                 return null;
             }
-            for (Type type : types) {
-                if (!TypeRational.is(type) && !TypeInteger.is(type)) {
-                    return null;
-                }
+            if (!TypeRational.is(types[0])) {
+                return null;
+            }
+            if (!TypeInteger.is(types[1])) {
+                return null;
             }
             return new EvaluatorPowRational(this);
         }

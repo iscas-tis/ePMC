@@ -75,10 +75,11 @@ public final class EvaluatorPowInterval implements OperatorEvaluator {
             if (types.length != 2) {
                 return null;
             }
-            for (Type type : types) {
-                if (!TypeInterval.is(type) && !TypeInteger.is(type)) {
-                    return null;
-                }
+            if (!TypeInterval.is(types[0])) {
+                return null;
+            }
+            if (!TypeInteger.is(types[1])) {
+                return null;
             }
             return new EvaluatorPowInterval(this);
         }

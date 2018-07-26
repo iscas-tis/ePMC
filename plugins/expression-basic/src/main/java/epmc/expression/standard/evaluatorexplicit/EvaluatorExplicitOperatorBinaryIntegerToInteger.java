@@ -23,8 +23,6 @@ package epmc.expression.standard.evaluatorexplicit;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;
 
-import java.util.Arrays;
-
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
