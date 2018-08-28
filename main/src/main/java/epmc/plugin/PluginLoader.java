@@ -252,15 +252,21 @@ final class PluginLoader {
             try {
                 clazz = classLoader.loadClass(className);
             } catch (ClassNotFoundException e) {
+                throw new RuntimeException(e);
             } catch (NoClassDefFoundError e) {
-                /* Has occurred when some JAR files were included in plugins.
-                 */
+                throw new RuntimeException(e);
             }
-            if (clazz != null) {
-                processClass(plugin, clazz);
-            }
+            processClassUnchecked(plugin, clazz);
         }
     }
+    
+    @SuppressWarnings(UNCHECKED)
+    private void processClassUnchecked(Plugin plugin, Class<?> clazz) {
+        assert plugin != null;
+        assert clazz != null;
+        plugin.add((Class<PluginInterface>) clazz);
+    }
+
 
     private List<String> tryReadClassNames(boolean isJAR, Path directory) {
         if (isJAR) {
