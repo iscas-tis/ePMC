@@ -171,7 +171,8 @@ final class PluginLoader {
                 throw new RuntimeException(e);
             }
         }
-        return new URLClassLoader(urls);
+        /* not using default class loader important when running from Maven */
+        return new URLClassLoader(urls, getClass().getClassLoader());
     }
 
     private List<Path> buildAllPluginPaths(List<Path> pluginFiles) {
