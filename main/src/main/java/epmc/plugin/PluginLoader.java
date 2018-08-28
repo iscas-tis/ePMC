@@ -630,15 +630,16 @@ final class PluginLoader {
             throw new RuntimeException();
         }
         String base = args[0];
+        Path out = Paths.get(base + SLASH + CLASSES_TXT);
+        Files.delete(out);
         List<String> pluginList = new ArrayList<>();
-        pluginList.add(base + SLASH);
+        pluginList.add(base);
         PluginLoader loader = new PluginLoader(pluginList, false);
         List<Class<? extends PluginInterface>> classes = loader.getPluginInterfaceClasses();
         List<String> result = new ArrayList<>();
         for (Class<? extends PluginInterface> clazz : classes) {
             result.add(clazz.getName());
         }
-        Path out = Paths.get(base + SLASH + CLASSES_TXT);
         Files.write(out, result);
     }
 }
