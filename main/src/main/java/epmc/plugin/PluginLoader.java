@@ -631,7 +631,9 @@ final class PluginLoader {
         }
         String base = args[0];
         Path out = Paths.get(base + SLASH + CLASSES_TXT);
-        Files.delete(out);
+        if (Files.exists(out)) {
+            Files.delete(out);
+        }
         List<String> pluginList = new ArrayList<>();
         pluginList.add(base);
         PluginLoader loader = new PluginLoader(pluginList, false);
