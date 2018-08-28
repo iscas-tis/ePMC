@@ -46,6 +46,33 @@
         </configuration>
       </plugin>
       <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>exec-maven-plugin</artifactId>
+        <version>1.6.0</version>
+        <executions>
+          <execution>
+	    <phase>compile</phase>
+            <goals>
+              <goal>java</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <mainClass>epmc.plugin.PluginLoader</mainClass>
+          <arguments>
+            <argument>${project.basedir}/target/classes</argument>
+          </arguments>
+          <systemProperties>
+            <systemProperty>
+              <key>myproperty</key>
+              <value>myvalue</value>
+            </systemProperty>
+          </systemProperties>
+	  <classpathScope>compile</classpathScope>
+	  <includeProjectDependencies>true</includeProjectDependencies>
+        </configuration>
+      </plugin>
+      <plugin>
         <version>2.6</version>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
