@@ -9,23 +9,19 @@
 #define OP_ADD 4
 #define OP_MULTIPLY 5
 
-__attribute__ ((visibility("default")))
-static int get_operator(int *program, int statement) {
+static inline int get_operator(int *program, int statement) {
     return program[statement * 4];
 }
 
-__attribute__ ((visibility("default")))
-static int get_assigned_to(int *program, int statement) {
+static inline int get_assigned_to(int *program, int statement) {
     return program[statement * 4 + 1];
 }
 
-__attribute__ ((visibility("default")))
-static int get_operand_left(int *program, int statement) {
+static inline int get_operand_left(int *program, int statement) {
     return program[statement * 4 + 2];
 }
 
-__attribute__ ((visibility("default")))
-static int get_operand_right(int *program, int statement) {
+static inline int get_operand_right(int *program, int statement) {
     return program[statement * 4 + 3];
 }
 
