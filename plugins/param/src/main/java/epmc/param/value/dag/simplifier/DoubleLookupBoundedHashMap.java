@@ -56,7 +56,9 @@ public final class DoubleLookupBoundedHashMap implements DoubleLookup {
     // https://stackoverflow.com/questions/41583249/how-to-round-a-double-float-to-binary-precision
     private double roundDouble(double value) {
         assert !Double.isNaN(value); // TODO user exception
-        assert !Double.isInfinite(value); // TODO user exception
+        if (Double.isInfinite(value)) {
+            return value;
+        }
         double factor = (1 | (1 << numDigitsRoundOffHash)) * value;
         value -= factor;
         value += factor;
