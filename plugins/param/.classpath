@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
+	<classpathentry kind="src" path="src/main/c/points_evaluator"/>
 	<classpathentry kind="src" path="src/main/c/gmp"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry excluding="*" kind="src" path="src/main/c/epmc_polynomial"/>

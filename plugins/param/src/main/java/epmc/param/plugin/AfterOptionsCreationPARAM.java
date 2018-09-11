@@ -28,6 +28,7 @@ import epmc.param.graphsolver.eliminationorder.EliminationOrderNodeNumbersDescen
 import epmc.param.graphsolver.eliminationorder.EliminationOrderNumNew;
 import epmc.param.graphsolver.eliminationorder.EliminationOrderQuickTarget;
 import epmc.param.graphsolver.eliminationorder.EliminationOrderRandom;
+import epmc.param.graphsolver.eliminationorder.EliminationOrderSameStructure;
 import epmc.param.graphsolver.eliminationorder.EliminationOrderWhenFullyExplored;
 import epmc.param.options.OptionsParam;
 import epmc.param.points.IntervalFormat;
@@ -211,6 +212,7 @@ public final class AfterOptionsCreationPARAM implements AfterOptionsCreation {
         orders.put(EliminationOrderMinProdPredSucc.IDENTIFIER, EliminationOrderMinProdPredSucc.Builder.class);
         orders.put(EliminationOrderNumNew.IDENTIFIER, EliminationOrderNumNew.Builder.class);
         orders.put(EliminationOrderWhenFullyExplored.IDENTIFIER, EliminationOrderWhenFullyExplored.Builder.class);
+        orders.put(EliminationOrderSameStructure.IDENTIFIER, EliminationOrderSameStructure.Builder.class);
         OptionTypeMap<Class<? extends EliminationOrder.Builder>> cancellatorType = new OptionTypeMap<>(orders);
         options.addOption().setBundleName(OptionsParam.PARAM_OPTIONS)
             .setIdentifier(OptionsParam.PARAM_ELIMINATION_ORDER)
