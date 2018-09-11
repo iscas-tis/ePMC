@@ -90,7 +90,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     public void read(BitStream reader) {
         assert !isImmutable();
         assert reader != null;
-        int value = reader.read(getNumBits());
+        int value = reader.readInt(getNumBits());
         if (TypeInteger.isIntegerBothBounded(getType())) {
             value += getBoundLower();
         }
@@ -104,7 +104,7 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
         if (TypeInteger.isIntegerBothBounded(getType())) {
             value -= getBoundLower();
         }
-        writer.write(value, getNumBits());
+        writer.writeInt(value, getNumBits());
     }
 
     public int getBoundLower() {

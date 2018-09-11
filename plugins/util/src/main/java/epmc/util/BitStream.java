@@ -33,7 +33,32 @@ public interface BitStream {
      */
     boolean read();
 
-    default int read(int numBits) {
+    /**
+     * Write next bit to bit stream and increase write cursor by one.
+     * 
+     * @param value bit to write
+     */
+    void write(boolean value);
+
+    default int readInt() {
+        int result = 0;
+        int mark = 1;
+        for (int bitNr = 0; bitNr < Integer.SIZE; bitNr++) {
+            result |= read() ? mark : 0;
+            mark <<= 1;
+        }
+        return result;
+    }
+    
+    default void writeInt(int value) {
+        int mark = 1;
+        for (int bitNr = 0; bitNr < Integer.SIZE; bitNr++) {
+            write((value & mark) > 0);
+            mark <<= 1;
+        }
+    }
+
+    default int readInt(int numBits) {
         int result = 0;
         int mark = 1;
         for (int bitNr = 0; bitNr < numBits; bitNr++) {
@@ -43,18 +68,37 @@ public interface BitStream {
         return result;
     }
 
-    /**
-     * Write next bit to bit stream and increate write cursor by one.
-     * 
-     * @param value bit to write
-     */
-    void write(boolean value);
-
-    default void write(int value, int numBits) {
+    default void writeInt(int value, int numBits) {
         int mark = 1;
         for (int bitNr = 0; bitNr < numBits; bitNr++) {
             write((value & mark) > 0);
             mark <<= 1;
         }
+    }
+    
+    default long readLong() {
+        long result = 0;
+        long mark = 1L;
+        for (int bitNr = 0; bitNr < Long.SIZE; bitNr++) {
+            result |= read() ? mark : 0;
+            mark <<= 1;
+        }
+        return result;
+    }
+    
+    default void writeLong(long value) {
+        long mark = 1L;
+        for (int bitNr = 0; bitNr < Long.SIZE; bitNr++) {
+            write((value & mark) > 0);
+            mark <<= 1;
+        }
+    }
+    
+    default double readDouble() {
+        return Double.longBitsToDouble(readLong());
+    }
+    
+    default void writeDouble(double value) {
+        writeLong(Double.doubleToLongBits(value));
     }
 }
