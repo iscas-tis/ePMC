@@ -41,10 +41,12 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     private final static String SPACE = " ";
     private int value;
     private final TypeInteger type;
-    private boolean immutable;
+    private final boolean bothBounded;
 
     ValueInteger(TypeInteger type) {
+        assert type != null;
         this.type = type;
+        bothBounded = TypeInteger.isIntegerBothBounded(getType());
     }
 
     @Override
@@ -59,7 +61,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
 
     @Override
     public void set(int value) {
-        assert !isImmutable();
         this.value = value;
     }
     
@@ -88,23 +89,26 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
 
     @Override
     public void read(BitStream reader) {
-        assert !isImmutable();
         assert reader != null;
-        int value = reader.readInt(getNumBits());
-        if (TypeInteger.isIntegerBothBounded(getType())) {
+        if (bothBounded) {
+            int value = reader.readInt(getNumBits());
             value += getBoundLower();
+            this.value = value;
+        } else {
+            int value = reader.readInt();
+            this.value = value;
         }
-        set(value);
     }
 
     @Override
     public void write(BitStream writer) {
         assert writer != null;
-        int value = getInt();
-        if (TypeInteger.isIntegerBothBounded(getType())) {
+        if (bothBounded) {
             value -= getBoundLower();
+            writer.writeInt(value, getNumBits());
+        } else {
+            writer.writeInt(value);
         }
-        writer.writeInt(value, getNumBits());
     }
 
     public int getBoundLower() {
@@ -142,14 +146,6 @@ public final class ValueInteger implements ValueNumber, ValueEnumerable, ValueNu
     @Override
     public int getValueNumber() {
         return value - getType().getLowerInt();
-    }
-
-    void setImmutable() {
-        this.immutable = true;
-    }
-
-    boolean isImmutable() {
-        return immutable;
     }
 
     @Override

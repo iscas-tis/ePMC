@@ -23,9 +23,10 @@ package epmc.value;
 import static epmc.error.UtilError.fail;
 
 import epmc.options.Options;
+import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueDouble implements ValueReal, ValueSetString {
+public final class ValueDouble implements ValueReal, ValueSetString, ValueBitStoreable {
     public static boolean is(Value value) {
         return value instanceof ValueDouble;
     }
@@ -162,5 +163,15 @@ public final class ValueDouble implements ValueReal, ValueSetString {
 
     boolean isImmutable() {
         return immutable;
+    }
+
+    @Override
+    public void read(BitStream reader) {
+        value = reader.readDouble();
+    }
+
+    @Override
+    public void write(BitStream writer) {
+        writer.writeDouble(value);
     }
 }

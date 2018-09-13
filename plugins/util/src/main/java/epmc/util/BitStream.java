@@ -53,7 +53,7 @@ public interface BitStream {
     default void writeInt(int value) {
         int mark = 1;
         for (int bitNr = 0; bitNr < Integer.SIZE; bitNr++) {
-            write((value & mark) > 0);
+            write((value & mark) != 0);
             mark <<= 1;
         }
     }
@@ -71,17 +71,17 @@ public interface BitStream {
     default void writeInt(int value, int numBits) {
         int mark = 1;
         for (int bitNr = 0; bitNr < numBits; bitNr++) {
-            write((value & mark) > 0);
+            write((value & mark) != 0L);
             mark <<= 1;
         }
     }
     
     default long readLong() {
-        long result = 0;
+        long result = 0L;
         long mark = 1L;
         for (int bitNr = 0; bitNr < Long.SIZE; bitNr++) {
-            result |= read() ? mark : 0;
-            mark <<= 1;
+            result |= read() ? mark : 0L;
+            mark <<= 1L;
         }
         return result;
     }
@@ -89,16 +89,21 @@ public interface BitStream {
     default void writeLong(long value) {
         long mark = 1L;
         for (int bitNr = 0; bitNr < Long.SIZE; bitNr++) {
-            write((value & mark) > 0);
-            mark <<= 1;
+            write((value & mark) != 0L);
+            mark <<= 1L;
         }
     }
     
     default double readDouble() {
-        return Double.longBitsToDouble(readLong());
+        long v = readLong();
+        double w = Double.longBitsToDouble(v);
+        assert !Double.isNaN(w) : v;
+        return w;
     }
     
     default void writeDouble(double value) {
-        writeLong(Double.doubleToLongBits(value));
+        assert !Double.isNaN(value) : value;
+        long l = Double.doubleToLongBits(value);
+        writeLong(l);
     }
 }

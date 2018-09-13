@@ -20,9 +20,10 @@
 
 package epmc.value;
 
+import epmc.util.BitStream;
 import epmc.value.Value;
 
-final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntArray {
+final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntArray, ValueBitStoreable {
     private final static String SPACE = " ";
     private final TypeArrayIntegerJava type;
     private int[] content;
@@ -99,5 +100,26 @@ final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntA
     @Override
     public String toString() {
         return UtilValue.arrayToString(this);
+    }
+
+    @Override
+    public void read(BitStream reader) {
+        int size = reader.readInt();
+        int newLength = content.length;
+        while (size < newLength) {
+            newLength *= 2;
+        }        
+        content = new int[newLength];
+        for (int index = 0; index < size; index++) {
+            content[index] = reader.readInt();
+        }
+    }
+
+    @Override
+    public void write(BitStream writer) {
+        writer.writeInt(size);
+        for (int index = 0; index < size; index++) {
+            writer.writeInt(content[index]);
+        }
     }
 }
