@@ -58,12 +58,6 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
     public TypeDouble(ValueDouble lower, ValueDouble upper) {
         this.lower = lower == null ? null : UtilValue.clone(lower);
         this.upper = upper == null ? null : UtilValue.clone(upper);
-        if (this.lower != null) {
-            this.lower.setImmutable();
-        }
-        if (this.upper != null) {
-            this.upper.setImmutable();
-        }
     }
 
     @Override

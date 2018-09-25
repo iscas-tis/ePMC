@@ -26,7 +26,7 @@ import epmc.options.Options;
 import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueDouble implements ValueReal, ValueSetString, ValueBitStoreable {
+public final class ValueDouble implements ValueReal, ValueSetString, ValueBitStoreable, ValueNumBitsKnown {
     public static boolean is(Value value) {
         return value instanceof ValueDouble;
     }
@@ -44,7 +44,6 @@ public final class ValueDouble implements ValueReal, ValueSetString, ValueBitSto
 
     private final TypeDouble type;
     private double value;
-    private boolean immutable;
     private final boolean outputNative = Options.get().getBoolean(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE);
     private final String format = Options.get().getString(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT);
     
@@ -69,7 +68,6 @@ public final class ValueDouble implements ValueReal, ValueSetString, ValueBitSto
     }
 
     public void set(double value) {
-        assert !isImmutable();
         this.value = value;
     }
 
@@ -132,7 +130,6 @@ public final class ValueDouble implements ValueReal, ValueSetString, ValueBitSto
 
     @Override
     public void set(int operand) {
-        assert !isImmutable();
         set((double) operand);
     }
 
@@ -155,14 +152,6 @@ public final class ValueDouble implements ValueReal, ValueSetString, ValueBitSto
             }
         }
 
-    }
-
-    void setImmutable() {
-        this.immutable = true;
-    }
-
-    boolean isImmutable() {
-        return immutable;
     }
 
     @Override

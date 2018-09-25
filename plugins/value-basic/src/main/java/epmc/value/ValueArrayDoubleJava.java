@@ -116,7 +116,7 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
         int newLength = content.length;
         while (size < newLength) {
             newLength *= 2;
-        }        
+        }
         content = new double[newLength];
         for (int index = 0; index < size; index++) {
             content[index] = reader.readDouble();
