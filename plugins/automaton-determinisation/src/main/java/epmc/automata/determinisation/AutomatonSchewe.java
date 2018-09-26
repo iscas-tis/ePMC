@@ -155,8 +155,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     }
 
     @Override
-    public void queryState(Value[] modelState, int automatonState)
-    {
+    public void queryState(Value[] modelState, int automatonState) {
         assert modelState != null;
         long combined;
         if (useAutomatonMapsCache) {

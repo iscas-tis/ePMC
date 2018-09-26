@@ -42,9 +42,4 @@ public interface AutomatonExporter {
         export();
         return out.toString();
     }
-
-    default void print() {
-        setOutput(System.out);
-        export();
-    }
 }

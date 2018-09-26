@@ -23,11 +23,21 @@ package epmc.command;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import epmc.automaton.Automaton;
+import epmc.automaton.AutomatonExporter;
+import epmc.automaton.AutomatonExporterImpl;
+import epmc.automaton.AutomatonExporter.Format;
 import epmc.command.OptionsCommandExpression2Automaton;
+import epmc.error.EPMCException;
+import epmc.error.UtilError;
+import epmc.expression.Expression;
 import epmc.main.options.UtilOptionsEPMC;
+import epmc.modelchecker.ModelCheckerResult;
 import epmc.modelchecker.TestHelper;
+import epmc.modelchecker.UtilModelChecker;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.options.UtilOptions;
 import epmc.plugin.OptionsPlugin;
 
 import static epmc.modelchecker.TestHelper.*;
@@ -46,7 +56,7 @@ public final class Expression2CommandTest {
 
     private final static Options prepareExpression2CommandOptions() {
         Options options = UtilOptionsEPMC.newOptions();
-        options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
+//        options.set(OptionsPlugin.PLUGIN, PLUGIN_DIR);
         prepareOptions(options, LogType.TRANSLATE, TestHelper.MODEL_INPUT_TYPE_PRISM);
         return options;
     }
@@ -54,13 +64,15 @@ public final class Expression2CommandTest {
     @Test
     public void asdfTest() {
         Options options = prepareExpression2CommandOptions();
+        TestHelper.processBeforeModelLoading(options);
         double tolerance = 1E-10;
         options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
         Map<String,String> constants = new HashMap<>();
         options.set(OptionsModelChecker.CONST, constants);
         options.set(Options.COMMAND, OptionsCommandExpression2Automaton.EXPRESSION2AUTOMATON);
         options.set(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE, "schewe-rabin");
-        //       execute(options, "Pmax=? [ (!\"z1\") U (\"z2\")  ] ");
+
+//        execute(options, "Pmax=? [ (!\"z1\") U (\"z2\")  ] ");
         //        execute(options, "P>=1 [ (F (\"z1\"))  ]");
         //        execute(options, "P>=1 [ (G(F (\"z1\")))  ]");
         //        execute(options, "P>=1 [ (G(F (\"z1\"))) & (G(F (\"z2\"))) ]");
@@ -75,5 +87,21 @@ public final class Expression2CommandTest {
         //        execute(options, "P>=1 [ !((F(G (a))) & (G(F(!a)))) ]");
 
         //        assertEquals("0.96484375", result, 1E-8);
+        
+        Expression expression = UtilModelChecker.parseExpression("P>=0.4 [F a]");
+        Automaton automaton = null;
+        try {
+            Automaton.Builder builder;
+            builder = UtilOptions.getInstance(OptionsCommandExpression2Automaton.AUTOMATON_EXPRESSION2TYPE);
+            builder.setExpression(expression.getChildren().get(0));
+            automaton = builder.build();
+        } catch (EPMCException e) {
+//            log.send(new ModelCheckerResult(property,  e));
+  //          continue;
+        }
+        AutomatonExporterImpl exporter = new AutomatonExporterImpl();
+        exporter.setAutomaton(automaton);
+        exporter.setFormat(Format.DOT);
+        System.out.println(exporter.exportToString());
     }
 }

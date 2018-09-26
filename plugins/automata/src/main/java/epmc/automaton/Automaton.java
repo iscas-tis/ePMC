@@ -27,8 +27,6 @@ import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
-// TODO transform this EPMC part into plugin, as it is not needed for many use cases
-
 // TODO complete documentation
 
 /**
@@ -79,8 +77,7 @@ public interface Automaton extends Closeable {
 
     Expression[] getExpressions();
 
-    void queryState(Value[] modelState, int automatonState)
-    ;
+    void queryState(Value[] modelState, int automatonState);
 
     default String getIdentifier() {
         return null;

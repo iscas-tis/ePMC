@@ -458,7 +458,8 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         AutomatonMojmir master = new AutomatonMojmir(formula, expressionsUnique, true, true);
         AutomatonExporter exporter = new AutomatonExporterImpl();
         exporter.setAutomaton(master);
-        exporter.print();
+        exporter.setOutput(System.out);
+        exporter.export();
 
         System.out.println(master);
         int state = master.getInitState();
