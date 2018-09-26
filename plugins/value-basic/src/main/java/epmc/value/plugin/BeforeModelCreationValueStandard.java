@@ -24,6 +24,7 @@ import epmc.plugin.BeforeModelCreation;
 import epmc.value.ContextValue;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeDouble;
+import epmc.value.TypeDoubleJava;
 import epmc.value.TypeInteger;
 import epmc.value.TypeInterval;
 import epmc.value.TypeReal;
@@ -200,9 +201,9 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
     }
 
     private static void addTypes() {
-        TypeDouble typeDouble = new TypeDouble(null, null);
-        TypeWeight.set(new TypeDouble(null, null));
-        TypeWeightTransition.set(new TypeDouble(null, null));
+        TypeDouble typeDouble = new TypeDoubleJava(null, null);
+        TypeWeight.set(new TypeDoubleJava(null, null));
+        TypeWeightTransition.set(new TypeDoubleJava(null, null));
         TypeReal.set(typeDouble);
         TypeInterval.set(new TypeInterval());
         TypeBoolean.set(new TypeBoolean());
