@@ -25,9 +25,10 @@ import java.util.HashMap;
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
-import epmc.automaton.AutomatonStateBuechi;
+import epmc.automaton.AutomatonStateBuechiSubset;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
+import epmc.automaton.BuechiSubsetCache;
 import epmc.automaton.BuechiTransition;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
@@ -59,7 +60,7 @@ public final class AutomatonSubset implements Automaton {
 
     }
 
-    private final AutomatonMaps automatonMaps = new AutomatonMaps();
+    private final AutomatonMaps<AutomatonStateBuechiImpl,AutomatonSubsetLabelImpl> automatonMaps = new AutomatonMaps<>();
     public final static String IDENTIFIER = "subset";
 
     private AutomatonSubset(Builder builder) {
@@ -72,6 +73,7 @@ public final class AutomatonSubset implements Automaton {
         trueState = buechi.getTrueState();
         this.expressions = buechi.getExpressions();
         guardsValid = UtilBitSet.newBitSetUnbounded();
+        cache = new BuechiSubsetCache<>(buechi);
     }
 
     @Override
@@ -79,11 +81,11 @@ public final class AutomatonSubset implements Automaton {
         return automatonMaps.getNumStates();
     }
 
-    protected <T extends AutomatonStateUtil> T makeUnique(T state) {
+    protected AutomatonStateBuechiImpl makeUnique(AutomatonStateBuechiImpl state) {
         return automatonMaps.makeUnique(state);
     }
 
-    protected <T extends AutomatonLabelUtil> T makeUnique(T label) {
+    protected AutomatonSubsetLabelImpl makeUnique(AutomatonSubsetLabelImpl label) {
         return automatonMaps.makeUnique(label);
     }
 
@@ -92,7 +94,7 @@ public final class AutomatonSubset implements Automaton {
         return automatonMaps.numberToState(number);
     }
 
-    private final class AutomatonStateBuechiImpl implements AutomatonSubsetState, AutomatonStateBuechi, AutomatonStateUtil {
+    private final class AutomatonStateBuechiImpl implements AutomatonSubsetState, AutomatonStateBuechiSubset, AutomatonStateUtil {
         private final AutomatonSubset automaton;
         private final BitSet states;
         private int number;
@@ -266,6 +268,7 @@ public final class AutomatonSubset implements Automaton {
     private final HashMap<SubsetCacheKey,SubsetCacheValue> succCache = new HashMap<>();
     private final BitSet guardsValid;
     private final SubsetCacheKey subsetCacheKey = new SubsetCacheKey();
+    private final BuechiSubsetCache<AutomatonStateBuechiImpl, AutomatonSubsetLabelImpl> cache;
 
     @Override
     public String getIdentifier() {
@@ -282,8 +285,7 @@ public final class AutomatonSubset implements Automaton {
     }
 
     @Override
-    public void queryState(Value[] modelState, int automatonState)
-    {
+    public void queryState(Value[] modelState, int automatonState) {
         AutomatonStateBuechiImpl subsetState = (AutomatonStateBuechiImpl) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(subsetState);
@@ -320,24 +322,11 @@ public final class AutomatonSubset implements Automaton {
         insertCache();
     }
 
-    private void lookupCache(AutomatonSubsetState rabinState)
-    {
-        int entryNr = 0;
-        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
-        for (int node = 0; node < automaton.getNumNodes(); node++) {
-            boolean stateSet  = rabinState.getStates().get(node);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
-                BuechiTransition trans = labels.getObject(node, succNr);
-                guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
-                entryNr++;
-            }
-        }
-        subsetCacheKey.state = rabinState;
-        subsetCacheKey.guards = guardsValid;
-        SubsetCacheValue entry = succCache.get(subsetCacheKey);
+    private void lookupCache(AutomatonStateBuechiImpl rabinState) {
+        BuechiSubsetCache<AutomatonStateBuechiImpl, AutomatonSubsetLabelImpl>.CacheValue entry = cache.lookup(rabinState);
         if (entry != null) {
-            succState = entry.state;
-            succLabel = entry.labeling;
+            succState = entry.getState();
+            succLabel = entry.getLabeling();
         } else {
             succState = null;
             succLabel = null;

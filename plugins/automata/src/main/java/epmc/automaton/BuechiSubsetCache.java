@@ -61,23 +61,24 @@ public final class BuechiSubsetCache <S extends AutomatonStateBuechiSubset,T> {
         }
     }
 
-    private final GraphExplicit automaton;
+    private final GraphExplicit graph;
     private final BitSet guardsValid;
     private final CacheKey cacheKey = new CacheKey();
     private final HashMap<CacheKey,CacheValue> succCache = new HashMap<>();
 
     public BuechiSubsetCache(Buechi buechi) {
         assert buechi != null;
-        automaton = buechi.getGraph();
-        guardsValid = UtilBitSet.newBitSetUnbounded();
+        graph = buechi.getGraph();
+        guardsValid = UtilBitSet.newBitSetBounded(buechi.getNumStates());
     }
     
     public CacheValue lookup(S subsetState) {
+        assert subsetState != null;
         int entryNr = 0;
-        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
-        for (int state = 0; state < automaton.getNumNodes(); state++) {
+        EdgeProperty labels = graph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
+        for (int state = 0; state < graph.getNumNodes(); state++) {
             boolean stateSet  = subsetState.getStates().get(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
+            for (int succNr = 0; succNr < graph.getNumSuccessors(state); succNr++) {
                 BuechiTransition trans = labels.getObject(state, succNr);
                 guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
                 entryNr++;
@@ -89,6 +90,8 @@ public final class BuechiSubsetCache <S extends AutomatonStateBuechiSubset,T> {
     }
 
     public void insert(S succState, T succLabel) {
+        assert succState != null;
+        assert succLabel != null;
         CacheValue value = new CacheValue(succState, succLabel);
         succCache.put(cacheKey.clone(), value);
     }

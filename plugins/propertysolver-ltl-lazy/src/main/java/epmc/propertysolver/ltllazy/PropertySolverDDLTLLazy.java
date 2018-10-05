@@ -37,7 +37,7 @@ import epmc.algorithms.dd.ComponentsDD;
 import epmc.automaton.AutomatonDD;
 import epmc.automaton.AutomatonRabin;
 import epmc.automaton.AutomatonRabinLabel;
-import epmc.automaton.AutomatonStateBuechi;
+import epmc.automaton.AutomatonStateBuechiSubset;
 import epmc.automaton.Buechi;
 import epmc.automaton.ProductGraphDD;
 import epmc.automaton.ProductGraphDDDD;
@@ -600,7 +600,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
         for (DD which : product.getAutomatonStates().keySet()) {
             int value = product.getAutomatonStates().get(which);
-            BitSet state = ((AutomatonStateBuechi) product.getAutomaton().numberToState(value)).getStates();
+            BitSet state = ((AutomatonStateBuechiSubset) product.getAutomaton().numberToState(value)).getStates();
             if (!map.containsKey(state)) {
                 map.put(state, getContextDD().newConstant(false));
             }

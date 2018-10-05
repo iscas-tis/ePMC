@@ -32,7 +32,7 @@ import epmc.algorithms.explicit.EndComponents;
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonRabin;
 import epmc.automaton.AutomatonRabinLabel;
-import epmc.automaton.AutomatonStateBuechi;
+import epmc.automaton.AutomatonStateBuechiSubset;
 import epmc.automaton.Buechi;
 import epmc.automaton.ProductGraphExplicit;
 import epmc.automaton.UtilAutomaton;
@@ -892,7 +892,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         NodeProperty nodeAutomaton = leafGraph.getNodeProperty(CommonProperties.NODE_AUTOMATON);
         for (int node = reachOne.nextSetBit(0); node >= 0; node = reachOne.nextSetBit(node+1)) {
             int modelState = nodeModel.getInt(node);
-            AutomatonStateBuechi autState = nodeAutomaton.getObject(node);
+            AutomatonStateBuechiSubset autState = nodeAutomaton.getObject(node);
             BitSet states = autState.getStates();
             int subState = subset.getState(states);
             int chkProdNode = prodGraph.combineToNode(modelState, subState);

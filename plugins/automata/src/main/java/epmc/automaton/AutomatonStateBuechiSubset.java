@@ -22,6 +22,6 @@ package epmc.automaton;
 
 import epmc.util.BitSet;
 
-public interface AutomatonStateBuechi {
+public interface AutomatonStateBuechiSubset {
     public abstract BitSet getStates();
 }

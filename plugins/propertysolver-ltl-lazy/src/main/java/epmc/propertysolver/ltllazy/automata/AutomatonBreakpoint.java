@@ -20,14 +20,12 @@
 
 package epmc.propertysolver.ltllazy.automata;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
+import epmc.automaton.BuechiSubsetCache;
 import epmc.automaton.BuechiTransition;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
@@ -68,7 +66,7 @@ public final class AutomatonBreakpoint implements Automaton {
 
     }
 
-    private final AutomatonMaps automatonMaps = new AutomatonMaps();
+    private final AutomatonMaps<AutomatonBreakpointState,AutomatonBreakpointLabelEnum> automatonMaps = new AutomatonMaps<>();
     public final static String IDENTIFIER = "breakpoint";
 
     private enum AutomatonBreakpointLabelEnum implements AutomatonBreakpointLabel, AutomatonLabelUtil {
@@ -102,50 +100,6 @@ public final class AutomatonBreakpoint implements Automaton {
         }
     }
 
-    private final class BreakpointCacheKey implements Cloneable {
-        private AutomatonBreakpointState state;
-        private BitSet guards;
-
-        @Override
-        public int hashCode() {
-            int hash = 0;
-            hash = state.hashCode() + (hash << 6) + (hash << 16) - hash;
-            hash = guards.hashCode() + (hash << 6) + (hash << 16) - hash;
-            return hash;
-        }
-
-        @Override
-        public boolean equals(Object obj) {
-            assert obj != null;
-            if (!(obj instanceof BreakpointCacheKey)) {
-                return false;
-            }
-            BreakpointCacheKey other = (BreakpointCacheKey) obj;
-            return state.equals(other.state) && guards.equals(other.guards);
-        }
-
-        @Override
-        protected BreakpointCacheKey clone() {
-            BreakpointCacheKey result = new BreakpointCacheKey();
-            result.state = state;
-            result.guards = guards.clone();
-            return result;
-        }
-    }
-
-    private final class BreakpointCacheValue {
-        private final AutomatonBreakpointState state;
-        private final AutomatonBreakpointLabelEnum labeling;
-
-        BreakpointCacheValue(AutomatonBreakpointState state,
-                AutomatonBreakpointLabelEnum labeling) {
-            assert state != null;
-            assert labeling != null;
-            this.state = state;
-            this.labeling = labeling;
-        }        
-    }
-
     private AutomatonBreakpointState succState;
     private AutomatonBreakpointLabelEnum succLabel;
     private final int numLabels;
@@ -154,9 +108,7 @@ public final class AutomatonBreakpoint implements Automaton {
     private final int trueState;
     private final Expression[] expressions;
     private final Buechi buechi;
-    private final Map<BreakpointCacheKey,BreakpointCacheValue> succCache = new HashMap<>();
-    private final BitSet guardsValid;
-    private final BreakpointCacheKey breakpointCacheKey = new BreakpointCacheKey();
+    private final BuechiSubsetCache<AutomatonBreakpointState, AutomatonBreakpointLabelEnum> cache;
 
     private AutomatonBreakpoint(Builder builder) {
         this.buechi = builder.getBuechi();
@@ -171,7 +123,7 @@ public final class AutomatonBreakpoint implements Automaton {
         this.initState = makeUnique(new AutomatonBreakpointState(this, initStates));
         this.trueState = buechi.getTrueState();
         this.expressions = buechi.getExpressions();
-        guardsValid = UtilBitSet.newBitSetUnbounded();
+        cache = new BuechiSubsetCache<>(buechi);
     }
 
     @Override
@@ -185,8 +137,7 @@ public final class AutomatonBreakpoint implements Automaton {
     }
 
     @Override
-    public void queryState(Value[] modelState, int automatonState)
-    {
+    public void queryState(Value[] modelState, int automatonState) {
         AutomatonBreakpointState breakpointState = (AutomatonBreakpointState) numberToState(automatonState);
         buechi.query(modelState);
         lookupCache(breakpointState);
@@ -244,24 +195,11 @@ public final class AutomatonBreakpoint implements Automaton {
         insertCache();
     }
 
-    private void lookupCache(AutomatonBreakpointState breakpointState)
-    {
-        int entryNr = 0;
-        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
-        for (int state = 0; state < automaton.getNumNodes(); state++) {
-            boolean stateSet  = breakpointState.getStates().get(state);
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(state); succNr++) {
-                BuechiTransition trans = labels.getObject(state, succNr);
-                guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
-                entryNr++;
-            }
-        }
-        breakpointCacheKey.state = breakpointState;
-        breakpointCacheKey.guards = guardsValid;
-        BreakpointCacheValue entry = succCache.get(breakpointCacheKey);
+    private void lookupCache(AutomatonBreakpointState breakpointState) {
+        BuechiSubsetCache<AutomatonBreakpointState, AutomatonBreakpointLabelEnum>.CacheValue entry = cache.lookup(breakpointState);
         if (entry != null) {
-            succState = entry.state;
-            succLabel = entry.labeling;
+            succState = entry.getState();
+            succLabel = entry.getLabeling();
         } else {
             succState = null;
             succLabel = null;
@@ -269,8 +207,7 @@ public final class AutomatonBreakpoint implements Automaton {
     }
 
     private void insertCache() {
-        BreakpointCacheValue value = new BreakpointCacheValue(succState, succLabel);
-        succCache.put(breakpointCacheKey.clone(), value);
+        cache.insert(succState, succLabel);
     }
 
     /**
@@ -326,11 +263,11 @@ public final class AutomatonBreakpoint implements Automaton {
         return automatonMaps.getNumStates();
     }
 
-    protected <T extends AutomatonStateUtil> T makeUnique(T state) {
+    protected AutomatonBreakpointState makeUnique(AutomatonBreakpointState state) {
         return automatonMaps.makeUnique(state);
     }
 
-    protected <T extends AutomatonLabelUtil> T makeUnique(T label) {
+    protected AutomatonBreakpointLabelEnum makeUnique(AutomatonBreakpointLabelEnum label) {
         return automatonMaps.makeUnique(label);
     }
 

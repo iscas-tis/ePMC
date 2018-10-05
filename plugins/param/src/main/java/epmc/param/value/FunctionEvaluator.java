@@ -1,6 +1,7 @@
 package epmc.param.value;
 
 import epmc.value.TypeAlgebra;
+import epmc.value.Value;
 import epmc.value.ValueArrayAlgebra;
 
 public interface FunctionEvaluator {
@@ -11,6 +12,10 @@ public interface FunctionEvaluator {
         
         Builder setResultType(TypeAlgebra type);
 
+//        Builder setInput(Value input);
+        
+//       Builder setOutput(Value output);
+        
         FunctionEvaluator build();
     }
 
@@ -19,4 +24,11 @@ public interface FunctionEvaluator {
     int getResultDimensions();
     
     void evaluate(ValueArrayAlgebra result, ValueArrayAlgebra point);
+    
+//    boolean canPut();
+    
+//    void put();
+    
+ //   void take();
+
 }
