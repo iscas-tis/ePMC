@@ -116,7 +116,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
                 if (index >= 0) {
                     prismPropertiesFilename = prismPropertiesFilename.substring(0, index);
                 }
-                prismPropertiesFilename = prismPropertiesFilename + PRISM_EXTENSION;
+                prismPropertiesFilename = prismPropertiesFilename + PROPERTIES_EXTENSION;
                 log.send(MessagesPRISMExporter.PRISM_EXPORTER_MISSING_PRISM_PROPERTIES_FILENAME, prismPropertiesFilename, modelFilename);
             }
             File prismPropertiesFile = new File(prismPropertiesFilename); 
