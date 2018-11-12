@@ -25,8 +25,9 @@ import org.junit.Test;
 
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
-import epmc.automaton.AutomatonExporter.Format;
+import epmc.automaton.AutomatonExporterDot;
+import epmc.automaton.AutomatonExporterFormat;
+import epmc.automaton.AutomatonExporterFormatDOT;
 import epmc.command.OptionsCommandExpression2Automaton;
 import epmc.error.EPMCException;
 import epmc.error.UtilError;
@@ -99,9 +100,9 @@ public final class Expression2CommandTest {
 //            log.send(new ModelCheckerResult(property,  e));
   //          continue;
         }
-        AutomatonExporterImpl exporter = new AutomatonExporterImpl();
+        AutomatonExporterDot exporter = new AutomatonExporterDot();
         exporter.setAutomaton(automaton);
-        exporter.setFormat(Format.DOT);
+        exporter.setFormat(AutomatonExporterFormatDOT.DOT);
         System.out.println(exporter.exportToString());
     }
 }

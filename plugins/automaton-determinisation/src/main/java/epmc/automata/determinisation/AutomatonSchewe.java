@@ -28,7 +28,7 @@ import gnu.trove.map.hash.TIntObjectHashMap;
 import java.util.Arrays;
 
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
+import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonParity;
@@ -473,7 +473,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
 
     @Override
     public String toString() {
-        AutomatonExporter exporter = new AutomatonExporterImpl();
+        AutomatonExporter exporter = new AutomatonExporterDot();
         exporter.setAutomaton(this);
         return exporter.toString();
     }

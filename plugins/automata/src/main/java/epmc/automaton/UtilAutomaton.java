@@ -264,6 +264,13 @@ public final class UtilAutomaton {
         return result.build();
     }
 
+    public static AutomatonExporter getExporter(Automaton automaton,
+            AutomatonExporterFormat format) {
+        Map<String,Class<? extends AutomatonExporter>> automata = Options.get().get(OptionsAutomaton.AUTOMATON_EXPORTER_CLASS);
+        return Util.getInstance(automata, exporter -> 
+            exporter.setAutomaton(automaton).setFormat(format).canHandle());
+    }
+    
     public static AutomatonRabin newAutomatonRabinSafra(Buechi buechi, BitSet automatonState) {
         Map<String,Class<Automaton.Builder>> automata = Options.get().get(OptionsAutomaton.AUTOMATON_CLASS);
         AutomatonSafra.Builder result = (AutomatonSafra.Builder)

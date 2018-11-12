@@ -22,6 +22,7 @@ package epmc.automaton.plugin;
 
 import java.util.Map;
 
+import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.OptionsAutomaton;
 import epmc.options.Category;
 import epmc.options.OptionTypeBoolean;
@@ -63,6 +64,10 @@ public final class AfterOptionsCreationAutomata implements AfterOptionsCreation 
         Map<String, Class<?>> automatonMap = new OrderedMap<>(true);
         options.set(OptionsAutomaton.AUTOMATON_CLASS, automatonMap);
 
+        Map<String, Class<?>> automatonExporterMap = new OrderedMap<>(true);
+        automatonExporterMap.put(AutomatonExporterDot.IDENTIFIER, AutomatonExporterDot.class);
+        options.set(OptionsAutomaton.AUTOMATON_EXPORTER_CLASS, automatonExporterMap);
+        
         options.addOption().setIdentifier(OptionsAutomaton.AUTOMATON_BUILDER)
         .setBundleName(OptionsAutomaton.OPTIONS_AUTOMATON)
         .setType(new OptionTypeEnum(OptionsAutomaton.Ltl2BaAutomatonBuilder.class))

@@ -36,7 +36,7 @@ import java.util.Queue;
 import java.util.Set;
 
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
+import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
@@ -456,7 +456,7 @@ public final class AutomatonMojmir implements AutomatonNumeredInput {
         }
         ExpressionsUnique expressionsUnique = new ExpressionsUnique(contextExpression, expressions);
         AutomatonMojmir master = new AutomatonMojmir(formula, expressionsUnique, true, true);
-        AutomatonExporter exporter = new AutomatonExporterImpl();
+        AutomatonExporter exporter = new AutomatonExporterDot();
         exporter.setAutomaton(master);
         exporter.setOutput(System.out);
         exporter.export();
