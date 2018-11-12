@@ -69,7 +69,11 @@ public final class BuechiSubsetCache <S extends AutomatonStateBuechiSubset,T> {
     public BuechiSubsetCache(Buechi buechi) {
         assert buechi != null;
         graph = buechi.getGraph();
-        guardsValid = UtilBitSet.newBitSetBounded(buechi.getNumStates());
+        int successors = 0;
+        for (int state = 0; state < buechi.getNumStates(); state++) {
+            successors += graph.getNumSuccessors(state);
+        }
+        guardsValid = UtilBitSet.newBitSetBounded(successors);
     }
     
     public CacheValue lookup(S subsetState) {
