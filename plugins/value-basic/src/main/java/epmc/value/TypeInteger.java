@@ -79,13 +79,10 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         } else {
             numBits = Integer.SIZE;
         }
-        valueMax.setImmutable();
         this.lowerBound = newValue();
         this.lowerBound.set(lowerBound);
-        this.lowerBound.setImmutable();
         this.upperBound = newValue();
         this.upperBound.set(upperBound);
-        this.upperBound.setImmutable();
     }
 
     public TypeInteger() {

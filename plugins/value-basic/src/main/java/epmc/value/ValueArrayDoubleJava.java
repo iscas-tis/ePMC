@@ -20,9 +20,10 @@
 
 package epmc.value;
 
+import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueContentDoubleArray {
+public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueContentDoubleArray, ValueBitStoreable {
     public static boolean is(Value value) {
         return value instanceof ValueArrayDoubleJava;
     }
@@ -66,8 +67,8 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
         assert index >= 0 : index;
         assert index < size() : index + SPACE + size();
         double entry = content[index];
-        assert ValueDouble.is(value) : value.getType();
-        ValueDouble.as(value).set(entry);
+        assert ValueDoubleJava.is(value) : value.getType();
+        ValueDoubleJava.as(value).set(entry);
     }
 
     @Override
@@ -107,5 +108,26 @@ public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueConten
     @Override
     public String toString() {
         return UtilValue.arrayToString(this);
+    }
+
+    @Override
+    public void read(BitStream reader) {
+        int size = reader.readInt();
+        int newLength = content.length;
+        while (size < newLength) {
+            newLength *= 2;
+        }
+        content = new double[newLength];
+        for (int index = 0; index < size; index++) {
+            content[index] = reader.readDouble();
+        }
+    }
+
+    @Override
+    public void write(BitStream writer) {
+        writer.writeInt(size);
+        for (int index = 0; index < size; index++) {
+            writer.writeDouble(content[index]);
+        }
     }
 }

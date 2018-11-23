@@ -26,8 +26,9 @@ import java.util.Set;
 
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
-import epmc.automaton.AutomatonExporter.Format;
+import epmc.automaton.AutomatonExporterDot;
+import epmc.automaton.AutomatonExporterFormat;
+import epmc.automaton.AutomatonExporterFormatDOT;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -123,9 +124,9 @@ public class CommandTaskExpression2Automaton implements CommandTask {
                 log.send(new ModelCheckerResult(property,  e));
                 continue;
             }
-            AutomatonExporter exporter = new AutomatonExporterImpl();
+            AutomatonExporter exporter = new AutomatonExporterDot();
             exporter.setAutomaton(automaton);
-            exporter.setFormat(Format.DOT);
+            exporter.setFormat(AutomatonExporterFormatDOT.DOT);
             ModelCheckerResult result = new ModelCheckerResult(property, exporter.exportToString());
             log.send(result);
         }

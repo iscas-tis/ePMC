@@ -20,8 +20,8 @@
 
 package epmc.propertysolver.ltllazy.automata;
 
-import epmc.automaton.AutomatonStateBuechi;
+import epmc.automaton.AutomatonStateBuechiSubset;
 
-public interface AutomatonSubsetState extends AutomatonStateBuechi {
+public interface AutomatonSubsetState extends AutomatonStateBuechiSubset {
     AutomatonSubset getAutomaton();
 }

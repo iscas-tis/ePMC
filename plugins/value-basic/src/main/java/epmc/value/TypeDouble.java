@@ -23,7 +23,7 @@ package epmc.value;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 
-public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeNumBitsKnown {
+public interface TypeDouble extends TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeNumBitsKnown {
     public static TypeDouble get() {
         return ContextValue.get().getType(TypeDouble.class);
     }
@@ -44,73 +44,7 @@ public final class TypeDouble implements TypeWeight, TypeWeightTransition, TypeR
             return null;
         }
     }
-
-    private final static String DOUBLE = "double";
-
-    // TODO get rid of these values
-    private final ValueDouble lower;
-    private final ValueDouble upper;
-
-    public TypeDouble() {
-        this(null, null);
-    }
     
-    public TypeDouble(ValueDouble lower, ValueDouble upper) {
-        this.lower = lower == null ? null : UtilValue.clone(lower);
-        this.upper = upper == null ? null : UtilValue.clone(upper);
-        if (this.lower != null) {
-            this.lower.setImmutable();
-        }
-        if (this.upper != null) {
-            this.upper.setImmutable();
-        }
-    }
-
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(DOUBLE);
-        return builder.toString();
-    }
-
-    @Override
-    public ValueDouble newValue() {
-        return new ValueDouble(this);
-    }
-
-    @Override
-    public int getNumBits() {
-        return Double.SIZE;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        assert obj != null;
-        if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-        return hash;
-    }
-
-    @Override
-    public ValueDouble getLower() {
-        return lower;
-    }
-
-    @Override
-    public ValueDouble getUpper() {
-        return upper;
-    }
-
-    @Override
-    public TypeArrayDouble getTypeArray() {
-        return ContextValue.get().makeUnique(new TypeArrayDouble(this));
-    }
+    ValueDouble newValue();
 }

@@ -49,25 +49,29 @@ import epmc.value.TypeEnumerable;
 import epmc.value.Value;
 import epmc.value.ValueEnumerable;
 
-public final class AutomatonExporterImpl implements AutomatonExporter {
+public final class AutomatonExporterDot implements AutomatonExporter {
+    public static final String IDENTIFIER = "dot-general";
     private Automaton automaton;
     private OutputStream outStream;
-    private Format format = Format.DOT;
+    private AutomatonExporterFormat format;
     private Value[][] validInputs;
 
     @Override
-    public void setAutomaton(Automaton automaton) {
+    public AutomatonExporterDot setAutomaton(Automaton automaton) {
         this.automaton = automaton;
+        return this;
     }
 
     @Override
-    public void setOutput(OutputStream out) {
+    public AutomatonExporterDot setOutput(OutputStream out) {
         this.outStream = out;
+        return this;
     }
 
     @Override
-    public void setFormat(Format format) {
+    public AutomatonExporterDot setFormat(AutomatonExporterFormat format) {
         this.format = format;
+        return this;
     }
 
     @Override
@@ -197,5 +201,13 @@ public final class AutomatonExporterImpl implements AutomatonExporter {
     @Override
     public String toString() {
         return exportToString();
+    }
+
+    @Override
+    public boolean canHandle() {
+        if (format != AutomatonExporterFormatDOT.DOT) {
+            return false;
+        }
+        return true;
     }
 }

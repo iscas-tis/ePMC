@@ -24,15 +24,13 @@ import java.io.ByteArrayOutputStream;
 import java.io.OutputStream;
 
 public interface AutomatonExporter {
-    enum Format {
-        DOT
-    }
+    AutomatonExporter setAutomaton(Automaton automaton);
 
-    void setAutomaton(Automaton automaton);
+    AutomatonExporter setFormat(AutomatonExporterFormat format);
 
-    void setOutput(OutputStream out);
-
-    void setFormat(Format format);
+    boolean canHandle();
+    
+    AutomatonExporter setOutput(OutputStream out);
 
     void export();
 
@@ -41,10 +39,5 @@ public interface AutomatonExporter {
         setOutput(out);
         export();
         return out.toString();
-    }
-
-    default void print() {
-        setOutput(System.out);
-        export();
     }
 }

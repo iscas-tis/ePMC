@@ -37,6 +37,7 @@ public enum OptionsAutomaton {
     AUTOMATON_DET_NEG,
     AUTOMATA_REPLACE_NE,
     AUTOMATON_CLASS,
+    AUTOMATON_EXPORTER_CLASS,
     ;
 
     public static enum Ltl2BaAutomatonBuilder {

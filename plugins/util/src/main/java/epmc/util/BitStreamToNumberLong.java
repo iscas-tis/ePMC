@@ -35,7 +35,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
         }
 
         @Override
-        public int read(int numBits) {
+        public int readInt(int numBits) {
             long result = bitSet;
             result >>>= index;
             long mask = ~0L;
@@ -57,7 +57,7 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
         }
 
         @Override
-        public void write(int value, int numBits) {
+        public void writeInt(int value, int numBits) {
             long valueLong = value;
             valueLong <<= index;
             bitSet |= valueLong;

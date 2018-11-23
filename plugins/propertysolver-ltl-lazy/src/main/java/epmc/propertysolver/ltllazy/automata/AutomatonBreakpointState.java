@@ -20,12 +20,12 @@
 
 package epmc.propertysolver.ltllazy.automata;
 
-import epmc.automaton.AutomatonStateBuechi;
+import epmc.automaton.AutomatonStateBuechiSubset;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 
-final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonStateBuechi {
+final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonStateBuechiSubset {
     private final BitSet states;
     private final int acceptance;
     private final BitSet children;

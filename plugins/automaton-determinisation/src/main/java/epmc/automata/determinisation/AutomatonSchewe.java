@@ -26,10 +26,9 @@ import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
 import gnu.trove.map.hash.TIntObjectHashMap;
 
 import java.util.Arrays;
-import java.util.HashMap;
 
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
+import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonParity;
@@ -37,6 +36,7 @@ import epmc.automaton.AutomatonRabin;
 import epmc.automaton.AutomatonSafra;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.automaton.Buechi;
+import epmc.automaton.BuechiSubsetCache;
 import epmc.automaton.BuechiTransition;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
@@ -89,7 +89,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     }
 
     private final boolean useAutomatonMapsCache = false;
-    private final AutomatonMaps automatonMaps = new AutomatonMaps();
+    private final AutomatonMaps<AutomatonScheweState,AutomatonScheweLabeling> automatonMaps = new AutomatonMaps<>();
     private AutomatonScheweState succState;
     private int succStateNumber;
     private AutomatonScheweLabeling succLabel;
@@ -100,12 +100,9 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     private final TObjectIntMap<int[]> nodeNumbers = new TObjectIntCustomHashMap<>(HashingStrategyArrayInt.getInstance(), 1000, 0.5f, -1);
     private final Buechi buechi;
     private final Expression[] expressions;
-    private final HashMap<ScheweCacheKey,ScheweCacheValue> succCache = new HashMap<>();
-    private final BitSet guardsValid;
-    private final ScheweCacheKey scheweCacheKey = new ScheweCacheKey();
     private boolean parity;
     private final BitSet prioritiesSeen;
-    private final EdgeProperty buechiLabels;
+    private final BuechiSubsetCache<AutomatonScheweState,AutomatonScheweLabeling> cache;
 
     private AutomatonSchewe(Builder builder) {
         assert builder != null;
@@ -114,7 +111,6 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         buechi = builder.getBuechi();
         this.numLabels = buechi.getNumLabels();
         this.buechiGraph = buechi.getGraph();
-        this.buechiLabels = buechiGraph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         BitSet init = builder.getInit();
         if (init == null) {
             init = UtilBitSet.newBitSetUnbounded();
@@ -123,24 +119,23 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
         init = init.clone();
         this.initState = makeUnique(new AutomatonScheweState(this, init, null));
         this.expressions = buechi.getExpressions();
-        this.guardsValid = UtilBitSet.newBitSetUnbounded();
         this.prioritiesSeen = UtilBitSet.newBitSetUnbounded();
         if (useAutomatonMapsCache) {
             this.automatonMaps.initialiseCache(expressions);
         }
+        cache = new BuechiSubsetCache<>(buechi);
     }
-
 
     @Override
     public int getNumStates() {
         return automatonMaps.getNumStates();
     }
 
-    protected <T extends AutomatonStateUtil> T makeUnique(T state) {
+    private AutomatonScheweState makeUnique(AutomatonScheweState state) {
         return automatonMaps.makeUnique(state);
     }
 
-    protected <T extends AutomatonLabelUtil> T makeUnique(T label) {
+    private AutomatonScheweLabeling makeUnique(AutomatonScheweLabeling label) {
         return automatonMaps.makeUnique(label);
     }
 
@@ -155,8 +150,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     }
 
     @Override
-    public void queryState(Value[] modelState, int automatonState)
-    {
+    public void queryState(Value[] modelState, int automatonState) {
         assert modelState != null;
         long combined;
         if (useAutomatonMapsCache) {
@@ -256,24 +250,10 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     }
 
     private void lookupCache(AutomatonScheweState scheweState) {
-        assert scheweState != null;
-        int entryNr = 0;
-
-        for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
-            boolean stateSet  = scheweState.getStates().get(state);
-            int numSuccessors = buechiGraph.getNumSuccessors(state);
-            for (int succNr = 0; succNr < numSuccessors; succNr++) {
-                BuechiTransition trans = buechiLabels.getObject(state, succNr);
-                guardsValid.set(entryNr, stateSet && trans.guardFulfilled());
-                entryNr++;
-            }
-        }
-        scheweCacheKey.state = scheweState;
-        scheweCacheKey.guards = guardsValid;
-        ScheweCacheValue entry = succCache.get(scheweCacheKey);
+        BuechiSubsetCache<AutomatonScheweState, AutomatonScheweLabeling>.CacheValue entry = cache.lookup(scheweState);
         if (entry != null) {
-            succState = entry.state;
-            succLabel = entry.labeling;
+            succState = entry.getState();
+            succLabel = entry.getLabeling();
         } else {
             succState = null;
             succLabel = null;
@@ -281,8 +261,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     }
 
     private void insertCache() {
-        ScheweCacheValue value = new ScheweCacheValue(succState, succLabel);
-        succCache.put(scheweCacheKey.clone(), value);
+        cache.insert(succState, succLabel);
     }
 
     /**
@@ -319,8 +298,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
      * @param succState successor state
      */
     private void rawUpdate(AutomatonScheweState scheweState,
-            AutomatonScheweState succState)
-    {
+            AutomatonScheweState succState) {
         BitSet succs = UtilBitSet.newBitSetUnbounded(buechiGraph.getNumNodes());
         EdgeProperty labels = buechiGraph.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int state = 0; state < buechiGraph.getNumNodes(); state++) {
@@ -495,7 +473,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
 
     @Override
     public String toString() {
-        AutomatonExporter exporter = new AutomatonExporterImpl();
+        AutomatonExporter exporter = new AutomatonExporterDot();
         exporter.setAutomaton(this);
         return exporter.toString();
     }

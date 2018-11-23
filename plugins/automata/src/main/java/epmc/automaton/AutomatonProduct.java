@@ -79,18 +79,18 @@ public final class AutomatonProduct implements Automaton {
         }
     }
 
-    private final AutomatonMaps automatonMaps = new AutomatonMaps();
+    private final AutomatonMaps<AutomatonProductState,AutomatonProductLabelImpl> automatonMaps = new AutomatonMaps<>();
 
     @Override
     public int getNumStates() {
         return automatonMaps.getNumStates();
     }
 
-    protected <T extends AutomatonStateUtil> T makeUnique(T state) {
+    protected AutomatonProductState makeUnique(AutomatonProductState state) {
         return automatonMaps.makeUnique(state);
     }
 
-    protected <T extends AutomatonLabelUtil> T makeUnique(T label) {
+    protected AutomatonProductLabelImpl makeUnique(AutomatonProductLabelImpl label) {
         return automatonMaps.makeUnique(label);
     }
 

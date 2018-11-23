@@ -30,7 +30,7 @@ import java.util.BitSet;
 import java.util.Set;
 
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
+import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
@@ -224,7 +224,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
 
     @Override
     public String toString() {
-        AutomatonExporter exporter = new AutomatonExporterImpl();
+        AutomatonExporter exporter = new AutomatonExporterDot();
         exporter.setAutomaton(this);
         return exporter.toString();
     }
@@ -245,7 +245,7 @@ public final class AutomatonSlave implements AutomatonNumeredInput {
         }
         ExpressionsUnique expressionsUnique = new ExpressionsUnique(contextExpression, expressions);
         AutomatonSlave observer = new AutomatonSlave(formula, expressionsUnique, false);
-        AutomatonExporter exporter = new AutomatonExporterImpl();
+        AutomatonExporter exporter = new AutomatonExporterDot();
         exporter.setAutomaton(observer);
         contextExpression.close();
         System.out.println(exporter);

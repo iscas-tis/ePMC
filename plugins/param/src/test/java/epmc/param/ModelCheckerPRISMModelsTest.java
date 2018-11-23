@@ -30,6 +30,7 @@ import epmc.param.graphsolver.eliminationorder.EliminationOrderNumNew;
 import epmc.param.graphsolver.eliminationorder.EliminationOrderNumNew;
 import epmc.param.graphsolver.eliminationorder.EliminationOrderQuickTarget;
 import epmc.param.graphsolver.eliminationorder.EliminationOrderRandom;
+import epmc.param.graphsolver.eliminationorder.EliminationOrderSameStructure;
 import epmc.param.options.OptionsParam;
 import epmc.param.plugin.TypeProviderIntervalDouble;
 import epmc.param.plugin.TypeProviderIntervalRational;
@@ -81,16 +82,18 @@ public final class ModelCheckerPRISMModelsTest {
         //options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNumNew.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
+  //    options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
         Map<String,String> constants = new HashMap<>();
         constants.put("MaxGood", "10");
-        constants.put("TotalRuns", "3");
+        constants.put("TotalRuns", "7");
         constants.put("CrowdSize", "5");
 //        constants.put("CrowdSize", "15");
         options.set(OptionsModelChecker.CONST, constants);
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
-        options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypePolynomialFraction.IDENTIFIER);
+        options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_BITS, "16");
-//        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterCInterval.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterPoints.IDENTIFIER);
+      options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterC.IDENTIFIER);
 
 //        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGraphviz.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_DAG_NODE_STORE, NodeStoreDisk.IDENTIFIER);
@@ -134,7 +137,9 @@ public final class ModelCheckerPRISMModelsTest {
 //
         //options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNumNew.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
-        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
+//       options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
+
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
         options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_BITS, "16");
@@ -168,22 +173,25 @@ public final class ModelCheckerPRISMModelsTest {
     //    parameters.add("repair_backbone_rate");
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
 //
-        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNodeNumbersAscending.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNodeNumbersAscending.IDENTIFIER);
+        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
 
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNumNew.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
     //    options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNodeNumbersDescending.IDENTIFIER);
-      
+      options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
+
         Map<String,String> constants = new HashMap<>();
-        constants.put("N", "8");
+        constants.put("N", "4");
         options.set(OptionsModelChecker.CONST, constants);
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
         options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_DOUBLE_CUTOFF_BIN_DIGITS, 10);
         options.set(OptionsParam.PARAM_DAG_USE_PROB_SIMPLIFIER, true);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_BITS, "16");
-        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGinsh.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGinsh.IDENTIFIER);
+        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterC.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_NODE_STORE, NodeStoreDisk.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_NODE_LOOKUP, NodeLookupBoundedHashMap.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterC.IDENTIFIER);
@@ -228,6 +236,8 @@ public final class ModelCheckerPRISMModelsTest {
         
         options.set(OptionsParam.PARAM_ELIMINATION_SELF_LOOP_METHOD, NodeEliminator.WeighterMethod.SELF_LOOP);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_DOUBLE_PROB_LOOKUP, DoubleLookupBoundedHashMap.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
+
         Model model = loadModel(options, String.format(ModelNames.PEER2PEER, 4, 4));
         processAfterModelLoading(options);
         Value result = TestHelper.computeResult(model, "R{\"time\"}=? [ F \"done\" ]");
@@ -269,8 +279,8 @@ public final class ModelCheckerPRISMModelsTest {
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(OptionsParam.PARAM_DAG_USE_PROB_SIMPLIFIER, true);
         Map<String,String> constants = new HashMap<>();
-        constants.put("N", "512");
-        constants.put("MAX", "10");
+        constants.put("N", "1024");
+        constants.put("MAX", "20");
         options.set(OptionsModelChecker.CONST, constants);
         List<String> parameters = new ArrayList<>();
         parameters.add("pK");
@@ -280,10 +290,11 @@ public final class ModelCheckerPRISMModelsTest {
         //options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNumNew.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
+        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
         options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
         options.set(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_BITS, "16");
-        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterJson.IDENTIFIER);
+        options.set(OptionsParam.PARAM_DAG_EXPORTER, ExporterGraphviz.IDENTIFIER);
         
         options.set(OptionsParam.PARAM_ELIMINATION_SELF_LOOP_METHOD, NodeEliminator.WeighterMethod.SELF_LOOP);
         Model model = loadModel(options, ModelNames.BRP);
@@ -363,6 +374,7 @@ public final class ModelCheckerPRISMModelsTest {
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNodeNumbersDescending.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
 
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
         options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);
@@ -372,7 +384,7 @@ public final class ModelCheckerPRISMModelsTest {
 
         
         options.set(OptionsParam.PARAM_ELIMINATION_SELF_LOOP_METHOD, NodeEliminator.WeighterMethod.SELF_LOOP);
-        Model model = loadModel(options, String.format(ModelNames.POLLING, 9));
+        Model model = loadModel(options, String.format(ModelNames.POLLING, 6));
         processAfterModelLoading(options);
         Value result;
         result = TestHelper.computeResult(model, "S=? [ s1=0 ] ");
@@ -387,7 +399,7 @@ public final class ModelCheckerPRISMModelsTest {
         Options options = preparePARAMOptions();
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         Map<String,String> constants = new HashMap<>();
-        constants.put("n", "4");
+        constants.put("n", "6");
         options.set(OptionsModelChecker.CONST, constants);
         List<String> parameters = new ArrayList<>();
         parameters.add("mr");
@@ -400,7 +412,8 @@ public final class ModelCheckerPRISMModelsTest {
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNumNew.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderRandom.IDENTIFIER);
 //        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderMinProdPredSucc.IDENTIFIER);
-        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNodeNumbersDescending.IDENTIFIER);
+//        options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderNodeNumbersDescending.IDENTIFIER);
+      options.set(OptionsParam.PARAM_ELIMINATION_ORDER, EliminationOrderSameStructure.IDENTIFIER);
 
         options.set(OptionsParam.PARAM_PARAMETER, parameters);
         options.set(OptionsParam.PARAM_FUNCTION_TYPE, TypeDag.IDENTIFIER);

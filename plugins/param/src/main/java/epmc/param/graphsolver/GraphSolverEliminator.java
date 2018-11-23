@@ -27,7 +27,6 @@ import epmc.param.graph.MutableGraph;
 import epmc.param.graph.MutableNodeProperty;
 import epmc.param.graphsolver.eliminationorder.EliminationOrder;
 import epmc.param.options.OptionsParam;
-import epmc.param.value.TypeFunction;
 import epmc.param.value.TypeStatistics;
 import epmc.util.BitSet;
 import epmc.util.RunningInfo;

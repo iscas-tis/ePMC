@@ -51,11 +51,11 @@ import epmc.value.ValueBoolean;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class AutomatonMaps {
-    private final Map<AutomatonStateUtil,AutomatonStateUtil> states = new HashMap<>();
-    private final List<AutomatonStateUtil> numberToState = new ArrayList<>();
-    private final List<AutomatonLabelUtil> numberToLabel = new ArrayList<>();
-    private final Map<AutomatonLabelUtil,AutomatonLabelUtil> labels = new HashMap<>();
+public final class AutomatonMaps <S extends AutomatonStateUtil, L extends AutomatonLabelUtil> {
+    private final Map<S,S> states = new HashMap<>();
+    private final List<S> numberToState = new ArrayList<>();
+    private final List<L> numberToLabel = new ArrayList<>();
+    private final Map<L,L> labels = new HashMap<>();
     private int[] successors;
     private int successorsPerEntry;
 
@@ -63,23 +63,21 @@ public final class AutomatonMaps {
         return states.size();
     }
 
-    public <T extends AutomatonStateUtil> T makeUnique(T state) {
+    public S makeUnique(S state) {
         assert state != null;
-        @SuppressWarnings("unchecked")
-        T result = (T) states.get(state);
+        S result = states.get(state);
         if (result == null) {
             state.setNumber(states.size());
-            states.put(state,state);
+            states.put(state, state);
             result = state;
             numberToState.add(state);
         }
         return result;
     }
 
-    public <T extends AutomatonLabelUtil> T makeUnique(T label) {
+    public L makeUnique(L label) {
         assert label != null;
-        @SuppressWarnings("unchecked")
-        T result = (T) labels.get(label);
+        L result = labels.get(label);
         if (result == null) {
             label.setNumber(labels.size());
             labels.put(label,label);
@@ -89,12 +87,12 @@ public final class AutomatonMaps {
         return result;
     }
 
-    public AutomatonStateUtil numberToState(int number) {
+    public S numberToState(int number) {
         assert number >= 0;
         return numberToState.get(number);
     }
 
-    public AutomatonLabelUtil numberToLabel(int number) {
+    public L numberToLabel(int number) {
         assert number >= 0;
         return numberToLabel.get(number);
     }

@@ -30,7 +30,7 @@ import java.util.Set;
 
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonExporter;
-import epmc.automaton.AutomatonExporterImpl;
+import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.AutomatonLabelUtil;
 import epmc.automaton.AutomatonMaps;
 import epmc.automaton.AutomatonStateUtil;
@@ -303,7 +303,7 @@ public final class AutomatonKretinskyProduct implements AutomatonGeneralisedRabi
 
     @Override
     public String toString() {
-        AutomatonExporter exporter = new AutomatonExporterImpl();
+        AutomatonExporter exporter = new AutomatonExporterDot();
         exporter.setAutomaton(this);
         return exporter.toString();
     }
