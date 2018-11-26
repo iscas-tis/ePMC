@@ -244,14 +244,14 @@ public final class Util {
      * @param tester predicate to test class instances against.
      * @return class instance from the map fulfilling criterion or {@code null}
      */
-    public static <T> T getInstance(Map<String,? extends Class<T>> map, Predicate<T> tester) {
+    public static <T> T getInstance(Map<String,Class<? extends T>> map, Predicate<T> tester) {
         assert map != null;
         assert tester != null;
-        for (Entry<String, ? extends Class<T>> entry : map.entrySet()) {
+        for (Entry<String, Class<? extends T>> entry : map.entrySet()) {
             assert entry.getKey() != null;
             assert entry.getValue() != null;
         }
-        for (Class<T> entry : map.values()) {
+        for (Class<? extends T> entry : map.values()) {
             T instance = getInstance(entry);
             if (tester.test(instance)) {
                 return instance;
