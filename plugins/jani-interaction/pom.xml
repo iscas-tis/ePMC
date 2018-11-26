@@ -43,24 +43,13 @@
 	</executions>
       </plugin>
       <plugin>
-        <groupId>com.github.wvengen</groupId>
-        <artifactId>proguard-maven-plugin</artifactId>
-        <configuration combine.self="append">
-	  <options combine.children="append">
-	    <option>-dontwarn javax.**</option>
-	    <option>-dontwarn org.ibex.nestedvm.**</option>
-            <option>-dontwarn org.sqlite.**</option>
-	  </options>
-          <assembly>
-            <inclusions>
-	      <inclusion>
-		<groupId>sqlite</groupId>
-		<artifactId>sqlite</artifactId>
-	      </inclusion>
-            </inclusions>
-	  </assembly>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+	  <descriptors combine.self="override">
+            <descriptor>assembly.xml</descriptor>
+          </descriptors>
         </configuration>
-      </plugin>                 
+      </plugin>
     </plugins>
   </build>
   <dependencies>
