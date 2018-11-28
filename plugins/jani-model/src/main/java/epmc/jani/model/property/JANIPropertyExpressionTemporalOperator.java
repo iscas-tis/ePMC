@@ -166,7 +166,9 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
             for (JsonValue rew : rewards) {
                 JANIPropertyRewardBound rb = new JANIPropertyRewardBound();
                 rb.setIdentifiers(validIdentifiers);
-                stepBounds.setForProperty(forProperty);
+                if (stepBounds != null) {
+                    stepBounds.setForProperty(forProperty);
+                }
                 rb.setModel(model);
                 rb.parse(rew);
                 this.rewardBounds.add(rb);
