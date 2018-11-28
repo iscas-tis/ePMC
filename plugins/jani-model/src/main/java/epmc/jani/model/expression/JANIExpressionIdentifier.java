@@ -79,7 +79,7 @@ public final class JANIExpressionIdentifier implements JANIExpression {
     @Override 
     public JANIExpression parseAsJANIExpression(JsonValue value) {
         assert model != null;
-        assert validIdentifiers != null;
+//        assert validIdentifiers != null;
         assert value != null;
         resetFields();
         if (!(value instanceof JsonString)) {
@@ -102,7 +102,7 @@ public final class JANIExpressionIdentifier implements JANIExpression {
     public JsonValue generate() {
         assert initialized;
         assert model != null;
-        assert validIdentifiers != null;
+//        assert validIdentifiers != null;
         return UtilJSON.toStringValue(identifier.getName());
     }
 

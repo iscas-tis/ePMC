@@ -20,6 +20,8 @@
 
 package epmc.jani.model;
 
+import java.util.Map;
+
 import javax.json.JsonValue;
 
 /**
@@ -28,6 +30,9 @@ import javax.json.JsonValue;
  * @author Ernst Moritz Hahn
  */
 public interface JANINode {
+    default void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+    }
+
     /**
      * Set model which this node belongs to.
      * For some nodes implementing this interface, it might be necessary to call

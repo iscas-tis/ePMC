@@ -274,16 +274,16 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         }
         modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS);
         constants = computeConstants();
-        variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES);
+        Map<String, JANIIdentifier> validIdentifiers = new LinkedHashMap<>();
+        if (modelConstants != null) {
+            validIdentifiers.putAll(modelConstants.getConstants());
+        }
+        variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES, modelConstants.getConstants());
         ensure(variables == null || constants == null
                 || Collections.disjoint(constants.keySet(), variables.keySet()),
                 ProblemsJANIParser.JANI_PARSER_DISJOINT_GLOBALS_CONSTANTS);
-        Map<String, JANIIdentifier> validIdentifiers = new LinkedHashMap<>();
         if (variables != null) {
             validIdentifiers.putAll(variables);
-        }
-        if (modelConstants != null) {
-            validIdentifiers.putAll(modelConstants.getConstants());
         }
         restrictInitial = UtilModelParser.parseOptional(this, () -> {
             InitialStates initialStates = new InitialStates();

@@ -49,8 +49,8 @@ public final class TimeProgress implements JANINode {
         return model;
     }
 
-    public void setIdentifiers(Map<String, JANIIdentifier> identifiers) {
-        this.identifiers = identifiers;
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.identifiers = (Map<String, JANIIdentifier>) identifiers;
     }
 
     @Override

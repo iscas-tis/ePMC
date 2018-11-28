@@ -21,6 +21,7 @@
 package epmc.jani.model;
 
 import java.util.Collections;
+import java.util.Map;
 
 import javax.json.Json;
 import javax.json.JsonObject;
@@ -78,6 +79,11 @@ public final class Variable implements JANINode, JANIIdentifier {
     private boolean transientVar;
     /** Comment for this automaton. */
     private String comment;
+    private Map<String, ? extends JANIIdentifier> identifiers;
+
+    public void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
+        this.identifiers = identifiers;
+    }
 
     public void setAutomaton(Automaton automaton) {
         assert this.automaton == null;
@@ -125,6 +131,7 @@ public final class Variable implements JANINode, JANIIdentifier {
         type.parse(typeV);
         if (object.containsKey(INITIAL_VALUE)) {
             ExpressionParser parser = new ExpressionParser(model, Collections.emptyMap(), false);
+            parser.setIdentifiers(identifiers);
             initialValue = parser.parseAsJANIExpression(object.get(INITIAL_VALUE));
         } else {
             initialValue = null;
