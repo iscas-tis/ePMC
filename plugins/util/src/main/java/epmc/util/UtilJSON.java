@@ -253,7 +253,8 @@ public final class UtilJSON {
         for (String choice : compositions) {
             assert choice != null;
         }
-        ensure(compositions.contains(composition), ProblemsJSON.JSON_VALUE_ONE_OF, compositions);
+        ensure(compositions.contains(composition),
+                ProblemsJSON.JSON_VALUE_ONE_OF, composition, compositions);
     }
 
     public static void ensureIdentifier(String identifier) {
