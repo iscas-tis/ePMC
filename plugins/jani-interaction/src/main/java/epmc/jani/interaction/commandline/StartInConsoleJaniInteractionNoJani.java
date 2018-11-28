@@ -22,7 +22,6 @@ import epmc.plugin.PluginInterface;
 import epmc.plugin.StartInConsole;
 import epmc.plugin.UtilPlugin;
 import epmc.util.Util;
-import epmc.value.ContextValue;
 
 public final class StartInConsoleJaniInteractionNoJani implements StartInConsole {
     private final static String IDENTIFIER = "start-in-console-jani-interaction";
@@ -168,7 +167,7 @@ public final class StartInConsoleJaniInteractionNoJani implements StartInConsole
             }
         }
         System.err.println(formattedMessage);
-        if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
+        if (options != null && options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
             e.printStackTrace();
         }
         System.exit(1);

@@ -68,7 +68,6 @@ public final class UtilOptionsEPMC {
         assert options != null;
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
         OptionTypeStringList typeFileList = new OptionTypeStringList(FILE);
-
         options.addOption().setIdentifier(OptionsEPMC.MODEL_INPUT_FILES)
             .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PROPERTY_INPUT_FILES)

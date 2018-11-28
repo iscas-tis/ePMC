@@ -34,7 +34,7 @@ import java.util.Map.Entry;
 import com.google.common.base.CaseFormat;
 
 import epmc.error.EPMCException;
-import epmc.error.UtilError;
+import static epmc.error.UtilError.ensure;
 
 import java.util.ResourceBundle;
 
@@ -269,7 +269,7 @@ public final class Options implements Serializable, Cloneable {
             return;
         }
         String commandName = args[0];
-        UtilError.ensure(commands.containsKey(commandName), ProblemsOptions.OPTIONS_COMMAND_NOT_VALID, args[0]);
+        ensure(commands.containsKey(commandName), ProblemsOptions.OPTIONS_COMMAND_NOT_VALID, args[0]);
         options.get(Options.COMMAND).set(commandName);
 
         int argNr = 1;
@@ -279,15 +279,15 @@ public final class Options implements Serializable, Cloneable {
         while (argNr < args.length) {
             option = null;
             String arg = args[argNr];
-            UtilError.ensure(!arg.equals(OPTION_PREFIX), ProblemsOptions.OPTIONS_PROGRAM_OPTION_NOT_VALID, arg);
+            ensure(!arg.equals(OPTION_PREFIX), ProblemsOptions.OPTIONS_PROGRAM_OPTION_NOT_VALID, arg);
             if (arg.length() >= 2 && arg.substring(0, 2).equals(OPTION_PREFIX)) {
                 option = arg.substring(2, arg.length());
             }
-            UtilError.ensure(option == null || options.containsKey(option),
+            ensure(option == null || options.containsKey(option),
                     ProblemsOptions.OPTIONS_PROGRAM_OPTION_NOT_VALID, option);
-            UtilError.ensure(lastOption == null || option == null, ProblemsOptions.OPTIONS_NO_VALUE_FOR_OPTION,
+            ensure(lastOption == null || option == null, ProblemsOptions.OPTIONS_NO_VALUE_FOR_OPTION,
                     lastOption);
-            UtilError.ensure(currentOption != null || option != null, ProblemsOptions.OPTIONS_NO_OPTION_FOR_VALUE, arg);
+            ensure(currentOption != null || option != null, ProblemsOptions.OPTIONS_NO_OPTION_FOR_VALUE, arg);
             if (option == null) {
                 String value = arg;
                 try {
@@ -310,7 +310,7 @@ public final class Options implements Serializable, Cloneable {
             }
             argNr++;
         }
-        UtilError.ensure(lastOption == null, ProblemsOptions.OPTIONS_NO_VALUE_FOR_OPTION, lastOption);
+        ensure(lastOption == null, ProblemsOptions.OPTIONS_NO_VALUE_FOR_OPTION, lastOption);
     }
 
     /**

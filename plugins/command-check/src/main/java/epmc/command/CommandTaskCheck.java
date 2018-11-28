@@ -90,7 +90,7 @@ public class CommandTaskCheck implements CommandTask {
                 MessageFormat formatter = new MessageFormat(message);
                 formatter.applyPattern(message);
                 resultString = formatter.format(e.getArguments());
-                if (options == null || options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
+                if (options != null && options.getBoolean(OptionsEPMC.PRINT_STACKTRACE)) {
                     e.printStackTrace();
                 }
             } else {
