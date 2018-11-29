@@ -31,6 +31,8 @@ import epmc.graph.CommonProperties;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsStochastic;
 import epmc.jani.model.Action;
+import epmc.jani.model.Automaton;
+import epmc.jani.model.Edge;
 import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.component.ComponentSynchronisationVectors;
@@ -131,14 +133,16 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         label = new PropertyEdgeAction(explorer);
         twoLayer = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics())
                 && SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
-        List<SynchronisationVectorSync> syncVectors = componentSynchronisationVectors.getSyncs();
+        List<SynchronisationVectorSync> syncVectors = new ArrayList<>();
+        syncVectors.addAll(componentSynchronisationVectors.getSyncs());
+        Map<Action, Integer> actionMap = UtilExplorer.computeActionToInteger(explorer.getModel());
+        syncVectors.addAll(computeSilentVectors(actionMap));
         numVectors = syncVectors.size();
         vectorSizes = new int[syncVectors.size()];
         vectorResult = new int[syncVectors.size()];
         vectorActions = new int[syncVectors.size()][];
         vectorAutomata = new int[syncVectors.size()][];
         int vecNr = 0;
-        Map<Action, Integer> actionMap = UtilExplorer.computeActionToInteger(explorer.getModel());
         for (SynchronisationVectorSync syncVec : syncVectors) {
             List<Action> sync = syncVec.getSynchronise();
             int syncSize = 0;
@@ -172,6 +176,41 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         weight = new PropertyEdgeGeneral(explorer, TypeWeightTransition.get());
         isState = new boolean[automata.length];
         multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeWeightTransition.get(), TypeWeightTransition.get());
+    }
+
+    private List<SynchronisationVectorSync> computeSilentVectors(Map<Action, Integer> actionMap) {
+        Action silentAction = componentSynchronisationVectors.getModel().getSilentAction();
+        int silentActionNr = actionMap.get(silentAction);
+        List<SynchronisationVectorSync> result = new ArrayList<>();
+        List<SynchronisationVectorElement> elements = componentSynchronisationVectors.getElements();
+        for (int elementNr = 0; elementNr < elements.size(); elementNr++) {
+            SynchronisationVectorElement element = elements.get(elementNr);
+            Automaton automaton = element.getAutomaton();
+            boolean automatonHasSilentAction = false;
+            for (Edge edge : automaton.getEdges()) {
+                int edgeActionNr = actionMap.get(edge.getActionOrSilent());
+                if (silentActionNr == edgeActionNr) {
+                    automatonHasSilentAction = true;
+                    break;
+                }
+            }
+            if (!automatonHasSilentAction) {
+                continue;
+            }
+            SynchronisationVectorSync sync = new SynchronisationVectorSync();
+            sync.setResult(silentAction);
+            List<Action> syncList = new ArrayList<>();
+            for (int i = 0; i < elements.size(); i++) {
+                syncList.add(null);
+            }
+            syncList.set(elementNr, silentAction);
+            sync.setSynchronise(syncList);
+            result.add(sync);
+        }
+//        List<SynchronisationVectorSync> result = new ArrayList<>();
+//        explorer.getModel().getAutomata()
+        // TODO Auto-generated method stub
+        return result;
     }
 
     @Override

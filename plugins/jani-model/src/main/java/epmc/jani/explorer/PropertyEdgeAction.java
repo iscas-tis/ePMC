@@ -100,4 +100,9 @@ public final class PropertyEdgeAction implements PropertyEdge {
         int[] newValues = Arrays.copyOf(values, newLength);
         values = newValues;
     }
+    
+    @Override
+    public String toString() {
+        return actionToNumber.toString();
+    }
 }

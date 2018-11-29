@@ -119,9 +119,9 @@ public final class GraphBuilderExplorer {
         Semantics semantics = ValueObject.as(explorer.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
         boolean nondet = semantics != null && SemanticsNonDet.isNonDet(semantics);
         Info info = new Info();
-        info.setSleepTime(5);
+        info.setSleepTime(1);
         info.setLog(log);
-        runningInfo.setSleepTime(5000);
+        runningInfo.setSleepTime(1000);
         runningInfo.setInformationSender(info);
         if (nondet) {
             doBuildAlternate(info);

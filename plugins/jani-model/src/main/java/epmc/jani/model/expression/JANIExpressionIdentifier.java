@@ -125,7 +125,7 @@ public final class JANIExpressionIdentifier implements JANIExpression {
     public Expression getExpression() {
         assert initialized;
         assert model != null;
-        assert validIdentifiers != null;
+//        assert validIdentifiers != null;
         return identifier.replacePositional(positional);
     }
 

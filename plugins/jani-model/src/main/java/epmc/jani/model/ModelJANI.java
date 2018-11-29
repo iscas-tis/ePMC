@@ -278,7 +278,8 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         if (modelConstants != null) {
             validIdentifiers.putAll(modelConstants.getConstants());
         }
-        variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES, modelConstants.getConstants());
+
+        variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES);
         ensure(variables == null || constants == null
                 || Collections.disjoint(constants.keySet(), variables.keySet()),
                 ProblemsJANIParser.JANI_PARSER_DISJOINT_GLOBALS_CONSTANTS);
@@ -724,6 +725,14 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         this.modelConstants = modelConstants;
     }
 
+    public Expression replaceConstantsOrNull(Expression expression) {
+        if (expression == null) {
+            return null;
+        }
+        return replaceConstants(expression);
+    }
+
+    
     public Expression replaceConstants(Expression expression) {
         assert expression != null;
         return UtilExpressionStandard.replace(expression, constants);
