@@ -1,6 +1,5 @@
 package epmc.jani.value;
 
-import epmc.jani.explorer.TypeDecision;
 import epmc.operator.Operator;
 import epmc.operator.OperatorSet;
 import epmc.value.OperatorEvaluator;
@@ -41,7 +40,7 @@ public final class OperatorEvaluatorSetLocationLocation implements OperatorEvalu
             if (types.length != 2) {
                 return null;
             }
-            if (!TypeDecision.is(types[0])) {
+            if (!TypeLocation.is(types[0])) {
                 return null;
             }
             if (!TypeLocation.is(types[1])) {

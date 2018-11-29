@@ -29,7 +29,9 @@ import epmc.jani.model.Location;
 import epmc.jani.model.Locations;
 import epmc.value.ContextValue;
 import epmc.value.Type;
+import epmc.value.TypeAlgebra;
 import epmc.value.TypeArray;
+import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeArrayGeneric;
 import epmc.value.TypeEnumerable;
 import epmc.value.TypeNumBitsKnown;
@@ -43,7 +45,7 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
+public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown, TypeAlgebra {
     public static TypeLocation get(Locations locations) {
         assert locations != null;
         TypeLocation type = new TypeLocation(locations);
@@ -70,22 +72,13 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
     /** Set of locations which this type represents. */
     //	private Locations locations;
     /** Map to enumerate locations. */
-    private TObjectIntMap<String> locationToNumber = new TObjectIntHashMap<>();
+    private final TObjectIntMap<String> locationToNumber = new TObjectIntHashMap<>();
     /** Maps a number to corresponding location. */
-    private String[] numberToLocation;
-    private List<String> locations;
+    private final String[] numberToLocation;
+    private final List<String> locations;
 
     TypeLocation(Locations locations) {
         this(locationsToStringList(locations));
-        assert locations != null;
-        this.numberToLocation = new String[locations.size()];
-        int locNr = 0;
-        for (Location location : locations) {
-            locationToNumber.put(location.getName(), locNr);
-            numberToLocation[locNr] = location.getName();
-            locNr++;
-        }
-        numBits = Integer.SIZE - Integer.numberOfLeadingZeros(locations.size() - 1);
     }
 
     /**
@@ -180,7 +173,7 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
     public int getNumber(Location location) {
         assert location != null;
         assert locationToNumber.containsKey(location.getName());
-        return locationToNumber.get(location);
+        return locationToNumber.get(location.getName());
     }
 
     /**
@@ -192,7 +185,7 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
      */
     public boolean contains(Location location) {
         assert location != null;
-        return locationToNumber.containsKey(location);
+        return locationToNumber.containsKey(location.getName());
     }
 
     /**
@@ -225,7 +218,9 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown {
     }
 
     @Override
-    public TypeArray getTypeArray() {
-        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
+    public TypeArrayAlgebra getTypeArray() {
+        // TODO
+        return null;
+//        return ContextValue.get().makeUnique(new TypeArrayGeneric(this));
     }
 }

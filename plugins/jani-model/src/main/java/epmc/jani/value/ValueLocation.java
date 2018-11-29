@@ -22,7 +22,9 @@ package epmc.jani.value;
 
 import epmc.jani.model.Location;
 import epmc.util.BitStream;
+import epmc.value.TypeAlgebra;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 import epmc.value.ValueBitStoreable;
 import epmc.value.ValueEnumerable;
 import epmc.value.ValueNumBitsKnown;
@@ -34,7 +36,7 @@ import epmc.value.ValueNumBitsKnown;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, ValueBitStoreable {
+public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, ValueBitStoreable, ValueAlgebra {
     /** String used in the {@link #toString()} method. */
     private final static String LOCATION = "location:";
 
@@ -145,7 +147,7 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
      */
     public void set(Location location) {
         assert location != null;
-        assert type.contains(location);
+        assert type.contains(location) : location + " " + type;
         locationNumber = type.getNumber(location);
     }
 
@@ -168,5 +170,9 @@ public final class ValueLocation implements ValueEnumerable, ValueNumBitsKnown, 
         assert locationNumber >= 0 : locationNumber;
         assert locationNumber < type.getNumLocations();
         this.locationNumber = number;
+    }
+
+    public void set(int value) {
+        locationNumber = value;
     }
 }

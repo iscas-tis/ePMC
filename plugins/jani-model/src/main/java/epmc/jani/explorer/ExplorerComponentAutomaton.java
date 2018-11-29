@@ -30,6 +30,7 @@ import java.util.Map.Entry;
 
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorCache;
+import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
@@ -50,6 +51,7 @@ import epmc.jani.model.component.Component;
 import epmc.jani.model.component.ComponentAutomaton;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.value.TypeLocation;
+import epmc.jani.value.ValueLocation;
 import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorIsZero;
 import epmc.operator.OperatorMultiply;
@@ -74,7 +76,7 @@ import gnu.trove.map.hash.TObjectIntHashMap;
  * @author Ernst Moritz Hahn
  */
 public final class ExplorerComponentAutomaton implements ExplorerComponent {
-    private final static class ExpressionToTypeAutomaton implements ExpressionToType {
+    private final class ExpressionToTypeAutomaton implements ExpressionToType {
         private final Map<Expression,Variable> variables = new LinkedHashMap<>();
 
         private ExpressionToTypeAutomaton(Collection<Variable> variables) {
@@ -91,6 +93,13 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         public Type getType(Expression expression) {
             assert expression != null;
             Variable variable = variables.get(expression);
+            if (variable == null && ExpressionIdentifierStandard.is(expression)) {
+                expression = new ExpressionIdentifierStandard.Builder()
+                        .setName(ExpressionIdentifierStandard.as(expression).getName())
+                        .setScope(componentAutomaton.getAutomaton())
+                        .build();
+                variable = variables.get(expression);
+            }
             if (variable == null) {
                 return null;
             }
@@ -459,7 +468,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                     int varNr = variableToNumber.get(entry.getKey());
                     initialNode.setVariable(varNr, entry.getValue());
                 }
-                initialNode.unmark();
+//                initialNode.unmark();
                 result.add(initialNode);
             }
         }
@@ -485,7 +494,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         if (locationVarNr == -1) {
             location = 0;
         } else {
-            location = ValueInteger.as(nodeValues[locationVarNr]).getInt();
+            location = ValueLocation.as(nodeValues[locationVarNr]).getValueNumber();
         }
         locationEvaluators[location].apply(node, node);
         EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];

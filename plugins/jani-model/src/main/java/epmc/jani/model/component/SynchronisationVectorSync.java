@@ -34,6 +34,7 @@ import javax.json.JsonValue.ValueType;
 import epmc.jani.model.Action;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.UtilModelParser;
 import epmc.util.UtilJSON;
 
 public final class SynchronisationVectorSync implements JANINode {
@@ -120,4 +121,8 @@ public final class SynchronisationVectorSync implements JANINode {
         return comment;
     }
 
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
+    }
 }

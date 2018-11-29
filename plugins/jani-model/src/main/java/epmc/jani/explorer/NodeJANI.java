@@ -28,6 +28,8 @@ import java.util.List;
 
 import epmc.expression.Expression;
 import epmc.graph.explorer.ExplorerNode;
+import epmc.jani.model.Location;
+import epmc.jani.value.ValueLocation;
 import epmc.operator.OperatorSet;
 import epmc.util.BitStream;
 import epmc.value.ContextValue;
@@ -254,6 +256,20 @@ public final class NodeJANI implements ExplorerNode {
             return false;
         }
         ValueObject.as(values[variable]).set(value);
+        variablesSet[numSet] = variable;
+        variablesSetMarks[variable] = true;
+        numSet++;
+        return true;
+    }
+
+    public boolean setVariable(int variable, Location value) {
+        assert variable >= 0;
+        assert variable < values.length;
+        assert value != null;
+        if (variablesSetMarks[variable]) {
+            return false;
+        }
+        ValueLocation.as(values[variable]).set(value);
         variablesSet[numSet] = variable;
         variablesSetMarks[variable] = true;
         numSet++;
