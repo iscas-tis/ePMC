@@ -56,6 +56,7 @@ import javax.json.stream.JsonParser.Event;
 
 import epmc.error.EPMCException;
 import epmc.error.Positional;
+import epmc.error.Problem;
 
 // TODO documentation
 // TODO reorder methods according to category (e.g. ensure, checked conversion)
@@ -253,8 +254,17 @@ public final class UtilJSON {
         for (String choice : compositions) {
             assert choice != null;
         }
+        ensureOneOf(composition, compositions, ProblemsJSON.JSON_VALUE_ONE_OF);
+    }
+
+    public static void ensureOneOf(String composition, Set<String> compositions, Problem problem) {
+        assert composition != null;
+        assert compositions != null;
+        for (String choice : compositions) {
+            assert choice != null;
+        }
         ensure(compositions.contains(composition),
-                ProblemsJSON.JSON_VALUE_ONE_OF, composition, compositions);
+                problem, composition, compositions);
     }
 
     public static void ensureIdentifier(String identifier) {
@@ -376,7 +386,7 @@ public final class UtilJSON {
         return result;
     }
 
-    public static <V> V toOneOf(JsonValue value, Map<String,V> map) {
+    public static <V> V toOneOf(JsonValue value, Map<String,V> map, Problem problem) {
         assert value != null;
         assert map != null;
         for (Entry<String, ?> entry : map.entrySet()) {
@@ -384,8 +394,18 @@ public final class UtilJSON {
             assert entry.getValue() != null;
         }
         UtilJSON.ensureString(value);
-        UtilJSON.ensureOneOf(((JsonString) value).getString(), map.keySet());
+        UtilJSON.ensureOneOf(((JsonString) value).getString(), map.keySet(), problem);
         return map.get(((JsonString) value).getString());
+    }
+
+    public static <V> V toOneOf(JsonValue value, Map<String,V> map) {
+        assert value != null;
+        assert map != null;
+        for (Entry<String, ?> entry : map.entrySet()) {
+            assert entry.getKey() != null;
+            assert entry.getValue() != null;
+        }
+        return toOneOf(value, map, ProblemsJSON.JSON_VALUE_ONE_OF);
     }
 
     public static <V> Set<V> toSubsetOf(JsonValue value, Map<String,V> map) {

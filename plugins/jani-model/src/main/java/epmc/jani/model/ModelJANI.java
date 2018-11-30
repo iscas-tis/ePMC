@@ -437,7 +437,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
                 Options.get().get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         for (JsonValue identifier : array) {
             Class<ModelExtension> extension =
-                    UtilJSON.toOneOf(identifier, modelExtensions);
+                    UtilJSON.toOneOf(identifier, modelExtensions, ProblemsJANIParser.JANI_PARSER_UNSUPPORTED_FEATURE);
             ModelExtension instance = Util.getInstance(extension);
             instance.setModel(this);
             this.modelExtensions.add(instance);

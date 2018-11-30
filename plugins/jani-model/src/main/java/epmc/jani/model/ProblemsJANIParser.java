@@ -64,6 +64,8 @@ public final class ProblemsJANIParser {
     public static final Problem JANI_PARSER_AUTOMATON_VARIABLES_INITIAL_STATES = newProblem("jani-parser-automaton-variables-initial-states");
     /** Automaton variables should be present if and only if initial states are present. */
     public static final Problem JANI_PARSER_COMPOSITION_DIFFERENT_SIZES = newProblem("jani-parser-composition-different-sizes");
+    /** Feature (extension) is not supported. */
+    public static final Problem JANI_PARSER_UNSUPPORTED_FEATURE = newProblem("jani-parser-unsupported-feature");
 
     /**
      * Create new problem object using plugin resource file.
