@@ -173,9 +173,9 @@ public final class ModelChecker implements Closeable {
         if (model.getPropertyList() != null) {
             for (RawProperty property : model.getPropertyList().getRawProperties()) {
                 String propString;
-                propString = property.getDefinition();
+                propString = property.getName();
                 if (propString == null) {
-                    propString = property.getName();
+                    propString = property.getDefinition();
                 }
                 getLog().send(MessagesModelChecker.ANALYSING_PROPERTY, propString);
                 Expression expression = model.getPropertyList().getParsedProperty(property);

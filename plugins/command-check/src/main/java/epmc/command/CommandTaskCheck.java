@@ -77,7 +77,10 @@ public class CommandTaskCheck implements CommandTask {
         List<OutputStream> resultOutput = getResultOutputs(options);
         int index = 0;
         for (RawProperty property : log.getProperties()) {
-            String exprString = property.getDefinition();
+            String exprString = property.getName();
+            if (exprString == null) {
+                exprString = property.getDefinition();
+            }
             Object propResult = log.get(property);
             if (propResult == null) {
                 index++;
