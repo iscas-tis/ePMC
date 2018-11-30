@@ -145,7 +145,7 @@ public final class PropertyPRISM implements Property {
             int nameEnd = line.indexOf(QUOT_C, 1);
             name = line.substring(1, nameEnd);
             int colonPlace = line.indexOf(COLON_C, nameEnd);
-            line = line.substring(colonPlace);
+            line = line.substring(colonPlace + 1);
             line = line.trim();
         }
         property.setName(name);
