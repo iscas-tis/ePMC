@@ -45,6 +45,8 @@ import epmc.plugin.UtilPlugin;
 public final class UtilOptionsEPMC {
     /** User-readable string indicating that we want to have filename there. */
     private final static String FILE = "file";
+    /** User-readable string indicating that we want to have property name there. */
+    private final static String NAME = "name";
 
     /**
      * Create new {@link Options} with EPMC-specific options.
@@ -72,6 +74,9 @@ public final class UtilOptionsEPMC {
             .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PROPERTY_INPUT_FILES)
             .setType(typeFileList).setCommandLine().build();
+        OptionTypeStringList typeStringList = new OptionTypeStringList(NAME);
+        options.addOption().setIdentifier(OptionsEPMC.PROPERTY_INPUT_NAMES)
+        .setType(typeStringList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.RESULT_OUTPUT_FILES)
             .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PRINT_STACKTRACE)

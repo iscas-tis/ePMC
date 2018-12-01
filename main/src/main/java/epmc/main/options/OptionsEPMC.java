@@ -35,6 +35,8 @@ public enum OptionsEPMC {
     MODEL_INPUT_FILES,
     /** {@link String} {@link List} of property input files */
     PROPERTY_INPUT_FILES,
+    /** {@link String} {@link List} of property input names */
+    PROPERTY_INPUT_NAMES,
     /** whether to print stack trace if user exception thrown */
     PRINT_STACKTRACE,
     /** {@link Map} from command {@link String} to available command {@link Class} */
