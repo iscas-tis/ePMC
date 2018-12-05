@@ -663,7 +663,6 @@ public final class PRISM2JANIConverter {
             Automaton automaton = moduleToAutomaton(moduleCommands, actions, globalVariables);
             automaton.setNumber(number);
             assert automaton != null;
-            modelJANI.getAutomata().addAutomaton(automaton);
             automata.addAutomaton(automaton);
             number++;
         }

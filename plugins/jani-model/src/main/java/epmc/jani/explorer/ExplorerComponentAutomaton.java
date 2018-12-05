@@ -30,7 +30,6 @@ import java.util.Map.Entry;
 
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorCache;
-import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
@@ -111,6 +110,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         }
     }
 
+    private EvaluatorCache evaluatorCache;
     /** Name of variable denoting location of automaton. */
     private final static String LOCATION_IDENTIFIER = "%locId";
     private final static String EDGE_IDENTIFIER = "%edge";
@@ -211,6 +211,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     public void build() {
         assert explorer != null;
         assert component != null;
+        evaluatorCache = explorer.getEvaluatorCache();
         componentAutomaton = (ComponentAutomaton) component;
         nonDet = SemanticsNonDet.isNonDet(explorer.getModel().getSemantics());
         stochastic = SemanticsStochastic.isStochastic(explorer.getModel().getSemantics());
@@ -333,7 +334,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
             edgeEvaluators[locNr] = new EdgeEvaluator[locationsNumEdges[locNr]];
         }
         Arrays.fill(locationsNumEdges, 0);
-        EvaluatorCache evaluatorCache = new EvaluatorCache();
         ExpressionToTypeAutomaton expressionToType = new ExpressionToTypeAutomaton(this.variableToNumber.keySet());
         ContextExpressionSimplifier simplifier = new ContextExpressionSimplifier(expressionToType, evaluatorCache);
         for (Edge edge : edges) {
@@ -359,7 +359,6 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
     private void buildTransientValueEvaluators() {
         locationEvaluators = new AssignmentsEvaluator[automaton.getLocations().size()];
         int index = 0;
-        EvaluatorCache evaluatorCache = new EvaluatorCache();        
         ExpressionToTypeAutomaton expressionToType = new ExpressionToTypeAutomaton(this.variableToNumber.keySet());
         ContextExpressionSimplifier simplifier = new ContextExpressionSimplifier(expressionToType, evaluatorCache);
         for (Location location : automaton.getLocations()) {

@@ -52,6 +52,10 @@ public final class ExplorerExtensionCTMC implements ExplorerExtension {
     @Override
     public void setExplorer(ExplorerJANI explorer) {
         this.explorer = explorer;
+    }
+
+    @Override
+    public void afterSystemCreation() {
         system = explorer.getExplorerSystem();
         player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
         player.set(Player.STOCHASTIC);
@@ -61,7 +65,7 @@ public final class ExplorerExtensionCTMC implements ExplorerExtension {
         systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
         allowMulti = Options.get().getBoolean(OptionsJANICTMC.JANI_CTMC_ALLOW_MULTI_TRANSITION);
     }
-
+    
     @Override
     public ExplorerEdgeProperty getEdgeProperty(Object property) {
         if (property == CommonProperties.WEIGHT) {

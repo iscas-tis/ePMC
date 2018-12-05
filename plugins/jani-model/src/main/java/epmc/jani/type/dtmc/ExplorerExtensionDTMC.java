@@ -72,6 +72,10 @@ public final class ExplorerExtensionDTMC implements ExplorerExtension {
         assert this.explorer == null;
         assert explorer != null;
         this.explorer = explorer;
+    }
+    
+    @Override
+    public void afterSystemCreation() {
         this.system = explorer.getExplorerSystem();
         player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
         player.set(Player.STOCHASTIC);

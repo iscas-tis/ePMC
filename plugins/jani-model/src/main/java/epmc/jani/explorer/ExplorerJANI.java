@@ -31,6 +31,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -58,7 +59,6 @@ import epmc.modelchecker.Log;
 import epmc.modelchecker.Model;
 import epmc.options.Options;
 import epmc.util.Util;
-import epmc.value.EvaluatorCache;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
@@ -165,6 +165,7 @@ public final class ExplorerJANI implements Explorer {
     private final PropertyNodeInitialNodes initNodesProp;
     private final PropertyNodeDeadlock deadlockNodesProp;
     private final PropertyNodeState stateProp;
+    private final EvaluatorCache evaluatorCache = new EvaluatorCache();
 
     private boolean state;
 
@@ -199,10 +200,11 @@ public final class ExplorerJANI implements Explorer {
         this.nonDet = SemanticsNonDet.isNonDet(model.getSemantics());
         prepareGlobalVariables(model);
         buildTransientValues(nodeProperties, edgeProperties);
+        extensions = prepareExtensions(model);
         system = prepareSystem(model);
+        afterSystemCreation();
         initialNodes = computeInitialNodes();
         fixDeadlocks = Options.get().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS);
-        extensions = prepareExtensions(model);
         prepareGraphProperties();
         prepareNodeProperties();
         prepareEdgeProperties();
@@ -211,6 +213,12 @@ public final class ExplorerJANI implements Explorer {
         stateProp = new PropertyNodeState(this);
         this.state = true;
         getLog().send(MessagesJANIExplorer.DONE_BUILDING_EXPLORER);
+    }
+
+    private void afterSystemCreation() {
+        for (ExplorerExtension extension : extensions) {
+            extension.afterSystemCreation();
+        }
     }
 
     private void prepareGraphProperties() {
@@ -353,7 +361,7 @@ public final class ExplorerJANI implements Explorer {
         List<Map<Variable, Value>> enumerated = enumerator.enumerate();
         Collection<NodeJANI> innerNodes = system.getInitialNodes();
         Collection<NodeJANI> result = new ArrayList<>();
-        EvaluatorCache evaluatorCache = new EvaluatorCache();
+        epmc.value.EvaluatorCache evaluatorCache = new epmc.value.EvaluatorCache();
         for (NodeJANI innerNode : innerNodes) {
             NodeJANI node = newNode();
             node.set(innerNode);
@@ -604,5 +612,9 @@ public final class ExplorerJANI implements Explorer {
 
     @Override
     public void close() {
+    }
+    
+    public EvaluatorCache getEvaluatorCache() {
+        return evaluatorCache;
     }
 }

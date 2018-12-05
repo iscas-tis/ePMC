@@ -22,6 +22,11 @@ package epmc.jani.extensions.functions;
 
 import java.util.Map;
 
+import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
+import epmc.expression.standard.OptionsExpressionBasic;
+import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitOperatorUnaryIntegerToInteger;
+import epmc.jani.explorer.ExplorerExtension;
+import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.options.Options;
@@ -46,5 +51,21 @@ public class AfterOptionsCreationJANIFunctions implements AfterOptionsCreation {
         }
         modelExtensions.put(ModelExtensionFunctions.IDENTIFIER,
                 ModelExtensionFunctions.class);
+        
+        Map<String,Class<? extends ExplorerExtension>> explorerExtensions = options.get(OptionsJANIExplorer.JANI_EXPLORER_EXTENSION_CLASS);
+        if (explorerExtensions == null) {
+            explorerExtensions = new OrderedMap<>();
+        }
+        explorerExtensions.put(ExplorerExtensionFunctions.IDENTIFIER, ExplorerExtensionFunctions.class);
+        options.set(OptionsJANIExplorer.JANI_EXPLORER_EXTENSION_CLASS, explorerExtensions);
+        
+        Map<String,Class<? extends EvaluatorExplicit.Builder>> evaluatorsExplicit = options.get(OptionsExpressionBasic.EXPRESSION_EVALUTOR_EXPLICIT_CLASS);
+        if (evaluatorsExplicit == null) {
+            evaluatorsExplicit = new OrderedMap<>(true);            
+        }
+        evaluatorsExplicit.put(EvaluatorExplicitCall.IDENTIFIER, EvaluatorExplicitCall.Builder.class);
+
+        options.set(OptionsExpressionBasic.EXPRESSION_EVALUTOR_EXPLICIT_CLASS, evaluatorsExplicit);
+
     }
 }

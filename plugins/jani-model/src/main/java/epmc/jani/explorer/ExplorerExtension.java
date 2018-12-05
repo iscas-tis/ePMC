@@ -27,10 +27,13 @@ import epmc.value.Value;
 
 public interface ExplorerExtension {
     String getIdentifier();
-
+    
     default void setExplorer(ExplorerJANI explorer) {
     }
 
+    default void afterSystemCreation() {
+    }
+    
     default boolean isUsedGetNodeProperty() {
         return false;
     }

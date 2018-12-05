@@ -51,11 +51,15 @@ public final class ExplorerExtensionMDP implements ExplorerExtension {
 
     @Override
     public void setExplorer(ExplorerJANI explorer) {
+        this.explorer = explorer;
+    }
+    
+    @Override
+    public void afterSystemCreation() {
         player = new PropertyNodeGeneral(explorer, TypeEnum.get(Player.class));
         system = explorer.getExplorerSystem();
         systemState = (PropertyNodeGeneral) system.getNodeProperty(CommonProperties.STATE);
         systemWeight = system.getEdgeProperty(CommonProperties.WEIGHT);
-        this.explorer = explorer;
     }
 
     @Override

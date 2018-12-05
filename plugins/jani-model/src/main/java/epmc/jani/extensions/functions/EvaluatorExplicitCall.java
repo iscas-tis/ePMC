@@ -33,8 +33,6 @@ import epmc.expression.standard.ProblemsExpression;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.expressionevaluator.ExpressionToType;
-import epmc.operator.Operator;
-import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.ProblemsValue;
 import epmc.value.Type;
@@ -93,7 +91,8 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
                     return false;
                 }
             }
-            return true;
+            return false;
+//            return true;
         }
 
         @Override

@@ -89,7 +89,10 @@ public final class AfterOptionsCreationExpressionStandard implements AfterOption
         .setDefault(true)
         .setCommandLine().setGui().build();
 
-        Map<String,Class<? extends EvaluatorExplicit.Builder>> evaluatorsExplicit = new OrderedMap<>(true);
+        Map<String,Class<? extends EvaluatorExplicit.Builder>> evaluatorsExplicit = options.get(OptionsExpressionBasic.EXPRESSION_EVALUTOR_EXPLICIT_CLASS);
+        if (evaluatorsExplicit == null) {
+            evaluatorsExplicit = new OrderedMap<>(true);            
+        }
         evaluatorsExplicit.put(EvaluatorExplicitVariable.IDENTIFIER, EvaluatorExplicitVariable.Builder.class);
         evaluatorsExplicit.put(EvaluatorExplicitOperator.IDENTIFIER, EvaluatorExplicitOperator.Builder.class);
         evaluatorsExplicit.put(EvaluatorExplicitOperatorShortcutNot.IDENTIFIER, EvaluatorExplicitOperatorShortcutNot.Builder.class);
@@ -105,7 +108,6 @@ public final class AfterOptionsCreationExpressionStandard implements AfterOption
         evaluatorsExplicit.put(EvaluatorExplicitOperatorBinaryIntegerToBoolean.IDENTIFIER, EvaluatorExplicitOperatorBinaryIntegerToBoolean.Builder.class);
         evaluatorsExplicit.put(EvaluatorExplicitOperatorUnaryIntegerToInteger.IDENTIFIER, EvaluatorExplicitOperatorUnaryIntegerToInteger.Builder.class);
         options.set(OptionsExpressionBasic.EXPRESSION_EVALUTOR_EXPLICIT_CLASS, evaluatorsExplicit);
-
 
         Map<String,Class<? extends EvaluatorDD>> evaluatorsDD = new OrderedMap<>(true);
         evaluatorsDD.put(EvaluatorDDVariable.IDENTIFIER, EvaluatorDDVariable.class);

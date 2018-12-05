@@ -9,6 +9,9 @@ public final class EvaluatorCache {
     private final Map<EvaluatorCacheEntry,EvaluatorExplicit> map = new HashMap<>();
     private final Map<Object,Object> auxMap = new HashMap<>();
     
+    public EvaluatorCache() {
+    }
+    
     public void put(EvaluatorCacheEntry key,EvaluatorExplicit value) {
         map.put(key, value);
     }
