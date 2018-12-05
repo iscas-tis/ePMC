@@ -112,7 +112,7 @@ public final class Edge implements JANINode {
         destinations.setValidLocations(validLocations);
         destinations.setValidIdentifiers(validIdentifiers);
         UtilModelParser.parse(model, destinations, object, DESTINATIONS);
-        model.parseAfterModelNodeExtensions(this, value);
+        model.parseAfterModelNodeExtensions(this, value, validIdentifiers);
         return this;
     }
 

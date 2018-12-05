@@ -224,7 +224,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         prepareProperties();
         name = componentAutomaton.getAutomaton().getName().intern();
         number = componentAutomaton.getAutomaton().getNumber();
-        actionFromTo = new int[explorer.getModel().getActions().size() + 1 + 1];
+        actionFromTo = new int[explorer.getModel().getActionsOrEmpty().size() + 1 + 1];
         cmp = TypeBoolean.get().newValue();
         isZero = ContextValue.get().getEvaluator(OperatorIsZero.IS_ZERO, TypeWeightTransition.get());
         add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
@@ -380,7 +380,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         ModelJANI model = edges.getModel();
         assert model != null;
         List<List<Edge>> actionToEdges = new ArrayList<>();
-        for (int actNr = 0; actNr < model.getActions().size() + 1; actNr++) {
+        for (int actNr = 0; actNr < model.getActionsOrEmpty().size() + 1; actNr++) {
             actionToEdges.add(new ArrayList<>());
         }
         Map<Action, Integer> map = UtilExplorer.computeActionToInteger(model);

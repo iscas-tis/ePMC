@@ -67,10 +67,10 @@ public final class SynchronisationVectorSync implements JANINode {
             if (sync.getValueType() == ValueType.NULL) {
                 this.synchronise.add(null);
             } else {
-                this.synchronise.add(UtilJSON.toOneOf(sync, model.getActions()));
+                this.synchronise.add(UtilJSON.toOneOf(sync, model.getActionsOrEmpty()));
             }
         }
-        result = UtilJSON.toOneOfOrNullFailInvalidType(object, RESULT, model.getActions());
+        result = UtilJSON.toOneOfOrNullFailInvalidType(object, RESULT, model.getActionsOrEmpty());
         //AT: from 2016-09-21 the result is optional; if omitted, it is the silent action
         //TODO: check if the silent action has to be added to the model
         if (result == null) {

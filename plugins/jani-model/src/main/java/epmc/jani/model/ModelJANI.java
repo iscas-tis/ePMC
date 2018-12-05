@@ -81,6 +81,7 @@ import epmc.modelchecker.Model;
 import epmc.modelchecker.Properties;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.util.OrderedMap;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
 import epmc.value.Type;
@@ -137,7 +138,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
     /** Global variables of this model. */
     private Variables variables;
     /** Automata specification of this model. */
-    private Automata automata = new Automata();
+    private Automata automata;
     ;
     /** System specification of this model. */
     private Component system;
@@ -150,7 +151,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
     /** Known JANI model semantic types. */
     private Map<String, Class<? extends JANIType>> types = new LinkedHashMap<>();
     /** Known JANI general expression types. */
-    private Map<String, Class<? extends JANIExpression>> expressionsClasses = new LinkedHashMap<>();
+    private Map<String, Class<? extends JANIExpression>> expressionsClasses = new OrderedMap<>(true);
     /** Known JANI property expression types. */
     private Map<String, Class<? extends JANIExpression>> propertyClasses = new LinkedHashMap<>();
     /** Metadata of the model. */
@@ -205,15 +206,15 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
      * {@link #prepareStandardProperties()} instead.
      */
     private void prepareStandardExpressions() {
-        expressionsClasses.put(JANIExpressionBool.IDENTIFIER, JANIExpressionBool.class);
-        expressionsClasses.put(JANIExpressionInt.IDENTIFIER, JANIExpressionInt.class);
-        expressionsClasses.put(JANIExpressionReal.IDENTIFIER, JANIExpressionReal.class);
-        expressionsClasses.put(JANIExpressionIdentifier.IDENTIFIER, JANIExpressionIdentifier.class);
+        expressionsClasses.put(JANIExpressionOperatorGeneric.IDENTIFIER, JANIExpressionOperatorGeneric.class);
         expressionsClasses.put(JANIExpressionOperatorIfThenElse.IDENTIFIER, JANIExpressionOperatorIfThenElse.class);
         expressionsClasses.put(JANIExpressionOperatorUnary.IDENTIFIER, JANIExpressionOperatorUnary.class);
         expressionsClasses.put(JANIExpressionOperatorBinary.IDENTIFIER, JANIExpressionOperatorBinary.class);
         expressionsClasses.put(JANIExpressionOperatorConstant.IDENTIFIER, JANIExpressionOperatorConstant.class);
-        expressionsClasses.put(JANIExpressionOperatorGeneric.IDENTIFIER, JANIExpressionOperatorGeneric.class);
+        expressionsClasses.put(JANIExpressionBool.IDENTIFIER, JANIExpressionBool.class);
+        expressionsClasses.put(JANIExpressionInt.IDENTIFIER, JANIExpressionInt.class);
+        expressionsClasses.put(JANIExpressionReal.IDENTIFIER, JANIExpressionReal.class);
+        expressionsClasses.put(JANIExpressionIdentifier.IDENTIFIER, JANIExpressionIdentifier.class);
     }
 
     /**
@@ -261,7 +262,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         parseType(object);
         parseFeatures(object);
 
-        parseBeforeModelNodeExtensions(this, value);
+        parseBeforeModelNodeExtensions(this, value, null);
         name = UtilJSON.getString(object, NAME);
         janiVersion = UtilJSON.getInteger(object, JANI_VERSION);
         ensure(janiVersion == 1, ProblemsJANIParser.JANI_PARSER_VERSION_NUMBER_WRONG,
@@ -269,9 +270,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
         metadata = UtilModelParser.parseOptional(this, Metadata.class, object, METADATA);
         actions = UtilModelParser.parseOptional(this, Actions.class, object, ACTIONS);
-        if (actions == null) {
-            actions = new Actions();
-        }
+
         modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS);
         constants = computeConstants();
         Map<String, JANIIdentifier> validIdentifiers = new LinkedHashMap<>();
@@ -286,31 +285,24 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         if (variables != null) {
             validIdentifiers.putAll(variables);
         }
+
         restrictInitial = UtilModelParser.parseOptional(this, () -> {
             InitialStates initialStates = new InitialStates();
             initialStates = new InitialStates();
             initialStates.setIdentifier(validIdentifiers);
             return initialStates;
         }, object, RESTRICT_INITIAL);
-        // AT: removed the following part as RESTRICT_INITIAL is optional; 
-        // moreover there is no requirement about global variables being present when
-        // RESTRICT_INITIAL is present
-        //    	ensure((variables == null) == (restrictInitial == null),
-        //    			ProblemsJANIParser.JANI_PARSER_GLOBAL_VARIABLES_INITIAL_STATES);
-        properties = UtilModelParser.parseOptional(this,
-                () -> {
+        
+        properties = UtilModelParser.parseOptional(this, () -> {
                     JANIProperties props = new JANIProperties();
                     props.setModel(this);
                     props.setValidIdentifiers(validIdentifiers);
                     return props;
-                },
-                object,
-                PROPERTIES);
-        UtilModelParser.parse(this, automata, object, AUTOMATA);
-        SystemParser system = new SystemParser();
-        UtilModelParser.parse(this, system, object, SYSTEM);
+                }, object, PROPERTIES);
+        automata = UtilModelParser.parse(this, Automata.class, object, AUTOMATA);
+        SystemParser system = UtilModelParser.parse(this, SystemParser.class, object, SYSTEM);
         this.system = system.getSystemComponent();
-        parseAfterModelNodeExtensions(this, value);
+        parseAfterModelNodeExtensions(this, value, validIdentifiers);
         return this;
     }
 
@@ -420,7 +412,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
     private void parseType(JsonObject object) {
         UtilJSON.ensureString(object, TYPE);
-        // TODO support further types
         Class<? extends ModelExtensionSemantics> clazz = UtilJSON.toOneOf(object, TYPE, janiToSemantics);
         semantics = Util.getInstance(clazz);
     }
@@ -437,7 +428,8 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
                 Options.get().get(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS);
         for (JsonValue identifier : array) {
             Class<ModelExtension> extension =
-                    UtilJSON.toOneOf(identifier, modelExtensions, ProblemsJANIParser.JANI_PARSER_UNSUPPORTED_FEATURE);
+                    UtilJSON.toOneOf(identifier, modelExtensions,
+                            ProblemsJANIParser.JANI_PARSER_UNSUPPORTED_FEATURE);
             ModelExtension instance = Util.getInstance(extension);
             instance.setModel(this);
             this.modelExtensions.add(instance);
@@ -639,9 +631,11 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         return silentAction;
     }
 
-    public void parseBeforeModelNodeExtensions(JANINode node, JsonValue value) {
+    public void parseBeforeModelNodeExtensions(JANINode node, JsonValue value,
+            Map<String, JANIIdentifier> identifiers) {
         assert node != null;
         semantics.setNode(node);
+        semantics.setIdentifiers(identifiers);
         semantics.setJsonValue(value);
         semantics.parseBefore();
         if (modelExtensions == null) {
@@ -649,15 +643,18 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         }
         for (ModelExtension extension : modelExtensions) {
             extension.setNode(node);
+            extension.setIdentifiers(identifiers);
             extension.setJsonValue(value);
             extension.parseBefore();
         }
     }
 
-    public void parseAfterModelNodeExtensions(JANINode node, JsonValue value) {
+    public void parseAfterModelNodeExtensions(JANINode node, JsonValue value,
+            Map<String, JANIIdentifier> identifiers) {
         assert node != null;
         assert value != null;
         semantics.setNode(node);
+        semantics.setIdentifiers(identifiers);
         semantics.setJsonValue(value);
         semantics.parseAfter();
         if (modelExtensions == null) {
@@ -665,6 +662,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         }
         for (ModelExtension extension : modelExtensions) {
             extension.setNode(node);
+            extension.setIdentifiers(identifiers);
             extension.setJsonValue(value);
             extension.parseAfter();
         }

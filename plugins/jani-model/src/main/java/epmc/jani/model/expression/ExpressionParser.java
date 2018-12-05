@@ -31,10 +31,12 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.error.EPMCException;
+import epmc.error.UtilError;
 import epmc.expression.Expression;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.ProblemsJANIParser;
 import epmc.util.Util;
 import epmc.util.UtilJSON;
 import epmc.value.Value;
@@ -87,7 +89,8 @@ public final class ExpressionParser implements JANINode {
                 break;
             }
         }
-        assert expression != null : value; // TODO replace by ensure
+        UtilError.ensure(expression != null,
+                ProblemsJANIParser.JANI_PARSER_CANNOT_PARSE_EXPRESSION, value);
         return expression;
     }
 

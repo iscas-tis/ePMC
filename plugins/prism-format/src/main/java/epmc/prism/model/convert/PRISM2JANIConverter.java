@@ -241,7 +241,7 @@ public final class PRISM2JANIConverter {
         extension.setModel(modelJANI);
         modelExtensions.add(extension);
         modelJANI.setModelExtensions(modelExtensions);
-        modelJANI.parseBeforeModelNodeExtensions(modelJANI, null);
+        modelJANI.parseBeforeModelNodeExtensions(modelJANI, null, null);
     }
 
     private void convertPlayers() {

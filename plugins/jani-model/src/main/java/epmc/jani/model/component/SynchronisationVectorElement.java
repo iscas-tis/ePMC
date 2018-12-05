@@ -62,7 +62,7 @@ public final class SynchronisationVectorElement implements JANINode {
         automaton = UtilJSON.toOneOf(object, AUTOMATON, model.getAutomata());
         comment = UtilJSON.getStringOrNull(object, COMMENT);
         if (object.containsKey(INPUT_ENABLE)) {
-            inputEnable = UtilJSON.toSubsetOf(object, INPUT_ENABLE, model.getActions());
+            inputEnable = UtilJSON.toSubsetOf(object, INPUT_ENABLE, model.getActionsOrEmpty());
         }
         return this;
     }

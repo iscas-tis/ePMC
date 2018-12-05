@@ -66,7 +66,9 @@ public final class ProblemsJANIParser {
     public static final Problem JANI_PARSER_COMPOSITION_DIFFERENT_SIZES = newProblem("jani-parser-composition-different-sizes");
     /** Feature (extension) is not supported. */
     public static final Problem JANI_PARSER_UNSUPPORTED_FEATURE = newProblem("jani-parser-unsupported-feature");
-
+    /** Cannot parse given expression. */
+    public static final Problem JANI_PARSER_CANNOT_PARSE_EXPRESSION = newProblem("jani-parser-cannot-parse-expression");
+    
     /**
      * Create new problem object using plugin resource file.
      * The name parameter must not be {@code null}.

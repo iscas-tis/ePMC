@@ -75,6 +75,8 @@ public final class UtilJSON {
 
     /** String with arbitrary content. */
     private final static String ARBITRARY = "arbitrary";
+    /** String with empty content. */
+    private final static String EMPTY = "";
     /** Textual representation of boolean value &quot;true&quot;. */
     private final static String TRUE = "true";
     /** Textual representation of boolean value &quot;false&quot;. */
@@ -85,6 +87,7 @@ public final class UtilJSON {
     private final static JsonValue TRUE_VALUE;
     /** JSON representation of boolean value &quot;false&quot;. */
     private final static JsonValue FALSE_VALUE;
+    
     static {
         JsonObjectBuilder trueValue = Json.createObjectBuilder();
         trueValue.add(ARBITRARY, true);
@@ -668,6 +671,17 @@ public final class UtilJSON {
         }
     }
 
+    public static String getStringOrEmpty(JsonObject object, String name) {
+        assert object != null;
+        assert name != null;
+        try {
+            return getString(object, name);
+        } catch (EPMCException e) {
+            return EMPTY;
+        }
+    }
+
+    
     public static int getInteger(JsonObject object, String name) {
         assert object != null;
         assert name != null;

@@ -18,47 +18,20 @@
 
  *****************************************************************************/
 
-package epmc.jani.model;
+package epmc.jani.extensions.functions;
 
-import java.util.Map;
+import epmc.plugin.BeforeModelCreation;
 
-import javax.json.JsonObjectBuilder;
-import javax.json.JsonValue;
+public final class BeforeModelCreationJANIFunctions implements BeforeModelCreation {
+    /** Identifier of this class. */
+    public final static String IDENTIFIER = "before-model-loading-jani-functions";
 
-/**
- * Extension for JANI models.
- * This interface is used for classes which extend the parsing process of JANI
- * models.
- * 
- * @author Ernst Moritz Hahn
- */
-public interface ModelExtension {
-    String getIdentifier();
-
-    default void setModel(ModelJANI model) {
+    @Override
+    public String getIdentifier() {
+        return IDENTIFIER;
     }
 
-
-    default ModelJANI getModel() {
-        return null;
-    }
-
-    default void setNode(JANINode node) {
-    }
-
-    default void setJsonValue(JsonValue value) {
-    }
-
-    default void setIdentifiers(Map<String, ? extends JANIIdentifier> identifiers) {
-    }
-
-    
-    default void parseBefore() {
-    }
-
-    default void parseAfter() {
-    }
-
-    default void generate(JsonObjectBuilder generate) {
+    @Override
+    public void process() {
     }
 }

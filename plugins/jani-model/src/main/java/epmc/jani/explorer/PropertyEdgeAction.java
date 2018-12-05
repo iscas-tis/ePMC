@@ -42,12 +42,12 @@ public final class PropertyEdgeAction implements PropertyEdge {
     PropertyEdgeAction(ExplorerJANI explorer) {
         assert explorer != null;
         ModelJANI model = explorer.getModel();
-        numberToAction = new Action[model.getActions().size() + 1];
+        numberToAction = new Action[model.getActionsOrEmpty().size() + 1];
         int actionNumber = 0;
         actionToNumber.put(model.getSilentAction(), actionNumber);
         numberToAction[actionNumber] = model.getSilentAction();
         actionNumber++;
-        for (Action action : model.getActions()) {
+        for (Action action : model.getActionsOrEmpty()) {
             actionToNumber.put(action, actionNumber);
             numberToAction[actionNumber] = action;
             actionNumber++;
