@@ -553,7 +553,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
         if (locationVarNr == -1) {
             location = 0;
         } else {
-            location = ValueInteger.as(nodeValues[locationVarNr]).getInt();
+            location = ValueLocation.as(nodeValues[locationVarNr]).getValueNumber();
         }
         EdgeEvaluator[] locationEdgeEvaluators = edgeEvaluators[location];
         if (edge == -1) {

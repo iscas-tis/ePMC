@@ -98,8 +98,8 @@ public final class ExpressionSimplifierOr implements ExpressionSimplifier {
                 .equals(expressionOperator.getOperand2())) {
             return getTrue(expression.getPositional());
         }
-        if (isNot(expressionOperator.getOperand2())
-                && ((ExpressionOperator) expressionOperator.getOperand2()).getOperand2()
+         if (isNot(expressionOperator.getOperand2())
+                && ((ExpressionOperator) expressionOperator.getOperand2()).getOperand1()
                 .equals(expressionOperator.getOperand1())) {
             return getTrue(expression.getPositional());
         }
