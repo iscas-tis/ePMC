@@ -774,6 +774,16 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         return false;
     }
 
+    public List<String> findUndefinedConstants() {
+        ArrayList<String> result = new ArrayList<>();
+        for (Constant constant : getModelConstantsOrEmpty()) {
+            if (constants.get(constant.getIdentifier()) == null) {
+                result.add(constant.getIdentifier().getName());
+            }
+        }
+        return result;
+    }
+    
     public String findSomeUndefinedConstant() {
         for (Constant constant : getModelConstantsOrEmpty()) {
             if (!constants.containsKey(constant.getIdentifier())) {

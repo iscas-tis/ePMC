@@ -50,6 +50,8 @@ public final class ProblemsJANIExplorer {
     public static final Problem JANI_EXPLORER_INITIAL_STATES_BRUTE_FORCE_UNBOUNDED = newProblem("jani-explorer-initial-states-brute-force-unbounded-variables");
     /** A certain constant should be defined for analysis but is not */
     public static final Problem JANI_EXPLORER_UNDEFINED_CONSTANT = newProblem("jani-explorer-undefined-constant");
+    /** There are undefined constants in the model. */
+    public static final Problem JANI_EXPLORER_UNDEFINED_CONSTANTS = newProblem("jani-explorer-undefined-constants");
     
     /**
      * Create new problem object using plugin resource file.

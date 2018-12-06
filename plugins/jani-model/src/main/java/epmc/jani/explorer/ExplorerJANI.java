@@ -193,6 +193,8 @@ public final class ExplorerJANI implements Explorer {
         assert edgeProperties != null;
         // TODO check validity of node properties already here
         getLog().send(MessagesJANIExplorer.START_BUILDING_EXPLORER);
+        ensureNoUndefinedConstants(model);
+        
         this.model = model;
         semantics = new TypeObject.Builder()
                 .setClazz(Semantics.class)
@@ -213,6 +215,17 @@ public final class ExplorerJANI implements Explorer {
         stateProp = new PropertyNodeState(this);
         this.state = true;
         getLog().send(MessagesJANIExplorer.DONE_BUILDING_EXPLORER);
+    }
+
+    private static void ensureNoUndefinedConstants(ModelJANI model) {
+        String undefinedConstantsString = model.findUndefinedConstants().toString();
+        if (model.containsUndefinedConstants()) {
+            undefinedConstantsString = undefinedConstantsString.substring(1, undefinedConstantsString.length() - 1);
+        }
+        ensure(!model.containsUndefinedConstants(),
+                ProblemsJANIExplorer.JANI_EXPLORER_UNDEFINED_CONSTANTS,
+                undefinedConstantsString);
+        
     }
 
     private void afterSystemCreation() {
