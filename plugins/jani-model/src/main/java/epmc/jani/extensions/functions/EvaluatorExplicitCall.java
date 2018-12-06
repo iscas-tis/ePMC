@@ -125,6 +125,8 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
         private final Map<String, JANIIdentifier> parameters;
 
         private ExpressionToTypeCall(ExpressionToType base, Map<String, JANIIdentifier> parameters) {
+            assert base != null;
+            assert parameters != null;
             this.base = base;
             this.parameters = parameters;
         }
@@ -137,7 +139,9 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
             }
             if (ExpressionIdentifierStandard.is(expression)) {
                 ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.as(expression);
-                return parameters.get(identifier.getName()).getType().toType();
+                if (parameters.containsKey(identifier.getName())) {
+                    return parameters.get(identifier.getName()).getType().toType();
+                }
             }
             // TODO Auto-generated method stub
             return null;
