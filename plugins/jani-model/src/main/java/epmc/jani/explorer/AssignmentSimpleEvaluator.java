@@ -23,6 +23,7 @@ package epmc.jani.explorer;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -48,6 +49,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         private Expression[] variables;
         private ExpressionToType expressionToType;
         private ContextExpressionSimplifier simplifier;
+        private EvaluatorCache evaluatorCache;
 
         @Override
         public Builder setAssignment(Assignment assignment) {
@@ -121,10 +123,17 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
         }
         
         @Override
+        public Builder setEvaluatorCache(EvaluatorCache evaluatorCache) {
+            this.evaluatorCache = evaluatorCache;
+            return this;
+        }
+
+        @Override
         public AssignmentSimpleEvaluator build() {
             assert canHandle();
             return new AssignmentSimpleEvaluator(this);
         }
+
     }
 
     private final int variable;
@@ -146,7 +155,7 @@ public final class AssignmentSimpleEvaluator implements AssignmentEvaluator {
 //                assignment.getType(builder.getExpressionToType()).newValue();
         assignment = builder.getSimplifier().simplify(assignment);
 //                UtilExpressionSimplify.simplify(builder.getExpressionToType(), assignment);
-        expression = UtilEvaluatorExplicit.newEvaluator(assignment, builder.getExpressionToType(), variables);
+        expression = UtilEvaluatorExplicit.newEvaluator(null, assignment, variables, builder.evaluatorCache, builder.getExpressionToType());
         set = ContextValue.get().getEvaluator(OperatorSet.SET, expression.getResultValue().getType(), value.getType());
     }
 

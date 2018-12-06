@@ -23,6 +23,7 @@ package epmc.jani.explorer;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
@@ -41,6 +42,8 @@ public interface AssignmentEvaluator {
         Builder setExpressionToType(ExpressionToType expressionToType);
 
         Builder setSimplifier(ContextExpressionSimplifier simplifier);
+
+        Builder setEvaluatorCache(EvaluatorCache evaluatorCache);
         
         boolean canHandle();
 

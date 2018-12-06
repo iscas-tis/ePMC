@@ -20,6 +20,7 @@
 
 package epmc.jani.extensions.functions;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.json.JsonArray;
@@ -27,6 +28,7 @@ import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.jani.model.Automaton;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelExtension;
@@ -40,7 +42,8 @@ public final class ModelExtensionFunctions implements ModelExtension {
     private ModelJANI model;
     private JANINode node;
     private JsonValue value;
-    private JANIFunctions functions;
+    private JANIFunctions modelFunctions;
+    private final Map<Automaton,JANIFunctions> automatonFunctions = new LinkedHashMap<>();
     private Map<String, ? extends JANIIdentifier> identifiers;
 
     @Override
@@ -73,16 +76,31 @@ public final class ModelExtensionFunctions implements ModelExtension {
 
     @Override
     public void parseAfter() {
-        if (!(this.node instanceof ModelJANI)) {
+        if (!(node instanceof ModelJANI)
+                && !(node instanceof Automaton)) {
             return;
         }
         assert value instanceof JsonObject : value;
         JsonObject object = (JsonObject) value;
         JsonArray jsonFunctions = UtilJSON.getArrayObjectOrNull(object, FUNCTIONS);
+        if (jsonFunctions == null) {
+            return;
+        }
+        JANIFunctions functions;
         functions = new JANIFunctions();
         functions.setIdentifiers(identifiers);
         functions.setModel(model);
+        if (node instanceof Automaton) {
+            functions.setAutomaton((Automaton) node);
+        }
         functions.parse(jsonFunctions);
+        if (node instanceof ModelJANI) {
+            modelFunctions = functions;
+        } else if (node instanceof Automaton) {
+            automatonFunctions.put((Automaton) node, functions);
+        } else {
+            assert false;
+        }
     }
     
     @Override
@@ -92,6 +110,20 @@ public final class ModelExtensionFunctions implements ModelExtension {
     
     @Override
     public void generate(JsonObjectBuilder generate) {
-        generate.add(FUNCTIONS, functions.generate());
+        if (node instanceof ModelJANI) {
+            generate.add(FUNCTIONS, modelFunctions.generate());
+        } else if (node instanceof Automaton) {
+            generate.add(FUNCTIONS, automatonFunctions.get(node).generate());
+        } else {
+            assert false;
+        }
+    }
+    
+    public JANIFunctions getModelFunctions() {
+        return modelFunctions;
+    }
+    
+    public Map<Automaton, JANIFunctions> getAutomatonFunctions() {
+        return automatonFunctions;
     }
 }

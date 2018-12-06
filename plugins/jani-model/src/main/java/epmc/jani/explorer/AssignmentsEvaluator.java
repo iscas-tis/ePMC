@@ -3,6 +3,7 @@ package epmc.jani.explorer;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.standard.simplify.ContextExpressionSimplifier;
 import epmc.expressionevaluator.ExpressionToType;
 import epmc.jani.model.Assignment;
@@ -19,6 +20,7 @@ public final class AssignmentsEvaluator {
         private Map<Expression, Expression> autVarToLocal;
         private ExpressionToType expressionToType;
         private ContextExpressionSimplifier simplifier;
+        private EvaluatorCache evaluatorCache;
 
         public Builder setAssignments(Assignments assignments) {
             this.assignments = assignments;
@@ -50,9 +52,15 @@ public final class AssignmentsEvaluator {
             return this;
         }
         
+        public Builder setEvaluatorCache(EvaluatorCache evaluatorCache) {
+            this.evaluatorCache = evaluatorCache;
+            return this;
+        }
+        
         public AssignmentsEvaluator build() {
             return new AssignmentsEvaluator(this);		
         }
+
     }
 
     private final AssignmentEvaluator[] evaluators;
@@ -62,12 +70,12 @@ public final class AssignmentsEvaluator {
         evaluators = new AssignmentEvaluator[builder.assignments.size()];
         int index = 0;
         for (Assignment assignment : builder.assignments) {
-            evaluators[index] = newAssignmentEvaluator(builder.autVarToLocal, builder.variableMap, builder.variables, assignment, builder.expressionToType, builder.simplifier);
+            evaluators[index] = newAssignmentEvaluator(builder.evaluatorCache, builder.autVarToLocal, builder.variableMap, builder.variables, assignment, builder.expressionToType, builder.simplifier);
             index++;
         }
     }
 
-    private static AssignmentEvaluator newAssignmentEvaluator(Map<Expression, Expression> autVarToLocal, Map<Variable, Integer> variableMap, Expression[] variables, Assignment assignment, ExpressionToType expressionToType, ContextExpressionSimplifier simplifier) {
+    private static AssignmentEvaluator newAssignmentEvaluator(EvaluatorCache evaluatorCache, Map<Expression, Expression> autVarToLocal, Map<Variable, Integer> variableMap, Expression[] variables, Assignment assignment, ExpressionToType expressionToType, ContextExpressionSimplifier simplifier) {
         assert assignment != null;
         Options options = Options.get();
         Map<String,Class<? extends AssignmentEvaluator.Builder>> assignmentEvaluators = options.get(OptionsJANIExplorer.JANI_EXPLORER_ASSIGNMENT_EVALUATOR_CLASS);
@@ -78,7 +86,8 @@ public final class AssignmentsEvaluator {
             .setVariableMap(variableMap)
             .setAutVarToLocal(autVarToLocal)
             .setExpressionToType(expressionToType)
-            .setSimplifier(simplifier);
+            .setSimplifier(simplifier)
+            .setEvaluatorCache(evaluatorCache);
             if (builder.canHandle()) {
                 return builder.build();
             }

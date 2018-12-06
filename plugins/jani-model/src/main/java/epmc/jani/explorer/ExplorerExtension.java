@@ -20,9 +20,11 @@
 
 package epmc.jani.explorer;
 
+import epmc.expression.Expression;
 import epmc.graph.explorer.ExplorerEdgeProperty;
 import epmc.graph.explorer.ExplorerNodeProperty;
 import epmc.jani.model.ModelExtension;
+import epmc.value.Type;
 import epmc.value.Value;
 
 public interface ExplorerExtension {

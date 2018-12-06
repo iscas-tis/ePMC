@@ -10,9 +10,12 @@ import javax.json.JsonObject;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.jani.model.Automaton;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.JANINode;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.Variable;
 import epmc.jani.model.expression.ExpressionParser;
 import epmc.jani.model.type.JANIType;
@@ -33,6 +36,7 @@ public final class JANIFunction implements JANINode {
     private JANIType type;
     private Map<String, JANIIdentifier> parameters;
     private Expression body;
+    private Automaton automaton;
 
     @Override
     public void setModel(ModelJANI model) {
@@ -48,6 +52,10 @@ public final class JANIFunction implements JANINode {
         this.identifiers = identifiers;
     }
 
+    public void setAutomaton(Automaton automaton) {
+        this.automaton = automaton;
+    }
+    
     @Override
     public JANINode parse(JsonValue fn) {
         JsonObject function = UtilJSON.toObject(fn);
@@ -76,12 +84,16 @@ public final class JANIFunction implements JANINode {
             String paramName = UtilJSON.getString(parameter, PARAMETER_NAME);
             assert !otherIdentifiers.containsKey(paramName); // TODO should ensure
             assert !result.containsKey(paramName); // TODO should ensure
-            JsonValue jsonType = UtilJSON.get(function, PARAMETER_TYPE);
+            JsonValue jsonType = UtilJSON.get(parameter, PARAMETER_TYPE);
             typeParser.parse(jsonType);
             JANIType pType = typeParser.getType();
             Variable variable = new Variable();
             variable.setName(paramName);
             variable.setType(pType);
+            variable.setIdentifier(new ExpressionIdentifierStandard.Builder()
+                    .setName(paramName)
+                    .setScope(automaton)
+                    .build());
             result.put(paramName, variable);
         }
         return result;
@@ -108,5 +120,26 @@ public final class JANIFunction implements JANINode {
     
     private JsonValue generateBody() {
         return ExpressionParser.generateExpression(model, body);
+    }
+    
+    public String getName() {
+        return name;
+    }
+    
+    public JANIType getType() {
+        return type;
+    }
+    
+    public Map<String, JANIIdentifier> getParameters() {
+        return parameters;
+    }
+
+    public Expression getBody() {
+        return body;
+    }
+    
+    @Override
+    public String toString() {
+        return UtilModelParser.toString(this);
     }
 }

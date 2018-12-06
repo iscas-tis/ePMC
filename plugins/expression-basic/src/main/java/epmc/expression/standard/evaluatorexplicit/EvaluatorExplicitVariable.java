@@ -113,6 +113,7 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
             }
         }
         this.index = index;
+        assert builder.getExpressionToType().getType(variables[index]) != null : variables[index] + " " +  builder.getExpressionToType();
         result = builder.getExpressionToType().getType(variables[index]).newValue();
         set = ContextValue.get().getEvaluator(OperatorSet.SET, builder.getExpressionToType().getType(variables[index]), builder.getExpressionToType().getType(variables[index]));
     }

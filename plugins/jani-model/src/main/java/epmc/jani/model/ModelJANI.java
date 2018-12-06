@@ -262,6 +262,15 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         parseType(object);
         parseFeatures(object);
 
+        /*
+        new ParserSimple<Actions>(null, () -> {
+            Actions actions = new Actions();
+            actions.setModel(this);
+            actions.parse(UtilJSON.get(object, "FFF"));
+            this.actions = actions;
+        });
+        */
+        
         parseBeforeModelNodeExtensions(this, value, null);
         name = UtilJSON.getString(object, NAME);
         janiVersion = UtilJSON.getInteger(object, JANI_VERSION);
@@ -328,11 +337,10 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
             }
         }
 
-        // TODO Auto-generated method stub
         return result;
     }
 
-    private Map<Expression, Expression> computeExternalConstants() {
+    private static Map<Expression, Expression> computeExternalConstants() {
         Options options = Options.get();
         Map<String,Object> optionsConsts = options.getMap(OptionsModelChecker.CONST);
         Map<Expression, Expression> result = new LinkedHashMap<>();
@@ -353,7 +361,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         return result;
     }
 
-    private Expression parseConstant(String valueString) {
+    private static Expression parseConstant(String valueString) {
         assert valueString != null;
         ExpressionType type = null;
         try {
@@ -464,6 +472,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         semantics.generate(result);
         if (modelExtensions != null) {
             for (ModelExtension extension : modelExtensions) {
+                extension.setNode(this);
                 extension.generate(result);
             }
         }

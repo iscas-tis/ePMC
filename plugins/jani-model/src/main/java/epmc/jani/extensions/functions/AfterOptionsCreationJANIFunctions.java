@@ -24,7 +24,6 @@ import java.util.Map;
 
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.OptionsExpressionBasic;
-import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitOperatorUnaryIntegerToInteger;
 import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.ModelExtension;

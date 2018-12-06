@@ -194,7 +194,7 @@ public final class EdgeEvaluator {
             rateExpr = edge.getModel().replaceConstants(rateExpr);
             rateExpr = UtilExpressionStandard.replace(rateExpr, autVarToLocal);
             rateExpr = builder.getSimplifier().simplify(rateExpr);
-            rateEval = UtilEvaluatorExplicit.newEvaluator(rateExpr, builder.getExpressionToType(), variables);
+            rateEval = UtilEvaluatorExplicit.newEvaluator(null, rateExpr, variables, builder.evaluatorCache, builder.getExpressionToType());
             setRate = ContextValue.get().getEvaluator(OperatorSet.SET, rateEval.getResultValue().getType(), TypeWeightTransition.get());
             rate = TypeWeightTransition.get().newValue();
         }
@@ -207,6 +207,7 @@ public final class EdgeEvaluator {
                     .setLocationVariable(builder.getLocationVariable())
                     .setAutVarToLocal(autVarToLocal)
                     .setTypeLocation(builder.getTypeLocation())
+                    .setEvaluatorCache(builder.evaluatorCache)
                     .setExpressionToType(builder.getExpressionToType())
                     .setSimplifier(builder.simplifier)
                     .build();

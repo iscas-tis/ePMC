@@ -133,7 +133,7 @@ public final class UtilEvaluatorExplicit {
         assert variables != null;
         assert cache != null;
         for (Expression variable : variables) {
-            assert variable != null;
+            assert variable != null : Arrays.toString(variables);
         }
         assert expressionToType != null;
         EvaluatorCacheEntry entry = new EvaluatorCacheEntry(returnType, expression, variables);

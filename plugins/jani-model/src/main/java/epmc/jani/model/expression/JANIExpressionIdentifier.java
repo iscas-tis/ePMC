@@ -88,6 +88,10 @@ public final class JANIExpressionIdentifier implements JANIExpression {
         if (validIdentifiers != null) {
             JANIIdentifier janiIdentifier = UtilJSON.toOneOf(value, validIdentifiers);
             identifier = janiIdentifier.getIdentifier();
+            if (identifier == null) {
+                System.out.println(value + " " + janiIdentifier);
+                System.out.println(validIdentifiers);
+            }
         } else {
             identifier = new ExpressionIdentifierStandard.Builder()
                     .setName(value.toString())

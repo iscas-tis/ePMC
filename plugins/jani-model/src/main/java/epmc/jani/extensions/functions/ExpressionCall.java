@@ -26,6 +26,7 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionPropositional;
 
 /**
@@ -33,7 +34,7 @@ import epmc.expression.standard.ExpressionPropositional;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class ExpressionCall implements ExpressionPropositional {
+public final class ExpressionCall implements ExpressionIdentifier {
     public final static class Builder {
         private Positional positional;
         private List<Expression> operands;

@@ -99,14 +99,15 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                         .build();
                 variable = variables.get(expression);
             }
-            if (variable == null) {
-                return null;
+            if (variable != null) {
+                JANIType type = variable.getType();
+                if (type == null) {
+                    return null;
+                }
+                return type.toType();
             }
-            JANIType type = variable.getType();
-            if (type == null) {
-                return null;
-            }
-            return type.toType();
+            return null;
+            // TODO ..
         }
     }
 
@@ -369,6 +370,7 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
                     .setVariableMap(variableToNumber)
                     .setVariables(explorer.getStateVariables().getIdentifiersArray())
                     .setSimplifier(simplifier)
+                    .setEvaluatorCache(evaluatorCache)
                     .build();
             index++;
         }

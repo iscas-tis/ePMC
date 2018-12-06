@@ -25,6 +25,7 @@ import static epmc.error.UtilError.ensure;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
@@ -58,6 +59,7 @@ public final class DestinationEvaluator {
         private TypeLocation typeLocation;
         private ExpressionToType expressionToType;
         private ContextExpressionSimplifier simplifier;
+        private EvaluatorCache evaluatorCache;
 
         public Builder setDestination(Destination destination) {
             this.destination = destination;
@@ -131,6 +133,11 @@ public final class DestinationEvaluator {
             return simplifier;
         }
         
+        public Builder setEvaluatorCache(EvaluatorCache evaluatorCache) {
+            this.evaluatorCache = evaluatorCache;
+            return this;
+        }
+
         public DestinationEvaluator build() {
             return new DestinationEvaluator(this);
         }
@@ -164,7 +171,7 @@ public final class DestinationEvaluator {
         probExpr = destination.getModel().replaceConstants(probExpr);
         probExpr = UtilExpressionStandard.replace(probExpr, autVarToLocal);
         probExpr = builder.getSimplifier().simplify(probExpr);
-        probability = UtilEvaluatorExplicit.newEvaluator(probExpr, builder.getExpressionToType(), variables);
+        probability = UtilEvaluatorExplicit.newEvaluator(null, probExpr, variables, builder.evaluatorCache, builder.getExpressionToType());
         TypeLocation typeLocation = builder.getTypeLocation();
 
         location = typeLocation.getNumber(destination.getLocation());
@@ -174,6 +181,7 @@ public final class DestinationEvaluator {
                 .setExpressionToType(builder.getExpressionToType())
                 .setVariableMap(variableMap)
                 .setVariables(variables)
+                .setEvaluatorCache(builder.evaluatorCache)
                 .setSimplifier(builder.simplifier)
                 .build();
         zeroWeight = UtilValue.newValue(TypeWeightTransition.get(), 0);

@@ -20,21 +20,19 @@
 
 package epmc.jani.extensions.functions;
 
-import static epmc.error.UtilError.fail;
-
-import java.util.Arrays;
+import java.util.ArrayList;
+import java.util.Map;
 
 import epmc.value.ValueBoolean;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorCache;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
-import epmc.expression.standard.ProblemsExpression;
+import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.evaluatorexplicit.EvaluatorExplicitBoolean;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit.EvaluatorCacheEntry;
 import epmc.expressionevaluator.ExpressionToType;
-import epmc.value.OperatorEvaluator;
-import epmc.value.ProblemsValue;
+import epmc.jani.model.JANIIdentifier;
 import epmc.value.Type;
 import epmc.value.Value;
 
@@ -44,6 +42,7 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
         private Expression expression;
         private EvaluatorCache cache;
         private ExpressionToType expressionToType;
+        private Class<?> returnType;
 
         @Override
         public String getIdentifier() {
@@ -91,12 +90,21 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
                     return false;
                 }
             }
-            return false;
-//            return true;
+            return true;
         }
 
         @Override
+        public void setReturnType(Class<?> returnType) {
+            this.returnType = returnType;
+        }
+        
+        @Override
         public EvaluatorExplicit build() {
+            EvaluatorCacheEntry entry = new EvaluatorCacheEntry(returnType, expression, variables);
+            EvaluatorExplicit already = cache.get(entry);
+            if (already != null) {
+                return already;
+            }
             return new EvaluatorExplicitCall(this);
         }
 
@@ -110,48 +118,99 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
         private ExpressionToType getExpressionToType() {
             return expressionToType;
         }
-
     }
 
-    public final static String IDENTIFIER = "operator";
+    private final static class ExpressionToTypeCall implements ExpressionToType {
+        private final ExpressionToType base;
+        private final Map<String, JANIIdentifier> parameters;
 
-    private final Expression[] variables;
+        private ExpressionToTypeCall(ExpressionToType base, Map<String, JANIIdentifier> parameters) {
+            this.base = base;
+            this.parameters = parameters;
+        }
+        
+        @Override
+        public Type getType(Expression expression) {
+            Type result = base.getType(expression);
+            if (result != null) {
+                return result;
+            }
+            if (ExpressionIdentifierStandard.is(expression)) {
+                ExpressionIdentifierStandard identifier = ExpressionIdentifierStandard.as(expression);
+                return parameters.get(identifier.getName()).getType().toType();
+            }
+            // TODO Auto-generated method stub
+            return null;
+        }
+        
+    }
+    
+    public final static String IDENTIFIER = "call";
     private final ExpressionCall expression;
-    private final OperatorEvaluator evaluator;
-    private final EvaluatorExplicit[] operands;
-    private final Value[] operandValues;
-    private final Value result;
-    private boolean needsEvaluation = true;
-    private Value[] values;
+    private final Value[] extendedValues;
+    private final int regSize;
+
+    private final EvaluatorExplicit bodyEvaluator;
+    private final EvaluatorExplicit[] operatorEvaluators;
 
     private EvaluatorExplicitCall(Builder builder) {
+        // TODO check for overlapping parameter names
+        // TODO recursion won't work
+        // TODO this thing is not very well tested
         assert builder != null;
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
-        variables = builder.getVariables();
+        // TODO support automata-specific functions
         expression = (ExpressionCall) builder.getExpression();
-        operands = new EvaluatorExplicit[expression.getOperands().size()];
-        operandValues = new Value[expression.getOperands().size()];
-        Type[] types = new Type[expression.getOperands().size()];
-        int opNr = 0;
-        for (Expression operand : expression.getOperands()) {
-            operands[opNr] = UtilEvaluatorExplicit.newEvaluator(null, operand, variables, builder.getCache(), builder.getExpressionToType());
-            operandValues[opNr] = operands[opNr].getResultValue();
-            assert operandValues[opNr] != null : opNr;
-            types[opNr] = operands[opNr].getResultValue().getType();
-            opNr++;
+        JANIFunction function = findFunction(builder);
+        Expression[] currentVariables = builder.getVariables();
+        Expression[] extendedVariables = new Expression[currentVariables.length
+                                                        + function.getParameters().size()];
+        for (int index = 0; index < currentVariables.length; index++) {
+            extendedVariables[index] = currentVariables[index];
         }
-        try {
-            evaluator = null;
-//            evaluator = ContextValue.get().getEvaluator(operator, types);
-        } catch (EPMCException e) {
-            if (e.getProblem().equals(ProblemsValue.OPTIONS_NO_OPERATOR_AVAILABLE)) {
-                fail(ProblemsExpression.EXPRESSION_INCONSISTENT_OPERATOR, expression.getPositional(), null, Arrays.toString(types));
-            }
-            throw e;
+        int index = currentVariables.length;
+        for (JANIIdentifier janiIdentifier : function.getParameters().values()) {
+            extendedVariables[index] = janiIdentifier.getIdentifier();
+            index++;
         }
+        
+        Expression body = function.getBody();
+        body = function.getModel().replaceConstants(body);
+        EvaluatorCacheEntry entry = new EvaluatorCacheEntry(builder.returnType, builder.expression, builder.variables);
+        builder.cache.put(entry, this);
+        ExpressionToType exprToTypeBody = computeExpressionToTypeBody(builder.getExpressionToType(), function.getParameters());
+        bodyEvaluator = UtilEvaluatorExplicit.newEvaluator(null, body, extendedVariables, builder.getCache(), exprToTypeBody);
+        operatorEvaluators = new EvaluatorExplicit[function.getParameters().size()];
+        index = 0;
+        for (Expression expression : expression.getOperands()) {
+            operatorEvaluators[index] = UtilEvaluatorExplicit.newEvaluator(null, expression, currentVariables, builder.getCache(), builder.getExpressionToType());
+            index++;
+        }
+        extendedValues = new Value[currentVariables.length
+                                   + function.getParameters().size()];
+        regSize = currentVariables.length;
+    }
 
-        result = evaluator.resultType().newValue();
+    private ExpressionToType computeExpressionToTypeBody(ExpressionToType expressionToType,
+            Map<String, JANIIdentifier> parameters) {
+        return new ExpressionToTypeCall(expressionToType, parameters);
+        // TODO Auto-generated method stub
+//        return null;
+    }
+
+    private static JANIFunction findFunction(Builder builder) {
+        ModelExtensionFunctions extensionFunctions = (ModelExtensionFunctions) builder.cache.getAux(ModelExtensionFunctions.class);
+        ArrayList<JANIFunction> functions = extensionFunctions.getModelFunctions().getFunctions();
+        String callWhat = ((ExpressionCall) builder.expression).getFunction();
+        JANIFunction function = null;
+        for (JANIFunction f : functions) {
+            if (f.getName().equals(callWhat)) {
+                function = f;
+                break;
+            }
+        }
+        return function;
     }
 
     @Override
@@ -166,38 +225,35 @@ public final class EvaluatorExplicitCall implements EvaluatorExplicit, Evaluator
 
     @Override
     public void setValues(Value... values) {
-        if (needsEvaluation && this.values == values) {
-            return;
+        for (int i = 0; i < operatorEvaluators.length; i++) {
+            operatorEvaluators[i].setValues(values);
         }
-        this.values = values;
-        for (EvaluatorExplicit operand : operands) {
-            operand.setValues(values);
+        for (int i = 0; i < values.length; i++) {
+            extendedValues[i] = values[i];
         }
-        needsEvaluation = true;
+//        bodyEvaluator.setValues(extendedValues);
     }
     
     @Override
     public void evaluate() {
-        assert values != null;
-        if (!needsEvaluation) {
-            return;
+        for (int i = 0; i < operatorEvaluators.length; i++) {
+            operatorEvaluators[i].evaluate();
         }
-        assert UtilEvaluatorExplicit.assertValues(values);
-        for (EvaluatorExplicit operand : operands) {
-            operand.evaluate();
+        for (int i = 0; i < operatorEvaluators.length; i++) {
+            extendedValues[regSize + i] = operatorEvaluators[i].getResultValue();
         }
-        evaluator.apply(result, operandValues);
-        needsEvaluation = false;
+        bodyEvaluator.setValues(extendedValues);
+        bodyEvaluator.evaluate();
     }
 
     @Override
     public Value getResultValue() {
-        return result;
+        return bodyEvaluator.getResultValue();
     }
 
     @Override
     public boolean evaluateBoolean() {
         evaluate();
-        return ValueBoolean.as(result).getBoolean();
+        return ValueBoolean.as(bodyEvaluator.getResultValue()).getBoolean();
     }
 }
