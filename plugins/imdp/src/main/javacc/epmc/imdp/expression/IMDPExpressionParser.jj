@@ -3,6 +3,7 @@ options
   JDK_VERSION = "1.8";
   LOOKAHEAD = 1;
   STATIC = false;
+  UNICODE_INPUT = true;
 }
 
 PARSER_BEGIN(IMDPExpressionParser)

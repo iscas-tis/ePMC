@@ -5,6 +5,7 @@ options
   STATIC = false;
   COMMON_TOKEN_ACTION = true;
   TOKEN_EXTENDS = "MyToken";
+  UNICODE_INPUT = true;
 }
 
 PARSER_BEGIN(PrismExpressionParser)
