@@ -67,8 +67,12 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
     private final static String OP = "op";
     private final static String U = "U";
     private final static String W = "W";
+    private final static String F = "F";
+    private final static String G = "G";
+    private final static String R = "R";
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
+    private final static String EXP = "exp";
     private final static String STEP_BOUNDS = "step-bounds";
     private final static String TIME_BOUNDS = "time-bounds";
     private final static String REWARD_BOUNDS = "reward-bounds";
@@ -126,19 +130,52 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
         if (!(object.get(OP) instanceof JsonString)) {
             return null;
         }
-        if (!object.containsKey(LEFT)) {
-            return null;
-        }
-        if (!object.containsKey(RIGHT)) {
-            return null;
-        }
         opValue = UtilJSON.getString(object, OP);
-        if (!opValue.equals(U) && !opValue.equals(W)) {
+        if (!opValue.equals(U) && !opValue.equals(W) 
+        		&& !opValue.equals(F) && !opValue.equals(G) && !opValue.equals(R)) {
             return null;
+        }
+        if (opValue.equals(U) || opValue.equals(W) || opValue.equals(R)) {
+	        if (!object.containsKey(LEFT)) {
+	            return null;
+	        }
+	        if (!object.containsKey(RIGHT)) {
+	            return null;
+	        }
+        }
+        if (opValue.equals(F) || opValue.equals(G)) {
+	        if (!object.containsKey(EXP)) {
+	            return null;
+	        }
         }
         ExpressionParser parser = new ExpressionParser(model, validIdentifiers, forProperty);
-        left = parser.parseAsJANIExpression(object.get(LEFT));
-        right = parser.parseAsJANIExpression(object.get(RIGHT));
+        if (opValue.equals(U) || opValue.equals(W)) {
+	        left = parser.parseAsJANIExpression(object.get(LEFT));
+	        right = parser.parseAsJANIExpression(object.get(RIGHT));
+        } else if (opValue.equals(R)) {
+            //op1 R op2 = op2 W (op2 /\ op1)
+        	opValue = W;
+	        JANIExpression op1 = parser.parseAsJANIExpression(object.get(LEFT));
+	        JANIExpression op2 = parser.parseAsJANIExpression(object.get(RIGHT));
+	        left = op2;
+	        right = parser.matchExpression(model, UtilExpressionStandard.opAnd(op2.getExpression(), op1.getExpression()));
+        } else if (opValue.equals(F)) {
+        	//F op = true U op
+    		opValue = U;
+        	right = parser.parseAsJANIExpression(object.get(EXP));
+    		left = parser.matchExpression(model, ExpressionLiteral.getTrue());
+    		left.setForProperty(true);
+    		left.setModel(model);
+    		left.setPositional(right.getPositional());
+        } else if (opValue.equals(G)) {
+        	//G op = op W false
+    		opValue = W;
+    		left = parser.parseAsJANIExpression(object.get(EXP));
+    		right = parser.matchExpression(model, ExpressionLiteral.getFalse());
+    		right.setForProperty(true);
+    		right.setModel(model);
+    		right.setPositional(left.getPositional());
+        }
 
         if (object.containsKey(STEP_BOUNDS)) {
             stepBounds = new JANIPropertyInterval();
