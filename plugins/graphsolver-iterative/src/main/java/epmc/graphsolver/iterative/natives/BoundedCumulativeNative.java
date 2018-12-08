@@ -34,11 +34,17 @@ import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
 import epmc.graphsolver.GraphSolverExplicit;
+import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitBoundedCumulative;
+import epmc.operator.OperatorMultiply;
+import epmc.options.Options;
 import epmc.util.ProblemsUtil;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
@@ -47,8 +53,13 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
+import epmc.value.ValueReal;
 
 import static epmc.graphsolver.iterative.UtilGraphSolverIterative.startWithInfoBounded;
+
+import java.util.Arrays;
+
+import epmc.algorithms.FoxGlynn;
 
 // TODO reward-based stuff should be moved to rewards plugin
 
@@ -69,6 +80,8 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
     private GraphSolverObjectiveExplicit objective;
     private GraphBuilderExplicit builder;
     private ValueArrayAlgebra cumulativeStateRewards;
+    private ValueReal lambda;
+    private Value unifRate;
 
     @Override
     public String getIdentifier() {
@@ -90,9 +103,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
                 && !SemanticsMDP.isMDP(semantics)) {
             return false;
         }
-        if (true 
-                && !(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)
-                ) {
+        if (!(objective instanceof GraphSolverObjectiveExplicitBoundedCumulative)) {
             return false;
         }
         return true;
@@ -121,9 +132,16 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
         builder.build();
         this.iterGraph = builder.getOutputGraph();
         assert iterGraph != null;
-        Value unifRate = newValueWeight();
+        unifRate = newValueWeight();
+        OperatorEvaluator multiply = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, TypeReal.get(), TypeReal.get());
         if (uniformise) {
             GraphExplicitModifier.uniformise(iterGraph, unifRate);
+        }
+        if (SemanticsCTMC.isCTMC(semanticsType)) {
+            lambda = TypeReal.get().newValue();
+            GraphSolverObjectiveExplicitBoundedCumulative objectiveBounded = (GraphSolverObjectiveExplicitBoundedCumulative) objective;
+            Value time = objectiveBounded.getTime();
+            multiply.apply(lambda, time, unifRate);
         }
 
         cumulativeStateRewards = null;
@@ -181,8 +199,14 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
         assert time.getInt() >= 0;
         boolean min = objectiveBoundedCumulative.isMin();
         inputValues = UtilValue.newArray(TypeWeight.get().getTypeArray(), iterGraph.computeNumStates());
-        if (isSparseMarkovNative(iterGraph)) {
+        Semantics semantics = ValueObject.as(origGraph.getGraphProperty(CommonProperties.SEMANTICS)).getObject();
+        if (SemanticsDTMC.isDTMC(semantics)) {
             dtmcBoundedCumulativeNative(time.getInt(), asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards);
+        } else if (SemanticsCTMC.isCTMC(semantics)) {
+            ValueReal precision = UtilValue.newValue(TypeReal.get(), Options.get().getString(OptionsGraphSolverIterative.GRAPHSOLVER_ITERATIVE_TOLERANCE));
+            FoxGlynn foxGlynn = new FoxGlynn(lambda, precision);
+            double doubleUnif = ValueReal.as(unifRate).getDouble();
+            ctmcBoundedCumulativeNative(asSparseMarkov(iterGraph), inputValues, cumulativeStateRewards, foxGlynn, doubleUnif);
         } else if (isSparseMDPNative(iterGraph)) {
             mdpBoundedCumulativeNative(time.getInt(), asSparseNondet(iterGraph), min, inputValues, cumulativeStateRewards);
         } else {
@@ -196,23 +220,12 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
         return graph instanceof GraphExplicitSparseAlternate;
     }
 
-    private static boolean isSparseMarkov(GraphExplicit graph) {
-        return graph instanceof GraphExplicitSparse;
-    }
-
     private static boolean isSparseMDPNative(GraphExplicit graph) {
         if (!isSparseNondet(graph)) {
             return false;
         }
         Semantics semantics = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         if (!SemanticsMDP.isMDP(semantics)) {
-            return false;
-        }
-        return true;
-    }
-
-    private static boolean isSparseMarkovNative(GraphExplicit graph) {
-        if (!isSparseMarkov(graph)) {
             return false;
         }
         return true;
@@ -229,8 +242,7 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
     /* implementation/native call of/to iteration algorithms */    
 
     private static void dtmcBoundedCumulativeNative(int bound,
-            GraphExplicitSparse graph, Value values, Value cumul)
-    {
+            GraphExplicitSparse graph, Value values, Value cumul) {
         int numStates = graph.computeNumStates();
         int[] stateBounds = graph.getBoundsJava();
         int[] targets = graph.getTargetsJava();
@@ -240,6 +252,34 @@ public final class BoundedCumulativeNative implements GraphSolverExplicit {
 
         int code = startWithInfoBounded(bound, info -> {
             return IterationNative.double_dtmc_bounded_cumulative(bound, numStates, stateBounds, targets, weights, valuesMem, cumulMem, info.createNumIterations());
+        });
+        UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
+        assert code == IterationNative.EPMC_ERROR_SUCCESS;
+    }
+
+    private static void ctmcBoundedCumulativeNative(GraphExplicitSparse graph,
+            Value values, ValueArrayAlgebra rewards, FoxGlynn foxGlynn, double doubleUnif) {
+        int numStates = graph.computeNumStates();
+        double[] fg = ValueContentDoubleArray.getContent(foxGlynn.getArray());
+        int left = foxGlynn.getLeft();
+        int right = foxGlynn.getRight();
+        double[] cumulFg = new double[right];
+        for (int i = left > 0 ? left : 1; i < right; i++) {
+            cumulFg[i] = cumulFg[i - 1] + fg[i - left];
+        }
+        for (int i = 0; i < cumulFg.length; i++) {
+            cumulFg[i] = (1.0 - cumulFg[i]) / doubleUnif;
+        }
+        int[] stateBounds = graph.getBoundsJava();
+        int[] targets = graph.getTargetsJava();
+        double[] weights = ValueContentDoubleArray.getContent(graph.getEdgeProperty(CommonProperties.WEIGHT).getContent());
+        double[] valuesMem = ValueContentDoubleArray.getContent(values);
+        double[] rewardsMem = ValueContentDoubleArray.getContent(rewards);
+        for (int i = 0; i < rewardsMem.length; i++) {
+            valuesMem[i] = rewardsMem[i];
+        }
+        int code = startWithInfoBounded(right, info -> {
+            return IterationNative.double_ctmc_bounded(cumulFg, 0, right, numStates, stateBounds, targets, weights, valuesMem, info.createNumIterations());
         });
         UtilError.ensure(code != IterationNative.EPMC_ERROR_OUT_OF_MEMORY, ProblemsUtil.INSUFFICIENT_NATIVE_MEMORY);
         assert code == IterationNative.EPMC_ERROR_SUCCESS;
