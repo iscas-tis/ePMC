@@ -25,6 +25,7 @@ import epmc.modelchecker.PropertySolver;
 import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
+import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
@@ -116,13 +117,17 @@ public final class PropertySolverExplicitSteadyState implements PropertySolver {
         ValueArrayAlgebra rewards = TypeWeight.get().getTypeArray().newValue();
         GraphExplicit graph = modelChecker.getLowLevel();
         rewards.setSize(graph.computeNumStates());
-        ValueBoolean value = TypeBoolean.get().newValue();
+        Value value = innerResult.getType().newValue();
         ValueAlgebra one = UtilValue.newValue(TypeWeight.get(), 1);
         ValueAlgebra zero = UtilValue.newValue(TypeWeight.get(), 0);
         for (int stateNr = 0; stateNr < innerResult.size(); stateNr++) {
             int state = innerResult.getExplicitIthState(stateNr);
             innerResult.getExplicitIthValue(value, stateNr);
-            rewards.set(value.getBoolean() ? one : zero , state);
+            if (ValueBoolean.is(value)) {
+                rewards.set(ValueBoolean.as(value).getBoolean() ? one : zero, state);   
+            } else {
+                rewards.set(value, state);                   
+            }
         }
         GraphSolverObjectiveExplicitSteadyState objective = new GraphSolverObjectiveExplicitSteadyState();
         objective.setGraph(graph);
