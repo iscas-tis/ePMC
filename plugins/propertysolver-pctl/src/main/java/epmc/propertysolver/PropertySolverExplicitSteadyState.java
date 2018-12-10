@@ -22,7 +22,6 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicitSteadyState;
 import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.ModelChecker;
 import epmc.modelchecker.PropertySolver;
-import epmc.value.TypeBoolean;
 import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
