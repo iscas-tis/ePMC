@@ -38,6 +38,12 @@ final class IterationNative {
             int[] iterationsResult,
             Memory numIterations, Memory difference);
 
+    native static int double_dtmc_unbounded_cumulative_jacobi_span(int relative,
+            double precision, int numStates, int[] stateBounds,
+            int[] targets, double[] weights, double[] values, double[] cumul,
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
+
     native static int double_dtmc_unbounded_cumulative_gaussseidel(int relative,
             double precision, int numStates, int[] stateBounds,
             int[] targets, double[] weights, double[] values, double[] cumul,
@@ -70,6 +76,13 @@ final class IterationNative {
             Memory numIterations, Memory difference);
 
     native static int double_mdp_unbounded_cumulative_jacobi(int relative,
+            double precision, int numStates,
+            int[] stateBounds, int[] nondetBounds, int[] targets,
+            double[] weights, int min, double[] values, double[] cumul,
+            int[] iterationsResult,
+            Memory numIterations, Memory difference);
+
+    native static int double_mdp_unbounded_cumulative_jacobi_span(int relative,
             double precision, int numStates,
             int[] stateBounds, int[] nondetBounds, int[] targets,
             double[] weights, int min, double[] values, double[] cumul,

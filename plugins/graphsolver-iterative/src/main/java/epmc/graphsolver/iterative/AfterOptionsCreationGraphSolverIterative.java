@@ -34,6 +34,7 @@ import epmc.graphsolver.iterative.natives.BoundedCumulativeNative;
 import epmc.graphsolver.iterative.natives.BoundedNative;
 import epmc.graphsolver.iterative.natives.BoundedReachabilityNative;
 import epmc.graphsolver.iterative.natives.UnboundedCumulativeNative;
+import epmc.graphsolver.iterative.natives.UnboundedLRANative;
 import epmc.graphsolver.iterative.natives.UnboundedReachabilityNative;
 import epmc.options.Category;
 import epmc.options.OptionTypeEnum;
@@ -89,6 +90,7 @@ public class AfterOptionsCreationGraphSolverIterative implements AfterOptionsCre
         graphSolverMap.put(BoundedCumulativeNative.IDENTIFIER, BoundedCumulativeNative.class);
         graphSolverMap.put(BoundedCumulativeDiscountedNative.IDENTIFIER, BoundedCumulativeDiscountedNative.class);
         graphSolverMap.put(UnboundedCumulativeNative.IDENTIFIER, UnboundedCumulativeNative.class);
+        graphSolverMap.put(UnboundedLRANative.IDENTIFIER, UnboundedLRANative.class);
         graphSolverMap.put(UnboundedReachabilityNative.IDENTIFIER, UnboundedReachabilityNative.class);
         graphSolverMap.put(BoundedReachabilityNative.IDENTIFIER, BoundedReachabilityNative.class);
         graphSolverMap.put(BoundedNative.IDENTIFIER, BoundedNative.class);

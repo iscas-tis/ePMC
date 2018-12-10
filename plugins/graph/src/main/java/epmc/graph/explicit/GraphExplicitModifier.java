@@ -25,6 +25,7 @@ import epmc.graph.Player;
 import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorDivide;
 import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorSet;
 import epmc.operator.OperatorSubtract;
 import epmc.value.ContextValue;
@@ -62,8 +63,16 @@ public final class GraphExplicitModifier {
     }
 
     public static void uniformise(GraphExplicit graph, Value uniRate) {
+        uniformise(graph, uniRate, null);
+    }
+    
+    public static void uniformise(GraphExplicit graph, Value uniRate, Value factor) {
         assert graph != null;
         Value uniformisationRate = computeUniformisationRate(graph);
+        if (factor != null) {
+            OperatorEvaluator multFct = ContextValue.get().getEvaluator(OperatorMultiply.MULTIPLY, uniformisationRate.getType(), factor.getType());
+            multFct.apply(uniformisationRate, uniformisationRate, factor);
+        }
         if (uniRate != null) {
             OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, uniformisationRate.getType(), uniRate.getType());
             set.apply(uniRate, uniformisationRate);
