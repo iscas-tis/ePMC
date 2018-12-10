@@ -95,7 +95,6 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     private final Expression expression;
     private final int index;
     private final Value result;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private EvaluatorExplicitIntegerVariable(Builder builder) {
@@ -128,7 +127,6 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
     @Override
     public void setValues(Value... values) {
         this.values = values;
-        needsEvaluation = true;
     }
     
     @Override
@@ -137,10 +135,6 @@ public class EvaluatorExplicitIntegerVariable implements EvaluatorExplicitIntege
         for (Value value : values) {
             assert value != null;
         }
-        if (!needsEvaluation) {
-            return;
-        }
-        needsEvaluation = false;
         ValueAlgebra.as(result).set(ValueInteger.as(values[index]).getInt());
     }
 

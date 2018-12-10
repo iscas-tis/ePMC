@@ -118,7 +118,6 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     private final Value result;
     private final OperatorEvaluator setThen;
     private final OperatorEvaluator setElse;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private boolean booleanValue;
@@ -157,23 +156,16 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
 
     @Override
     public void setValues(Value... values) {
-        if (needsEvaluation && this.values == values) {
-            return;
-        }
         this.values = values;
         operands[0].setValues(values);
         operands[1].setValues(values);
         operands[2].setValues(values);
-        needsEvaluation = true;
     }
     
     @Override
     public void evaluate() {
         assert values != null;
         assert UtilEvaluatorExplicit.assertValues(values);
-        if (!needsEvaluation) {
-            return;
-        }
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean()) {
             EvaluatorExplicit thenOp = operands[1];
             thenOp.evaluate();
@@ -183,7 +175,6 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
             elseOp.evaluate();
             setElse.apply(result, elseOp.getResultValue());
         }
-        needsEvaluation = false;
     }
 
     @Override
@@ -194,9 +185,6 @@ public final class EvaluatorExplicitOperatorShortcutIfThenElse implements Evalua
     @Override
     public boolean evaluateBoolean() {
         assert UtilEvaluatorExplicit.assertValues(values);
-        if (!needsEvaluation) {
-            return booleanValue;
-        }
         if (((EvaluatorExplicitBoolean) operands[0]).evaluateBoolean()) {
             booleanValue = ((EvaluatorExplicitBoolean) operands[1]).evaluateBoolean();
             return booleanValue;

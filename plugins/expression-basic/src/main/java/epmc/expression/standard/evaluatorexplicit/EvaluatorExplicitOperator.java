@@ -122,7 +122,6 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
     private final EvaluatorExplicit[] operands;
     private final Value[] operandValues;
     private final Value result;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private EvaluatorExplicitOperator(Builder builder) {
@@ -169,28 +168,20 @@ public final class EvaluatorExplicitOperator implements EvaluatorExplicit, Evalu
 
     @Override
     public void setValues(Value... values) {
-        if (needsEvaluation && this.values == values) {
-            return;
-        }
         this.values = values;
         for (EvaluatorExplicit operand : operands) {
             operand.setValues(values);
         }
-        needsEvaluation = true;
     }
     
     @Override
     public void evaluate() {
         assert values != null;
-        if (!needsEvaluation) {
-            return;
-        }
         assert UtilEvaluatorExplicit.assertValues(values);
         for (EvaluatorExplicit operand : operands) {
             operand.evaluate();
         }
         evaluator.apply(result, operandValues);
-        needsEvaluation = false;
     }
 
     @Override

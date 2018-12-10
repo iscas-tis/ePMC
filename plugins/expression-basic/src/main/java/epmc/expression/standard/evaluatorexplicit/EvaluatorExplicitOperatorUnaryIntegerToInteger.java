@@ -139,7 +139,6 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
     private final UnaryIntegerToInteger unaryIntegerToInteger;
 
     private final OperatorEvaluator evaluator;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private EvaluatorExplicitOperatorUnaryIntegerToInteger(Builder builder) {
@@ -184,7 +183,6 @@ public final class EvaluatorExplicitOperatorUnaryIntegerToInteger implements Eva
         for (EvaluatorExplicit operand : operands) {
             operand.setValues(values);
         }
-        needsEvaluation = true;
     }
     
     @Override

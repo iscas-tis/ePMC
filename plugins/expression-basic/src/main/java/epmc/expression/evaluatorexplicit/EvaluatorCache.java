@@ -27,4 +27,13 @@ public final class EvaluatorCache {
     public Object getAux(Object key) {
         return auxMap.get(key);
     }
+    
+    @Override
+    public String toString() {
+        StringBuilder builder = new StringBuilder();
+        builder.append(map);
+        builder.append("\n");
+        builder.append(auxMap);
+        return builder.toString();
+    }
 }

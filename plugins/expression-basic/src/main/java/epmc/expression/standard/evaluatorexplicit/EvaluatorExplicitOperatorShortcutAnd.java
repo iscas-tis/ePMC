@@ -37,7 +37,6 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
         private Expression expression;
         private EvaluatorCache cache;
         private ExpressionToType expressionType;
-
         @Override
         public String getIdentifier() {
             return IDENTIFIER;
@@ -115,7 +114,6 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
     private final EvaluatorExplicitBoolean operandLeft;
     private final EvaluatorExplicitBoolean operandRight;
     private final ValueBoolean result;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private boolean resultBoolean;
@@ -146,22 +144,14 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
 
     @Override
     public void setValues(Value... values) {
-        if (needsEvaluation && this.values == values) {
-            return;
-        }
         this.values = values;
         operandLeft.setValues(values);
         operandRight.setValues(values);
-        needsEvaluation = true;
     }
     
     @Override
     public void evaluate() {
         assert UtilEvaluatorExplicit.assertValues(values);
-        if (!needsEvaluation) {
-            return;
-        }
-        needsEvaluation = false;
         if (!operandLeft.evaluateBoolean()) {
             result.set(false);
         } else {
@@ -172,10 +162,6 @@ public final class EvaluatorExplicitOperatorShortcutAnd implements EvaluatorExpl
     @Override
     public boolean evaluateBoolean() {
         assert UtilEvaluatorExplicit.assertValues(values);
-        if (!needsEvaluation) {
-            return resultBoolean;
-        }
-        needsEvaluation = false;
         if (!operandLeft.evaluateBoolean()) {
             resultBoolean = false;
             return false;

@@ -95,7 +95,6 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     private final int index;
     private final Value result;
     private final OperatorEvaluator set;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private EvaluatorExplicitVariable(Builder builder) {
@@ -131,7 +130,6 @@ public class EvaluatorExplicitVariable implements EvaluatorExplicit, EvaluatorEx
     @Override
     public void setValues(Value... values) {
         this.values = values;
-        needsEvaluation = true;
     }
     
     @Override

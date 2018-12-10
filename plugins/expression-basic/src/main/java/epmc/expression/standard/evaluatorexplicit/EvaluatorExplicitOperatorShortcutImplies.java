@@ -115,7 +115,6 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
     private EvaluatorExplicitBoolean[] operands;
     private Value[] operandValues;
     private ValueBoolean result;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
 
@@ -151,7 +150,6 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
     public void setValues(Value... values) {
         this.values = values;
         operands[0].setValues(values);
-        needsEvaluation = true;
     }
     
     @Override

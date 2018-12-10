@@ -329,7 +329,6 @@ public final class ExplorerJANI implements Explorer {
                 usedTransientValues.add(specification.getExpression());
             }
         }
-
         transientValuesVariables = new int[usedTransientValues.size()];
         int trvNr = 0;
         for (Variable transientValue : model.getGlobalVariablesTransient()) {
@@ -407,9 +406,6 @@ public final class ExplorerJANI implements Explorer {
         this.queriedNode = nodeJANI;
         nodeJANI.unmark();
         isDeadlock = system.getNumSuccessors() == 0;
-        for (PropertyNodeExpression prop : expressionNodeProperties.values()) {
-            prop.setVariableValues(nodeJANI.getValues());
-        }
         if (nonDet && nodeJANI.getBoolean(selfLoopVariable)) {
             system.setNumSuccessors(1);
             system.getSuccessorNode(0).setVariable(selfLoopVariable, false);
@@ -423,6 +419,9 @@ public final class ExplorerJANI implements Explorer {
                 extension.beforeQuerySystem(nodeJANI);
             }
             system.queryNode(nodeJANI);
+            for (PropertyNodeExpression prop : expressionNodeProperties.values()) {
+                prop.setVariableValues(nodeJANI.getValues());
+            }
             for (ExplorerExtension extension : extensions) {
                 extension.afterQuerySystem(nodeJANI);
             }

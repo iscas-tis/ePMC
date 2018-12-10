@@ -115,7 +115,6 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
     private final EvaluatorExplicitBoolean[] operands;
     private final Value[] operandValues;
     private final ValueBoolean result;
-    private boolean needsEvaluation = true;
     private Value[] values;
 
     private boolean booleanResult;
@@ -151,19 +150,14 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
 
     @Override
     public void setValues(Value... values) {
-        if (needsEvaluation && this.values == values) {
-            return;
-        }
         this.values = values;
         operands[0].setValues(values);
         operands[1].setValues(values);
-        needsEvaluation = true;
     }
     
     @Override
     public void evaluate() {
         assert UtilEvaluatorExplicit.assertValues(values);
-        needsEvaluation = false;
         if (operands[0].evaluateBoolean()) {
             result.set(true);
         } else {
@@ -174,10 +168,6 @@ public final class EvaluatorExplicitOperatorShortcutOr implements EvaluatorExpli
     @Override
     public boolean evaluateBoolean() {
         assert UtilEvaluatorExplicit.assertValues(values);
-        if (!needsEvaluation) {
-            return booleanResult;
-        }
-        needsEvaluation = false;
         if (operands[0].evaluateBoolean()) {
             booleanResult = true;
             return true;
