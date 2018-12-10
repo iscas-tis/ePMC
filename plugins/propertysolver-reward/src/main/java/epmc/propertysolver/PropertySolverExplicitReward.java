@@ -163,8 +163,7 @@ public final class PropertySolverExplicitReward implements PropertySolver {
         return result;
     }
 
-    public StateMap doSolve(Expression property, StateSetExplicit states, boolean min)
-    {
+    public StateMap doSolve(Expression property, StateSetExplicit states, boolean min) {
         RewardSpecification rewardStructure = ((ExpressionReward) property).getReward();
         NodeProperty stateReward = graph.getNodeProperty(rewardStructure);
         EdgeProperty transReward = graph.getEdgeProperty(rewardStructure);
