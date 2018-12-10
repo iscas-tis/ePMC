@@ -743,7 +743,7 @@ public final class GraphBuilderExplicit {
 
     public GraphBuilderExplicit setBackward() {
         assert !isBuilt();
-        setReorder(true);
+        setBackward(true);
         return this;
     }
 }
