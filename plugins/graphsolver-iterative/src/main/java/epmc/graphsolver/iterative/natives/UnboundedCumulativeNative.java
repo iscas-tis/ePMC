@@ -25,16 +25,19 @@ import java.util.List;
 import epmc.error.UtilError;
 import epmc.graph.CommonProperties;
 import epmc.graph.GraphBuilderExplicit;
+import epmc.graph.Player;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsCTMC;
 import epmc.graph.SemanticsContinuousTime;
 import epmc.graph.SemanticsDTMC;
 import epmc.graph.SemanticsMDP;
 import epmc.graph.SemanticsNonDet;
+import epmc.graph.explicit.EdgeProperty;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.GraphExplicitModifier;
 import epmc.graph.explicit.GraphExplicitSparse;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;
+import epmc.graph.explicit.NodeProperty;
 import epmc.graphsolver.GraphSolverExplicit;
 import epmc.graphsolver.iterative.IterationMethod;
 import epmc.graphsolver.iterative.IterationStopCriterion;
@@ -44,16 +47,24 @@ import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicitUnboundedCumulative;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorSet;
+import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.ProblemsUtil;
 import epmc.util.StopWatch;
+import epmc.value.ContextValue;
+import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeArrayAlgebra;
 import epmc.value.TypeDouble;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.Value;
+import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueContentDoubleArray;
 import epmc.value.ValueObject;
@@ -143,9 +154,6 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
         builder.build();
         this.iterGraph = builder.getOutputGraph();
         assert iterGraph != null;
-        if (embed) {
-            GraphExplicitModifier.embed(iterGraph);
-        }
 
         GraphSolverObjectiveExplicitUnboundedCumulative objectiveUnboundedCumulative = (GraphSolverObjectiveExplicitUnboundedCumulative) objective;
         cumulativeStateRewards = objectiveUnboundedCumulative.getStateRewards();
@@ -173,7 +181,40 @@ public final class UnboundedCumulativeNative implements GraphSolverExplicit {
                 }
                 cumulativeStateRewards = cumulativeStateRewardsNew;
             }
+            if (embed) {
+                fixRewards();
+            }
         }
+        if (embed) {
+            GraphExplicitModifier.embed(iterGraph);
+        }
+    }
+
+    private void fixRewards() {
+        // TODO fix also for ctmdps
+        ValueAlgebra zero = UtilValue.newValue(TypeWeightTransition.get(), 0);
+        ValueAlgebra sum = TypeWeightTransition.get().newValue();
+        OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
+        ValueAlgebra weight = TypeWeightTransition.get().newValue();
+        NodeProperty playerProp = iterGraph.getNodeProperty(CommonProperties.PLAYER);
+        EdgeProperty weightProp = iterGraph.getEdgeProperty(CommonProperties.WEIGHT);
+        OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeight.get(), TypeWeight.get());
+        OperatorEvaluator set = ContextValue.get().getEvaluator(OperatorSet.SET, TypeWeight.get(), TypeWeight.get());
+        for (int node = 0; node < iterGraph.getNumNodes(); node++) {
+            Player player = playerProp.getEnum(node);
+            if (player == Player.STOCHASTIC) {
+                set.apply(sum, zero);
+                for (int succNr = 0; succNr < iterGraph.getNumSuccessors(node); succNr++) {
+                    add.apply(sum, sum, weightProp.get(node, succNr));
+                }
+                cumulativeStateRewards.get(weight, node);
+                divide.apply(weight, weight, sum);
+                cumulativeStateRewards.set(weight, node);                
+            }
+        }
+
+        // TODO Auto-generated method stub
+        
     }
 
     private void prepareResultValues() {
