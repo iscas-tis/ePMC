@@ -10,7 +10,7 @@ Compared to IscasMC, EPMC supports a richer set of probabilistic models includin
 * Stochastic Multi-player games (SMGs)
 * Probabilistic Parity Games (PPGs)
 
-All input models can be in the PRISM format and JANI format.
+All input models can be specified in the PRISM format and JANI format.
 
 EPMC implemented the supports for
 
