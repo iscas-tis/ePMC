@@ -10,7 +10,7 @@ Compared to IscasMC, EPMC supports a richer set of probabilistic models includin
 * Stochastic Multi-player games (SMGs)
 * Probabilistic Parity Games (PPGs)
 
-All input models can be in the PRISM format and JANI format.
+All input models can be specified in the PRISM format and JANI format.
 
 EPMC implemented the supports for
 
@@ -26,3 +26,10 @@ The main characteristics of EPMC are *the high modularity of the tool, the possi
 EPMC is mainly developed in Java, but accesses a few libraries written in C/C++ to increase performance or to access well established legacy code. Its graphical user interface (GUI) is a single static webpage. The GUI communicates with the backend, where core functions (like model checking) and high-privilege operations (like file I/O) are realised.
 
 Please follow our [wiki documentations](../../wiki/Documentations) to build and use ePMC.
+
+## Contact
+Comments and feedback about any aspect of ePMC are very welcome. Please contact:
+
+Andrea Turrini
+
+(family_name_AT_ios_DOT_ac_DOT_cn)
