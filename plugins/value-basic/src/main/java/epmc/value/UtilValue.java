@@ -93,7 +93,7 @@ public final class UtilValue {
                     TypeInteger.as(b).getLowerInt());
             int upperBound = Math.max(TypeInteger.as(a).getUpperInt(),
                     TypeInteger.as(b).getUpperInt());
-            upper = (T) new TypeInteger(lowerBound, upperBound);
+            upper = (T) new TypeIntegerJava(lowerBound, upperBound);
         } else {
             OperatorEvaluator setAB = ContextValue.get().getEvaluatorOrNull(OperatorSet.SET, b, a);
             OperatorEvaluator setBA = ContextValue.get().getEvaluatorOrNull(OperatorSet.SET, a, b);

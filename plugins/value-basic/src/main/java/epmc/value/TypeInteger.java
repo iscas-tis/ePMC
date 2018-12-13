@@ -23,9 +23,9 @@ package epmc.value;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 
-public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerable, TypeNumBitsKnown {
+public interface TypeInteger extends TypeNumber, TypeBounded, TypeNumBitsKnown {
     public static TypeInteger get(int lowerBound, int upperBound) {
-        return ContextValue.get().makeUnique(new TypeInteger(lowerBound, upperBound));
+        return ContextValue.get().makeUnique(new TypeIntegerJava(lowerBound, upperBound));
     }
 
     public static TypeInteger get() {
@@ -65,126 +65,20 @@ public final class TypeInteger implements TypeNumber, TypeBounded, TypeEnumerabl
         return typeInteger.isLeftBounded() || typeInteger.isRightBounded();
     }
 
-    private final ValueInteger lowerBound;
-    private final ValueInteger upperBound;
-    private final ValueInteger valueMax = new ValueInteger(this);
-    private final int numBits;
-
-    public TypeInteger(int lowerBound, int upperBound) {
-        valueMax.set(Integer.MAX_VALUE);
-        assert lowerBound <= upperBound;
-        if (lowerBound != Integer.MIN_VALUE && upperBound != Integer.MAX_VALUE) {
-            int numValues = upperBound - lowerBound + 1;
-            numBits = Integer.SIZE - Integer.numberOfLeadingZeros(numValues - 1);
-        } else {
-            numBits = Integer.SIZE;
-        }
-        this.lowerBound = newValue();
-        this.lowerBound.set(lowerBound);
-        this.upperBound = newValue();
-        this.upperBound.set(upperBound);
-    }
-
-    public TypeInteger() {
-        this(Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }    
-
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        if (isLeftBounded() || isRightBounded()) {
-            builder.append("[");
-            builder.append(isLeftBounded() ? lowerBound : "-inf");
-            builder.append("..");
-            builder.append(isRightBounded() ? upperBound : "inf");
-            builder.append("]");
-        } else {
-            builder.append("int");
-        }
-        return builder.toString();
+    TypeArrayInteger getTypeArray();
+    
+    int getLowerInt();
+
+    int getUpperInt();
+
+    default boolean isLeftBounded() {
+        return false;
     }
 
-    @Override
-    public ValueInteger newValue() {
-        if (isLeftBounded()) {
-            ValueInteger result = new ValueInteger(this);
-            result.set(lowerBound.getInt());
-            return result;
-        } else {
-            return new ValueInteger(this);
-        }
+    default boolean isRightBounded() {
+        return false;
     }
-
-    public int getLowerInt() {
-        return lowerBound.getInt();
-    }
-
-    public int getUpperInt() {
-        return upperBound.getInt();
-    }
-
-    @Override
-    public ValueInteger getLower() {
-        return lowerBound;
-    }
-
-    @Override
-    public ValueInteger getUpper() {
-        return upperBound;
-    }
-
-    public boolean isLeftBounded() {
-        return lowerBound != null && lowerBound.getInt() != Integer.MIN_VALUE;
-    }
-
-    public boolean isRightBounded() {
-        return upperBound != null && upperBound.getInt() != Integer.MAX_VALUE;
-    }
-
-    @Override
-    public int getNumBits() {
-        return numBits;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        assert obj != null;
-        if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        TypeInteger other = (TypeInteger) obj;
-        if (!this.lowerBound.equals(other.lowerBound)) {
-            return false;
-        }
-        if (!this.upperBound.equals(other.upperBound)) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-        hash = lowerBound.getInt() + (hash << 6) + (hash << 16) - hash;
-        hash = upperBound.getInt() + (hash << 6) + (hash << 16) - hash;
-        return hash;
-    }
-
-    @Override
-    public int getNumValues() {
-        if (!TypeInteger.isIntegerBothBounded(this)) {
-            return Integer.MAX_VALUE;
-        }
-        return getUpperInt() + 1 - getLowerInt();
-    }
-
-    @Override
-    public TypeArrayInteger getTypeArray() {
-        if (TypeInteger.isIntegerBothBounded(this)) {
-            return ContextValue.get().makeUnique(new TypeArrayIntegerBounded(this));
-        } else {
-            return ContextValue.get().makeUnique(new TypeArrayIntegerJava(this));            
-        }
-    }    
+    
+    ValueInteger newValue();
 }
