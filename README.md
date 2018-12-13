@@ -31,4 +31,5 @@ Please follow our [wiki documentations](../../wiki/Documentations) to build and 
 Comments and feedback about any aspect of ePMC are very welcome. Please contact:
 
 Andrea Turrini
-family_name_AT_ios_DOT_ac_DOT_cn
+
+(family_name_AT_ios_DOT_ac_DOT_cn)
