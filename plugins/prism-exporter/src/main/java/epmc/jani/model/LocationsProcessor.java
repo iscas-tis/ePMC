@@ -22,11 +22,11 @@ package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
-import epmc.prism.exporter.processor.Range;
+import epmc.prism.exporter.util.Range;
 
 public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 

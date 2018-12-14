@@ -26,9 +26,9 @@ import java.util.List;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.ModelJANIProcessor;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {

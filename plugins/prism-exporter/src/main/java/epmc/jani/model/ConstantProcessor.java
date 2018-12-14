@@ -21,8 +21,8 @@
 package epmc.jani.model;
 
 import epmc.expression.Expression;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ConstantProcessor implements JANI2PRISMProcessorStrict {

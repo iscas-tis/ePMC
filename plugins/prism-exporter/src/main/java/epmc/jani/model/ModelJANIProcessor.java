@@ -21,8 +21,8 @@
 package epmc.jani.model;
 
 import epmc.graph.SemanticsTimed;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {

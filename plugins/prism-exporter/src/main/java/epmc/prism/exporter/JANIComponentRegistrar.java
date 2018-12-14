@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.prism.exporter.processor;
+package epmc.prism.exporter;
 
 import static epmc.error.UtilError.ensure;
 
@@ -40,6 +40,9 @@ import epmc.jani.model.Location;
 import epmc.jani.model.ModelJANIProcessor;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.util.Range;
 import epmc.time.TypeClock;
 
 /**

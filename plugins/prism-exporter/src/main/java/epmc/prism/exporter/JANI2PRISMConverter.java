@@ -18,9 +18,10 @@
 
  *****************************************************************************/
 
-package epmc.prism.exporter.processor;
+package epmc.prism.exporter;
 
 import epmc.jani.model.ModelJANI;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public final class JANI2PRISMConverter {
 

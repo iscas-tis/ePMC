@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.prism.exporter.processor;
+package epmc.prism.exporter.util;
 
 public class Range {
     public final int low;

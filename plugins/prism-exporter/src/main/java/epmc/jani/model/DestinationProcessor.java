@@ -20,8 +20,8 @@
 
 package epmc.jani.model;
 
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class DestinationProcessor implements JANI2PRISMProcessorStrict {

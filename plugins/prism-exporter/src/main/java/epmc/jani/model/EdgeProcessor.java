@@ -33,9 +33,9 @@ import epmc.graph.SemanticsDTMC;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorMultiply;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class EdgeProcessor implements JANI2PRISMProcessorStrict {
