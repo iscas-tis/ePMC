@@ -48,7 +48,7 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
 
         for (PlayerJANI player : players) {
             prism.append("\n")
-            .append(ProcessorRegistrar.getProcessor(player).toPRISM());			
+                .append(ProcessorRegistrar.getProcessor(player).toPRISM());			
         }
 
         return prism.toString();
@@ -69,7 +69,8 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
         assert players != null;
 
         for (PlayerJANI player : players) {
-            ProcessorRegistrar.getProcessor(player).validateTransientVariables();
+            ProcessorRegistrar.getProcessor(player)
+                .validateTransientVariables();
         }
     }
 
@@ -80,7 +81,8 @@ public class PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
         boolean usesTransient = false;
 
         for (PlayerJANI player : players) {
-            usesTransient |= ProcessorRegistrar.getProcessor(player).usesTransientVariables();
+            usesTransient |= ProcessorRegistrar.getProcessor(player)
+                    .usesTransientVariables();
         }
 
         return usesTransient;
