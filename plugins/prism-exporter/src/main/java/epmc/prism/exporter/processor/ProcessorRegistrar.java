@@ -49,10 +49,10 @@ import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalGloballyProcessor;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTemporalNextProcessor;
-import epmc.expression.standard.ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.ExpressionTemporalRelease;
 import epmc.expression.standard.ExpressionTemporalReleaseProcessor;
 import epmc.expression.standard.ExpressionTemporalUntil;
+import epmc.expression.standard.ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.TimeBoundProcessor;
 import epmc.jani.model.Action;
@@ -229,7 +229,7 @@ public class ProcessorRegistrar {
     }
 
     /**
-     * Allow to use the extended PRISM Syntax
+     * Allow to use the extended PRISM syntax
      */
     public static void useExtendedPRISMSyntax() {
         useExtendedSyntax = true;
@@ -237,6 +237,17 @@ public class ProcessorRegistrar {
 
     public static boolean getUseExtendedPRISMSyntax() {
         return useExtendedSyntax;
+    }
+
+    /**
+     * Allow to use the non PRISM syntax
+     */
+    public static void useNonPRISMSyntax() {
+        useNonPRISMSyntax = true;
+    }
+
+    public static boolean getUseNonPRISMSyntax() {
+        return useNonPRISMSyntax;
     }
 
     public static void setAllowMultipleLocations(boolean allowMultipleLocations) {
@@ -367,5 +378,4 @@ public class ProcessorRegistrar {
 
         return processors;
     }
-
 }
