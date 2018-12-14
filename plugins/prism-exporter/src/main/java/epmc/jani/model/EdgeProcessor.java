@@ -22,8 +22,17 @@ package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionOperator;
 import epmc.graph.SemanticsDTMC;
+import epmc.operator.Operator;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorMultiply;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.JANIComponentRegistrar;
@@ -31,6 +40,14 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 
+	private static ExpressionOperator newOperator(Operator operator, Expression operand1, Expression operand2) {
+        return new ExpressionOperator.Builder()
+                .setOperator(operator)
+                .setOperands(operand1, operand2)
+                .build();
+    }
+
+	
     private Edge edge = null;
     private String prefix = null;
     private Automaton automaton = null;
@@ -42,14 +59,26 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
 
         edge = (Edge) obj;
 
+    	Map<Variable, Expression> rewards = new HashMap<>();
+
         Action action = edge.getActionOrSilent();
         for (Destination destination: edge.getDestinations()) {
+            Expression prob = destination.getProbabilityExpressionOrOne();
             for (AssignmentSimple assignment : destination.getAssignmentsOrEmpty()) {
                 Variable reward = assignment.getRef();
                 if (reward.isTransient()) {
-                    JANIComponentRegistrar.registerTransitionRewardExpression(reward, action, assignment.getValue());
+	                Expression cumulativeExp = rewards.get(reward);
+	                Expression weightedExp = newOperator(OperatorMultiply.MULTIPLY, prob, assignment.getValue());
+	                if (cumulativeExp == null) {
+	                	rewards.put(reward, weightedExp);
+	                } else {
+	                	rewards.put(reward, newOperator(OperatorAdd.ADD, cumulativeExp, weightedExp));
+	                }
                 }
             }
+        }
+        for (Entry<Variable, Expression> entry : rewards.entrySet()) {
+            JANIComponentRegistrar.registerTransitionRewardExpression(entry.getKey(), action, entry.getValue());
         }
         return this;
     }
