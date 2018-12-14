@@ -23,7 +23,7 @@ package epmc.jani.type.lts;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
+import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 
 public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorNonPRISM {
@@ -42,7 +42,7 @@ public final class ModelExtensionLTSProcessor implements JANI2PRISMProcessorNonP
     @Override
     public List<String> getUnsupportedFeature() {
         List<String> ll = new LinkedList<>();
-        ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_LTS);
+        ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_LTS);
         return ll;
     }
 

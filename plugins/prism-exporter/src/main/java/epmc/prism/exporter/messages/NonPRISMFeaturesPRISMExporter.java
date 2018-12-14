@@ -29,12 +29,12 @@ import epmc.messages.Message;
  * 
  * @author Andrea Turrini
  */
-public final class ExtendedFeaturesPRISMExporter {
+public final class NonPRISMFeaturesPRISMExporter {
     /** Base name of resource bundle for the messages. */
-    public final static String EXTENDED_FEATURES_PRISM_EXPORTER = "ExtendedFeaturesPRISMExporter";
-    public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_SMG = newMessage().setIdentifier("prism-exporter-extended-feature-semantic-type-smg").build().toString();
-    public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SMG_COALITION = newMessage().setIdentifier("prism-exporter-extended-feature-smg-coalition").build().toString();
-    public final static String PRISM_EXPORTER_EXTENDED_FEATURE_PLAYER_DEFINITION = newMessage().setIdentifier("prism-exporter-extended-feature-player-definition").build().toString();
+    public final static String NONPRISM_FEATURES_PRISM_EXPORTER = "NonPRISMFeaturesPRISMExporter";
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_MA = newMessage().setIdentifier("prism-exporter-nonprism-feature-semantic-type-ma").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_CTMDP = newMessage().setIdentifier("prism-exporter-nonprism-feature-semantic-type-ctmdp").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_LTS = newMessage().setIdentifier("prism-exporter-nonprism-feature-semantic-type-lts").build().toString();
 
     /**
      * Creates a new message with given identifier with this resource bundle.
@@ -44,12 +44,12 @@ public final class ExtendedFeaturesPRISMExporter {
      * @return message created
      */
     private static Message.Builder newMessage() {
-        return new Message.Builder().setBundle(EXTENDED_FEATURES_PRISM_EXPORTER);
+        return new Message.Builder().setBundle(NONPRISM_FEATURES_PRISM_EXPORTER);
     }
 
     /**
      * Private constructor to prevent instantiation of this class.
      */
-    private ExtendedFeaturesPRISMExporter() {
+    private NonPRISMFeaturesPRISMExporter() {
     }
 }

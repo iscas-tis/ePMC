@@ -23,7 +23,7 @@ package epmc.jani.type.ctmdp;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
+import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 
 public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorNonPRISM {
@@ -51,7 +51,7 @@ public final class ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorNo
     @Override
     public List<String> getUnsupportedFeature() {
         List<String> ll = new LinkedList<>();
-        ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_CTMDP);
+        ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_CTMDP);
         return ll;
     }	
 }
