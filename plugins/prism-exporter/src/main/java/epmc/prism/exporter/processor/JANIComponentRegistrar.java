@@ -116,7 +116,7 @@ public class JANIComponentRegistrar {
     private static Map<Variable, Map<Action, Expression>> rewardTransitionExpressions;
     private static Map<Variable, Expression> rewardStateExpressions;
 
-    private static Map<Variable, Automaton> variablesAssignedByAutomaton;
+    private static Set<Variable> variablesAssignedByAutomata;
     private static Map<Automaton, Set<Variable>> automatonAssignsVariables;
 
     private static Map<Action, String> actionNames;
@@ -149,7 +149,7 @@ public class JANIComponentRegistrar {
 
         rewardTransitionExpressions = new HashMap<>();
         rewardStateExpressions = new HashMap<>();
-        variablesAssignedByAutomaton = new HashMap<>();
+        variablesAssignedByAutomata = new HashSet<>();
         automatonAssignsVariables = new HashMap<>();
         actionNames = new HashMap<>();
 
@@ -348,10 +348,10 @@ public class JANIComponentRegistrar {
             return;
         }
 
-        if (variable.getType().toType() instanceof TypeClock && !variablesAssignedByAutomaton.containsKey(variable)) {
+        if (variable.getType().toType() instanceof TypeClock && !variablesAssignedByAutomata.contains(variable)) {
             unassignedClockVariables.add(variable);
         } else { 
-            if (!variablesAssignedByAutomaton.containsKey(variable)) {
+            if (!variablesAssignedByAutomata.contains(variable)) {
                 globalVariables.add(variable);
             }
         }
@@ -433,14 +433,7 @@ public class JANIComponentRegistrar {
             return;
         }
 
-        Automaton oldAut = variablesAssignedByAutomaton.get(variable);
-        if (oldAut == null) {
-            variablesAssignedByAutomaton.put(variable, automaton);
-        } else {
-            ensure(automaton.equals(oldAut), 
-                    ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA, 
-                    getIdentifierNameByIdentifier(variable));
-        }
+        variablesAssignedByAutomata.add(variable);
 
         Set<Variable> assignedVariables = automatonAssignsVariables.get(automaton);
         if (assignedVariables == null) {
