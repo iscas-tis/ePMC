@@ -51,7 +51,7 @@ public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
             prism.append(prefix);
         }
 
-        prism.append(literal.getValue().toString());
+        prism.append(literal.getValue());
 
         return prism.toString();
     }
