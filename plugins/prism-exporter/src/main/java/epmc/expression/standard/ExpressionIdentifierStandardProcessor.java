@@ -22,8 +22,8 @@ package epmc.expression.standard;
 
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.Variable;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class ExpressionIdentifierStandardProcessor implements JANI2PRISMProcessorStrict {
 
