@@ -32,6 +32,17 @@ import epmc.messages.Message;
 public final class NonPRISMFeaturesPRISMExporter {
     /** Base name of resource bundle for the messages. */
     public final static String NONPRISM_FEATURES_PRISM_EXPORTER = "NonPRISMFeaturesPRISMExporter";
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ABS = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-abs").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_DISTANCE = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-distance").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ID = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-id").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISNEGINF = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-isneginf").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISONE = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-isone").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISPOSINF = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-isposinf").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISZERO = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-iszero").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_OVERFLOW = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-overflow").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_SET = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-set").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_UNDERFLOW = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-underflow").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_WIDEN = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-widen").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_MA = newMessage().setIdentifier("prism-exporter-nonprism-feature-semantic-type-ma").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_CTMDP = newMessage().setIdentifier("prism-exporter-nonprism-feature-semantic-type-ctmdp").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_LTS = newMessage().setIdentifier("prism-exporter-nonprism-feature-semantic-type-lts").build().toString();
