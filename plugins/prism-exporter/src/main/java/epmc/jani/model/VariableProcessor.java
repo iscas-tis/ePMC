@@ -74,16 +74,16 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
                 prism.append(prefix);
             }
             prism.append("// ")
-            .append(comment)
-            .append("\n");
+                .append(comment)
+                .append("\n");
         }
 
         if (prefix != null)	{
             prism.append(prefix);
         }
         prism.append(JANIComponentRegistrar.getIdentifierNameByIdentifier(variable))
-        .append(" : ")
-        .append(ProcessorRegistrar.getProcessor(variable.getType())
+            .append(" : ")
+            .append(ProcessorRegistrar.getProcessor(variable.getType())
                 .toPRISM());
 
         if (!JANIComponentRegistrar.areInitialConditionsUsed()) {
@@ -91,7 +91,7 @@ public class VariableProcessor implements JANI2PRISMProcessorStrict {
                 Expression initial = variable.getInitialValueOrNull();
                 if (initial != null) {
                     prism.append(" init ")
-                    .append(ProcessorRegistrar.getProcessor(initial)
+                        .append(ProcessorRegistrar.getProcessor(initial)
                             .toPRISM());
                 }
             }

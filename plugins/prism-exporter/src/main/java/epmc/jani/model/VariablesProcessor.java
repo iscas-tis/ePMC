@@ -65,7 +65,7 @@ public class VariablesProcessor implements JANI2PRISMProcessorStrict {
 
         for (Variable variable : variables) {
             ProcessorRegistrar.getProcessor(variable)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

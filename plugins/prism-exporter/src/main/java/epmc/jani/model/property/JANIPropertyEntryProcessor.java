@@ -45,13 +45,13 @@ public class JANIPropertyEntryProcessor implements JANI2PRISMProcessorStrict {
         String comment = property.getComment();
         if (comment != null) {
             prism.append("// ")
-            .append(comment)
-            .append("\n");
+                .append(comment)
+                .append("\n");
         }
 
         prism.append(ProcessorRegistrar.getProcessor(property.getExpression())
                 .toPRISM())
-        .append("\n");
+            .append("\n");
 
         return prism.toString();
     }
@@ -61,7 +61,7 @@ public class JANIPropertyEntryProcessor implements JANI2PRISMProcessorStrict {
         assert property != null;
 
         ProcessorRegistrar.getProcessor(property.getExpression())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

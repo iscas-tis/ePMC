@@ -46,7 +46,7 @@ public class InitialStatesProcessor implements JANI2PRISMProcessorStrict {
         assert initialStates != null;
 
         ProcessorRegistrar.getProcessor(initialStates.getExp())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

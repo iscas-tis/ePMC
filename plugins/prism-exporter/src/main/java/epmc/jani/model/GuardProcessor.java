@@ -49,7 +49,7 @@ public class GuardProcessor implements JANI2PRISMProcessorStrict {
         assert guard != null;
 
         ProcessorRegistrar.getProcessor(guard.getExp())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

@@ -64,54 +64,66 @@ public final class AfterOptionsCreationPRISMExporter implements AfterOptionsCrea
         assert commandTaskClasses != null;
 
         options.addCommand()
-        .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(CommandTaskPRISMExporterPRISMExport.IDENTIFIER)
-        .setCommandLine()
-        .build();
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(CommandTaskPRISMExporterPRISMExport.IDENTIFIER)
+            .setCommandLine()
+            .build();
 
         commandTaskClasses.put(CommandTaskPRISMExporterPRISMExport.IDENTIFIER, CommandTaskPRISMExporterPRISMExport.class);
 
         OptionTypeString typeString = OptionTypeString.getInstance();
         OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
 
-        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_NAME)
-        .setType(typeString)
-        .setCommandLine()
-        .setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_NAME)
+            .setType(typeString)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_FILE_NAME)
-        .setType(typeString)
-        .setCommandLine()
-        .setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_FILE_NAME)
+            .setType(typeString)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME)
-        .setType(typeString)
-        .setCommandLine()
-        .setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME)
+            .setType(typeString)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)
-        .setType(typeBoolean)
-        .setDefault(false)
-        .setCommandLine()
-        .setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)
+            .setType(typeBoolean)
+            .setDefault(false)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM)
-        .setType(typeBoolean)
-        .setDefault(false)
-        .setCommandLine()
-        .setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM)
+            .setType(typeBoolean)
+            .setDefault(false)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
-        .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS)
-        .setType(typeBoolean)
-        .setDefault(false)
-        .setCommandLine()
-        .setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsPRISMExporter.OPTIONS_PRISM_EXPORTER)
+            .setIdentifier(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS)
+            .setType(typeBoolean)
+            .setDefault(false)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%f");
     }

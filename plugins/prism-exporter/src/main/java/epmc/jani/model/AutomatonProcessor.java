@@ -60,13 +60,13 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
         String comment = automaton.getComment();
         if (comment != null) {
             prism.append("// ")
-            .append(comment)
-            .append("\n");
+                .append(comment)
+                .append("\n");
         }
 
         prism.append("module ")
-        .append(automaton.getName())
-        .append("\n");
+            .append(automaton.getName())
+            .append("\n");
 
         Variables local = automaton.getVariablesNonTransient();
         if (local != null) {
@@ -95,12 +95,12 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
                 .setPrefix(ModelJANIProcessor.INDENT)
                 .setAutomaton(automaton)
                 .toPRISM())
-        .append("\n")
-        .append(ProcessorRegistrar.getProcessor(automaton.getEdges())
+            .append("\n")
+            .append(ProcessorRegistrar.getProcessor(automaton.getEdges())
                 .setPrefix(ModelJANIProcessor.INDENT)
                 .setAutomaton(automaton)
                 .toPRISM())
-        .append("endmodule\n");
+            .append("endmodule\n");
 
         return prism.toString();
     }
@@ -112,12 +112,12 @@ public class AutomatonProcessor implements JANI2PRISMProcessorStrict {
         InitialStates initial = automaton.getInitialStates();
         if (initial != null) {
             ProcessorRegistrar.getProcessor(initial)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
         ProcessorRegistrar.getProcessor(automaton.getLocations())
-        .validateTransientVariables();
+            .validateTransientVariables();
         ProcessorRegistrar.getProcessor(automaton.getEdges())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

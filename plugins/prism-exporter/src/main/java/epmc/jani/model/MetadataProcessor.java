@@ -45,10 +45,10 @@ public class MetadataProcessor implements JANI2PRISMProcessorStrict {
 
         for (Entry<String, String> entry : metadata.getValues().entrySet()) {
             prism.append("// ")
-            .append(entry.getKey())
-            .append(": ")
-            .append(entry.getValue())
-            .append("\n");
+                .append(entry.getKey())
+                .append(": ")
+                .append(entry.getValue())
+                .append("\n");
         }
 
         return prism.toString();

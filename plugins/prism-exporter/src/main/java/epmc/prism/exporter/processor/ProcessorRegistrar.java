@@ -207,7 +207,7 @@ public class ProcessorRegistrar {
                 ensure(useExtendedSyntax, 
                         ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
                         ((JANI2PRISMProcessorExtended)processor).getUnsupportedFeature()
-                        .toArray());
+                            .toArray());
             } else {
                 Class<? extends JANI2PRISMProcessorNonPRISM> nonPRISMProcessorClass = nonPRISMProcessors.get(JANIComponent.getClass());
                 if (nonPRISMProcessorClass != null) {
@@ -216,7 +216,7 @@ public class ProcessorRegistrar {
                     ensure(useNonPRISMSyntax, 
                             ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
                             ((JANI2PRISMProcessorNonPRISM)processor).getUnsupportedFeature()
-                            .toArray());
+                                .toArray());
                 } else {
                     ensure(false, 
                             ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNKNOWN_PROCESSOR, 

@@ -214,7 +214,9 @@ public class JANIComponentRegistrar {
             mapLI = new HashMap<>();
             automatonLocationIdentifier.put(automaton, mapLI);
         }
-        ensure(!mapLI.containsKey(location), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_LOCATION_DEFINED_TWICE, location.getName());
+        ensure(!mapLI.containsKey(location), 
+                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_LOCATION_DEFINED_TWICE, 
+                location.getName());
         mapLI.put(location, location_counter_id++);
 
         String name = "location";
@@ -236,7 +238,7 @@ public class JANIComponentRegistrar {
         assert automatonLocationIdentifier.containsKey(automaton);
 
         Map<Location, Integer> mapLI = automatonLocationIdentifier.get(automaton);
-        assert mapLI != null && mapLI.containsKey(location);
+        assert (mapLI != null) && mapLI.containsKey(location);
 
         return mapLI.get(location);
     }
@@ -272,7 +274,9 @@ public class JANIComponentRegistrar {
     public static void registerIdentifier(JANIIdentifier identifier) {
         assert identifier != null;
 
-        ensure(!identifierNames.containsKey(identifier), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_IDENTIFIER_DEFINED_TWICE, identifier.getName());
+        ensure(!identifierNames.containsKey(identifier), 
+                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_IDENTIFIER_DEFINED_TWICE, 
+                identifier.getName());
         if (!identifierNames.containsKey(identifier)) {
             identifierByName.put(identifier.getName(), identifier);
             String name;
@@ -476,23 +480,23 @@ public class JANIComponentRegistrar {
 	                remaining = true;
 	            }
 	            prism.append("// Original variable name: ").append(reward.getName()).append("\n")
-	            .append("// New name: ").append(name).append("\n");
+	                .append("// New name: ").append(name).append("\n");
 	            prism.append("rewards ").append(name).append("\n");
 	            expression = rewardStateExpressions.get(reward);
 	            if (expression != null) {
 	                processor = ProcessorRegistrar.getProcessor(expression);
-	                prism.append(ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM().toString()).append(";\n");
+	                prism.append(ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM()).append(";\n");
 	            }
 	            Map<Action, Expression> mapAA = rewardTransitionExpressions.get(reward);
 	            if (mapAA != null) {
 	                for(Entry<Action, Expression> entryAA : mapAA.entrySet()) {
 	                    action = entryAA.getKey();
 	                    processor = ProcessorRegistrar.getProcessor(action);
-	                    prism.append(ModelJANIProcessor.INDENT).append(processor.toPRISM().toString()).append(" true : ");
+	                    prism.append(ModelJANIProcessor.INDENT).append(processor.toPRISM()).append(" true : ");
 	
 	                    expression = entryAA.getValue();
 	                    processor = ProcessorRegistrar.getProcessor(expression);
-	                    prism.append(processor.toPRISM().toString()).append(";\n");
+	                    prism.append(processor.toPRISM()).append(";\n");
 	
 	                }
 	            }
@@ -537,7 +541,9 @@ public class JANIComponentRegistrar {
      */
     public static String getActionName(Action action) {
         assert action != null;
-        ensure(actionNames.containsKey(action), ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION, action.getName());
+        ensure(actionNames.containsKey(action), 
+                ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_UNDEFINED_USED_ACTION, 
+                action.getName());
 
         return actionNames.get(action);
     }
@@ -558,7 +564,7 @@ public class JANIComponentRegistrar {
 	            String name = entry.getValue();
 	            if (! constant.getName().equals(name)) {
 	                sb.append("// Original constant name: ").append(constant.getName()).append("\n")
-	                .append("// New name: ").append(name).append("\n\n");
+	                    .append("// New name: ").append(name).append("\n\n");
 	            }
         	}
         }
@@ -577,7 +583,7 @@ public class JANIComponentRegistrar {
 	                String name = entry.getValue();
 	                if (! variable.getName().equals(name)) {
 	                    sb.append("// Original variable name: ").append(variable.getName()).append("\n")
-	                    .append("// New name: ").append(name).append("\n\n");
+	                        .append("// New name: ").append(name).append("\n\n");
 	                }
 	            }
         	}
@@ -592,7 +598,7 @@ public class JANIComponentRegistrar {
         String name = identifierNames.get(variable);
         if (! variable.getName().equals(name)) {
             sb.append(prefix).append("// Original variable name: ").append(variable.getName()).append("\n")
-            .append(prefix).append("// New name: ").append(name).append("\n\n");
+                .append(prefix).append("// New name: ").append(name).append("\n\n");
         }
 
         return sb.toString();		
@@ -606,7 +612,7 @@ public class JANIComponentRegistrar {
             String name = entry.getValue();
             if (! action.getName().equals(name)) {
                 sb.append("// Original action name: ").append(action.getName()).append("\n")
-                .append("// New name: ").append(name).append("\n\n");
+                    .append("// New name: ").append(name).append("\n\n");
             }
         }
 
@@ -621,7 +627,7 @@ public class JANIComponentRegistrar {
             String locationName = automatonLocationName.get(automaton);
             for (Entry<Location, Integer> entry : automatonLocationIdentifier.get(automaton).entrySet()) {
                 sb.append("// Original location: ").append(entry.getKey().getName()).append("\n")
-                .append("// Condition: ").append(locationName).append(" = ").append(entry.getValue()).append("\n");
+                    .append("// Condition: ").append(locationName).append(" = ").append(entry.getValue()).append("\n");
             }
         }
 
@@ -662,7 +668,8 @@ public class JANIComponentRegistrar {
         JANI2PRISMProcessorStrict processor; 
 
         if (usesInitialConditions) {
-            prism.append("init\n").append(ModelJANIProcessor.INDENT);
+            prism.append("init\n")
+                .append(ModelJANIProcessor.INDENT);
             boolean addAnd = false;
 
             for (Entry<Automaton, Collection<Location>> entry : initialLocations.entrySet()) {
@@ -678,10 +685,10 @@ public class JANIComponentRegistrar {
                             remaining = true;
                         }
                         prism.append("(")
-                        .append(locationName)
-                        .append("=")
-                        .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
-                        .append(")");
+                            .append(locationName)
+                            .append("=")
+                            .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
+                            .append(")");
                     }
                     prism.append(")");
                     addAnd = true;
@@ -690,17 +697,18 @@ public class JANIComponentRegistrar {
             if (initialStates != null) {
                 if (addAnd) {
                     prism.append("\n")
-                    .append(ModelJANIProcessor.INDENT)
-                    .append("&\n")
-                    .append(ModelJANIProcessor.INDENT);
+                        .append(ModelJANIProcessor.INDENT)
+                        .append("&\n")
+                        .append(ModelJANIProcessor.INDENT);
                 }
                 String comment = initialStates.getComment();
                 if (comment != null) {
-                    prism.append("// ").append(comment).append("\n").append(ModelJANIProcessor.INDENT);
+                    prism.append("// ").append(comment).append("\n")
+                        .append(ModelJANIProcessor.INDENT);
                 }
                 Expression exp = initialStates.getExp(); 
                 processor = ProcessorRegistrar.getProcessor(exp);
-                prism.append(processor.toPRISM().toString());
+                prism.append(processor.toPRISM());
             }	
 
             prism.append("\nendinit\n");

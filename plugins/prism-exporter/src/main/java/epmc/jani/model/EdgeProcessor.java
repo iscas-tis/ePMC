@@ -87,8 +87,8 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
                 prism.append(prefix);
             }
             prism.append("// ")
-            .append(comment)
-            .append("\n");
+                .append(comment)
+                .append("\n");
         }
 
         if (prefix != null)	{
@@ -96,22 +96,22 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
         }
         prism.append(ProcessorRegistrar.getProcessor(edge.getActionOrSilent())
                 .toPRISM())
-        .append(" ");
+            .append(" ");
 
         if (automaton.getLocations().size() > 1) {
             prism.append("(")
-            .append(JANIComponentRegistrar.getLocationName(automaton))
-            .append(" = ")
-            .append(JANIComponentRegistrar.getLocationIdentifier(automaton, edge.getLocation()))
-            .append(") & ");
+                .append(JANIComponentRegistrar.getLocationName(automaton))
+                .append(" = ")
+                .append(JANIComponentRegistrar.getLocationIdentifier(automaton, edge.getLocation()))
+                .append(") & ");
         }
         prism.append(ProcessorRegistrar.getProcessor(edge.getGuard())
                 .toPRISM())
-        .append(" -> ")
-        .append(ProcessorRegistrar.getProcessor(edge.getDestinations())
+            .append(" -> ")
+            .append(ProcessorRegistrar.getProcessor(edge.getDestinations())
                 .setAutomaton(automaton)
                 .toPRISM())
-        .append(";\n");
+            .append(";\n");
 
         return prism.toString();
     }
@@ -121,9 +121,9 @@ public class EdgeProcessor implements JANI2PRISMProcessorStrict {
         assert edge != null;
 
         ProcessorRegistrar.getProcessor(edge.getGuard())
-        .validateTransientVariables();
+            .validateTransientVariables();
         ProcessorRegistrar.getProcessor(edge.getDestinations())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

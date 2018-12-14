@@ -66,20 +66,20 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
             if (!ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
                 prism.append(ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
                         .toPRISM())
-                .append(" : ");
+                    .append(" : ");
             }
         } else {
             prism.append(ProcessorRegistrar.getProcessor(probability)
                     .toPRISM())
-            .append(" : ");
+                .append(" : ");
         }
 
         if (automaton.getLocations().size() > 1) {
             prism.append("(")
-            .append(JANIComponentRegistrar.getLocationName(automaton))
-            .append("'=")
-            .append(JANIComponentRegistrar.getLocationIdentifier(automaton, destination.getLocation()))
-            .append(") & ");
+                .append(JANIComponentRegistrar.getLocationName(automaton))
+                .append("'=")
+                .append(JANIComponentRegistrar.getLocationIdentifier(automaton, destination.getLocation()))
+                .append(") & ");
         }
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
@@ -95,12 +95,12 @@ public class DestinationProcessor implements JANI2PRISMProcessorStrict {
         assert destination != null;
 
         ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
-        .validateTransientVariables();
+            .validateTransientVariables();
 
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
             ProcessorRegistrar.getProcessor(assignments)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

@@ -50,11 +50,11 @@ public class LocationProcessor implements JANI2PRISMProcessorStrict {
         TimeProgress timeProgress = location.getTimeProgress();
         if (timeProgress != null) {
             ProcessorRegistrar.getProcessor(timeProgress)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
         for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
             ProcessorRegistrar.getProcessor(assignment)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 
