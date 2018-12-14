@@ -170,6 +170,12 @@ public class JANIComponentRegistrar {
         location_counter_name = 0;
         location_counter_id = 0;
     }
+    
+    public static void addSilentAction(Action action) {
+    	assert (action != null) && action.getModel().getSilentAction().equals(action);
+    	
+    	actionNames.put(action, action.getName());
+    }
 
     public static void setIsTimedModel(boolean isTimedModel) {
         JANIComponentRegistrar.isTimedModel = isTimedModel;

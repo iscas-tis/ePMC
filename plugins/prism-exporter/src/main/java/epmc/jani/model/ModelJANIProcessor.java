@@ -39,6 +39,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
         jani = (ModelJANI) obj;
 
         JANIComponentRegistrar.setIsTimedModel(SemanticsTimed.isTimed(jani.getSemantics()));
+        JANIComponentRegistrar.addSilentAction(jani.getSilentAction());
         return this;
     }
 
