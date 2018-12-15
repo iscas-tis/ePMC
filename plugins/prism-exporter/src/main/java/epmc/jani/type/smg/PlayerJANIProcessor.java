@@ -26,9 +26,9 @@ import java.util.List;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.ModelJANIProcessor;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
@@ -52,7 +52,7 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
         boolean remaining = false;
 
         prism.append("player ")
-        .append(player.getName());
+            .append(player.getName());
 
         for (Automaton automaton: player.getAutomataOrEmpty()) {
             if (remaining) {
@@ -61,8 +61,8 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
                 remaining = true;
             }
             prism.append("\n")
-            .append(ModelJANIProcessor.INDENT)
-            .append(automaton.getName());
+                .append(ModelJANIProcessor.INDENT)
+                .append(automaton.getName());
         }
         for (Action action: player.getActionsOrEmpty()) {
             if (remaining) {
@@ -71,10 +71,10 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
                 remaining = true;
             }
             prism.append("\n")
-            .append(ModelJANIProcessor.INDENT)
-            .append("[")
-            .append(JANIComponentRegistrar.getActionName(action))
-            .append("]");
+                .append(ModelJANIProcessor.INDENT)
+                .append("[")
+                .append(JANIComponentRegistrar.getActionName(action))
+                .append("]");
         }
 
         prism.append("\nendplayer\n");
@@ -108,7 +108,8 @@ public class PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
         boolean usesTransient = false;
 
         for (Action action: player.getActionsOrEmpty()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(action).usesTransientVariables();
+            usesTransient |= ProcessorRegistrar.getProcessor(action)
+                    .usesTransientVariables();
         }
 
         return usesTransient;

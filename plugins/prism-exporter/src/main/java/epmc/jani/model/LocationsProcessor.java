@@ -22,11 +22,11 @@ package epmc.jani.model;
 
 import static epmc.error.UtilError.ensure;
 
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
-import epmc.prism.exporter.processor.Range;
+import epmc.prism.exporter.util.Range;
 
 public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 
@@ -81,18 +81,18 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
                     prism.append(ProcessorRegistrar.getProcessor(timeProgress)
                             .setPrefix(prefix)
                             .toPRISM())
-                    .append("\n");
+                        .append("\n");
                 }
             }
         } else {
             Range range = JANIComponentRegistrar.getLocationRange(automaton);
             prism.append(prefix)
-            .append(JANIComponentRegistrar.getLocationName(automaton))
-            .append(": [")
-            .append(range.low)
-            .append("..")
-            .append(range.high)
-            .append("]");
+                .append(JANIComponentRegistrar.getLocationName(automaton))
+                .append(": [")
+                .append(range.low)
+                .append("..")
+                .append(range.high)
+                .append("]");
             if (!JANIComponentRegistrar.areInitialConditionsUsed() && automaton.getInitialLocations().size() == 1) {
                 prism.append(" init ");
                 for (Location location : automaton.getInitialLocations()) {
@@ -103,33 +103,33 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 
             if (JANIComponentRegistrar.isTimedModel()) {
                 prism.append("\n")
-                .append(prefix)
-                .append("invariant\n");
+                    .append(prefix)
+                    .append("invariant\n");
                 boolean remaining = false;
                 for (Location location : locations) {
                     TimeProgress timeProgress = location.getTimeProgress();
                     if (timeProgress != null) {
                         if (remaining) {
                             prism.append(prefix)
-                            .append(ModelJANIProcessor.INDENT)
-                            .append("&\n");
+                                .append(ModelJANIProcessor.INDENT)
+                                .append("&\n");
                         } else {
                             remaining = true;
                         }
                         prism.append(prefix)
-                        .append(ModelJANIProcessor.INDENT)
-                        .append("(")
-                        .append(JANIComponentRegistrar.getLocationName(automaton))
-                        .append("=")
-                        .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
-                        .append(" => (")
-                        .append(ProcessorRegistrar.getProcessor(timeProgress.getExp())
+                            .append(ModelJANIProcessor.INDENT)
+                            .append("(")
+                            .append(JANIComponentRegistrar.getLocationName(automaton))
+                            .append("=")
+                            .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
+                            .append(" => (")
+                            .append(ProcessorRegistrar.getProcessor(timeProgress.getExp())
                                 .toPRISM())
-                        .append("))\n");
+                            .append("))\n");
                     }
                 }
                 prism.append(prefix)
-                .append("endinvariant\n");
+                    .append("endinvariant\n");
             }
         }
         return prism.toString();
@@ -141,7 +141,7 @@ public class LocationsProcessor implements JANI2PRISMProcessorStrict {
 
         for (Location location : locations) {
             ProcessorRegistrar.getProcessor(location)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

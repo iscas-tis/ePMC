@@ -56,7 +56,7 @@ public class ConstantsProcessor implements JANI2PRISMProcessorStrict {
 
         for (Constant constant : constants) {
             ProcessorRegistrar.getProcessor(constant)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

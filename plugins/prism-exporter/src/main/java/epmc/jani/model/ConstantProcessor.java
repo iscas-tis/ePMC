@@ -21,8 +21,8 @@
 package epmc.jani.model;
 
 import epmc.expression.Expression;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public class ConstantProcessor implements JANI2PRISMProcessorStrict {
@@ -48,20 +48,21 @@ public class ConstantProcessor implements JANI2PRISMProcessorStrict {
         String comment = constant.getComment();
         if (comment != null) {
             prism.append("// ")
-            .append(comment)
-            .append("\n");
+                .append(comment)
+                .append("\n");
         }
 
         prism.append("const ")
-        .append(ProcessorRegistrar.getProcessor(constant.getType())
+            .append(ProcessorRegistrar.getProcessor(constant.getType())
                 .toPRISM())
-        .append(" ")
-        .append(constant.getName());
+            .append(" ")
+            .append(constant.getName());
 
         Expression expression = constant.getValue();
         if (expression != null) {
             prism.append(" = ")
-            .append(expression.toString());
+                .append(ProcessorRegistrar.getProcessor(expression)
+                        .toPRISM());
         }
 
         prism.append(";\n");
@@ -74,7 +75,7 @@ public class ConstantProcessor implements JANI2PRISMProcessorStrict {
         assert constant != null;
 
         ProcessorRegistrar.getProcessor(constant.getValue())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

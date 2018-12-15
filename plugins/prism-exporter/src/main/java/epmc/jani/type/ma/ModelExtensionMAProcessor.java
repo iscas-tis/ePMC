@@ -23,7 +23,7 @@ package epmc.jani.type.ma;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
+import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 
 public final class ModelExtensionMAProcessor implements JANI2PRISMProcessorNonPRISM {
@@ -43,7 +43,7 @@ public final class ModelExtensionMAProcessor implements JANI2PRISMProcessorNonPR
     @Override
     public List<String> getUnsupportedFeature() {
         List<String> ll = new LinkedList<>();
-        ll.add(ExtendedFeaturesPRISMExporter.PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_MA);
+        ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_MA);
         return ll;
     }
 

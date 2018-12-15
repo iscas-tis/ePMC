@@ -43,10 +43,13 @@ public final class ModelExtensionSMGProcessor implements JANI2PRISMProcessorExte
     public String toPRISM() {
         assert smg != null;
 
-        return new StringBuilder().append(ModelExtensionSMG.IDENTIFIER)
-                .append("\n")
-                .append(ProcessorRegistrar.getProcessor(smg.getPlayers()).toPRISM())
-                .toString();
+        StringBuilder prism = new StringBuilder(); 
+        
+        prism.append(ModelExtensionSMG.IDENTIFIER)
+            .append("\n")
+            .append(ProcessorRegistrar.getProcessor(smg.getPlayers()).toPRISM());
+        
+        return prism.toString();
     }
 
 

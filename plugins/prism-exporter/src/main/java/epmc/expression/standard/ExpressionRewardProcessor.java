@@ -48,23 +48,23 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
         switch(type) {
         case REACHABILITY:
             prism.append("(")
-            .append(ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
-                    .toPRISM())
-            .append(")");
+                .append(ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
+                        .toPRISM())
+                .append(")");
             break;
         case INSTANTANEOUS:
         case CUMULATIVE:
             prism.append("(")
-            .append(ProcessorRegistrar.getProcessor(reward.getTime())
-                    .toPRISM())
-            .append(")");
+                .append(ProcessorRegistrar.getProcessor(reward.getTime())
+                        .toPRISM())
+                .append(")");
             break;
         case DISCOUNTED:
             prism.append(ProcessorRegistrar.getProcessor(reward.getTime())
                     .toPRISM())
-            .append(",")
-            .append(ProcessorRegistrar.getProcessor(reward.getDiscount())
-                    .toPRISM());
+                .append(",")
+                .append(ProcessorRegistrar.getProcessor(reward.getDiscount())
+                        .toPRISM());
             break;
         default:
         }
@@ -78,7 +78,7 @@ public class ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 
         for (Expression child : reward.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

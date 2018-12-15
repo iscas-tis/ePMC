@@ -37,10 +37,10 @@ import epmc.modelchecker.Log;
 import epmc.modelchecker.Model;
 import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
+import epmc.prism.exporter.JANI2PRISMConverter;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.messages.MessagesPRISMExporter;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMConverter;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 import epmc.value.OptionsValue;
 

@@ -23,11 +23,11 @@ package epmc.prism.exporter.processor;
 import epmc.jani.model.Automaton;
 
 public interface JANI2PRISMProcessorStrict {	
-    default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; }
+    default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; };
 
-    default JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) { return this; }
+    default JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) { return this; };
 
-    default JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) { return this; }
+    default JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) { return this; };
 
     JANI2PRISMProcessorStrict setElement(Object obj);
 
@@ -41,7 +41,7 @@ public interface JANI2PRISMProcessorStrict {
      * Explore the JANI model and identify the variables that are assigned 
      * in some edge of the automata labelled with a synchronising action. 
      */
-    default void findAssignedVariables() {}
+    default void findAssignedVariables() {};
 
     /**
      * Explore the JANI model and check whether the use of transient variables is compatible with PRISM 

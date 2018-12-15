@@ -68,7 +68,7 @@ public class AssignmentsProcessor implements JANI2PRISMProcessorStrict {
 
         for (Assignment assignment : assignments) {
             ProcessorRegistrar.getProcessor(assignment)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

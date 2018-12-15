@@ -47,13 +47,12 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
         if (quantified instanceof ExpressionSteadyState) {
             prism.append("S");
         } else if (quantified instanceof ExpressionReward) {
-            prism.append("R");
-
-            prism.append("{")
-            .append(ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
-                    .getExpression())
-                    .toPRISM())
-            .append("}");
+            prism.append("R")
+                .append("{")
+                .append(ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
+                        .getExpression())
+                        .toPRISM())
+                .append("}");
         } else {
             prism.append("P");
         }
@@ -68,9 +67,9 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
         }
 
         prism.append("[")
-        .append(ProcessorRegistrar.getProcessor(quantified)
-                .toPRISM())
-        .append("]");
+            .append(ProcessorRegistrar.getProcessor(quantified)
+                    .toPRISM())
+            .append("]");
 
         return prism.toString();
     }
@@ -81,7 +80,7 @@ public class ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict 
 
         for (Expression child : quantifier.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

@@ -36,8 +36,8 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
                 prism.append(prefix);
             }
             prism.append("// ")
-            .append(comment)
-            .append("\n");
+                .append(comment)
+                .append("\n");
         }
 
         if (prefix != null)	{
@@ -51,7 +51,7 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
             processor.setPrefix(ModelJANIProcessor.INDENT);			
         }
         prism.append(processor.toPRISM())
-        .append("\n");
+            .append("\n");
         if (prefix != null)	{
             prism.append(prefix);
         }
@@ -65,7 +65,7 @@ public class TimeProgressProcessor implements JANI2PRISMProcessorStrict {
         assert timeProgress != null;
 
         ProcessorRegistrar.getProcessor(timeProgress.getExp())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

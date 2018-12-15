@@ -18,30 +18,15 @@
 
  *****************************************************************************/
 
-package epmc.prism.exporter.processor;
+package epmc.prism.exporter.util;
 
-import epmc.jani.model.ModelJANI;
+public class Range {
+    public final int low;
+    public final int high;
 
-public final class JANI2PRISMConverter {
-
-    private final ModelJANI jani;
-
-    public JANI2PRISMConverter(ModelJANI jani) {
-        assert jani != null;
-        JANIComponentRegistrar.reset();
-
-        this.jani = jani;
-    }
-
-    public String convertModel() {
-        assert jani != null;
-
-        return ProcessorRegistrar.getProcessor(jani).toPRISM();
-    }
-
-    public String convertProperties() {
-        assert jani != null;
-
-        return ProcessorRegistrar.getProcessor(jani.getPropertyList()).toPRISM();
+    public Range(int low, int high) {
+        this.low = low;
+        this.high = high;
     }
 }
+

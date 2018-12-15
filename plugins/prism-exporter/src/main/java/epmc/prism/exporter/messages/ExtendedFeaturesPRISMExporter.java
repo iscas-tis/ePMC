@@ -33,9 +33,6 @@ public final class ExtendedFeaturesPRISMExporter {
     /** Base name of resource bundle for the messages. */
     public final static String EXTENDED_FEATURES_PRISM_EXPORTER = "ExtendedFeaturesPRISMExporter";
     public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_SMG = newMessage().setIdentifier("prism-exporter-extended-feature-semantic-type-smg").build().toString();
-    public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_MA = newMessage().setIdentifier("prism-exporter-extended-feature-semantic-type-ma").build().toString();
-    public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_CTMDP = newMessage().setIdentifier("prism-exporter-extended-feature-semantic-type-ctmdp").build().toString();
-    public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SEMANTIC_TYPE_LTS = newMessage().setIdentifier("prism-exporter-extended-feature-semantic-type-lts").build().toString();
     public final static String PRISM_EXPORTER_EXTENDED_FEATURE_SMG_COALITION = newMessage().setIdentifier("prism-exporter-extended-feature-smg-coalition").build().toString();
     public final static String PRISM_EXPORTER_EXTENDED_FEATURE_PLAYER_DEFINITION = newMessage().setIdentifier("prism-exporter-extended-feature-player-definition").build().toString();
 

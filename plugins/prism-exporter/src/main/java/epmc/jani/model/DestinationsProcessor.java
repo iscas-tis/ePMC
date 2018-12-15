@@ -70,7 +70,7 @@ public class DestinationsProcessor implements JANI2PRISMProcessorStrict {
 
         for (Destination destination : destinations) {
             ProcessorRegistrar.getProcessor(destination)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

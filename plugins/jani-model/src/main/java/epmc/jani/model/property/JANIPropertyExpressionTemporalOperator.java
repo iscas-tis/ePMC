@@ -295,6 +295,9 @@ public final class JANIPropertyExpressionTemporalOperator implements JANIExpress
             left = parser.matchExpression(model, ExpressionLiteral.getTrue());
             right = parser.matchExpression(model, expressionTemporal.getOperand());
             stepBounds = new JANIPropertyInterval();
+            stepBounds.setForProperty(forProperty);
+            stepBounds.setModel(model);
+            stepBounds.setIdentifiers(validIdentifiers);
             stepBounds.setLower(ExpressionLiteral.getOne());
             stepBounds.setLowerExclusive(false);
             stepBounds.setUpper(ExpressionLiteral.getOne());

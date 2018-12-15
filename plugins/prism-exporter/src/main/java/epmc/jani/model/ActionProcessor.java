@@ -20,8 +20,8 @@
 
 package epmc.jani.model;
 
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class ActionProcessor implements JANI2PRISMProcessorStrict {
 
@@ -43,8 +43,8 @@ public class ActionProcessor implements JANI2PRISMProcessorStrict {
         StringBuilder prism = new StringBuilder();
 
         prism.append("[")
-        .append(JANIComponentRegistrar.getActionName(action))
-        .append("]");
+            .append(JANIComponentRegistrar.getActionName(action))
+            .append("]");
 
         return prism.toString();
     }

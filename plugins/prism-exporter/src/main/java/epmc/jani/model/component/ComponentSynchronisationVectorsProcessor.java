@@ -27,9 +27,9 @@ import java.util.List;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 import epmc.jani.model.Edge;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.JANIComponentRegistrar;
 
 public class ComponentSynchronisationVectorsProcessor implements JANI2PRISMProcessorStrict {
 

@@ -72,7 +72,7 @@ public class EdgesProcessor implements JANI2PRISMProcessorStrict {
 
         for (Edge edge : edges) {
             ProcessorRegistrar.getProcessor(edge)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

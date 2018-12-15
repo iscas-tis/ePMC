@@ -49,7 +49,7 @@ public class ProbabilityProcessor implements JANI2PRISMProcessorStrict {
         assert probability != null;
 
         ProcessorRegistrar.getProcessor(probability.getExp())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

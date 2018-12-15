@@ -49,7 +49,7 @@ public class RateProcessor implements JANI2PRISMProcessorStrict {
         assert rate != null;
 
         ProcessorRegistrar.getProcessor(rate.getExp())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
     @Override

@@ -46,7 +46,7 @@ public class JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
         for (RawProperty raw : properties.getRawProperties()) {
             prism.append(ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
                     .toPRISM())
-            .append("\n");
+                .append("\n");
         }
 
         return prism.toString();
@@ -58,7 +58,7 @@ public class JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
 
         for (RawProperty raw : properties.getRawProperties()) {
             ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

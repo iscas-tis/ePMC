@@ -56,12 +56,12 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
             prism.append(prefix);
         }
         prism.append("(")
-        .append(ProcessorRegistrar.getProcessor(assignment.getRef())
+            .append(ProcessorRegistrar.getProcessor(assignment.getRef())
                 .toPRISM())
-        .append("'=")
-        .append(ProcessorRegistrar.getProcessor(assignment.getValue())
+            .append("'=")
+            .append(ProcessorRegistrar.getProcessor(assignment.getValue())
                 .toPRISM())
-        .append(")");
+            .append(")");
         return prism.toString();
     }
 
@@ -70,10 +70,10 @@ public class AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
         assert assignment != null;
 
         ensure(!ProcessorRegistrar.getProcessor(assignment.getValue())
-                .usesTransientVariables(), 
+                    .usesTransientVariables(), 
                 ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE, 
                 assignment.getRef()
-                .getName());
+                    .getName());
     }
 
     @Override

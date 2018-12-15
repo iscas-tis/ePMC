@@ -44,24 +44,25 @@ public class ExpressionTemporalReleaseProcessor implements JANI2PRISMProcessorSt
 
         if (isFalse(temporal.getOperandRight())) {
             prism.append("G")
-            .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
-                    .toPRISM())
-            .append(" (")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
-                    .toPRISM())
-            .append(")");
+                .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
+                        .toPRISM())
+                .append(" (")
+                .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
+                        .toPRISM())
+                .append(")");
         } else {
             prism.append("(")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
-                    .toPRISM()) 
-            .append(") R")
-            .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
-                    .toPRISM())
-            .append(" (")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
-                    .toPRISM())
-            .append(")");
+                .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
+                        .toPRISM()) 
+                .append(") R")
+                .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
+                        .toPRISM())
+                .append(" (")
+                .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                        .toPRISM())
+                .append(")");
         }
+
         return prism.toString();
     }
 
@@ -71,7 +72,7 @@ public class ExpressionTemporalReleaseProcessor implements JANI2PRISMProcessorSt
 
         for (Expression child : temporal.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

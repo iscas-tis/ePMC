@@ -18,15 +18,11 @@
 
  *****************************************************************************/
 
-package epmc.prism.exporter.processor;
+package epmc.prism.exporter.operatorprocessor;
 
-public class Range {
-    public final int low;
-    public final int high;
+import java.util.List;
 
-    public Range(int low, int high) {
-        this.low = low;
-        this.high = high;
-    }
+public interface JANI2PRISMOperatorProcessorExtended extends JANI2PRISMOperatorProcessorStrict {
+
+    List<String> getUnsupportedFeature();
 }
-
