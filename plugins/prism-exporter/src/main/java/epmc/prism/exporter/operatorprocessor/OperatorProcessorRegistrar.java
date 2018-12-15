@@ -156,11 +156,11 @@ public class OperatorProcessorRegistrar {
      * @param expressionOperator the JANI component for which obtain the operator processor
      * @return the corresponding operator processor
      */
-    public static JANI2PRISMOperatorProcessorStrict getOperatorProcessor(Operator operator, ExpressionOperator expressionOperator) {
+    public static JANI2PRISMOperatorProcessorStrict getOperatorProcessor(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
 
         JANI2PRISMOperatorProcessorStrict processor = null;
-        Class<? extends JANI2PRISMOperatorProcessorStrict> operatorProcessorClass = strictOperatorProcessors.get(operator.getClass());
+        Class<? extends JANI2PRISMOperatorProcessorStrict> operatorProcessorClass = strictOperatorProcessors.get(expressionOperator.getOperator().getClass());
         if (operatorProcessorClass != null) {
             processor = Util.getInstance(operatorProcessorClass)
                     .setExpressionOperator(expressionOperator);

@@ -55,8 +55,7 @@ public class ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
             prism.append(prefix);
         }
         
-        prism.append(OperatorProcessorRegistrar.getOperatorProcessor(expressionOperator.getOperator(), 
-                        expressionOperator)
+        prism.append(OperatorProcessorRegistrar.getOperatorProcessor(expressionOperator)
                 .toPRISM());
 
         return prism.toString();
