@@ -61,7 +61,8 @@ public class ConstantProcessor implements JANI2PRISMProcessorStrict {
         Expression expression = constant.getValue();
         if (expression != null) {
             prism.append(" = ")
-                .append(expression.toString());
+                .append(ProcessorRegistrar.getProcessor(expression)
+                        .toPRISM());
         }
 
         prism.append(";\n");

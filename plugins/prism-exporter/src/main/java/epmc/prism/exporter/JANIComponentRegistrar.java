@@ -558,7 +558,7 @@ public class JANIComponentRegistrar {
     }
 
     public static String constantsRenaming() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder prism = new StringBuilder();
 
         for (Entry<JANIIdentifier,String> entry : identifierNames.entrySet()) {
         	JANIIdentifier identifier = entry.getKey();
@@ -566,17 +566,17 @@ public class JANIComponentRegistrar {
 	            Constant constant = (Constant) identifier;
 	            String name = entry.getValue();
 	            if (! constant.getName().equals(name)) {
-	                sb.append("// Original constant name: ").append(constant.getName()).append("\n")
+	                prism.append("// Original constant name: ").append(constant.getName()).append("\n")
 	                    .append("// New name: ").append(name).append("\n\n");
 	            }
         	}
         }
 
-        return sb.toString();		
+        return prism.toString();		
     }
 
     public static String globalVariablesRenaming() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder prism = new StringBuilder();
 
         for (Entry<JANIIdentifier,String> entry : identifierNames.entrySet()) {
         	JANIIdentifier identifier = entry.getKey();
@@ -585,56 +585,57 @@ public class JANIComponentRegistrar {
 	            if (globalVariables.contains(variable)) {
 	                String name = entry.getValue();
 	                if (! variable.getName().equals(name)) {
-	                    sb.append("// Original variable name: ").append(variable.getName()).append("\n")
+	                    prism.append("// Original variable name: ").append(variable.getName()).append("\n")
 	                        .append("// New name: ").append(name).append("\n\n");
 	                }
 	            }
         	}
         }
 
-        return sb.toString();		
+        return prism.toString();		
     }
 
     public static String variableRenaming(Variable variable, String prefix) {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder prism = new StringBuilder();
 
         String name = identifierNames.get(variable);
         if (! variable.getName().equals(name)) {
-            sb.append(prefix).append("// Original variable name: ").append(variable.getName()).append("\n")
+            prism.append(prefix).append("// Original variable name: ").append(variable.getName()).append("\n")
                 .append(prefix).append("// New name: ").append(name).append("\n\n");
         }
 
-        return sb.toString();		
+        return prism.toString();		
     }
 
     public static String actionsRenaming() {
-        StringBuilder sb = new StringBuilder();
+        StringBuilder prism = new StringBuilder();
 
         for (Entry<Action,String> entry : actionNames.entrySet()) {
             Action action = entry.getKey();
             String name = entry.getValue();
             if (! action.getName().equals(name)) {
-                sb.append("// Original action name: ").append(action.getName()).append("\n")
+                prism.append("// Original action name: ").append(action.getName()).append("\n")
                     .append("// New name: ").append(name).append("\n\n");
             }
         }
 
-        return sb.toString();
+        return prism.toString();
     }
 
     public static String locationRenaming(Automaton automaton) {
-        StringBuilder sb = new StringBuilder();
         assert automatonLocationIdentifier.containsKey(automaton);
+
+        StringBuilder prism = new StringBuilder();
 
         if (automatonLocationIdentifier.get(automaton).size() > 1) {
             String locationName = automatonLocationName.get(automaton);
             for (Entry<Location, Integer> entry : automatonLocationIdentifier.get(automaton).entrySet()) {
-                sb.append("// Original location: ").append(entry.getKey().getName()).append("\n")
+                prism.append("// Original location: ").append(entry.getKey().getName()).append("\n")
                     .append("// Condition: ").append(locationName).append(" = ").append(entry.getValue()).append("\n");
             }
         }
 
-        return sb.toString();
+        return prism.toString();
     }
 
     public static void registerInitialRestriction(InitialStates initialStates) {
