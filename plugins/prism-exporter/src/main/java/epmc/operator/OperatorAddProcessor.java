@@ -23,8 +23,6 @@ package epmc.operator;
 import static epmc.prism.exporter.util.UtilPRISMExporter.appendWithParenthesesIfNeeded;
 
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionIdentifier;
-import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
 
@@ -69,8 +67,20 @@ public class OperatorAddProcessor implements JANI2PRISMOperatorProcessorStrict {
      * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#needsParentheses(epmc.expression.standard.Expression)
      */
     @Override
-    public boolean needsParentheses(Expression operand) {
-        return (operand instanceof ExpressionLiteral 
-                || operand instanceof ExpressionIdentifier);
+    public boolean needsParentheses(Expression childOperand) {
+        if (childOperand instanceof ExpressionOperator) {
+            Operator operator = ((ExpressionOperator) childOperand).getOperator();
+            if (operator.equals(OperatorAdd.ADD))
+                return false;
+            if (operator.equals(OperatorSubtract.SUBTRACT))
+                return false;
+            if (operator.equals(OperatorMultiply.MULTIPLY))
+                return false;
+            if (operator.equals(OperatorMultiplyInverse.MULTIPLY_INVERSE))
+                return false;
+            if (operator.equals(OperatorDivide.DIVIDE))
+                return false;
+        }
+        return JANI2PRISMOperatorProcessorStrict.super.needsParentheses(childOperand);
     }
 }

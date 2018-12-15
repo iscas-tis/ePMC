@@ -71,8 +71,6 @@ import epmc.operator.OperatorIte;
 import epmc.operator.OperatorIteProcessor;
 import epmc.operator.OperatorLe;
 import epmc.operator.OperatorLeProcessor;
-import epmc.operator.OperatorLog;
-import epmc.operator.OperatorLogProcessor;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorLtProcessor;
 import epmc.operator.OperatorMax;

@@ -22,6 +22,7 @@ package epmc.operator;
 
 import static epmc.prism.exporter.util.UtilPRISMExporter.appendWithParenthesesIfNeeded;
 
+import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
 
@@ -60,5 +61,18 @@ public class OperatorAndProcessor implements JANI2PRISMOperatorProcessorStrict {
         appendWithParenthesesIfNeeded(this, expressionOperator.getOperand2(), prism);
 
         return prism.toString();
+    }
+
+    /* (non-Javadoc)
+     * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#needsParentheses(epmc.expression.standard.Expression)
+     */
+    @Override
+    public boolean needsParentheses(Expression childOperand) {
+        if (childOperand instanceof ExpressionOperator) {
+            Operator operator = ((ExpressionOperator) childOperand).getOperator();
+            if (operator.equals(OperatorAnd.AND))
+                return false;
+        }
+        return JANI2PRISMOperatorProcessorStrict.super.needsParentheses(childOperand);
     }
 }
