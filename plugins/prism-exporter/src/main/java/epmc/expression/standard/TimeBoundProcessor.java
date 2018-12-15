@@ -50,31 +50,31 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
             //nothing to do
         } else if (!timeBound.isLeftBounded()) {
             prism.append(timeBound.isRightOpen() ? "<" : "<=")
-            .append(leftBraceIfNeeded(right))
-            .append(ProcessorRegistrar.getProcessor(right)
-                    .toPRISM())
-            .append(rightBraceIfNeeded(right));        	
+                .append(leftBraceIfNeeded(right))
+                .append(ProcessorRegistrar.getProcessor(right)
+                        .toPRISM())
+                .append(rightBraceIfNeeded(right));        	
         } else if (!timeBound.isRightBounded()) {
             prism.append(timeBound.isLeftOpen() ? ">" : ">=")
-            .append(leftBraceIfNeeded(left))
-            .append(ProcessorRegistrar.getProcessor(left)
-                    .toPRISM())
-            .append(rightBraceIfNeeded(left));
+                .append(leftBraceIfNeeded(left))
+                .append(ProcessorRegistrar.getProcessor(left)
+                        .toPRISM())
+                .append(rightBraceIfNeeded(left));
         } else if (left.equals(right)) {
             prism.append("=")
-            .append(leftBraceIfNeeded(left))
-            .append(ProcessorRegistrar.getProcessor(left)
-                    .toPRISM())
-            .append(rightBraceIfNeeded(left));
+                .append(leftBraceIfNeeded(left))
+                .append(ProcessorRegistrar.getProcessor(left)
+                        .toPRISM())
+                .append(rightBraceIfNeeded(left));
         } else {
             prism.append(timeBound.isLeftOpen() ? "]" : "[")
-            .append(left)
-            .append(ProcessorRegistrar.getProcessor(left)
-                    .toPRISM())
-            .append(",")
-            .append(ProcessorRegistrar.getProcessor(right)
-                    .toPRISM())
-            .append(timeBound.isRightOpen() ? "[" : "]");
+                .append(left)
+                .append(ProcessorRegistrar.getProcessor(left)
+                        .toPRISM())
+                .append(",")
+                .append(ProcessorRegistrar.getProcessor(right)
+                        .toPRISM())
+                .append(timeBound.isRightOpen() ? "[" : "]");
         }
 
         return prism.toString();
@@ -85,9 +85,9 @@ public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
         assert timeBound != null;
 
         ProcessorRegistrar.getProcessor(timeBound.getLeft())
-        .validateTransientVariables();
+            .validateTransientVariables();
         ProcessorRegistrar.getProcessor(timeBound.getRight())
-        .validateTransientVariables();
+            .validateTransientVariables();
     }
 
 

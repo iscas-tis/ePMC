@@ -45,14 +45,15 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 
         prism.append("multi(");
 
-        boolean remaining = false;
+        boolean notFirst = false;
         for (Expression operand : multiObjective.getOperands()) {
-            if (remaining) {
+            if (notFirst) {
                 prism.append(", ");
             } else {
-                remaining = true;
+                notFirst = true;
             }
-            prism.append(ProcessorRegistrar.getProcessor(operand).toPRISM());
+            prism.append(ProcessorRegistrar.getProcessor(operand)
+                    .toPRISM());
         }
         prism.append(")");
 
@@ -64,7 +65,7 @@ public class ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStr
 
         for (Expression child : multiObjective.getOperands()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

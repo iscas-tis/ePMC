@@ -50,19 +50,19 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 
         prism.append("<<");
 
-        boolean remaining = false;
+        boolean notFirst = false;
         for (SMGPlayer player : coalition.getPlayers()) {
-            if (remaining) {
+            if (notFirst) {
                 prism.append(", ");
             } else {
-                remaining = true;
+                notFirst = true;
             }
             prism.append(ProcessorRegistrar.getProcessor(player.getExpression())
                     .toPRISM());
         }
         prism.append(">>")
-        .append(ProcessorRegistrar.getProcessor(coalition.getInner())
-                .toPRISM());
+            .append(ProcessorRegistrar.getProcessor(coalition.getInner())
+                    .toPRISM());
 
         return prism.toString();
     }
@@ -73,7 +73,7 @@ public class ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended
 
         for (Expression child : coalition.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

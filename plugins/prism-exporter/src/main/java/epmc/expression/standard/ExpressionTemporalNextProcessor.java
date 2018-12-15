@@ -42,13 +42,14 @@ public class ExpressionTemporalNextProcessor implements JANI2PRISMProcessorStric
 
         StringBuilder prism = new StringBuilder();
 
-            prism.append("X")
+        prism.append("X")
             .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
                     .toPRISM())
             .append("(")
             .append(ProcessorRegistrar.getProcessor(temporal.getOperand())
                     .toPRISM())
             .append(")");
+
         return prism.toString();
     }
 
@@ -58,7 +59,7 @@ public class ExpressionTemporalNextProcessor implements JANI2PRISMProcessorStric
 
         for (Expression child : temporal.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

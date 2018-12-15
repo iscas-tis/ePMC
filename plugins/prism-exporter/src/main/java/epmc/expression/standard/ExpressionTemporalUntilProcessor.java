@@ -43,21 +43,22 @@ public class ExpressionTemporalUntilProcessor implements JANI2PRISMProcessorStri
         StringBuilder prism = new StringBuilder();
         if (isTrue(temporal.getOperandLeft())) {
             prism.append("F(")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
-                    .toPRISM())
-            .append(")");
+                .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                        .toPRISM())
+                .append(")");
         } else {
             prism.append("(")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
-                    .toPRISM()) 
-            .append(") U")
-            .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
-                    .toPRISM())
-            .append(" (")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
-                    .toPRISM())
-            .append(")");
+                .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
+                        .toPRISM()) 
+                .append(") U")
+                .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
+                        .toPRISM())
+                .append(" (")
+                .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                        .toPRISM())
+                .append(")");
         }
+
         return prism.toString();
     }
 
@@ -67,7 +68,7 @@ public class ExpressionTemporalUntilProcessor implements JANI2PRISMProcessorStri
 
         for (Expression child : temporal.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

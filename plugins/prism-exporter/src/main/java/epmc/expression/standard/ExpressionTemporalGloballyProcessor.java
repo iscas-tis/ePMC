@@ -42,13 +42,14 @@ public class ExpressionTemporalGloballyProcessor implements JANI2PRISMProcessorS
 
         StringBuilder prism = new StringBuilder();
 
-            prism.append("G")
+        prism.append("G")
             .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
                     .toPRISM())
             .append("(")
             .append(ProcessorRegistrar.getProcessor(temporal.getOperand())
                     .toPRISM())
             .append(")");
+
         return prism.toString();
     }
 
@@ -58,7 +59,7 @@ public class ExpressionTemporalGloballyProcessor implements JANI2PRISMProcessorS
 
         for (Expression child : temporal.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

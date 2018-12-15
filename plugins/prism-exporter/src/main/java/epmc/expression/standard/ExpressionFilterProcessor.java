@@ -44,16 +44,16 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
         StringBuilder prism = new StringBuilder();
 
         prism.append("filter(")
-        .append(filter.getFilterType().toString())
-        .append(", ")
-        .append(ProcessorRegistrar.getProcessor(filter.getProp())
-                .toPRISM());
+            .append(filter.getFilterType().toString())
+            .append(", ")
+            .append(ProcessorRegistrar.getProcessor(filter.getProp())
+                    .toPRISM());
 
         Expression states = filter.getStates();
         if (states != null) {
             prism.append(", ")
-            .append(ProcessorRegistrar.getProcessor(states)
-                    .toPRISM());
+                .append(ProcessorRegistrar.getProcessor(states)
+                        .toPRISM());
         }
         prism.append(")");
 
@@ -65,7 +65,7 @@ public class ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
 
         for (Expression child : filter.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

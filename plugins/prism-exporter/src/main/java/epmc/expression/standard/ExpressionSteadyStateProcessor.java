@@ -51,7 +51,7 @@ public class ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict
 
         for (Expression child: steadyState.getChildren()) {
             ProcessorRegistrar.getProcessor(child)
-            .validateTransientVariables();
+                .validateTransientVariables();
         }
     }
 

@@ -45,6 +45,7 @@ public class ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
     @Override
     public String toPRISM() {
         assert literal != null;
+        
         StringBuilder prism = new StringBuilder();
 
         if (prefix != null) {
