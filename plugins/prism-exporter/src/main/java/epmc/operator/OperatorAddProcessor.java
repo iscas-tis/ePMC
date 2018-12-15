@@ -20,11 +20,6 @@
 
 package epmc.operator;
 
-import java.util.List;
-
-import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionIdentifier;
-import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
@@ -76,39 +71,13 @@ public class OperatorAddProcessor implements JANI2PRISMOperatorProcessorStrict {
             prism.append(prefix);
         }
         
-        List<Expression> children = expressionOperator.getChildren();
-        boolean remaining = false;
-        for (Expression child : children) {
-            boolean needBraces = true;
-            if (remaining) {
-                prism.append(" + ");
-            } else {
-                remaining = true;
-            }
-            if (child instanceof ExpressionOperator) {
-                ExpressionOperator childOp = (ExpressionOperator) child;
-                if (OperatorAdd.ADD.equals(childOp.getOperator())) {
-                    needBraces = false;
-                }
-                if (OperatorMultiply.MULTIPLY.equals(childOp.getOperator())
-                        || OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO.equals(childOp.getOperator())) {
-                    needBraces = false;
-                }
-            }
-            if (child instanceof ExpressionLiteral || child instanceof ExpressionIdentifier) {
-                needBraces = false;
-            }
-            if (needBraces) {
-                prism.append("(");
-            }
-            prism.append(ProcessorRegistrar.getProcessor(child)
-                    .toPRISM());
-            if (needBraces) {
-                prism.append(")");
-            }
-        }
-
+        prism.append("(")
+            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toPRISM())
+            .append(") + (")
+            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toPRISM())
+            .append(")");
         return prism.toString();
     }
-
 }

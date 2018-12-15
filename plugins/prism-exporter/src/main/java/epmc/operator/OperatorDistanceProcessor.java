@@ -75,5 +75,4 @@ public class OperatorDistanceProcessor implements JANI2PRISMOperatorProcessorNon
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_DISTANCE);
         return ll;
     }
-
 }

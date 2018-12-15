@@ -75,5 +75,4 @@ public class OperatorIdProcessor implements JANI2PRISMOperatorProcessorNonPRISM 
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ID);
         return ll;
     }
-
 }

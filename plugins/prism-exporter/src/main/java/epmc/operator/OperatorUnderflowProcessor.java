@@ -75,5 +75,4 @@ public class OperatorUnderflowProcessor implements JANI2PRISMOperatorProcessorNo
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_UNDERFLOW);
         return ll;
     }
-
 }

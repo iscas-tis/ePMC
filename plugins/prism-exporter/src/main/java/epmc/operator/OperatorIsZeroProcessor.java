@@ -75,5 +75,4 @@ public class OperatorIsZeroProcessor implements JANI2PRISMOperatorProcessorNonPR
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISZERO);
         return ll;
     }
-
 }

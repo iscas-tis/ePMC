@@ -20,24 +20,18 @@
 
 package epmc.operator;
 
-import static epmc.error.UtilError.ensure;
-
-import java.util.LinkedList;
-import java.util.List;
-
 import epmc.expression.standard.ExpressionOperator;
-import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
-import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorNonPRISM;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 /**
  * @author Andrea Turrini
  *
  */
-public class OperatorIsPosInfProcessor implements JANI2PRISMOperatorProcessorNonPRISM {
+public class OperatorGtProcessor implements JANI2PRISMOperatorProcessorStrict {
 
     private ExpressionOperator expressionOperator = null;
+    private String prefix = null;
     
     /* (non-Javadoc)
      * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#setOperatorElement(epmc.operator.Operator, java.lang.Object)
@@ -47,7 +41,7 @@ public class OperatorIsPosInfProcessor implements JANI2PRISMOperatorProcessorNon
         assert operator != null;
         assert obj != null;
         
-        assert operator.equals(OperatorIsPosInf.IS_POS_INF);
+        assert operator.equals(OperatorGt.GT);
         assert obj instanceof ExpressionOperator; 
     
         expressionOperator = (ExpressionOperator) obj;
@@ -55,24 +49,35 @@ public class OperatorIsPosInfProcessor implements JANI2PRISMOperatorProcessorNon
     }
 
     /* (non-Javadoc)
-     * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#toPRISM()
+     * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#setPrefix(String)
+     */
+    @Override
+    public JANI2PRISMOperatorProcessorStrict setPrefix(String prefix) {
+        this.prefix = prefix;
+        return this;
+    }
+
+
+    /* (non-Javadoc)
+     * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#toPRISM()
      */
     @Override
     public String toPRISM() {
         assert expressionOperator != null;
-        ensure(false, 
-                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, 
-                expressionOperator.getOperator());
-        return null;
-    }
 
-    /* (non-Javadoc)
-     * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorNonPRISM#getUnsupportedFeature()
-     */
-    @Override
-    public List<String> getUnsupportedFeature() {
-        List<String> ll = new LinkedList<>();
-        ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISPOSINF);
-        return ll;
+        StringBuilder prism = new StringBuilder();
+
+        if (prefix != null) {
+            prism.append(prefix);
+        }
+        
+        prism.append("(")
+            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toPRISM())
+            .append(") > (")
+            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toPRISM())
+            .append(")");
+        return prism.toString();
     }
 }

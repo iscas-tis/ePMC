@@ -75,5 +75,4 @@ public class OperatorDivideIgnoreZeroProcessor implements JANI2PRISMOperatorProc
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_DIVIDEIGNOREZERO);
         return ll;
     }
-
 }

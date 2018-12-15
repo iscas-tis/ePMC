@@ -75,5 +75,4 @@ public class OperatorIsNegInfProcessor implements JANI2PRISMOperatorProcessorNon
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISNEGINF);
         return ll;
     }
-
 }

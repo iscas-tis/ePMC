@@ -75,5 +75,4 @@ public class OperatorWidenProcessor implements JANI2PRISMOperatorProcessorNonPRI
         ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_WIDEN);
         return ll;
     }
-
 }
