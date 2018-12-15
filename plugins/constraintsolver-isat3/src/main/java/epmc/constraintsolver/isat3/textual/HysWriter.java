@@ -41,7 +41,7 @@ import epmc.operator.OperatorGt;
 import epmc.operator.OperatorIff;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorLe;
-import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLn;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorMax;
 import epmc.operator.OperatorMin;
@@ -106,8 +106,8 @@ final class HysWriter {
         /* "exp" not supported */
         /* "exp2" not supported */
         /* "exp10" not supported */
-        iscasMCToISat3.put(OperatorLog.LOG, newOperator()
-                .setIdentifier("log").setType(ISatOperator.Type.PREFIX).build());
+//        iscasMCToISat3.put(OperatorLn.LN, newOperator()
+  //              .setIdentifier("log").setType(ISatOperator.Type.PREFIX).build());
         /* "log2" not supported */
         /* "log10" not supported */
         /* "sin" not supported */

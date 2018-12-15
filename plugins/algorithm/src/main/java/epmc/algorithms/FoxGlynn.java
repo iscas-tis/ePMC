@@ -30,7 +30,7 @@ import epmc.operator.OperatorEq;
 import epmc.operator.OperatorExp;
 import epmc.operator.OperatorFloor;
 import epmc.operator.OperatorGt;
-import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLn;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorOverflow;
@@ -91,7 +91,7 @@ public final class FoxGlynn {
     private ValueReal totalWeight;
 
     private void finder(int m) {
-        OperatorEvaluator logOp = ContextValue.get().getEvaluator(OperatorLog.LOG, TypeReal.get());
+        OperatorEvaluator logOp = ContextValue.get().getEvaluator(OperatorLn.LN, TypeReal.get());
         OperatorEvaluator ceil = ContextValue.get().getEvaluator(OperatorCeil.CEIL, typeReal);
         OperatorEvaluator floor = ContextValue.get().getEvaluator(OperatorFloor.FLOOR, typeReal);
         OperatorEvaluator pow = ContextValue.get().getEvaluator(OperatorPow.POW, typeReal, typeReal);

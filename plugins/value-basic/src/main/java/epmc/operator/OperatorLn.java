@@ -23,10 +23,10 @@ package epmc.operator;
 import epmc.operator.Operator;
 
 /**
- * Operator of first argument with base of second argument
+ * Operator for natural logarithm.
  * 
  * @author Ernst Moritz Hahn
  */
-public enum OperatorLog implements Operator {
-    LOG
+public enum OperatorLn implements Operator {
+    LN
 }

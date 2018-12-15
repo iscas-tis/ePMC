@@ -125,7 +125,7 @@ public final class StandardJANIOperators {
         operators.add().setJANI(OPERATOR_POW).setEPMC(OperatorPow.POW)
         .setArity(2).build();
         operators.add().setJANI(OPERATOR_LOG).setEPMC(OperatorLog.LOG)
-        .setArity(1).build();
+        .setArity(2).build();
         operators.add().setJANI(OPERATOR_CEIL).setEPMC(OperatorCeil.CEIL)
         .setArity(1).build();
         operators.add().setJANI(OPERATOR_FLOOR).setEPMC(OperatorFloor.FLOOR)

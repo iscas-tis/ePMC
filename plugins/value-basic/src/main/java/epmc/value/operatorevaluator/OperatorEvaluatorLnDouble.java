@@ -21,7 +21,7 @@
 package epmc.value.operatorevaluator;
 
 import epmc.operator.Operator;
-import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLn;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeDouble;
@@ -30,7 +30,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueDouble;
 
-public final class OperatorEvaluatorLogDouble implements OperatorEvaluator {
+public final class OperatorEvaluatorLnDouble implements OperatorEvaluator {
     public final static class Builder implements OperatorEvaluatorSimpleBuilder {
         private boolean built;
         private Operator operator;
@@ -57,10 +57,10 @@ public final class OperatorEvaluatorLogDouble implements OperatorEvaluator {
                 assert type != null;
             }
             built = true;
-            if (operator != OperatorLog.LOG) {
+            if (operator != OperatorLn.LN) {
                 return null;
             }
-            if (types.length != 2) {
+            if (types.length != 1) {
                 return null;
             }
             for (Type type : types) {
@@ -68,11 +68,11 @@ public final class OperatorEvaluatorLogDouble implements OperatorEvaluator {
                     return null;
                 }
             }
-            return new OperatorEvaluatorLogDouble(this);
+            return new OperatorEvaluatorLnDouble(this);
         }
     }
 
-    private OperatorEvaluatorLogDouble(Builder builder) {
+    private OperatorEvaluatorLnDouble(Builder builder) {
     }
 
     @Override
@@ -88,7 +88,6 @@ public final class OperatorEvaluatorLogDouble implements OperatorEvaluator {
             assert operand != null;
         }
         double value1 = UtilValue.getDoubleOrInt(operands[0]);
-        double value2 = UtilValue.getDoubleOrInt(operands[1]);
-        ValueDouble.as(result).set(Math.log(value1) / Math.log(value2));
+        ValueDouble.as(result).set(Math.log(value1));
     }
 }

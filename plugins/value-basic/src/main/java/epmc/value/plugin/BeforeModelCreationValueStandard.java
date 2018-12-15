@@ -74,6 +74,7 @@ import epmc.value.operatorevaluator.OperatorEvaluatorIteDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorIteInt;
 import epmc.value.operatorevaluator.OperatorEvaluatorLeDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorLeInt;
+import epmc.value.operatorevaluator.OperatorEvaluatorLnDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorLogDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorLtDouble;
 import epmc.value.operatorevaluator.OperatorEvaluatorLtInt;
@@ -153,6 +154,7 @@ public final class BeforeModelCreationValueStandard implements BeforeModelCreati
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorIteDouble.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorLeDouble.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorLeInt.Builder.class);
+        SimpleEvaluatorFactory.get().add(OperatorEvaluatorLnDouble.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorLogDouble.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorLtDouble.Builder.class);
         SimpleEvaluatorFactory.get().add(OperatorEvaluatorLtInt.Builder.class);
