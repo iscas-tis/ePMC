@@ -20,9 +20,13 @@
 
 package epmc.operator;
 
+import static epmc.prism.exporter.util.UtilPRISMExporter.appendWithParenthesesIfNeeded;
+
+import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifier;
+import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 /**
  * @author Andrea Turrini
@@ -54,13 +58,19 @@ public class OperatorAddProcessor implements JANI2PRISMOperatorProcessorStrict {
 
         StringBuilder prism = new StringBuilder();
 
-        prism.append("(")
-            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
-                    .toPRISM())
-            .append(") + (")
-            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
-                    .toPRISM())
-            .append(")");
+        appendWithParenthesesIfNeeded(this, expressionOperator.getOperand1(), prism);
+        prism.append(" + ");
+        appendWithParenthesesIfNeeded(this, expressionOperator.getOperand2(), prism);
+        
         return prism.toString();
+    }
+    
+    /* (non-Javadoc)
+     * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#needsParentheses(epmc.expression.standard.Expression)
+     */
+    @Override
+    public boolean needsParentheses(Expression operand) {
+        return (operand instanceof ExpressionLiteral 
+                || operand instanceof ExpressionIdentifier);
     }
 }

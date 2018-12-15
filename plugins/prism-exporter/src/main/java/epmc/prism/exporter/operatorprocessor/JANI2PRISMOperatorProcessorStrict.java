@@ -20,12 +20,28 @@
 
 package epmc.prism.exporter.operatorprocessor;
 
+import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifier;
+import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 
 public interface JANI2PRISMOperatorProcessorStrict {	
 
     JANI2PRISMOperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator);
 
+    /**
+     * Decide whether the child operand needs to be wrapped with parentheses
+     * so to generated an unambiguous or even a correct expression according 
+     * to the PRISM syntax. 
+     * 
+     * @param childOperand the child operand
+     * @return whether the child operand needs to be wrapped with parentheses
+     */
+    default boolean needsParentheses(Expression childOperand) { 
+        return (childOperand instanceof ExpressionLiteral 
+            || childOperand instanceof ExpressionIdentifier); 
+    };
+    
     /**
      * Generate a PRISM representation of the component.
      * @return the PRISM representation

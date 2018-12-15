@@ -20,9 +20,10 @@
 
 package epmc.operator;
 
+import static epmc.prism.exporter.util.UtilPRISMExporter.appendWithParenthesesIfNeeded;
+
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 /**
  * @author Andrea Turrini
@@ -54,10 +55,9 @@ public class OperatorNotProcessor implements JANI2PRISMOperatorProcessorStrict {
 
         StringBuilder prism = new StringBuilder();
 
-        prism.append("!(")
-            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
-                    .toPRISM())
-            .append(")");
+        prism.append("!");
+        appendWithParenthesesIfNeeded(this, expressionOperator.getOperand1(), prism);
+
         return prism.toString();
     }
 }
