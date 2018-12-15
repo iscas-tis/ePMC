@@ -35,7 +35,7 @@ import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
  * @author Andrea Turrini
  *
  */
-public class OperatorIsOneProcessor implements JANI2PRISMOperatorProcessorNonPRISM {
+public class OperatorDivideIgnoreZeroProcessor implements JANI2PRISMOperatorProcessorNonPRISM {
 
     private ExpressionOperator expressionOperator = null;
     
@@ -47,7 +47,7 @@ public class OperatorIsOneProcessor implements JANI2PRISMOperatorProcessorNonPRI
         assert operator != null;
         assert obj != null;
         
-        assert operator.equals(OperatorIsOne.IS_ONE);
+        assert operator.equals(OperatorDivideIgnoreZero.DIVIDE_IGNORE_ZERO);
         assert obj instanceof ExpressionOperator; 
     
         expressionOperator = (ExpressionOperator) obj;
@@ -72,7 +72,7 @@ public class OperatorIsOneProcessor implements JANI2PRISMOperatorProcessorNonPRI
     @Override
     public List<String> getUnsupportedFeature() {
         List<String> ll = new LinkedList<>();
-        ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISONE);
+        ll.add(NonPRISMFeaturesPRISMExporter.PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_DIVIDEIGNOREZERO);
         return ll;
     }
 

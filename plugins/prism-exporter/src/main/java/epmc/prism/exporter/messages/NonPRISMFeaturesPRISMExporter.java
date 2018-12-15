@@ -34,6 +34,7 @@ public final class NonPRISMFeaturesPRISMExporter {
     public final static String NONPRISM_FEATURES_PRISM_EXPORTER = "NonPRISMFeaturesPRISMExporter";
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ABS = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-abs").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_DISTANCE = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-distance").build().toString();
+    public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_DIVIDEIGNOREZERO = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-divideignorezero").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ID = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-id").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISNEGINF = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-isneginf").build().toString();
     public final static String PRISM_EXPORTER_NONPRISM_FEATURE_OPERATOR_ISONE = newMessage().setIdentifier("prism-exporter-nonprism-feature-operator-isone").build().toString();

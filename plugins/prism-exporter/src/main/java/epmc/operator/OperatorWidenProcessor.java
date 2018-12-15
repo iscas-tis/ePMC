@@ -59,6 +59,7 @@ public class OperatorWidenProcessor implements JANI2PRISMOperatorProcessorNonPRI
      */
     @Override
     public String toPRISM() {
+        assert expressionOperator != null;
         ensure(false, 
                 ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNKNOWN_OPERATOR, 
                 expressionOperator.getOperator());
