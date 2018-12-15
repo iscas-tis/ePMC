@@ -669,24 +669,24 @@ public class JANIComponentRegistrar {
         assert usesInitialConditions != null;
 
         StringBuilder prism = new StringBuilder();
-        JANI2PRISMProcessorStrict processor; 
 
         if (usesInitialConditions) {
             prism.append("init\n")
                 .append(ModelJANIProcessor.INDENT);
+            
             boolean addAnd = false;
 
             for (Entry<Automaton, Collection<Location>> entry : initialLocations.entrySet()) {
                 Automaton automaton = entry.getKey();
                 if (entry.getValue().size() > 1) {
                     String locationName = JANIComponentRegistrar.getLocationName(automaton);
-                    boolean remaining = false;
                     prism.append("(");
+                    boolean notFirst = false;
                     for (Location location : entry.getValue()) {
-                        if (remaining) {
+                        if (notFirst) {
                             prism.append("|");
                         } else {
-                            remaining = true;
+                            notFirst = true;
                         }
                         prism.append("(")
                             .append(locationName)
@@ -710,13 +710,13 @@ public class JANIComponentRegistrar {
                     prism.append("// ").append(comment).append("\n")
                         .append(ModelJANIProcessor.INDENT);
                 }
-                Expression exp = initialStates.getExp(); 
-                processor = ProcessorRegistrar.getProcessor(exp);
-                prism.append(processor.toPRISM());
+                prism.append(ProcessorRegistrar.getProcessor(initialStates.getExp())
+                        .toPRISM());
             }	
 
             prism.append("\nendinit\n");
         }
+
         return prism.toString();
     }
 }
