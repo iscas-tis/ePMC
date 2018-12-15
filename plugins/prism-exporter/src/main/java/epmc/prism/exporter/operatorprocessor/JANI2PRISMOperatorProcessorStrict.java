@@ -24,6 +24,15 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
+import epmc.operator.Operator;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorFloor;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorMod;
+import epmc.operator.OperatorPow;
+import epmc.operator.OperatorSqrt;
 
 public interface JANI2PRISMOperatorProcessorStrict {	
 
@@ -37,9 +46,31 @@ public interface JANI2PRISMOperatorProcessorStrict {
      * @param childOperand the child operand
      * @return whether the child operand needs to be wrapped with parentheses
      */
-    default boolean needsParentheses(Expression childOperand) { 
-        return (childOperand instanceof ExpressionLiteral 
-            || childOperand instanceof ExpressionIdentifier); 
+    default boolean needsParentheses(Expression childOperand) {
+        if (childOperand instanceof ExpressionLiteral) 
+            return false;
+        if (childOperand instanceof ExpressionIdentifier) 
+            return false;
+        if (childOperand instanceof ExpressionOperator) {
+            Operator operator = ((ExpressionOperator) childOperand).getOperator();
+            if (operator.equals(OperatorCeil.CEIL))
+                return false;
+            if (operator.equals(OperatorFloor.FLOOR))
+                return false;
+            if (operator.equals(OperatorLog.LOG))
+                return false;
+            if (operator.equals(OperatorMax.MAX))
+                return false;
+            if (operator.equals(OperatorMin.MIN))
+                return false;
+            if (operator.equals(OperatorMod.MOD))
+                return false;
+            if (operator.equals(OperatorPow.POW))
+                return false;
+            if (operator.equals(OperatorSqrt.SQRT))
+                return false;
+        }
+        return true; 
     };
     
     /**
