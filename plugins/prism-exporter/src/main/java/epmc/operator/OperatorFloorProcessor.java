@@ -31,32 +31,19 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
 public class OperatorFloorProcessor implements JANI2PRISMOperatorProcessorStrict {
 
     private ExpressionOperator expressionOperator = null;
-    private String prefix = null;
     
     /* (non-Javadoc)
-     * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#setOperatorElement(epmc.operator.Operator, java.lang.Object)
+     * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#setExpressionOperator(epmc.expression.standard.ExpressionOperator)
      */
     @Override
-    public JANI2PRISMOperatorProcessorStrict setOperatorElement(Operator operator, Object obj) {
-        assert operator != null;
-        assert obj != null;
+    public JANI2PRISMOperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator) {
+        assert expressionOperator != null;
         
-        assert operator.equals(OperatorFloor.FLOOR);
-        assert obj instanceof ExpressionOperator; 
+        assert expressionOperator.getOperator().equals(OperatorFloor.FLOOR);
     
-        expressionOperator = (ExpressionOperator) obj;
+        this.expressionOperator = expressionOperator;
         return this;
     }
-
-    /* (non-Javadoc)
-     * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#setPrefix(String)
-     */
-    @Override
-    public JANI2PRISMOperatorProcessorStrict setPrefix(String prefix) {
-        this.prefix = prefix;
-        return this;
-    }
-
 
     /* (non-Javadoc)
      * @see epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict#toPRISM()
@@ -67,10 +54,6 @@ public class OperatorFloorProcessor implements JANI2PRISMOperatorProcessorStrict
 
         StringBuilder prism = new StringBuilder();
 
-        if (prefix != null) {
-            prism.append(prefix);
-        }
-        
         prism.append("floor(")
             .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toPRISM())

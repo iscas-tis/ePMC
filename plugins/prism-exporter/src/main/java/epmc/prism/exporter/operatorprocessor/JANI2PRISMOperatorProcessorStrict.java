@@ -20,14 +20,11 @@
 
 package epmc.prism.exporter.operatorprocessor;
 
-import epmc.operator.Operator;
+import epmc.expression.standard.ExpressionOperator;
 
 public interface JANI2PRISMOperatorProcessorStrict {	
-    default JANI2PRISMOperatorProcessorStrict setPrefix(String prefix) { return this; };
 
-    default JANI2PRISMOperatorProcessorStrict setForDefinition(boolean forDefinition) { return this; };
-
-    JANI2PRISMOperatorProcessorStrict setOperatorElement(Operator operator, Object obj);
+    JANI2PRISMOperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator);
 
     /**
      * Generate a PRISM representation of the component.

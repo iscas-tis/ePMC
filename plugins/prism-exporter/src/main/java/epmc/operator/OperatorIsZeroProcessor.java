@@ -29,7 +29,6 @@ import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorNonPRISM;
-import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
 
 /**
  * @author Andrea Turrini
@@ -40,17 +39,15 @@ public class OperatorIsZeroProcessor implements JANI2PRISMOperatorProcessorNonPR
     private ExpressionOperator expressionOperator = null;
     
     /* (non-Javadoc)
-     * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#setOperatorElement(epmc.operator.Operator, java.lang.Object)
+     * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorNonPRISM#setExpressionOperator(epmc.expression.standard.ExpressionOperator)
      */
     @Override
-    public JANI2PRISMOperatorProcessorStrict setOperatorElement(Operator operator, Object obj) {
-        assert operator != null;
-        assert obj != null;
+    public JANI2PRISMOperatorProcessorNonPRISM setExpressionOperator(ExpressionOperator expressionOperator) {
+        assert expressionOperator != null;
         
-        assert operator.equals(OperatorIsZero.IS_ZERO);
-        assert obj instanceof ExpressionOperator; 
+        assert expressionOperator.getOperator().equals(OperatorIsZero.IS_ZERO);
     
-        expressionOperator = (ExpressionOperator) obj;
+        this.expressionOperator = expressionOperator;
         return this;
     }
 
