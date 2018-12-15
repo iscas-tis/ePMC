@@ -34,14 +34,12 @@ import epmc.operator.OperatorCeil;
 import epmc.operator.OperatorDivide;
 import epmc.operator.OperatorDivideIgnoreZero;
 import epmc.operator.OperatorEq;
-import epmc.operator.OperatorFloor;
 import epmc.operator.OperatorGe;
 import epmc.operator.OperatorGt;
 import epmc.operator.OperatorIff;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorIte;
 import epmc.operator.OperatorLe;
-import epmc.operator.OperatorLog;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorMax;
 import epmc.operator.OperatorMin;
@@ -50,7 +48,6 @@ import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorNe;
 import epmc.operator.OperatorNot;
 import epmc.operator.OperatorOr;
-import epmc.operator.OperatorPow;
 import epmc.operator.OperatorSubtract;
 import epmc.util.Util;
 import epmc.value.Type;
@@ -70,7 +67,9 @@ public final class DD implements Cloneable {
     private final ContextDD context;
     /** DD library this node belongs to. */
     private final LibraryDD libraryDD;
-    /** Unique ID in the DD library the node belongs to which this node wraps. */
+    /**
+     * Unique ID in the DD library the node belongs to which this node wraps.
+     */
     private final long uniqueId;
     /** Whether the node is still alive and can be operated with. */
     private boolean alive;
@@ -127,9 +126,9 @@ public final class DD implements Cloneable {
     }
 
     /**
-     * Checks whether this node is still alive and may be used.
-     * The node is alive if it has not been disposed and its context has not
-     * yet been closed.
+     * Checks whether this node is still alive and may be used. The node is
+     * alive if it has not been disposed and its context has not yet been
+     * closed.
      * 
      * @return whether this node is still alive and may be used
      */
@@ -148,26 +147,25 @@ public final class DD implements Cloneable {
     }
 
     /**
-     * Dispose the DD node.
-     * After disposing the node, it may not be longer be operated with, that is,
-     * {@code apply} operations etc. are all illegal on this node. All DD nodes
-     * created must finally be disposed using this function. A node must not be
-     * disposed more than once.
+     * Dispose the DD node. After disposing the node, it may not be longer be
+     * operated with, that is, {@code apply} operations etc. are all illegal on
+     * this node. All DD nodes created must finally be disposed using this
+     * function. A node must not be disposed more than once.
      */
     public void dispose() {
         assert alive : alreadyDeadMessage();
-    alive = false;
-    getContext().removeDD(this);
-    if (getContext().isDebugDD()) {
-        StackTraceElement[] trace = Thread.currentThread().getStackTrace();
-        this.disposeTrace = trace.clone();
-    }
+        alive = false;
+        getContext().removeDD(this);
+        if (getContext().isDebugDD()) {
+            StackTraceElement[] trace = Thread.currentThread().getStackTrace();
+            this.disposeTrace = trace.clone();
+        }
     }
 
     /**
-     * Checks whether the node has not been disposed.
-     * The function does still return true if the node has not been disposed but
-     * its context has already been closed. It is intended for internal usage.
+     * Checks whether the node has not been disposed. The function does still
+     * return true if the node has not been disposed but its context has already
+     * been closed. It is intended for internal usage.
      * 
      * @return whether the node has not been disposed
      */
@@ -196,8 +194,7 @@ public final class DD implements Cloneable {
 
     private String alreadyDeadMessage() {
         if (getContext().isDebugDD()) {
-            return "DD already closed. Allocated at\n"
-                    + buildCreateTraceString() + "\nPreviously closed at\n"
+            return "DD already closed. Allocated at\n" + buildCreateTraceString() + "\nPreviously closed at\n"
                     + buildCloseTraceString();
         } else {
             return ContextDD.WRONG_USAGE_NO_DEBUG;
@@ -217,18 +214,22 @@ public final class DD implements Cloneable {
         return getContext().apply(operator, this, other1, other2);
     }
 
+    // TODO get rid of this function
     public DD add(DD other) {
         return apply(other, OperatorAdd.ADD);
     }
 
+    // TODO get rid of this function
     public DD multiply(DD other) {
         return apply(other, OperatorMultiply.MULTIPLY);
     }
 
+    // TODO get rid of this function
     public DD subtract(DD other) {
         return apply(other, OperatorSubtract.SUBTRACT);
     }
 
+    // TODO get rid of this function
     public DD subtractWith(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
@@ -239,10 +240,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
-    public DD divide(DD other) {
-        return apply(other, OperatorDivide.DIVIDE);
-    }
-
+    // TODO get rid of this function
     public DD divideWith(DD other) {
         DD result = apply(other, OperatorDivide.DIVIDE);
         dispose();
@@ -250,14 +248,17 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD eq(DD other) {
         return apply(other, OperatorEq.EQ);
     }
 
+    // TODO get rid of this function
     public DD gt(DD other) {
         return apply(other, OperatorGt.GT);
     }
 
+    // TODO get rid of this function
     public DD gtWith(DD other) {
         DD result = apply(other, OperatorGt.GT);
         dispose();
@@ -265,14 +266,17 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD ge(DD other) {
         return apply(other, OperatorGe.GE);
     }
 
+    // TODO get rid of this function
     public DD ne(DD other) {
         return apply(other, OperatorNe.NE);
     }
 
+    // TODO get rid of this function
     public DD neWith(DD other) {
         DD result = apply(other, OperatorNe.NE);
         dispose();
@@ -280,6 +284,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD geWith(DD other) {
         DD result = ge(other);
         other.dispose();
@@ -287,21 +292,17 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD lt(DD other) {
         return apply(other, OperatorLt.LT);
     }
 
+    // TODO get rid of this function
     public DD le(DD other) {
         return apply(other, OperatorLe.LE);
     }
 
-    public DD leWith(DD other) {
-        DD result = le(other);
-        other.dispose();
-        dispose();
-        return result;
-    }
-
+    // TODO get rid of this function
     public DD and(DD other) {
         assert alive() : alreadyDeadMessage();
         assert isBoolean() : this;
@@ -310,6 +311,7 @@ public final class DD implements Cloneable {
         return apply(other, OperatorAnd.AND);
     }
 
+    // TODO get rid of this function
     public DD and(DD... others) {
         assert others != null;
         for (DD other : others) {
@@ -325,6 +327,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD andWith(DD... others) {
         assert alive() : alreadyDeadMessage();
         assert others != null;
@@ -345,6 +348,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD orWith(DD... others) {
         assert alive() : alreadyDeadMessage();
         assert others != null;
@@ -365,6 +369,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD or(DD... others) {
         assert alive() : alreadyDeadMessage();
         assert others != null;
@@ -383,6 +388,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD add(DD... others) {
         assert others != null;
         for (DD other : others) {
@@ -398,6 +404,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD addWith(DD... others) {
         assert others != null;
         for (DD other : others) {
@@ -417,6 +424,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD multiply(DD... others) {
         assert others != null;
         for (DD other : others) {
@@ -432,6 +440,7 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD or(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
@@ -439,6 +448,7 @@ public final class DD implements Cloneable {
         return apply(other, OperatorOr.OR);
     }
 
+    // TODO get rid of this function
     public DD orWith(DD other) {
         assert other != null;
         assert alive() : alreadyDeadMessage();
@@ -447,54 +457,42 @@ public final class DD implements Cloneable {
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
-    public DD maxWith(DD other) {
-        assert other != null;
-        assert alive() : alreadyDeadMessage();
-        assert other.alive() : other.alreadyDeadMessage();
-        DD result = max(other);
-        this.dispose();
-        other.dispose();
-        return result;
-    }    
-
+    // TODO get rid of this function
     public DD andWith(DD other) {
         DD result = and(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
+    // TODO get rid of this function
     public DD abstractAndExistWith(DD other, DD cube) {
         DD result = abstractAndExist(other, cube);
         this.dispose();
         other.dispose();
         cube.dispose();
         return result;
-    }    
+    }
 
+    // TODO get rid of this function
     public DD multiplyWith(DD other) {
         DD result = multiply(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
+    // TODO get rid of this function
     public DD abstractExistWith(DD other) {
         DD result = abstractExist(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
-
-    public DD abstractMinWith(DD other) {
-        DD result = abstractMin(other);
-        this.dispose();
-        other.dispose();
-        return result;
     }
 
+    // TODO get rid of this function
     public DD abstractMaxWith(DD other) {
         DD result = abstractMax(other);
         this.dispose();
@@ -502,39 +500,43 @@ public final class DD implements Cloneable {
         return result;
     }
 
+    // TODO get rid of this function
     public DD notWith() {
         DD result = not();
         this.dispose();
         return result;
-    }    
+    }
 
+    // TODO get rid of this function
     public DD andNotWith(DD other) {
         DD result = andNot(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
+    // TODO get rid of this function
     public DD eqWith(DD other) {
         DD result = eq(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
+    // TODO get rid of this function
     public DD addWith(DD other) {
         DD result = add(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
     public DD modWith(DD other) {
         DD result = mod(other);
         this.dispose();
         other.dispose();
         return result;
-    }    
+    }
 
     public DD not() {
         return apply(OperatorNot.NOT);
@@ -571,14 +573,6 @@ public final class DD implements Cloneable {
         return apply(OperatorCeil.CEIL);
     }
 
-    public DD floor() {
-        return apply(OperatorFloor.FLOOR);
-    }
-
-    public DD log(DD other) {
-        return apply(other, OperatorLog.LOG);
-    }
-
     public DD max(DD other) {
         return apply(other, OperatorMax.MAX);
     }
@@ -591,9 +585,7 @@ public final class DD implements Cloneable {
         return apply(other, OperatorMod.MOD);
     }
 
-    public DD pow(DD other) {
-        return apply(other, OperatorPow.POW);
-    }
+    // TODO get rid of this function
     public DD ite(DD thenNode, DD elseNode) {
         return apply(thenNode, elseNode, OperatorIte.ITE);
     }
@@ -660,7 +652,7 @@ public final class DD implements Cloneable {
         assert cube != null;
         DD result = abstractSum(cube);
         cube.dispose();
-        dispose();        
+        dispose();
         return result;
     }
 
@@ -830,10 +822,9 @@ public final class DD implements Cloneable {
         return result;
     }
 
-
     public Walker walker() {
         assert alive() : alreadyDeadMessage();
-        return getContext().walker(this, true);        
+        return getContext().walker(this, true);
     }
 
     public DD andNot(DD scc) {
@@ -873,7 +864,7 @@ public final class DD implements Cloneable {
         return getContext().toInt(this);
     }
 
-    public DD toMTWith()  {
+    public DD toMTWith() {
         DD result = toMT();
         dispose();
         return result;
@@ -907,21 +898,18 @@ public final class DD implements Cloneable {
         return getContext().applyOverSat(operator, this, sat);
     }
 
-    public Value applyOverSat(Operator operator, DD support, DD sat)
-    {
+    public Value applyOverSat(Operator operator, DD support, DD sat) {
         assert operator != null;
         assert assertValidDD(sat);
         assert TypeBoolean.is(sat.getType());
         return getContext().applyOverSat(operator, this, support, sat);
     }
 
-    public Value maxOverSat(DD sat)
-    {
+    public Value maxOverSat(DD sat) {
         return getContext().maxOverSat(this, sat);
     }
 
-    public Value minOverSat(DD sat)
-    {
+    public Value minOverSat(DD sat) {
         return getContext().minOverSat(this, sat);
     }
 
@@ -1009,7 +997,6 @@ public final class DD implements Cloneable {
         return result;
     }
 
-
     public DD multiply(int value) {
         assert alive() : alreadyDeadMessage();
         DD constant = getContext().newConstant(value);
@@ -1051,7 +1038,7 @@ public final class DD implements Cloneable {
         return andNot(other).isFalseWith();
     }
 
-    public boolean isSubsetWith(DD other)  {
+    public boolean isSubsetWith(DD other) {
         assert alive() : alreadyDeadMessage();
         assert assertValidDD(other);
         assert isBoolean();
@@ -1112,7 +1099,7 @@ public final class DD implements Cloneable {
         assert alive() : alreadyDeadMessage();
         assert other != null;
         assert cube != null;
-        return getContext().abstractImpliesForall(this, other, cube);        
+        return getContext().abstractImpliesForall(this, other, cube);
     }
 
 }
