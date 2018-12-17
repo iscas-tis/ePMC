@@ -71,8 +71,9 @@ public final class Actions implements JANINode, Map<String,Action>, Iterable<Act
     @Override
     public JsonValue generate() {
         JsonArrayBuilder result = Json.createArrayBuilder();
-        for (Action action : actions.values()) {			
-            result.add(action.generate());
+        for (Action action : actions.values()) {
+            if (!model.getSilentAction().equals(action))
+                result.add(action.generate());
         }
         return result.build();
     }

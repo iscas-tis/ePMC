@@ -123,6 +123,7 @@ public class JANIComponentRegistrar {
     private static Map<Automaton, Set<Variable>> automatonAssignsVariables;
 
     private static Map<Action, String> actionNames;
+    private static Action silentAction;
 
     private static Map<Automaton, String> automatonLocationName;
     private static Map<Automaton, Map<Location, Integer>> automatonLocationIdentifier;
@@ -155,6 +156,7 @@ public class JANIComponentRegistrar {
         variablesAssignedByAutomata = new HashSet<>();
         automatonAssignsVariables = new HashMap<>();
         actionNames = new HashMap<>();
+        silentAction = null;
 
         automatonLocationIdentifier = new HashMap<>();
         automatonLocationName = new HashMap<>();
@@ -178,6 +180,8 @@ public class JANIComponentRegistrar {
     	assert (action != null) && action.getModel().getSilentAction().equals(action);
     	
     	actionNames.put(action, action.getName());
+    	usedNames.add(action.getName());
+    	silentAction = action;
     }
 
     public static void setIsTimedModel(boolean isTimedModel) {
@@ -524,7 +528,7 @@ public class JANIComponentRegistrar {
             } else {
                 name = action.getName();
             }
-            if (! name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
+            if (!name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
                 name = "action_" + action_counter;
             }
             while (usedNames.contains(name)) {
@@ -552,9 +556,10 @@ public class JANIComponentRegistrar {
     }
 
     public static boolean isSilentAction(Action action) {
+        assert silentAction != null;
         assert action != null;
 
-        return "τ".equals(action.getName());
+        return silentAction.equals(action);
     }
 
     public static String constantsRenaming() {
@@ -613,7 +618,7 @@ public class JANIComponentRegistrar {
         for (Entry<Action,String> entry : actionNames.entrySet()) {
             Action action = entry.getKey();
             String name = entry.getValue();
-            if (! action.getName().equals(name)) {
+            if (!action.getName().equals(name)) {
                 prism.append("// Original action name: ").append(action.getName()).append("\n")
                     .append("// New name: ").append(name).append("\n\n");
             }

@@ -90,7 +90,6 @@ import epmc.modelchecker.Properties;
 import epmc.modelchecker.RawProperty;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAddInverse;
-import epmc.operator.OperatorCeil;
 import epmc.operator.OperatorPow;
 import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
@@ -170,8 +169,8 @@ public final class PRISM2JANIConverter {
     private final ModelPRISM modelPRISM;
     /** JANI model created. */
     private final ModelJANI modelJANI;
-    /** Tau action replacing silent action. */
-    private Action tauAction;
+    /** Silent action. */
+    private Action silentAction;
 
     private boolean forExporting;
     private ExpressionToTypeJANIConverter expressionToType;
@@ -192,9 +191,10 @@ public final class PRISM2JANIConverter {
         	.setEPMC(OperatorPRISMPow.PRISM_POW)
         	.setArity(2).build();
         modelJANI.setName(modelPRISM.getIdentifier());
-        this.tauAction = new Action();
-        tauAction.setModel(modelJANI);
-        tauAction.setName(TAU);
+        silentAction = new Action();
+        silentAction.setModel(modelJANI);
+        silentAction.setName(TAU);
+//        silentAction = modelJANI.getSilentAction();
         this.forExporting = forExporting;
     }
 
@@ -238,7 +238,6 @@ public final class PRISM2JANIConverter {
     private void convertExtensions() {
         List<ModelExtension> modelExtensions = new ArrayList<>();
         ModelExtensionDerivedOperators extension = Util.getInstance(ModelExtensionDerivedOperators.class);
-        extension.setModel(modelJANI);
         modelExtensions.add(extension);
         modelJANI.setModelExtensions(modelExtensions);
         modelJANI.parseBeforeModelNodeExtensions(modelJANI, null, null);
@@ -275,7 +274,7 @@ public final class PRISM2JANIConverter {
         RewardsConverter rewardsConverter = new RewardsConverter();
         rewardsConverter.setJANIModel(modelJANI);
         rewardsConverter.setPRISMModel(modelPRISM);
-        rewardsConverter.setTauAction(tauAction);
+        rewardsConverter.setTauAction(silentAction);
         rewardsConverter.setForExporting(forExporting);
         rewardsConverter.attachRewards();
     }
@@ -661,8 +660,8 @@ public final class PRISM2JANIConverter {
             assert module.isCommands();
             ModuleCommands moduleCommands = (ModuleCommands) module;
             Automaton automaton = moduleToAutomaton(moduleCommands, actions, globalVariables);
-            automaton.setNumber(number);
             assert automaton != null;
+            automaton.setNumber(number);
             automata.addAutomaton(automaton);
             number++;
         }
@@ -686,9 +685,11 @@ public final class PRISM2JANIConverter {
      */
     private Variables buildGlobalVariables() {
         Variables globalVariables = new Variables();
+        globalVariables.setModel(modelJANI);
 
         for (Entry<Expression, JANIType> entry : modelPRISM.getGlobalVariables().entrySet()) {
             Variable variable = convertVariable((ExpressionIdentifierStandard) entry.getKey(), entry.getValue(), null);
+            variable.setModel(modelJANI);
             globalVariables.addVariable(variable);
         }
         for (Module module : modelPRISM.getModules()) {
@@ -696,6 +697,7 @@ public final class PRISM2JANIConverter {
             for (Entry<Expression, JANIType> entry : module.getVariables().entrySet()) {
                 Expression varInit = module.getInitValues().get(entry.getKey());
                 Variable variable = convertVariable((ExpressionIdentifierStandard) entry.getKey(), entry.getValue(), varInit);
+                variable.setModel(modelJANI);
                 globalVariables.addVariable(variable);
             }
         }
@@ -729,19 +731,22 @@ public final class PRISM2JANIConverter {
     }
 
     private Actions computeActions() {
+        String silentName = modelJANI.getSilentAction().getName();
         Actions result = new Actions();
+        result.setModel(modelJANI);
         for (Module module : modelPRISM.getModules()) {
             ModuleCommands moduleCommands = (ModuleCommands) module;
             for (Command command : moduleCommands.getCommands()) {
-                ExpressionIdentifierStandard exprAct = (ExpressionIdentifierStandard) command.getAction();
-                if (!result.containsKey(exprAct.getName())
-                        && !exprAct.getName().equals(EMPTY)) {
-                    Action action = new Action();
-                    action.setName(exprAct.getName());
-                    result.addAction(action);
-                } else if (!result.containsKey(exprAct.getName())
-                        && exprAct.getName().equals(EMPTY)) {
-                    result.addAction(tauAction);
+                String exprActName = ((ExpressionIdentifierStandard) command.getAction()).getName();
+                if (!result.containsKey(exprActName)) {
+                    if (exprActName.equals(silentName)) {
+                        result.addAction(silentAction);
+                    } else {
+                        Action action = new Action();
+                        action.setName(exprActName);
+                        action.setModel(modelJANI);
+                        result.addAction(action);
+                    }
                 }
             }
         }
@@ -759,13 +764,13 @@ public final class PRISM2JANIConverter {
     private Automaton moduleToAutomaton(ModuleCommands module, Actions actions,
             Variables globalVariables) {
         Automaton automaton = new Automaton();
+        automaton.setModel(modelJANI);
         Rate rateOne = new Rate();
         rateOne.setExp(ExpressionLiteral.getOne());
         rateOne.setModel(modelJANI);
 
         Edges edges = new Edges();
         edges.setModel(modelJANI);
-        automaton.setModel(modelJANI);
         Location location = new Location();
         location.setModel(modelJANI);
         location.setName(LOCATION_NAME);
@@ -789,7 +794,7 @@ public final class PRISM2JANIConverter {
             edge.setModel(modelJANI);
             Action action = actions.get(((ExpressionIdentifierStandard) (command.getAction())).getName());
             if (action == null) {
-                action = tauAction;
+                action = silentAction;
             }
             edge.setAction(action);
             edge.setLocation(location);
@@ -928,7 +933,7 @@ public final class PRISM2JANIConverter {
     }
 
     Action getTauAction() {
-        return tauAction;
+        return silentAction;
     }
 
     private static boolean isTrue(Expression expression) {

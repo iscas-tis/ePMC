@@ -279,6 +279,8 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
 
         metadata = UtilModelParser.parseOptional(this, Metadata.class, object, METADATA);
         actions = UtilModelParser.parseOptional(this, Actions.class, object, ACTIONS);
+        // the silent action is always available
+        actions.addAction(silentAction);
 
         modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS);
         constants = computeConstants();
@@ -467,8 +469,8 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         if (properties != null) {
             result.add(PROPERTIES, properties.generate());
         }
-        result.add(AUTOMATA, getAutomata().generate());
-        result.add(SYSTEM, getSystem().generate());
+        result.add(AUTOMATA, automata.generate());
+        result.add(SYSTEM, system.generate());
         semantics.generate(result);
         if (modelExtensions != null) {
             for (ModelExtension extension : modelExtensions) {
@@ -652,6 +654,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         }
         for (ModelExtension extension : modelExtensions) {
             extension.setNode(node);
+            extension.setModel(this);
             extension.setIdentifiers(identifiers);
             extension.setJsonValue(value);
             extension.parseBefore();
