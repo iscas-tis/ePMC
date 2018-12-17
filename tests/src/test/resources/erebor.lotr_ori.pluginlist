@@ -13,6 +13,7 @@
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/prism-format/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/dd-cudd/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/dd-cudd-mtbdd/target/classes/
+/home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/graphsolver-lp/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/graphsolver-iterative/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/propertysolver-propositional/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/propertysolver-operator/target/classes/
@@ -23,7 +24,6 @@
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/propertysolver-multiobjective/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/propertysolver-coalition/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/lumper-explicit-signature/target/classes/
-/home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/jani-interaction/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/command-check/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/command-explore/target/classes/
 /home/ori/Documenti/Ricerca/Working/GitHub/ePMC/plugins/command-expression2automaton/target/classes/
