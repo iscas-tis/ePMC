@@ -88,7 +88,7 @@ final class RewardsConverter {
     /** JANI model resulting from transformation from PRISM model. */
     private ModelJANI modelJANI;
     /** Action used as silent action. */
-    private Action tauAction;
+    private Action silentAction;
     /** Rewards have to be renamed for exporting but not for internal use;
      * this variable controls the way rewards are managed. */
     private boolean forExporting;
@@ -106,13 +106,13 @@ final class RewardsConverter {
     }
 
     void setTauAction(Action tauAction) {
-        this.tauAction = tauAction;
+        this.silentAction = tauAction;
     }
 
     void attachRewards() {
         assert modelJANI != null;
         assert modelPRISM != null;
-        assert tauAction != null;
+        assert silentAction != null;
 
         RewardMethod rewardMethod = Options.get().getEnum(OptionsPRISMConverter.PRISM_CONVERTER_REWARD_METHOD);
         switch (rewardMethod) {
@@ -253,7 +253,7 @@ final class RewardsConverter {
             for (TransitionReward transitionReward : structure.getTransitionRewards()) {
                 String label = transitionReward.getLabel();
                 if (!action.getName().equals(label)
-                        && (this.tauAction != action || !label.equals(EMPTY))) {
+                        && (!silentAction.equals(action) || !label.equals(EMPTY))) {
                     continue;
                 }
                 Expression guard = transitionReward.getGuard();

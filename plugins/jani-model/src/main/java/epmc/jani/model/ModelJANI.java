@@ -646,7 +646,6 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
             Map<String, JANIIdentifier> identifiers) {
         assert node != null;
         semantics.setNode(node);
-        semantics.setModel(this);
         semantics.setIdentifiers(identifiers);
         semantics.setJsonValue(value);
         semantics.parseBefore();
