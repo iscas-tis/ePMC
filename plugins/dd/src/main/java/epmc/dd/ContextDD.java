@@ -1655,8 +1655,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public Value applyOverSat(Operator identifier, DD dd, DD support, DD sat)
-    {
+    public Value applyOverSat(Operator identifier, DD dd, DD support, DD sat) {
         assert alive();
         assert identifier != null;
         assert assertValidDD(dd);
@@ -1674,8 +1673,7 @@ public final class ContextDD implements Closeable {
         return value;
     }
 
-    private boolean applyOverSatSupportOK(DD dd, DD support, DD sat)
-    {
+    private boolean applyOverSatSupportOK(DD dd, DD support, DD sat) {
         TIntSet commonSupport = new TIntHashSet();
         commonSupport.addAll(dd.support());
         commonSupport.addAll(sat.support());
@@ -1688,8 +1686,7 @@ public final class ContextDD implements Closeable {
         return true;
     }
 
-    public Value applyOverSat(Operator identifier, DD dd, DD sat)
-    {
+    public Value applyOverSat(Operator identifier, DD dd, DD sat) {
         assert identifier != null;
         assert assertValidDD(dd);
         assert assertValidDD(sat);
@@ -1979,8 +1976,7 @@ public final class ContextDD implements Closeable {
         return true;
     }
 
-    public DD abstractAndExist(DD dd, DD other, DD cube)
-    {
+    public DD abstractAndExist(DD dd, DD other, DD cube) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(other);
@@ -2127,8 +2123,7 @@ public final class ContextDD implements Closeable {
         return lowLevelsExt;
     }
 
-    public List<DD> twoCplIte(DD ifDD, List<DD> op1, List<DD> op2)
-    {
+    public List<DD> twoCplIte(DD ifDD, List<DD> op1, List<DD> op2) {
         assert alive();
         assert assertValidDD(ifDD);
         assert ifDD.isBoolean();
@@ -2153,8 +2148,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public List<DD> twoCplMultiply(List<DD> op1p, List<DD> op2p)
-    {
+    public List<DD> twoCplMultiply(List<DD> op1p, List<DD> op2p) {
         assert alive();
         assert twoCplOK(op1p);
         assert twoCplOK(op2p);
@@ -2202,8 +2196,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public List<DD> twoCplShiftLeft(List<DD> op, int numShift)
-    {
+    public List<DD> twoCplShiftLeft(List<DD> op, int numShift) {
         assert alive();
         assert twoCplOK(op);
         assert numShift >= 0;
@@ -2217,8 +2210,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public List<DD> twoCplAdd(List<DD> op1, List<DD> op2)
-    {
+    public List<DD> twoCplAdd(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2228,8 +2220,7 @@ public final class ContextDD implements Closeable {
         return result;
     }    
 
-    private List<DD> twoCplAdd(List<DD> op1w, List<DD> op2w, int size)
-    {
+    private List<DD> twoCplAdd(List<DD> op1w, List<DD> op2w, int size) {
         assert alive();
         assert twoCplOK(op1w);
         assert twoCplOK(op2w);
@@ -2281,8 +2272,7 @@ public final class ContextDD implements Closeable {
         return twoComplOp;
     }
 
-    public List<DD> twoCplSubtract(List<DD> op1, List<DD> op2)
-    {
+    public List<DD> twoCplSubtract(List<DD> op1, List<DD> op2) {
         assert alive();
         assert twoCplOK(op1);
         assert twoCplOK(op2);
@@ -2404,8 +2394,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public List<DD> twoCplFromInt(int number, int numBits)
-    {
+    public List<DD> twoCplFromInt(int number, int numBits) {
         assert alive();
         assert number > Integer.MIN_VALUE;
         assert number < Integer.MAX_VALUE;
