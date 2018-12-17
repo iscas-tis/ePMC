@@ -65,7 +65,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
                 .toPRISM())
         	.append("\n");
         // Constants
-        JANIComponentRegistrar.constantsRenaming();
+        prism.append(JANIComponentRegistrar.constantsRenaming());
         Constants constants = jani.getModelConstants();
         if (constants != null) {
             prism.append(ProcessorRegistrar.getProcessor(constants)
@@ -74,7 +74,7 @@ public class ModelJANIProcessor implements JANI2PRISMProcessorStrict {
         }
 
         // Global variables
-        JANIComponentRegistrar.globalVariablesRenaming();
+        prism.append(JANIComponentRegistrar.globalVariablesRenaming());
         for (Variable variable : JANIComponentRegistrar.getGlobalVariables()) {
             prism.append(ProcessorRegistrar.getProcessor(variable)
                     .setPrefix("global ")
