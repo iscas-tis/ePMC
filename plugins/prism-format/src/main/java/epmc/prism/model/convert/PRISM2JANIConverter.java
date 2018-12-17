@@ -461,7 +461,7 @@ public final class PRISM2JANIConverter {
         properties.setValidIdentifiers(Collections.emptyMap()); 
         Properties oldProperties = modelPRISM.getPropertyList();
         for (RawProperty raw : oldProperties.getRawProperties()) {
-            Expression property = oldProperties.getParsedProperty(raw);; 
+            Expression property = oldProperties.getParsedProperty(raw);
             if (forExporting) { 
                 property = useOnlyPrefixedNamedRewards(modelPRISM, property);
             }

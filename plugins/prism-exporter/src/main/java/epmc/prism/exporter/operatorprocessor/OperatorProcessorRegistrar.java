@@ -71,6 +71,10 @@ import epmc.operator.OperatorIte;
 import epmc.operator.OperatorIteProcessor;
 import epmc.operator.OperatorLe;
 import epmc.operator.OperatorLeProcessor;
+import epmc.operator.OperatorLn;
+import epmc.operator.OperatorLnProcessor;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorLogProcessor;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorLtProcessor;
 import epmc.operator.OperatorMax;
@@ -210,8 +214,8 @@ public class OperatorProcessorRegistrar {
         operatorProcessors.put(OperatorImplies.class, OperatorImpliesProcessor.class);
         operatorProcessors.put(OperatorIte.class, OperatorIteProcessor.class);
         operatorProcessors.put(OperatorLe.class, OperatorLeProcessor.class);
-//        TODO: re-enable only after the issue about the meaning of the log operator is fixed
-//        operatorProcessors.put(OperatorLog.class, OperatorLogProcessor.class);
+        operatorProcessors.put(OperatorLn.class, OperatorLnProcessor.class);
+        operatorProcessors.put(OperatorLog.class, OperatorLogProcessor.class);
         operatorProcessors.put(OperatorLt.class, OperatorLtProcessor.class);
         operatorProcessors.put(OperatorMax.class, OperatorMaxProcessor.class);
         operatorProcessors.put(OperatorMin.class, OperatorMinProcessor.class);
