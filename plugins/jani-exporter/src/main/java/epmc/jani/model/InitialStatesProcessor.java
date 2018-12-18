@@ -24,57 +24,38 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class DestinationProcessor implements JANIProcessor {
-    /** String indicating the probability of this destination. */
-    private final static String PROBABILITY = "probability";
-    /** String indicating the source location of this edge. */
-    private final static String LOCATION = "location";
-    /** String indicating the assignments of this edge. */
-    private final static String ASSIGNMENTS = "assignments";
-    /** String indicating comment of this destination. */
+public class InitialStatesProcessor implements JANIProcessor {
+    private final static String EXP = "exp";
     private final static String COMMENT = "comment";
 
-    private Destination destination = null;
+    private InitialStates initialStates = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Destination; 
+        assert component instanceof InitialStates; 
 
-        destination = (Destination) component;
+        initialStates = (InitialStates) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert destination != null;
+        assert initialStates != null;
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
+        
+        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(initialStates.getExp())
+                .toJSON());
 
-        Location location = destination.getLocation();
-        assert location != null;
-        builder.add(LOCATION, location.getName());
-        
-        Probability probability = destination.getProbability();
-        if (probability != null) {
-            builder.add(PROBABILITY, ProcessorRegistrar.getProcessor(probability)
-                    .toJSON());
-        }
-        
-        Assignments assignments = destination.getAssignments();
-        if (assignments != null) {
-            builder.add(ASSIGNMENTS, ProcessorRegistrar.getProcessor(assignments)
-                    .toJSON());
-        }
-        
-        String comment = destination.getComment();
+        String comment = initialStates.getComment();
         if (comment != null) {
             builder.add(COMMENT, comment);
         }
-
+        
         return builder.build();
-    }	
+    }
 }

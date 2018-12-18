@@ -40,6 +40,8 @@ import epmc.jani.model.Edges;
 import epmc.jani.model.EdgesProcessor;
 import epmc.jani.model.Guard;
 import epmc.jani.model.GuardProcessor;
+import epmc.jani.model.InitialStates;
+import epmc.jani.model.InitialStatesProcessor;
 import epmc.jani.model.Location;
 import epmc.jani.model.LocationProcessor;
 import epmc.jani.model.Locations;
@@ -161,7 +163,7 @@ public class ProcessorRegistrar {
         processors.put(Variable.class, VariableProcessor.class);
 
         //Initial states
-//        processors.put(InitialStates.class, InitialStatesProcessor.class);
+        processors.put(InitialStates.class, InitialStatesProcessor.class);
 
         //Automata
 //        processors.put(Automata.class, AutomataProcessor.class);
