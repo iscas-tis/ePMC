@@ -189,6 +189,14 @@ public final class Location implements JANINode, Serializable {
         this.validIdentifiers = validIdentifiers;
     }
 
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
     @Override
     public String toString() {
         return UtilModelParser.toString(this);

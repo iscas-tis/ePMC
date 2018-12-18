@@ -26,6 +26,20 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epmc.jani.exporter.error.ProblemsJANIExporter;
+import epmc.jani.model.Constant;
+import epmc.jani.model.ConstantProcessor;
+import epmc.jani.model.Constants;
+import epmc.jani.model.ConstantsProcessor;
+import epmc.jani.model.Edge;
+import epmc.jani.model.EdgeProcessor;
+import epmc.jani.model.Edges;
+import epmc.jani.model.EdgesProcessor;
+import epmc.jani.model.Guard;
+import epmc.jani.model.GuardProcessor;
+import epmc.jani.model.Location;
+import epmc.jani.model.LocationProcessor;
+import epmc.jani.model.Locations;
+import epmc.jani.model.LocationsProcessor;
 import epmc.jani.model.Metadata;
 import epmc.jani.model.MetadataProcessor;
 import epmc.jani.model.ModelJANI;
@@ -135,8 +149,8 @@ public class ProcessorRegistrar {
 //        processors.put(ModelJANI.class, ModelJANIProcessor.class);
 
         //Constants
-//        processors.put(Constants.class, ConstantsProcessor.class);
-//        processors.put(Constant.class, ConstantProcessor.class);
+        processors.put(Constants.class, ConstantsProcessor.class);
+        processors.put(Constant.class, ConstantProcessor.class);
 
         //Variables
         processors.put(Variables.class, VariablesProcessor.class);
@@ -153,15 +167,15 @@ public class ProcessorRegistrar {
 //        processors.put(ComponentSynchronisationVectors.class, ComponentSynchronisationVectorsProcessor.class);
 
         //Locations
-//        processors.put(Locations.class, LocationsProcessor.class);
-//        processors.put(Location.class, LocationProcessor.class);
+        processors.put(Locations.class, LocationsProcessor.class);
+        processors.put(Location.class, LocationProcessor.class);
 
         //Time progress/invariants
         processors.put(TimeProgress.class, TimeProgressProcessor.class);
 
         //Edges
-//        processors.put(Edges.class, EdgesProcessor.class);
-//        processors.put(Edge.class, EdgeProcessor.class);
+        processors.put(Edges.class, EdgesProcessor.class);
+        processors.put(Edge.class, EdgeProcessor.class);
 
         //Actions
 //        processors.put(Action.class, ActionProcessor.class);
@@ -171,7 +185,7 @@ public class ProcessorRegistrar {
 //        processors.put(Destination.class, DestinationProcessor.class);
 
         //Guards
-//        processors.put(Guard.class, GuardProcessor.class);
+        processors.put(Guard.class, GuardProcessor.class);
 
         //Assignments
 //        processors.put(Assignments.class, AssignmentsProcessor.class);
