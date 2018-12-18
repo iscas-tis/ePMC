@@ -27,6 +27,7 @@ import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.main.options.OptionsEPMC;
 import epmc.modelchecker.CommandTask;
 import epmc.options.Category;
+import epmc.options.OptionTypeBoolean;
 import epmc.options.OptionTypeString;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
@@ -62,30 +63,49 @@ public final class AfterOptionsCreationJANIExporter implements AfterOptionsCreat
         assert commandTaskClasses != null;
 
         options.addCommand()
-        .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
-        .setIdentifier(CommandTaskJANIExporterJANIExport.IDENTIFIER)
-        .setCommandLine()
-        .build();
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(CommandTaskJANIExporterJANIExport.IDENTIFIER)
+            .setCommandLine()
+            .build();
 
         commandTaskClasses.put(CommandTaskJANIExporterJANIExport.IDENTIFIER, CommandTaskJANIExporterJANIExport.class);
 
         OptionTypeString typeString = OptionTypeString.getInstance();
+        OptionTypeBoolean typeBoolean = OptionTypeBoolean.getInstance();
 
-        options.addOption().setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
-        .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_FILE_NAME)
-        .setType(typeString)
-        .setCommandLine().setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_FILE_NAME)
+            .setType(typeString)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
-        .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_MODEL_NAME)
-        .setType(typeString)
-        .setCommandLine().setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_MODEL_NAME)
+            .setType(typeString)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
 
-        options.addOption().setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
-        .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX)
-        .setType(typeString)
-        .setDefault("reward_")
-        .setCommandLine().setCategory(category).build();
+        options.addOption()
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX)
+            .setType(typeString)
+            .setDefault("reward_")
+            .setCommandLine()
+            .setCategory(category)
+            .build();
+
+        options.addOption()
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_SYNCHRONISE_SILENT)
+            .setType(typeBoolean)
+            .setDefault(false)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
     }
 
 }

@@ -37,5 +37,8 @@ public enum OptionsJANIExporter {
     /** Whether to print out messages during the export. */
     JANI_EXPORTER_PRINT_MESSAGES,
     /** Prefix for reward structure names. */
-    JANI_EXPORTER_REWARD_NAME_PREFIX;
+    JANI_EXPORTER_REWARD_NAME_PREFIX,
+    /** Whether to generate the synchronisation information for the silent action. */
+    JANI_EXPORTER_SYNCHRONISE_SILENT
+    ;
 }
