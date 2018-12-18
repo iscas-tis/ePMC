@@ -25,9 +25,9 @@ import javax.json.JsonValue;
 import epmc.expression.Expression;
 import epmc.jani.model.ModelJANI;
 
-public interface JANIExpressionProcessor {	
+public interface ExpressionProcessor {	
     
-    JANIExpressionProcessor setElement(ModelJANI model, Expression expression);
+    ExpressionProcessor setElement(ModelJANI model, Expression expression);
 
     JsonValue toJSON();
 }

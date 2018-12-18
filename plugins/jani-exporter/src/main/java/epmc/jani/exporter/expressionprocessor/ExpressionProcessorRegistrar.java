@@ -27,7 +27,7 @@ import java.util.Map;
 
 import epmc.expression.Expression;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
-import epmc.jani.exporter.expressionprocessor.JANIExpressionProcessor;
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessor;
 import epmc.jani.model.Action;
 import epmc.jani.model.ActionProcessor;
 import epmc.jani.model.AssignmentSimple;
@@ -115,7 +115,7 @@ import epmc.util.Util;
  *
  */
 public class ExpressionProcessorRegistrar {
-    private static Map<Class<? extends Expression>, Class<? extends JANIExpressionProcessor>> expressionProcessors = registerExpressionProcessors();
+    private static Map<Class<? extends Expression>, Class<? extends ExpressionProcessor>> expressionProcessors = registerExpressionProcessors();
     
     private static ModelJANI model = null;
     
@@ -137,7 +137,7 @@ public class ExpressionProcessorRegistrar {
      * @param expression the expression to which associate the processor
      * @param processor the corresponding processor
      */
-    public static void registerExpressionProcessor(Class<? extends Expression> expression, Class<? extends JANIExpressionProcessor> processor) {
+    public static void registerExpressionProcessor(Class<? extends Expression> expression, Class<? extends ExpressionProcessor> processor) {
         expressionProcessors.put(expression, processor);
     }
 
@@ -147,12 +147,12 @@ public class ExpressionProcessorRegistrar {
      * @param expression the expression for which obtain the processor
      * @return the corresponding processor
      */
-    public static JANIExpressionProcessor getExpressionProcessor(Expression expression) {
+    public static ExpressionProcessor getExpressionProcessor(Expression expression) {
         assert model != null;
         assert expression != null;
 
-        JANIExpressionProcessor processor = null;
-        Class<? extends JANIExpressionProcessor> processorClass = expressionProcessors.get(expression.getClass());
+        ExpressionProcessor processor = null;
+        Class<? extends ExpressionProcessor> processorClass = expressionProcessors.get(expression.getClass());
         if (processorClass != null) {
             processor = Util.getInstance(processorClass)
                     .setElement(model, expression);
@@ -165,8 +165,8 @@ public class ExpressionProcessorRegistrar {
         return processor;
     }
 
-    private static Map<Class<? extends Expression>, Class<? extends JANIExpressionProcessor>> registerExpressionProcessors() {
-        Map<Class<? extends Expression>, Class<? extends JANIExpressionProcessor>> processors = new HashMap<>();
+    private static Map<Class<? extends Expression>, Class<? extends ExpressionProcessor>> registerExpressionProcessors() {
+        Map<Class<? extends Expression>, Class<? extends ExpressionProcessor>> processors = new HashMap<>();
         
         return processors;
     }
