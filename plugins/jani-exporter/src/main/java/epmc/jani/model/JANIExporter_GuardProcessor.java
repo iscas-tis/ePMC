@@ -20,39 +20,42 @@
 
 package epmc.jani.model;
 
-import java.util.Map.Entry;
-
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
 
-public class MetadataProcessor implements JANIProcessor {
+public class JANIExporter_GuardProcessor implements JANIProcessor {
+    private final static String EXP = "exp";
+    private final static String COMMENT = "comment";
 
-    private Metadata metadata = null;
+    private Guard guard = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Metadata; 
+        assert component instanceof Guard; 
 
-        metadata = (Metadata) component;
+        guard = (Guard) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert metadata != null;
+        assert guard != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        
-        for (Entry<String, String> entry : metadata.getValues().entrySet()) {
-            String key = entry.getKey();
-            assert key != null;
-            builder.add(key, entry.getValue());
-        }
 
+        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(guard.getExp())
+                .toJSON());
+
+        String comment = guard.getComment();
+        if (comment != null) {
+            builder.add(COMMENT, comment);
+        }
+        
         return builder.build();
     }
 }

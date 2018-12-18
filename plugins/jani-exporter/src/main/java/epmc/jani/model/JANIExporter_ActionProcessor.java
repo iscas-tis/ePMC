@@ -21,34 +21,38 @@
 package epmc.jani.model;
 
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class DestinationsProcessor implements JANIProcessor {
+public class JANIExporter_ActionProcessor implements JANIProcessor {
+    /** Identifies the name of a given action. */
+    private final static String NAME = "name";
+    private final static String COMMENT = "comment";
 
-    private Destinations destinations = null;
+    private Action action = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Destinations; 
+        assert component instanceof Action; 
 
-        destinations = (Destinations) component;
+        action = (Action) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert destinations != null;
+        assert action != null;
 
-        JsonArrayBuilder builder = Json.createArrayBuilder();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+
+        builder.add(NAME, action.getName());
         
-        for (Destination destination : destinations) {
-            builder.add(ProcessorRegistrar.getProcessor(destination)
-                    .toJSON());
+        String comment = action.getComment();
+        if (comment != null) {
+            builder.add(COMMENT, comment);
         }
         
         return builder.build();

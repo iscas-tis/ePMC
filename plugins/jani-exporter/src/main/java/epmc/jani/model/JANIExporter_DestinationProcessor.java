@@ -18,63 +18,63 @@
 
  *****************************************************************************/
 
-package epmc.jani.model.component;
-
-import java.util.Set;
+package epmc.jani.model;
 
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
-import epmc.jani.model.Action;
-import epmc.jani.model.Automaton;
 
-public class SynchronisationVectorElementProcessor implements JANIProcessor {
-    private final static String AUTOMATON = "automaton";
-    private final static String INPUT_ENABLE = "input-enable";
+public class JANIExporter_DestinationProcessor implements JANIProcessor {
+    /** String indicating the probability of this destination. */
+    private final static String PROBABILITY = "probability";
+    /** String indicating the source location of this edge. */
+    private final static String LOCATION = "location";
+    /** String indicating the assignments of this edge. */
+    private final static String ASSIGNMENTS = "assignments";
+    /** String indicating comment of this destination. */
     private final static String COMMENT = "comment";
 
-    private SynchronisationVectorElement syncVectorElement = null;
+    private Destination destination = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof SynchronisationVectorElement; 
+        assert component instanceof Destination; 
 
-        syncVectorElement = (SynchronisationVectorElement) component;
+        destination = (Destination) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert syncVectorElement != null;
-
+        assert destination != null;
+        
         JsonObjectBuilder builder = Json.createObjectBuilder();
+
+        Location location = destination.getLocation();
+        assert location != null;
+        builder.add(LOCATION, location.getName());
         
-        Automaton automaton = syncVectorElement.getAutomaton();
-        assert automaton != null;
-        builder.add(AUTOMATON, automaton.getName());
-        
-        Set<Action> inputEnable = syncVectorElement.getInputEnable();
-        if (inputEnable != null) {
-            JsonArrayBuilder inputEnableBuilder = Json.createArrayBuilder();
-            
-            for (Action action : inputEnable) {
-                assert action != null;
-                assert !ProcessorRegistrar.isSilentAction(action);
-                inputEnableBuilder.add(action.getName());
-            }
-            builder.add(INPUT_ENABLE, inputEnableBuilder);
+        Probability probability = destination.getProbability();
+        if (probability != null) {
+            builder.add(PROBABILITY, ProcessorRegistrar.getProcessor(probability)
+                    .toJSON());
         }
         
-        String comment = syncVectorElement.getComment();
+        Assignments assignments = destination.getAssignments();
+        if (assignments != null) {
+            builder.add(ASSIGNMENTS, ProcessorRegistrar.getProcessor(assignments)
+                    .toJSON());
+        }
+        
+        String comment = destination.getComment();
         if (comment != null) {
             builder.add(COMMENT, comment);
         }
-        
+
         return builder.build();
-    }
+    }	
 }

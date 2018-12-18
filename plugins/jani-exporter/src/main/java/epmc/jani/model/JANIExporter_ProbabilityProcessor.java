@@ -27,31 +27,31 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
 
-public class InitialStatesProcessor implements JANIProcessor {
+public class JANIExporter_ProbabilityProcessor implements JANIProcessor {
     private final static String EXP = "exp";
     private final static String COMMENT = "comment";
 
-    private InitialStates initialStates = null;
+    private Probability probability = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof InitialStates; 
+        assert component instanceof Probability; 
 
-        initialStates = (InitialStates) component;
+        probability = (Probability) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert initialStates != null;
-        
+        assert probability != null;
+
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(initialStates.getExp())
+        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(probability.getExp())
                 .toJSON());
 
-        String comment = initialStates.getComment();
+        String comment = probability.getComment();
         if (comment != null) {
             builder.add(COMMENT, comment);
         }

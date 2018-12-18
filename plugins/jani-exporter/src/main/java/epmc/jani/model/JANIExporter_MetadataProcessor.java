@@ -20,58 +20,39 @@
 
 package epmc.jani.model;
 
+import java.util.Map.Entry;
+
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.expression.Expression;
-import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class ConstantProcessor implements JANIProcessor {
-    /** Identifier for the name of the constant. */
-    private final static String NAME = "name";
-    /** Identifier for the type of the constant. */
-    private final static String TYPE = "type";
-    /** Identifier for the value of the constant. */
-    private final static String VALUE = "value";
-    /** Identifier for the comment of the constant. */
-    private final static String COMMENT = "comment";
+public class JANIExporter_MetadataProcessor implements JANIProcessor {
 
-    private Constant constant = null;
+    private Metadata metadata = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Constant; 
+        assert component instanceof Metadata; 
 
-        constant = (Constant) component;
+        metadata = (Metadata) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert constant != null;
+        assert metadata != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        builder.add(NAME, constant.getName());
+        for (Entry<String, String> entry : metadata.getValues().entrySet()) {
+            String key = entry.getKey();
+            assert key != null;
+            builder.add(key, entry.getValue());
+        }
 
-        builder.add(TYPE, ProcessorRegistrar.getProcessor(constant.getType())
-                .toJSON());
-        
-        Expression value = constant.getValue();
-        if (value != null) {
-            builder.add(VALUE, ExpressionProcessorRegistrar.getExpressionProcessor(value)
-                    .toJSON());
-        }
-        
-        String comment = constant.getComment();
-        if (comment != null) {
-            builder.add(COMMENT, comment);
-        }
-        
         return builder.build();
     }
 }

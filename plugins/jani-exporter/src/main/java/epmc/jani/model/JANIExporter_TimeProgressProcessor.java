@@ -7,7 +7,7 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
 
-public class TimeProgressProcessor implements JANIProcessor {
+public class JANIExporter_TimeProgressProcessor implements JANIProcessor {
     private final static String EXP = "exp";
     private final static String COMMENT = "comment";
 

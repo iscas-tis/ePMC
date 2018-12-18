@@ -21,41 +21,36 @@
 package epmc.jani.model;
 
 import javax.json.Json;
-import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class GuardProcessor implements JANIProcessor {
-    private final static String EXP = "exp";
-    private final static String COMMENT = "comment";
+public class JANIExporter_ConstantsProcessor implements JANIProcessor {
 
-    private Guard guard = null;
+    private Constants constants = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Guard; 
+        assert component instanceof Constants; 
 
-        guard = (Guard) component;
+        constants = (Constants) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert guard != null;
+        assert constants != null;
 
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-
-        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(guard.getExp())
-                .toJSON());
-
-        String comment = guard.getComment();
-        if (comment != null) {
-            builder.add(COMMENT, comment);
-        }
+        JsonArrayBuilder builder = Json.createArrayBuilder();
         
+        for (Constant constant : constants.getConstants().values()) {
+            builder.add(ProcessorRegistrar.getProcessor(constant)
+                    .toJSON());
+        }
+
         return builder.build();
     }
 }

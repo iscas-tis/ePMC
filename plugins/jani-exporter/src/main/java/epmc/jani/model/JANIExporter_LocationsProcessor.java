@@ -18,33 +18,39 @@
 
  *****************************************************************************/
 
-package epmc.jani.model.type;
+package epmc.jani.model;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.util.UtilJSON;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public final class JANITypeBoolProcessor implements JANIProcessor {
+public class JANIExporter_LocationsProcessor implements JANIProcessor {
 
-    /** Identifier for boolean type. */
-    private final static String BOOL = "bool";
-
-    private JANITypeBool bool = null;
+    private Locations locations = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof JANITypeBool;
+        assert component instanceof Locations; 
 
-        bool = (JANITypeBool) component;
+        locations = (Locations) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert bool != null;
+        assert locations != null;
 
-        return UtilJSON.toStringValue(BOOL);
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        
+        for (Location location : locations.getLocations().values()) {
+            builder.add(ProcessorRegistrar.getProcessor(location)
+                    .toJSON());
+        }
+        
+        return builder.build();
     }
 }

@@ -31,7 +31,7 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.Action;
 import epmc.options.Options;
 
-public class ComponentSynchronisationVectorsProcessor implements JANIProcessor {
+public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JANIProcessor {
     public final static String IDENTIFIER = "synchronisation-vectors";
     private final static String ELEMENTS = "elements";
     private final static String SYNCS = "syncs";

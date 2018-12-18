@@ -24,51 +24,34 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class LocationProcessor implements JANIProcessor {
-    /** String identifying the name of the location. */
-    private final static String NAME = "name";
-    /** String identifying time progress condition of this location. */
-    private final static String TIME_PROGRESS = "time-progress";
-    /** String identifying comment of this location. */
+public class JANIExporter_InitialStatesProcessor implements JANIProcessor {
+    private final static String EXP = "exp";
     private final static String COMMENT = "comment";
-    /** String identifying state transient values of this location. */
-    private final static String TRANSIENT_VALUES = "transient-values";
 
-    private Location location = null;
+    private InitialStates initialStates = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Location; 
+        assert component instanceof InitialStates; 
 
-        location = (Location) component;
+        initialStates = (InitialStates) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert location != null;
-
+        assert initialStates != null;
+        
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        builder.add(NAME, location.getName());
-        
-        TimeProgress timeProgress = location.getTimeProgress();
-        if (timeProgress != null) {
-            builder.add(TIME_PROGRESS, ProcessorRegistrar.getProcessor(timeProgress)
-                    .toJSON());
-        }
+        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(initialStates.getExp())
+                .toJSON());
 
-        Assignments transientValuesAssignments = location.getTransientValueAssignments();
-        if (transientValuesAssignments != null) {
-            builder.add(TRANSIENT_VALUES, ProcessorRegistrar.getProcessor(transientValuesAssignments)
-                    .toJSON());
-        }
-        
-        String comment = location.getComment();
+        String comment = initialStates.getComment();
         if (comment != null) {
             builder.add(COMMENT, comment);
         }

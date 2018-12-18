@@ -27,65 +27,67 @@ import java.util.Map;
 
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.model.Action;
-import epmc.jani.model.ActionProcessor;
+import epmc.jani.model.Actions;
+import epmc.jani.model.JANIExporter_ActionProcessor;
+import epmc.jani.model.JANIExporter_ActionsProcessor;
 import epmc.jani.model.AssignmentSimple;
-import epmc.jani.model.AssignmentSimpleProcessor;
+import epmc.jani.model.JANIExporter_AssignmentSimpleProcessor;
 import epmc.jani.model.Assignments;
-import epmc.jani.model.AssignmentsProcessor;
+import epmc.jani.model.JANIExporter_AssignmentsProcessor;
 import epmc.jani.model.Automata;
-import epmc.jani.model.AutomataProcessor;
+import epmc.jani.model.JANIExporter_AutomataProcessor;
 import epmc.jani.model.Automaton;
-import epmc.jani.model.AutomatonProcessor;
+import epmc.jani.model.JANIExporter_AutomatonProcessor;
 import epmc.jani.model.Constant;
-import epmc.jani.model.ConstantProcessor;
+import epmc.jani.model.JANIExporter_ConstantProcessor;
 import epmc.jani.model.Constants;
-import epmc.jani.model.ConstantsProcessor;
+import epmc.jani.model.JANIExporter_ConstantsProcessor;
 import epmc.jani.model.Destination;
-import epmc.jani.model.DestinationProcessor;
+import epmc.jani.model.JANIExporter_DestinationProcessor;
 import epmc.jani.model.Destinations;
-import epmc.jani.model.DestinationsProcessor;
+import epmc.jani.model.JANIExporter_DestinationsProcessor;
 import epmc.jani.model.Edge;
-import epmc.jani.model.EdgeProcessor;
+import epmc.jani.model.JANIExporter_EdgeProcessor;
 import epmc.jani.model.Edges;
-import epmc.jani.model.EdgesProcessor;
+import epmc.jani.model.JANIExporter_EdgesProcessor;
 import epmc.jani.model.Guard;
-import epmc.jani.model.GuardProcessor;
+import epmc.jani.model.JANIExporter_GuardProcessor;
 import epmc.jani.model.InitialStates;
-import epmc.jani.model.InitialStatesProcessor;
+import epmc.jani.model.JANIExporter_InitialStatesProcessor;
 import epmc.jani.model.Location;
-import epmc.jani.model.LocationProcessor;
+import epmc.jani.model.JANIExporter_LocationProcessor;
 import epmc.jani.model.Locations;
-import epmc.jani.model.LocationsProcessor;
+import epmc.jani.model.JANIExporter_LocationsProcessor;
 import epmc.jani.model.Metadata;
-import epmc.jani.model.MetadataProcessor;
+import epmc.jani.model.JANIExporter_MetadataProcessor;
 import epmc.jani.model.ModelJANI;
-import epmc.jani.model.ModelJANIProcessor;
+import epmc.jani.model.JANIExporter_ModelJANIProcessor;
 import epmc.jani.model.Probability;
-import epmc.jani.model.ProbabilityProcessor;
+import epmc.jani.model.JANIExporter_ProbabilityProcessor;
 import epmc.jani.model.Rate;
-import epmc.jani.model.RateProcessor;
+import epmc.jani.model.JANIExporter_RateProcessor;
 import epmc.jani.model.TimeProgress;
-import epmc.jani.model.TimeProgressProcessor;
+import epmc.jani.model.JANIExporter_TimeProgressProcessor;
 import epmc.jani.model.Variable;
-import epmc.jani.model.VariableProcessor;
+import epmc.jani.model.JANIExporter_VariableProcessor;
 import epmc.jani.model.Variables;
-import epmc.jani.model.VariablesProcessor;
+import epmc.jani.model.JANIExporter_VariablesProcessor;
 import epmc.jani.model.component.ComponentSynchronisationVectors;
-import epmc.jani.model.component.ComponentSynchronisationVectorsProcessor;
+import epmc.jani.model.component.JANIExporter_ComponentSynchronisationVectorsProcessor;
 import epmc.jani.model.component.SynchronisationVectorElement;
-import epmc.jani.model.component.SynchronisationVectorElementProcessor;
+import epmc.jani.model.component.JANIExporter_SynchronisationVectorElementProcessor;
 import epmc.jani.model.component.SynchronisationVectorSync;
-import epmc.jani.model.component.SynchronisationVectorSyncProcessor;
+import epmc.jani.model.component.JANIExporter_SynchronisationVectorSyncProcessor;
 import epmc.jani.model.type.JANITypeBool;
-import epmc.jani.model.type.JANITypeBoolProcessor;
+import epmc.jani.model.type.JANIExporter_JANITypeBoolProcessor;
 import epmc.jani.model.type.JANITypeBounded;
-import epmc.jani.model.type.JANITypeBoundedProcessor;
+import epmc.jani.model.type.JANIExporter_JANITypeBoundedProcessor;
 import epmc.jani.model.type.JANITypeInt;
-import epmc.jani.model.type.JANITypeIntProcessor;
+import epmc.jani.model.type.JANIExporter_JANITypeIntProcessor;
 import epmc.jani.model.type.JANITypeReal;
-import epmc.jani.model.type.JANITypeRealProcessor;
+import epmc.jani.model.type.JANIExporter_JANITypeRealProcessor;
 import epmc.time.JANITypeClock;
-import epmc.time.JANITypeClockProcessor;
+import epmc.time.JANIExporter_JANITypeClockProcessor;
 import epmc.util.Util;
 
 /**
@@ -160,66 +162,67 @@ public class ProcessorRegistrar {
 
 
         //JANI types
-        processors.put(JANITypeBool.class, JANITypeBoolProcessor.class);
-        processors.put(JANITypeBounded.class, JANITypeBoundedProcessor.class);
-        processors.put(JANITypeInt.class, JANITypeIntProcessor.class);
-        processors.put(JANITypeReal.class, JANITypeRealProcessor.class);
-        processors.put(JANITypeClock.class, JANITypeClockProcessor.class);
+        processors.put(JANITypeBool.class, JANIExporter_JANITypeBoolProcessor.class);
+        processors.put(JANITypeBounded.class, JANIExporter_JANITypeBoundedProcessor.class);
+        processors.put(JANITypeInt.class, JANIExporter_JANITypeIntProcessor.class);
+        processors.put(JANITypeReal.class, JANIExporter_JANITypeRealProcessor.class);
+        processors.put(JANITypeClock.class, JANIExporter_JANITypeClockProcessor.class);
 
         //JANI metadata
-        processors.put(Metadata.class, MetadataProcessor.class);
+        processors.put(Metadata.class, JANIExporter_MetadataProcessor.class);
 
         //JANI model
-        processors.put(ModelJANI.class, ModelJANIProcessor.class);
+        processors.put(ModelJANI.class, JANIExporter_ModelJANIProcessor.class);
 
         //Constants
-        processors.put(Constants.class, ConstantsProcessor.class);
-        processors.put(Constant.class, ConstantProcessor.class);
+        processors.put(Constants.class, JANIExporter_ConstantsProcessor.class);
+        processors.put(Constant.class, JANIExporter_ConstantProcessor.class);
 
         //Variables
-        processors.put(Variables.class, VariablesProcessor.class);
-        processors.put(Variable.class, VariableProcessor.class);
+        processors.put(Variables.class, JANIExporter_VariablesProcessor.class);
+        processors.put(Variable.class, JANIExporter_VariableProcessor.class);
 
         //Initial states
-        processors.put(InitialStates.class, InitialStatesProcessor.class);
+        processors.put(InitialStates.class, JANIExporter_InitialStatesProcessor.class);
 
         //Automata
-        processors.put(Automata.class, AutomataProcessor.class);
-        processors.put(Automaton.class, AutomatonProcessor.class);
+        processors.put(Automata.class, JANIExporter_AutomataProcessor.class);
+        processors.put(Automaton.class, JANIExporter_AutomatonProcessor.class);
 
         //Synchronisation
-        processors.put(ComponentSynchronisationVectors.class, ComponentSynchronisationVectorsProcessor.class);
-        processors.put(SynchronisationVectorElement.class, SynchronisationVectorElementProcessor.class);
-        processors.put(SynchronisationVectorSync.class, SynchronisationVectorSyncProcessor.class);
+        processors.put(ComponentSynchronisationVectors.class, JANIExporter_ComponentSynchronisationVectorsProcessor.class);
+        processors.put(SynchronisationVectorElement.class, JANIExporter_SynchronisationVectorElementProcessor.class);
+        processors.put(SynchronisationVectorSync.class, JANIExporter_SynchronisationVectorSyncProcessor.class);
 
         //Locations
-        processors.put(Locations.class, LocationsProcessor.class);
-        processors.put(Location.class, LocationProcessor.class);
+        processors.put(Locations.class, JANIExporter_LocationsProcessor.class);
+        processors.put(Location.class, JANIExporter_LocationProcessor.class);
 
         //Time progress/invariants
-        processors.put(TimeProgress.class, TimeProgressProcessor.class);
+        processors.put(TimeProgress.class, JANIExporter_TimeProgressProcessor.class);
 
         //Edges
-        processors.put(Edges.class, EdgesProcessor.class);
-        processors.put(Edge.class, EdgeProcessor.class);
+        processors.put(Edges.class, JANIExporter_EdgesProcessor.class);
+        processors.put(Edge.class, JANIExporter_EdgeProcessor.class);
 
         //Actions
-        processors.put(Action.class, ActionProcessor.class);
+        processors.put(Actions.class, JANIExporter_ActionsProcessor.class);
+        processors.put(Action.class, JANIExporter_ActionProcessor.class);
 
         //Destinations
-        processors.put(Destinations.class, DestinationsProcessor.class);
-        processors.put(Destination.class, DestinationProcessor.class);
+        processors.put(Destinations.class, JANIExporter_DestinationsProcessor.class);
+        processors.put(Destination.class, JANIExporter_DestinationProcessor.class);
 
         //Guards
-        processors.put(Guard.class, GuardProcessor.class);
+        processors.put(Guard.class, JANIExporter_GuardProcessor.class);
 
         //Assignments
-        processors.put(Assignments.class, AssignmentsProcessor.class);
-        processors.put(AssignmentSimple.class, AssignmentSimpleProcessor.class);
+        processors.put(Assignments.class, JANIExporter_AssignmentsProcessor.class);
+        processors.put(AssignmentSimple.class, JANIExporter_AssignmentSimpleProcessor.class);
 
         //Probability/rate
-        processors.put(Probability.class, ProbabilityProcessor.class);
-        processors.put(Rate.class, RateProcessor.class);
+        processors.put(Probability.class, JANIExporter_ProbabilityProcessor.class);
+        processors.put(Rate.class, JANIExporter_RateProcessor.class);
 
         //JANI properties
 //        processors.put(JANIProperties.class, JANIPropertiesProcessor.class);

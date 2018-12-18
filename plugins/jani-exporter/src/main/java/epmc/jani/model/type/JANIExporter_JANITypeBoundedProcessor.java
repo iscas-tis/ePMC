@@ -28,7 +28,7 @@ import epmc.expression.Expression;
 import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
 
-public final class JANITypeBoundedProcessor implements JANIProcessor {
+public final class JANIExporter_JANITypeBoundedProcessor implements JANIProcessor {
     public final static String IDENTIFIER = "bounded";
     /** Identifies the type of variable type specification. */
     private final static String KIND = "kind";

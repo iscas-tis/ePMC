@@ -28,7 +28,7 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class AutomatonProcessor implements JANIProcessor {
+public class JANIExporter_AutomatonProcessor implements JANIProcessor {
     /** String identifying the name of an automaton. */
     private final static String NAME = "name";
     /** String identifying the variables of an automaton. */

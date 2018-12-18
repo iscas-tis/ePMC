@@ -18,55 +18,59 @@
 
  *****************************************************************************/
 
-package epmc.jani.model;
+package epmc.jani.model.component;
 
 import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.model.Action;
 
-public class AssignmentSimpleProcessor implements JANIProcessor {
-    /** String specifying to which variable to assign to. */
-    private final static String REF = "ref";
-    /** String specifying expression of value to be assigned. */
-    private final static String VALUE = "value";
-    /** String identifying index of this assignment. */
-    private final static String INDEX = "index";
-    /** String specifying comment for this assignment. */
+public class JANIExporter_SynchronisationVectorSyncProcessor implements JANIProcessor {
+    private final static String SYNCHRONISE = "synchronise";
+    private final static String RESULT = "result";
     private final static String COMMENT = "comment";
 
-    private AssignmentSimple assignment = null;
+    private SynchronisationVectorSync syncVectorSync = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof AssignmentSimple; 
+        assert component instanceof SynchronisationVectorSync; 
 
-        assignment = (AssignmentSimple) component;
+        syncVectorSync = (SynchronisationVectorSync) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert assignment != null;
+        assert syncVectorSync != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        builder.add(REF, assignment.getRef().getName());
-
-        builder.add(VALUE, ExpressionProcessorRegistrar.getExpressionProcessor(assignment.getValue())
-                .toJSON());
-
-        Integer index = assignment.getIndex();
-        if (index != null)
-            builder.add(INDEX, index);
+        JsonArrayBuilder synchronise = Json.createArrayBuilder();
+        for (Action sync : syncVectorSync.getSynchronise()) {
+            if (sync == null) {
+                synchronise.addNull();
+            } else {
+                synchronise.add(sync.getName());
+            }
+        }
+        builder.add(SYNCHRONISE, synchronise);
         
-        String comment = assignment.getComment();
-        if (comment != null)
+        Action result = syncVectorSync.getResult();
+        if (result != null && !ProcessorRegistrar.isSilentAction(result)) {
+            builder.add(RESULT, result.getName());
+        }
+        
+        String comment = syncVectorSync.getComment();
+        if (comment != null) {
             builder.add(COMMENT, comment);
-
+        }
+        
         return builder.build();
     }
 }

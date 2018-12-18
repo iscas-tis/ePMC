@@ -18,55 +18,57 @@
 
  *****************************************************************************/
 
-package epmc.jani.model.component;
+package epmc.jani.model;
 
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
-import epmc.jani.model.Action;
 
-public class SynchronisationVectorSyncProcessor implements JANIProcessor {
-    private final static String SYNCHRONISE = "synchronise";
-    private final static String RESULT = "result";
+public class JANIExporter_LocationProcessor implements JANIProcessor {
+    /** String identifying the name of the location. */
+    private final static String NAME = "name";
+    /** String identifying time progress condition of this location. */
+    private final static String TIME_PROGRESS = "time-progress";
+    /** String identifying comment of this location. */
     private final static String COMMENT = "comment";
+    /** String identifying state transient values of this location. */
+    private final static String TRANSIENT_VALUES = "transient-values";
 
-    private SynchronisationVectorSync syncVectorSync = null;
+    private Location location = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof SynchronisationVectorSync; 
+        assert component instanceof Location; 
 
-        syncVectorSync = (SynchronisationVectorSync) component;
+        location = (Location) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert syncVectorSync != null;
+        assert location != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
+        
+        builder.add(NAME, location.getName());
+        
+        TimeProgress timeProgress = location.getTimeProgress();
+        if (timeProgress != null) {
+            builder.add(TIME_PROGRESS, ProcessorRegistrar.getProcessor(timeProgress)
+                    .toJSON());
+        }
 
-        JsonArrayBuilder synchronise = Json.createArrayBuilder();
-        for (Action sync : syncVectorSync.getSynchronise()) {
-            if (sync == null) {
-                synchronise.addNull();
-            } else {
-                synchronise.add(sync.getName());
-            }
-        }
-        builder.add(SYNCHRONISE, synchronise);
-        
-        Action result = syncVectorSync.getResult();
-        if (result != null && !ProcessorRegistrar.isSilentAction(result)) {
-            builder.add(RESULT, result.getName());
+        Assignments transientValuesAssignments = location.getTransientValueAssignments();
+        if (transientValuesAssignments != null) {
+            builder.add(TRANSIENT_VALUES, ProcessorRegistrar.getProcessor(transientValuesAssignments)
+                    .toJSON());
         }
         
-        String comment = syncVectorSync.getComment();
+        String comment = location.getComment();
         if (comment != null) {
             builder.add(COMMENT, comment);
         }

@@ -31,7 +31,7 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.valuejson.UtilValueJSON;
 
-public class VariableProcessor implements JANIProcessor {
+public class JANIExporter_VariableProcessor implements JANIProcessor {
     /** Identifies a variable. */
     private final static String TYPE = "type";
     /** Identifies the name of a variable. */

@@ -31,7 +31,7 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.modelchecker.Properties;
 
-public class ModelJANIProcessor implements JANIProcessor {
+public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
     /** Identifier of this model class. */
     public final static String IDENTIFIER = "jani";
     /** Identifies the part of a model where its system components are given. */

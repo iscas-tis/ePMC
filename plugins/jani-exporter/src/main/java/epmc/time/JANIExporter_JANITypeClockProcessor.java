@@ -18,44 +18,32 @@
 
  *****************************************************************************/
 
-package epmc.jani.model;
+package epmc.time;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.util.UtilJSON;
 
-public class ProbabilityProcessor implements JANIProcessor {
-    private final static String EXP = "exp";
-    private final static String COMMENT = "comment";
+public final class JANIExporter_JANITypeClockProcessor implements JANIProcessor {
+    /** Identifier for boolean type. */
+    private final static String CLOCK = "clock";
 
-    private Probability probability = null;
+    private JANITypeClock clock = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Probability; 
+        assert component instanceof JANITypeClock;
 
-        probability = (Probability) component;
+        clock = (JANITypeClock) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert probability != null;
+        assert clock != null;
 
-        JsonObjectBuilder builder = Json.createObjectBuilder();
-        
-        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(probability.getExp())
-                .toJSON());
-
-        String comment = probability.getComment();
-        if (comment != null) {
-            builder.add(COMMENT, comment);
-        }
-        
-        return builder.build();
+        return UtilJSON.toStringValue(CLOCK);
     }
 }

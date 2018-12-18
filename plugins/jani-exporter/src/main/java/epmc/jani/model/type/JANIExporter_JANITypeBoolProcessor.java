@@ -25,25 +25,26 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.util.UtilJSON;
 
-public final class JANITypeIntProcessor implements JANIProcessor {
-    /** Identifier for integer type. */
-    private final static String INT = "int";
+public final class JANIExporter_JANITypeBoolProcessor implements JANIProcessor {
 
-    private JANITypeInt integer = null;
+    /** Identifier for boolean type. */
+    private final static String BOOL = "bool";
+
+    private JANITypeBool bool = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof JANITypeInt;
+        assert component instanceof JANITypeBool;
 
-        integer = (JANITypeInt) component;
+        bool = (JANITypeBool) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert integer != null;
+        assert bool != null;
 
-        return UtilJSON.toStringValue(INT);
+        return UtilJSON.toStringValue(BOOL);
     }
 }

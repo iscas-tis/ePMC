@@ -27,7 +27,7 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class EdgeProcessor implements JANIProcessor {
+public class JANIExporter_EdgeProcessor implements JANIProcessor {
     /** String identifying the source location. */
     private final static String LOCATION = "location";
     /** String identifying the action, if given. */

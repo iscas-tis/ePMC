@@ -21,34 +21,55 @@
 package epmc.jani.model;
 
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
+import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.expression.Expression;
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class EdgesProcessor implements JANIProcessor {
+public class JANIExporter_ConstantProcessor implements JANIProcessor {
+    /** Identifier for the name of the constant. */
+    private final static String NAME = "name";
+    /** Identifier for the type of the constant. */
+    private final static String TYPE = "type";
+    /** Identifier for the value of the constant. */
+    private final static String VALUE = "value";
+    /** Identifier for the comment of the constant. */
+    private final static String COMMENT = "comment";
 
-    private Edges edges = null;
+    private Constant constant = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Edges; 
+        assert component instanceof Constant; 
 
-        edges = (Edges) component;
+        constant = (Constant) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert edges != null;
+        assert constant != null;
 
-        JsonArrayBuilder builder = Json.createArrayBuilder();
+        JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        for (Edge edge : edges) {
-            builder.add(ProcessorRegistrar.getProcessor(edge)
+        builder.add(NAME, constant.getName());
+
+        builder.add(TYPE, ProcessorRegistrar.getProcessor(constant.getType())
+                .toJSON());
+        
+        Expression value = constant.getValue();
+        if (value != null) {
+            builder.add(VALUE, ExpressionProcessorRegistrar.getExpressionProcessor(value)
                     .toJSON());
+        }
+        
+        String comment = constant.getComment();
+        if (comment != null) {
+            builder.add(COMMENT, comment);
         }
         
         return builder.build();

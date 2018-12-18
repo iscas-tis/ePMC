@@ -27,30 +27,30 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class LocationsProcessor implements JANIProcessor {
+public class JANIExporter_AutomataProcessor implements JANIProcessor {
 
-    private Locations locations = null;
+    private Automata automata = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Locations; 
+        assert component instanceof Automata;
 
-        locations = (Locations) component;
+        automata = (Automata) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert locations != null;
+        assert automata != null;
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         
-        for (Location location : locations.getLocations().values()) {
-            builder.add(ProcessorRegistrar.getProcessor(location)
+        for (Automaton automaton : automata.values()) {
+            builder.add(ProcessorRegistrar.getProcessor(automaton)
                     .toJSON());
         }
-        
+
         return builder.build();
-    }
+    }	
 }

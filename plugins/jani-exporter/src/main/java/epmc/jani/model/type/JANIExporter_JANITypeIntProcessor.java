@@ -18,32 +18,32 @@
 
  *****************************************************************************/
 
-package epmc.time;
+package epmc.jani.model.type;
 
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.util.UtilJSON;
 
-public final class JANITypeClockProcessor implements JANIProcessor {
-    /** Identifier for boolean type. */
-    private final static String CLOCK = "clock";
+public final class JANIExporter_JANITypeIntProcessor implements JANIProcessor {
+    /** Identifier for integer type. */
+    private final static String INT = "int";
 
-    private JANITypeClock clock = null;
+    private JANITypeInt integer = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof JANITypeClock;
+        assert component instanceof JANITypeInt;
 
-        clock = (JANITypeClock) component;
+        integer = (JANITypeInt) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert clock != null;
+        assert integer != null;
 
-        return UtilJSON.toStringValue(CLOCK);
+        return UtilJSON.toStringValue(INT);
     }
 }

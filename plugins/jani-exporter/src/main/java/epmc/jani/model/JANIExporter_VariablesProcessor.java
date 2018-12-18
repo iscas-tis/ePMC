@@ -27,27 +27,27 @@ import javax.json.JsonValue;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
-public class ConstantsProcessor implements JANIProcessor {
+public class JANIExporter_VariablesProcessor implements JANIProcessor {
 
-    private Constants constants = null;
+    private Variables variables = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Constants; 
+        assert component instanceof Variables; 
 
-        constants = (Constants) component;
+        variables = (Variables) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert constants != null;
+        assert variables != null;
 
         JsonArrayBuilder builder = Json.createArrayBuilder();
         
-        for (Constant constant : constants.getConstants().values()) {
-            builder.add(ProcessorRegistrar.getProcessor(constant)
+        for (Variable variable : variables.values()) {
+            builder.add(ProcessorRegistrar.getProcessor(variable)
                     .toJSON());
         }
 

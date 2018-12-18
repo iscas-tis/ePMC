@@ -24,37 +24,49 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
 
-public class ActionProcessor implements JANIProcessor {
-    /** Identifies the name of a given action. */
-    private final static String NAME = "name";
+public class JANIExporter_AssignmentSimpleProcessor implements JANIProcessor {
+    /** String specifying to which variable to assign to. */
+    private final static String REF = "ref";
+    /** String specifying expression of value to be assigned. */
+    private final static String VALUE = "value";
+    /** String identifying index of this assignment. */
+    private final static String INDEX = "index";
+    /** String specifying comment for this assignment. */
     private final static String COMMENT = "comment";
 
-    private Action action = null;
+    private AssignmentSimple assignment = null;
 
     @Override
     public JANIProcessor setElement(Object component) {
         assert component != null;
-        assert component instanceof Action; 
+        assert component instanceof AssignmentSimple; 
 
-        action = (Action) component;
+        assignment = (AssignmentSimple) component;
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert action != null;
+        assert assignment != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        builder.add(NAME, action.getName());
+        builder.add(REF, assignment.getRef().getName());
+
+        builder.add(VALUE, ExpressionProcessorRegistrar.getExpressionProcessor(assignment.getValue())
+                .toJSON());
+
+        Integer index = assignment.getIndex();
+        if (index != null)
+            builder.add(INDEX, index);
         
-        String comment = action.getComment();
-        if (comment != null) {
+        String comment = assignment.getComment();
+        if (comment != null)
             builder.add(COMMENT, comment);
-        }
-        
+
         return builder.build();
     }
 }
