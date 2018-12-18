@@ -264,6 +264,10 @@ public final class Variable implements JANINode, JANIIdentifier {
     public boolean isTransient() {
         return transientVar;
     }
+    
+    public boolean isTransientAssigned() {
+        return transientVarSet;
+    }
 
     public void setComment(String comment) {
         this.comment = comment;
