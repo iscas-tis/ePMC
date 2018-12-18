@@ -47,7 +47,7 @@ public class GuardProcessor implements JANIProcessor {
         assert guard != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        
+
         builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(guard.getExp())
                 .toJSON());
 

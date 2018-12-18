@@ -27,6 +27,7 @@ import javax.json.JsonValue;
 import epmc.expression.Expression;
 import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.valuejson.UtilValueJSON;
 
@@ -58,11 +59,12 @@ public class VariableProcessor implements JANIProcessor {
         assert variable != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
+
         builder.add(NAME, variable.getName());
 
         JANIType type = variable.getType();
-        assert type != null;
-        builder.add(TYPE, type.generate());
+        builder.add(TYPE, ProcessorRegistrar.getProcessor(type)
+                .toJSON());
         
         Expression initialValue = variable.getInitialValueOrNull();
         if (initialValue != null) {
@@ -73,6 +75,7 @@ public class VariableProcessor implements JANIProcessor {
                 builder.add(INITIAL_VALUE, UtilValueJSON.valueToJson(type.getDefaultValue()));
             }
         }
+        
         if (variable.isTransientAssigned()) {
             builder.add(TRANSIENT, variable.isTransient());
         }

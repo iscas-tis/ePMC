@@ -48,7 +48,9 @@ public class MetadataProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         for (Entry<String, String> entry : metadata.getValues().entrySet()) {
-            builder.add(entry.getKey(), entry.getValue());
+            String key = entry.getKey();
+            assert key != null;
+            builder.add(key, entry.getValue());
         }
 
         return builder.build();

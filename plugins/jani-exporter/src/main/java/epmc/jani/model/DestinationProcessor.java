@@ -22,21 +22,11 @@ package epmc.jani.model;
 
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.JANIComponentRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class DestinationProcessor implements JANIProcessor {
 
     private Destination destination = null;
-    private String prefix = null;
-    private Automaton automaton = null;
-
-    @Override
-    public JANIProcessor setAutomaton(Automaton automaton) {
-        this.automaton = automaton;
-        return this;
-    }
 
     @Override
     public JANIProcessor setElement(Object component) {
@@ -48,79 +38,8 @@ public class DestinationProcessor implements JANIProcessor {
     }
 
     @Override
-    public JANIProcessor setPrefix(String prefix) {
-        this.prefix = prefix;
-        return this;
-    }
-
-    @Override
     public JsonValue toJSON() {
         assert destination != null;
 
-        StringBuilder prism = new StringBuilder();
-
-        if (prefix != null)	{
-            prism.append(prefix);
-        }
-
-        Probability probability = destination.getProbability();
-        if (probability == null) {
-            if (!ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
-                prism.append(ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
-                        .toJSON())
-                    .append(" : ");
-            }
-        } else {
-            prism.append(ProcessorRegistrar.getProcessor(probability)
-                    .toJSON())
-                .append(" : ");
-        }
-
-        if (automaton.getLocations().size() > 1) {
-            prism.append("(")
-                .append(JANIComponentRegistrar.getLocationName(automaton))
-                .append("'=")
-                .append(JANIComponentRegistrar.getLocationIdentifier(automaton, destination.getLocation()))
-                .append(") & ");
-        }
-        Assignments assignments = destination.getAssignments();
-        if (assignments != null) {
-            prism.append(ProcessorRegistrar.getProcessor(assignments)
-                    .toJSON());
-        }
-
-        return prism.toString();
-    }
-
-    @Override
-    public void validateTransientVariables() {
-        assert destination != null;
-
-        ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
-            .validateTransientVariables();
-
-        Assignments assignments = destination.getAssignments();
-        if (assignments != null) {
-            ProcessorRegistrar.getProcessor(assignments)
-                .validateTransientVariables();
-        }
-    }
-
-    @Override
-    public boolean usesTransientVariables() {
-        assert destination != null;
-
-        boolean usesTransient = false;
-
-        usesTransient |= ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
-                .usesTransientVariables();
-
-        Assignments assignments = destination.getAssignments();
-        if (assignments != null) {
-            usesTransient |= ProcessorRegistrar.getProcessor(assignments)
-                    .usesTransientVariables();
-        }
-
-        return usesTransient;
     }	
 }

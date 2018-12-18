@@ -57,6 +57,7 @@ public class ConstantProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         builder.add(NAME, constant.getName());
+
         builder.add(TYPE, ProcessorRegistrar.getProcessor(constant.getType())
                 .toJSON());
         

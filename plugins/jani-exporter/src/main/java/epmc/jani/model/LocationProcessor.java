@@ -56,18 +56,18 @@ public class LocationProcessor implements JANIProcessor {
         
         builder.add(NAME, location.getName());
         
-        Assignments transientValuesAssignments = location.getTransientValueAssignments();
-        if (transientValuesAssignments != null) {
-            builder.add(TRANSIENT_VALUES, ProcessorRegistrar.getProcessor(transientValuesAssignments)
-                    .toJSON());
-        }
-        
         TimeProgress timeProgress = location.getTimeProgress();
         if (timeProgress != null) {
             builder.add(TIME_PROGRESS, ProcessorRegistrar.getProcessor(timeProgress)
                     .toJSON());
         }
 
+        Assignments transientValuesAssignments = location.getTransientValueAssignments();
+        if (transientValuesAssignments != null) {
+            builder.add(TRANSIENT_VALUES, ProcessorRegistrar.getProcessor(transientValuesAssignments)
+                    .toJSON());
+        }
+        
         String comment = location.getComment();
         if (comment != null) {
             builder.add(COMMENT, comment);

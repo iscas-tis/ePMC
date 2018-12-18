@@ -44,12 +44,13 @@ public class VariablesProcessor implements JANIProcessor {
     public JsonValue toJSON() {
         assert variables != null;
 
-        JsonArrayBuilder result = Json.createArrayBuilder();
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        
         for (Variable variable : variables.values()) {
-            result.add(ProcessorRegistrar.getProcessor(variable)
+            builder.add(ProcessorRegistrar.getProcessor(variable)
                     .toJSON());
         }
 
-        return result.build();
+        return builder.build();
     }
 }

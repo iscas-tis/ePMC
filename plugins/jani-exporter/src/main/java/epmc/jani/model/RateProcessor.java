@@ -47,7 +47,7 @@ public class RateProcessor implements JANIProcessor {
         assert rate != null;
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        
+
         builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(rate.getExp())
                 .toJSON());
 

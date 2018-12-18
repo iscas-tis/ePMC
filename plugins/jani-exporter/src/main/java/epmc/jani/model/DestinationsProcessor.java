@@ -20,6 +20,8 @@
 
 package epmc.jani.model;
 
+import javax.json.Json;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
@@ -28,13 +30,6 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 public class DestinationsProcessor implements JANIProcessor {
 
     private Destinations destinations = null;
-    private Automaton automaton = null;
-
-    @Override
-    public JANIProcessor setAutomaton(Automaton automaton) {
-        this.automaton = automaton;
-        return this;
-    }
 
     @Override
     public JANIProcessor setElement(Object component) {
@@ -49,43 +44,13 @@ public class DestinationsProcessor implements JANIProcessor {
     public JsonValue toJSON() {
         assert destinations != null;
 
-        StringBuilder prism = new StringBuilder();
-
-        boolean remaining = false;
+        JsonArrayBuilder builder = Json.createArrayBuilder();
+        
         for (Destination destination : destinations) {
-            JANIProcessor processor = ProcessorRegistrar.getProcessor(destination);
-            if (remaining) {
-                processor.setPrefix(" + ");
-            } else {
-                remaining = true;
-            }
-            prism.append(processor.setAutomaton(automaton)
+            builder.add(ProcessorRegistrar.getProcessor(destination)
                     .toJSON());
         }
-
-        return prism.toString();
+        
+        return builder.build();
     }
-
-    @Override
-    public void validateTransientVariables() {
-        assert destinations != null;
-
-        for (Destination destination : destinations) {
-            ProcessorRegistrar.getProcessor(destination)
-                .validateTransientVariables();
-        }
-    }
-
-    @Override
-    public boolean usesTransientVariables() {
-        assert destinations != null;
-
-        boolean usesTransient = false;
-        for (Destination destination : destinations) {
-            usesTransient |= ProcessorRegistrar.getProcessor(destination)
-                    .usesTransientVariables();
-        }
-
-        return usesTransient;
-    }	
 }

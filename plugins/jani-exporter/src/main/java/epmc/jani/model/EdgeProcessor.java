@@ -57,8 +57,10 @@ public class EdgeProcessor implements JANIProcessor {
         assert edge != null;
 
         JsonObjectBuilder result = Json.createObjectBuilder();
-        
-        result.add(LOCATION, edge.getLocation().getName());
+
+        Location location = edge.getLocation();
+        assert location != null;
+        result.add(LOCATION, location.getName());
         
         Action action = edge.getAction();
         if (action != null) {
