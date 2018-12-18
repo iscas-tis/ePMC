@@ -26,7 +26,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epmc.jani.exporter.error.ProblemsJANIExporter;
+import epmc.jani.model.Metadata;
+import epmc.jani.model.MetadataProcessor;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.Probability;
+import epmc.jani.model.ProbabilityProcessor;
+import epmc.jani.model.Rate;
+import epmc.jani.model.RateProcessor;
 import epmc.jani.model.TimeProgress;
 import epmc.jani.model.TimeProgressProcessor;
 import epmc.jani.model.Variable;
@@ -123,7 +129,7 @@ public class ProcessorRegistrar {
         processors.put(JANITypeClock.class, JANITypeClockProcessor.class);
 
         //JANI metadata
-//        processors.put(Metadata.class, MetadataProcessor.class);
+        processors.put(Metadata.class, MetadataProcessor.class);
 
         //JANI model
 //        processors.put(ModelJANI.class, ModelJANIProcessor.class);
@@ -172,8 +178,8 @@ public class ProcessorRegistrar {
 //        processors.put(AssignmentSimple.class, AssignmentSimpleProcessor.class);
 
         //Probability/rate
-//        processors.put(Probability.class, ProbabilityProcessor.class);
-//        processors.put(Rate.class, RateProcessor.class);
+        processors.put(Probability.class, ProbabilityProcessor.class);
+        processors.put(Rate.class, RateProcessor.class);
 
         //JANI properties
 //        processors.put(JANIProperties.class, JANIPropertiesProcessor.class);
