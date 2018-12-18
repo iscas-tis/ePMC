@@ -33,16 +33,16 @@ import epmc.error.EPMCException;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.exporter.messages.MessagesJANIExporter;
 import epmc.jani.exporter.options.OptionsJANIExporter;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
-import epmc.jani.model.UtilModelParser;
 import epmc.main.options.OptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.CommandTask;
 import epmc.modelchecker.Log;
 import epmc.modelchecker.ModelChecker;
 import epmc.options.Options;
-import epmc.prism.model.convert.PRISM2JANIConverter;
+import epmc.util.UtilJSON;
 
 //TODO: Add support for property files
 //TODO: Add support for property name pattern
@@ -76,7 +76,7 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
         Options options = Options.get();
         Log log = options.get(OptionsMessages.LOG);
         //TODO: probably the reward prefix has to be moved to a more appropriate place independent from the converted model type
-        PRISM2JANIConverter.setRewardPrefix(options.getString(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX));
+//        PRISM2JANIConverter.setRewardPrefix(options.getString(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX));
         try {
             List<String> modelFilenames = options.get(OptionsEPMC.MODEL_INPUT_FILES);
             ensure(modelFilenames != null, ProblemsJANIExporter.JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES);
@@ -115,8 +115,10 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                 jani.setName(modelName);
                 log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION_DONE, modelName);
                 log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION, janiFilename);
+                ProcessorRegistrar.setModel(jani);
                 try (PrintWriter out = new PrintWriter(janiFile, StandardCharsets.UTF_8.name())) {
-                    out.println(UtilModelParser.prettyString(jani));
+                    out.println(UtilJSON.prettyString(ProcessorRegistrar.getProcessor(jani)
+                            .toJSON()));
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (UnsupportedEncodingException e) {
