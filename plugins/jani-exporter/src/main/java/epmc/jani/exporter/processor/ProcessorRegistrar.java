@@ -59,6 +59,7 @@ import epmc.jani.model.LocationsProcessor;
 import epmc.jani.model.Metadata;
 import epmc.jani.model.MetadataProcessor;
 import epmc.jani.model.ModelJANI;
+import epmc.jani.model.ModelJANIProcessor;
 import epmc.jani.model.Probability;
 import epmc.jani.model.ProbabilityProcessor;
 import epmc.jani.model.Rate;
@@ -169,7 +170,7 @@ public class ProcessorRegistrar {
         processors.put(Metadata.class, MetadataProcessor.class);
 
         //JANI model
-//        processors.put(ModelJANI.class, ModelJANIProcessor.class);
+        processors.put(ModelJANI.class, ModelJANIProcessor.class);
 
         //Constants
         processors.put(Constants.class, ConstantsProcessor.class);
