@@ -24,7 +24,7 @@ import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
-public class TimeBoundProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 
     private TimeBound timeBound = null;
 

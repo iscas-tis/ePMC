@@ -54,7 +54,7 @@ import epmc.expression.standard.PRISMExporter_ExpressionTemporalReleaseProcessor
 import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.PRISMExporter_ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.TimeBound;
-import epmc.expression.standard.TimeBoundProcessor;
+import epmc.expression.standard.PRISMExporter_TimeBoundProcessor;
 import epmc.jani.model.Action;
 import epmc.jani.model.PRISMExporter_ActionProcessor;
 import epmc.jani.model.AssignmentSimple;
@@ -305,7 +305,7 @@ public class ProcessorRegistrar {
         processors.put(TimeProgress.class, PRISMExporter_TimeProgressProcessor.class);
 
         //Time bounds
-        processors.put(TimeBound.class, TimeBoundProcessor.class);
+        processors.put(TimeBound.class, PRISMExporter_TimeBoundProcessor.class);
 
         //Edges
         processors.put(Edges.class, PRISMExporter_EdgesProcessor.class);
