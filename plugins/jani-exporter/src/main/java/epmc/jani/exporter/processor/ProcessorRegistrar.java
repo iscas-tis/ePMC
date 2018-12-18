@@ -26,14 +26,24 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epmc.jani.exporter.error.ProblemsJANIExporter;
+import epmc.jani.model.Action;
+import epmc.jani.model.ActionProcessor;
 import epmc.jani.model.AssignmentSimple;
 import epmc.jani.model.AssignmentSimpleProcessor;
 import epmc.jani.model.Assignments;
 import epmc.jani.model.AssignmentsProcessor;
+import epmc.jani.model.Automata;
+import epmc.jani.model.AutomataProcessor;
+import epmc.jani.model.Automaton;
+import epmc.jani.model.AutomatonProcessor;
 import epmc.jani.model.Constant;
 import epmc.jani.model.ConstantProcessor;
 import epmc.jani.model.Constants;
 import epmc.jani.model.ConstantsProcessor;
+import epmc.jani.model.Destination;
+import epmc.jani.model.DestinationProcessor;
+import epmc.jani.model.Destinations;
+import epmc.jani.model.DestinationsProcessor;
 import epmc.jani.model.Edge;
 import epmc.jani.model.EdgeProcessor;
 import epmc.jani.model.Edges;
@@ -59,6 +69,12 @@ import epmc.jani.model.Variable;
 import epmc.jani.model.VariableProcessor;
 import epmc.jani.model.Variables;
 import epmc.jani.model.VariablesProcessor;
+import epmc.jani.model.component.ComponentSynchronisationVectors;
+import epmc.jani.model.component.ComponentSynchronisationVectorsProcessor;
+import epmc.jani.model.component.SynchronisationVectorElement;
+import epmc.jani.model.component.SynchronisationVectorElementProcessor;
+import epmc.jani.model.component.SynchronisationVectorSync;
+import epmc.jani.model.component.SynchronisationVectorSyncProcessor;
 import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeBoolProcessor;
 import epmc.jani.model.type.JANITypeBounded;
@@ -82,18 +98,19 @@ public class ProcessorRegistrar {
     
     private static ModelJANI model = null;
     
-    public void setModel(ModelJANI model) {
+    public static void setModel(ModelJANI model) {
         assert model != null;
         
         ProcessorRegistrar.model = model;
     }
     
-    public ModelJANI getModel() {
+    public static boolean isSilentAction(Action action) {
         assert model != null;
+        assert action != null;
         
-        return model;
+        return model.getSilentAction().equals(action);
     }
-
+    
     /**
      * Add a new processor for a JANI component in the set of known processors.
      * 
@@ -166,11 +183,13 @@ public class ProcessorRegistrar {
         processors.put(InitialStates.class, InitialStatesProcessor.class);
 
         //Automata
-//        processors.put(Automata.class, AutomataProcessor.class);
-//        processors.put(Automaton.class, AutomatonProcessor.class);
+        processors.put(Automata.class, AutomataProcessor.class);
+        processors.put(Automaton.class, AutomatonProcessor.class);
 
-        //Synchronisation vectors
-//        processors.put(ComponentSynchronisationVectors.class, ComponentSynchronisationVectorsProcessor.class);
+        //Synchronisation
+        processors.put(ComponentSynchronisationVectors.class, ComponentSynchronisationVectorsProcessor.class);
+        processors.put(SynchronisationVectorElement.class, SynchronisationVectorElementProcessor.class);
+        processors.put(SynchronisationVectorSync.class, SynchronisationVectorSyncProcessor.class);
 
         //Locations
         processors.put(Locations.class, LocationsProcessor.class);
@@ -184,11 +203,11 @@ public class ProcessorRegistrar {
         processors.put(Edge.class, EdgeProcessor.class);
 
         //Actions
-//        processors.put(Action.class, ActionProcessor.class);
+        processors.put(Action.class, ActionProcessor.class);
 
         //Destinations
-//        processors.put(Destinations.class, DestinationsProcessor.class);
-//        processors.put(Destination.class, DestinationProcessor.class);
+        processors.put(Destinations.class, DestinationsProcessor.class);
+        processors.put(Destination.class, DestinationProcessor.class);
 
         //Guards
         processors.put(Guard.class, GuardProcessor.class);
