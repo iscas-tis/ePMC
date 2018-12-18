@@ -36,6 +36,7 @@ public final class ProblemsJANIExporter {
     /** Unaccessible PRISM file name. */
     public final static Problem JANI_EXPORTER_UNACCESSIBLE_FILENAME = newProblem("jani-exporter-unaccessible-filename");
     public final static Problem JANI_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("jani-exporter-error-unknown-processor");
+    public final static Problem JANI_EXPORTER_ERROR_UNKNOWN_FILTERTYPE = newProblem("jani-exporter-error-unknown-filtertype");
 
     /**
      * Create new problem object using plugin resource file.

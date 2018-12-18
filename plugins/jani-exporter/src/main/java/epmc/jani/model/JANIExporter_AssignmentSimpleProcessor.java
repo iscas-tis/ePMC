@@ -24,8 +24,8 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_AssignmentSimpleProcessor implements JANIProcessor {
     /** String specifying to which variable to assign to. */
@@ -56,7 +56,7 @@ public class JANIExporter_AssignmentSimpleProcessor implements JANIProcessor {
 
         builder.add(REF, assignment.getRef().getName());
 
-        builder.add(VALUE, ExpressionProcessorRegistrar.getExpressionProcessor(assignment.getValue())
+        builder.add(VALUE, ProcessorRegistrar.getProcessor(assignment.getValue())
                 .toJSON());
 
         Integer index = assignment.getIndex();

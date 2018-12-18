@@ -25,6 +25,14 @@ import static epmc.error.UtilError.ensure;
 import java.util.HashMap;
 import java.util.Map;
 
+import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.FilterType;
+import epmc.expression.standard.JANIExporter_ExpressionIdentifierStandardProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionLiteralProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionOperatorProcessor;
+import epmc.expression.standard.JANIExporter_FilterTypeProcessor;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
@@ -232,6 +240,12 @@ public class ProcessorRegistrar {
 //        processors.put(PlayersJANI.class, PlayersJANIProcessor.class);
 //        processors.put(PlayerJANI.class, PlayerJANIProcessor.class);
 
+        // expressions
+        processors.put(ExpressionIdentifierStandard.class, JANIExporter_ExpressionIdentifierStandardProcessor.class);
+        processors.put(ExpressionLiteral.class, JANIExporter_ExpressionLiteralProcessor.class);
+        processors.put(ExpressionOperator.class, JANIExporter_ExpressionOperatorProcessor.class);
+        processors.put(FilterType.class, JANIExporter_FilterTypeProcessor.class);
+        
         return processors;
     }
 }

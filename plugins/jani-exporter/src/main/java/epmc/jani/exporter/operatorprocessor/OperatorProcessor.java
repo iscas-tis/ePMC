@@ -18,16 +18,15 @@
 
  *****************************************************************************/
 
-package epmc.jani.exporter.expressionprocessor;
+package epmc.jani.exporter.operatorprocessor;
 
 import javax.json.JsonValue;
 
-import epmc.expression.Expression;
-import epmc.jani.model.ModelJANI;
+import epmc.expression.standard.ExpressionOperator;
 
-public interface ExpressionProcessor {	
-    
-    ExpressionProcessor setElement(ModelJANI model, Expression expression);
+public interface OperatorProcessor {	
+
+    OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator);
 
     JsonValue toJSON();
 }

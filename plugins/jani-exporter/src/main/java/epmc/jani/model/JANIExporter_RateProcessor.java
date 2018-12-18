@@ -24,8 +24,8 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_RateProcessor implements JANIProcessor {
     private final static String EXP = "exp";
@@ -48,7 +48,7 @@ public class JANIExporter_RateProcessor implements JANIProcessor {
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(rate.getExp())
+        builder.add(EXP, ProcessorRegistrar.getProcessor(rate.getExp())
                 .toJSON());
 
         String comment = rate.getComment();
