@@ -26,6 +26,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import epmc.jani.exporter.error.ProblemsJANIExporter;
+import epmc.jani.model.AssignmentSimple;
+import epmc.jani.model.AssignmentSimpleProcessor;
+import epmc.jani.model.Assignments;
+import epmc.jani.model.AssignmentsProcessor;
 import epmc.jani.model.Constant;
 import epmc.jani.model.ConstantProcessor;
 import epmc.jani.model.Constants;
@@ -188,8 +192,8 @@ public class ProcessorRegistrar {
         processors.put(Guard.class, GuardProcessor.class);
 
         //Assignments
-//        processors.put(Assignments.class, AssignmentsProcessor.class);
-//        processors.put(AssignmentSimple.class, AssignmentSimpleProcessor.class);
+        processors.put(Assignments.class, AssignmentsProcessor.class);
+        processors.put(AssignmentSimple.class, AssignmentSimpleProcessor.class);
 
         //Probability/rate
         processors.put(Probability.class, ProbabilityProcessor.class);
