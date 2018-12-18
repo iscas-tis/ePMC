@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.jani.exporter.processor;
+package epmc.jani.exporter.expressionprocessor;
 
 import javax.json.JsonValue;
 

@@ -4,8 +4,8 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class TimeProgressProcessor implements JANIProcessor {
     private final static String EXP = "exp";
@@ -28,9 +28,8 @@ public class TimeProgressProcessor implements JANIProcessor {
 
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        builder.add(EXP, ProcessorRegistrar.getProcessor(timeProgress.getExp())
+        builder.add(EXP, ExpressionProcessorRegistrar.getExpressionProcessor(timeProgress.getExp())
                 .toJSON());
-//        ExpressionParser.generateExpression(model, timeProgress.getExp()));
         
         String comment = timeProgress.getComment();
         if (comment != null) {

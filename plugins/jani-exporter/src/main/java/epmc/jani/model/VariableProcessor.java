@@ -25,11 +25,10 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
+import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.valuejson.UtilValueJSON;
-import epmc.util.UtilJSON;
 
 public class VariableProcessor implements JANIProcessor {
     /** Identifies a variable. */
@@ -58,27 +57,31 @@ public class VariableProcessor implements JANIProcessor {
     public JsonValue toJSON() {
         assert variable != null;
 
-        JsonObjectBuilder result = Json.createObjectBuilder();
-        result.add(NAME, variable.getName());
+        JsonObjectBuilder builder = Json.createObjectBuilder();
+        builder.add(NAME, variable.getName());
 
         JANIType type = variable.getType();
         assert type != null;
-        result.add(TYPE, type.generate());
+        builder.add(TYPE, type.generate());
         
         Expression initialValue = variable.getInitialValueOrNull();
         if (initialValue != null) {
-            result.add(INITIAL_VALUE, ProcessorRegistrar.getProcessor(initialValue)
+            builder.add(INITIAL_VALUE, ExpressionProcessorRegistrar.getExpressionProcessor(initialValue)
                     .toJSON());
         } else {
             if (variable.isTransientAssigned() && variable.isTransient()) {
-                result.add(INITIAL_VALUE, UtilValueJSON.valueToJson(type.getDefaultValue()));
+                builder.add(INITIAL_VALUE, UtilValueJSON.valueToJson(type.getDefaultValue()));
             }
         }
         if (variable.isTransientAssigned()) {
-            result.add(TRANSIENT, variable.isTransient());
+            builder.add(TRANSIENT, variable.isTransient());
         }
-        UtilJSON.addOptional(result, COMMENT, variable.getComment());
 
-        return result.build();
+        String comment = variable.getComment();
+        if (comment != null) {
+            builder.add(COMMENT, comment);
+        }
+        
+        return builder.build();
     }
 }
