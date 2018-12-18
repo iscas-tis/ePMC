@@ -55,7 +55,7 @@ public class ComponentSynchronisationVectorsProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         JsonArrayBuilder elements = Json.createArrayBuilder();
-        for (SynchronisationVectorElementProcessor element : syncVectors.getElements()) {
+        for (SynchronisationVectorElement element : syncVectors.getElements()) {
             elements.add(ProcessorRegistrar.getProcessor(element)
                     .toJSON());
         }
@@ -63,7 +63,7 @@ public class ComponentSynchronisationVectorsProcessor implements JANIProcessor {
         
         int nsyncs = 0;
         JsonArrayBuilder syncs = Json.createArrayBuilder();
-        for (SynchronisationVectorSyncProcessor sync : syncVectors.getSyncs()) {
+        for (SynchronisationVectorSync sync : syncVectors.getSyncs()) {
             if (hasToBeAdded(sync)) {
                 syncs.add(ProcessorRegistrar.getProcessor(sync)
                         .toJSON());
@@ -82,7 +82,7 @@ public class ComponentSynchronisationVectorsProcessor implements JANIProcessor {
         return builder.build();
     }
     
-    private boolean hasToBeAdded(SynchronisationVectorSyncProcessor sync) {
+    private boolean hasToBeAdded(SynchronisationVectorSync sync) {
         if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_SYNCHRONISE_SILENT)) {
             return true;
         } else {

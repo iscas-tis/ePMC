@@ -20,18 +20,12 @@
 
 package epmc.jani.model;
 
-import static epmc.error.UtilError.ensure;
-
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.error.ProblemsPRISMExporter;
 import epmc.jani.exporter.expressionprocessor.ExpressionProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
-import epmc.jani.model.expression.ExpressionParser;
-import epmc.util.UtilJSON;
 
 public class AssignmentSimpleProcessor implements JANIProcessor {
     /** String specifying to which variable to assign to. */
