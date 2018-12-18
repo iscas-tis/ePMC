@@ -76,5 +76,12 @@
       <scope>system</scope>
       <systemPath>${project.basedir}/../graph/target/epmc-graph-0.jar</systemPath>
     </dependency>
+    <dependency>
+      <groupId>epmc.util</groupId>
+      <artifactId>epmc-util</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../util/target/epmc-util-0.jar</systemPath>
+    </dependency>
   </dependencies>
 </project>
