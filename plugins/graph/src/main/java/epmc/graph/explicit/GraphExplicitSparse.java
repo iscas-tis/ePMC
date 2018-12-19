@@ -123,8 +123,8 @@ public final class GraphExplicitSparse implements GraphExplicit {
         bounds = UtilValue.newArray(typeArrayInteger, numNodes + 1);
         successors = UtilValue.newArray(typeArrayInteger, numTotalOut);
 
-        addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
-        addNodePropertyConstant(CommonProperties.STATE, UtilValue.newValue(TypeBoolean.get(), true));
+//        addSettableEdgeProperty(CommonProperties.WEIGHT, TypeWeight.get());
+//        addNodePropertyConstant(CommonProperties.STATE, UtilValue.newValue(TypeBoolean.get(), true));
     }
 
     public NodeProperty addNodePropertyConstant(Object name, Value constant) {

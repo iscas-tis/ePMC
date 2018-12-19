@@ -120,7 +120,7 @@ public final class AutomatonBreakpoint implements Automaton {
         }
         this.numLabels = buechi.getNumLabels();
         this.automaton = buechi.getGraph();
-        this.initState = makeUnique(new AutomatonBreakpointState(this, initStates));
+        this.initState = makeUnique(new AutomatonBreakpointState(initStates));
         this.trueState = buechi.getTrueState();
         this.expressions = buechi.getExpressions();
         cache = new BuechiSubsetCache<>(buechi);
@@ -189,7 +189,7 @@ public final class AutomatonBreakpoint implements Automaton {
             succLabel = AutomatonBreakpointLabelEnum.REJECTING;
         }
         reduceSuccs(succs, succsChildren);
-        succState = new AutomatonBreakpointState(this, succs, succAcceptance, succsChildren);
+        succState = new AutomatonBreakpointState(succs, succAcceptance, succsChildren);
         succState = makeUnique(succState);
         succLabel = makeUnique(succLabel);
         insertCache();

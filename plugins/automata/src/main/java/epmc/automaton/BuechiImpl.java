@@ -69,6 +69,7 @@ import epmc.value.ValueInteger;
 public class BuechiImpl implements Buechi {
     private final static String SPOT_PARAM_FORMULA = "-f";
     private final static String SPOT_PARAM_LOW_OPTIMISATIONS = "--low";
+    private final static String SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE = "-Ht";
 
     private final static String IDENTIFIER = "buechi-spot";
     private final String ltl2tgba;
@@ -195,7 +196,8 @@ public class BuechiImpl implements Buechi {
             // is possible once a new version of SPOT appears.
             final String[] autExecArgs = {ltl2tgba,
                     SPOT_PARAM_FORMULA, spotFn,
-                    SPOT_PARAM_LOW_OPTIMISATIONS};
+                    SPOT_PARAM_LOW_OPTIMISATIONS,
+                    SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE};
             final Process autProcess = Runtime.getRuntime().exec(autExecArgs);
             final BufferedReader autIn = new BufferedReader
                     (new InputStreamReader(autProcess.getInputStream()));

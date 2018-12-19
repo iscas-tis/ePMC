@@ -22,7 +22,6 @@ package epmc.automata.determinisation;
 
 import java.util.Arrays;
 
-import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonStateBuechiSubset;
 import epmc.automaton.AutomatonStateUtil;
 import epmc.util.BitSet;
@@ -157,11 +156,6 @@ final class AutomatonScheweState implements AutomatonStateUtil, AutomatonStateBu
     void setIndex(int index) {
         assert index >= 0;
         this.index = index;
-    }
-
-    @Override
-    public Automaton getAutomaton() {
-        return this.automaton;
     }
 
     @Override

@@ -130,7 +130,8 @@ import epmc.jani.model.ModelJANI;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
-import epmc.prism.exporter.processor.JANI2PRISMConverter;
+import epmc.prism.exporter.JANI2PRISMConverter;
+import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;;
 
 public final class ExportJANIToPRISMModels {
     /**

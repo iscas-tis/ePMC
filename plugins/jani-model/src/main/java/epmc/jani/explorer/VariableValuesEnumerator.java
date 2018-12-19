@@ -58,7 +58,6 @@ import epmc.value.EvaluatorCache;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
-import epmc.value.TypeBounded;
 import epmc.value.TypeEnumerable;
 import epmc.value.UtilValue;
 import epmc.value.Value;

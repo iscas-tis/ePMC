@@ -157,17 +157,15 @@ public final class AutomatonProduct implements Automaton {
     }
 
     public final static class AutomatonProductState implements AutomatonStateUtil {
-        private final Automaton automaton;
         private final int[] states;
         private int number;
 
-        AutomatonProductState(Automaton automaton, int[] states) {
-            this.automaton = automaton;
+        AutomatonProductState(int[] states) {
             this.states = Arrays.copyOf(states, states.length);
         }
 
         AutomatonProductState(AutomatonProductState other) {
-            this(other.getAutomaton(), other.states);
+            this(other.states);
         }
 
         @Override
@@ -202,11 +200,6 @@ public final class AutomatonProduct implements Automaton {
         }
 
         @Override
-        public Automaton getAutomaton() {
-            return this.automaton;
-        }
-
-        @Override
         public void setNumber(int number) {
             this.number = number;
         }
@@ -236,7 +229,7 @@ public final class AutomatonProduct implements Automaton {
         for (int i = 0; i < automata.length; i++) {
             init[i] = automata[i].getInitState();
         }
-        this.initState = makeUnique(new AutomatonProductState(this, init));
+        this.initState = makeUnique(new AutomatonProductState(init));
         List<Automaton> automataList = new ArrayList<>();
         for (Automaton automaton : automata) {
             automataList.add(automaton);
@@ -284,7 +277,7 @@ public final class AutomatonProduct implements Automaton {
             succStateArray[i] = automata[i].getSuccessorState();
             succLabelingsArray[i] = automata[i].getSuccessorLabel();
         }
-        this.succState = makeUnique(new AutomatonProductState(this, succStateArray));
+        this.succState = makeUnique(new AutomatonProductState(succStateArray));
         this.succLabel = makeUnique(new AutomatonProductLabelImpl(succLabelingsArray));
         CacheKey cacheKey = new CacheKey(modelState, automatonState);
         CacheValue cacheValue = new CacheValue();
