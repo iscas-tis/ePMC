@@ -140,8 +140,8 @@ public final class Destination implements JANINode {
     @Override
     public JsonValue generate() {
         JsonObjectBuilder result = Json.createObjectBuilder();
-        UtilModelParser.addOptional(result, PROBABILITY, probability);
         result.add(LOCATION, location.getName());
+        UtilModelParser.addOptional(result, PROBABILITY, probability);
         UtilModelParser.addOptional(result, ASSIGNMENTS, assignments);
         //		AT: there are no transient/observable assignment in the JANI specification
         //		UtilModelParser.addOptional(result, OBSERVABLES, observableAssignments);
