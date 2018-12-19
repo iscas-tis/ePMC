@@ -37,6 +37,7 @@ public final class ProblemsJANIExporter {
     public static final Problem JANI_EXPORTER_UNACCESSIBLE_FILENAME = newProblem("jani-exporter-unaccessible-filename");
     public static final Problem JANI_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("jani-exporter-error-unknown-processor");
     public static final Problem JANI_EXPORTER_ERROR_UNKNOWN_FILTERTYPE = newProblem("jani-exporter-error-unknown-filtertype");
+    public static final Problem JANI_EXPORTER_ERROR_UNSUPPORTED_DIRTYPE = newProblem("jani-exporter-error-unsupported-dir-type");
 
     /**
      * Create new problem object using plugin resource file.

@@ -323,8 +323,6 @@ public class ProcessorRegistrar {
                 JANIExporter_JANIPropertiesProcessor.class);
         processors.put(JANIPropertyEntry.class, 
                 JANIExporter_JANIPropertyEntryProcessor.class);
-//        processors.put(JANIPropertyExpressionProbabilityQuantifier.class, 
-//                JANIExporter_JANIPropertyExpressionProbabilityQuantifierProcessor.class);
 
         //SMG players
 //        processors.put(PlayersJANI.class, JANIExporter_PlayersJANIProcessor.class);
