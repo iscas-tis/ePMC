@@ -35,6 +35,7 @@ import epmc.jani.model.UtilModelParser;
  */
 public class JANIExporter_OperatorGtProcessor implements OperatorProcessor {
     private static final String OP = "op";
+    private static final String GT = ">";
     private static final String LT = "<";
     private static final String LEFT = "left";
     private static final String RIGHT = "right";
@@ -57,12 +58,20 @@ public class JANIExporter_OperatorGtProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        // op1 > op2 ==> op2 < op1
-        builder.add(OP, LT);
-        builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
-                .toJSON());
-        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
-                .toJSON());
+        if (ProcessorRegistrar.useDerivedOperators()) {
+            builder.add(OP, GT);
+            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toJSON());
+            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toJSON());
+        } else {
+            // op1 > op2 ==> op2 < op1
+            builder.add(OP, LT);
+            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toJSON());
+            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toJSON());
+        }
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         
