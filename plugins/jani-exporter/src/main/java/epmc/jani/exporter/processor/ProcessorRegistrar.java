@@ -25,10 +25,12 @@ import static epmc.error.UtilError.ensure;
 import java.util.HashMap;
 import java.util.Map;
 
+import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.FilterType;
+import epmc.expression.standard.JANIExporter_ExpressionFilterProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionIdentifierStandardProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionLiteralProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionOperatorProcessor;
@@ -85,6 +87,10 @@ import epmc.jani.model.component.JANIExporter_ComponentSynchronisationVectorsPro
 import epmc.jani.model.component.SynchronisationVectorElement;
 import epmc.jani.model.component.JANIExporter_SynchronisationVectorElementProcessor;
 import epmc.jani.model.component.SynchronisationVectorSync;
+import epmc.jani.model.property.JANIExporter_JANIPropertiesProcessor;
+import epmc.jani.model.property.JANIExporter_JANIPropertyEntryProcessor;
+import epmc.jani.model.property.JANIProperties;
+import epmc.jani.model.property.JANIPropertyEntry;
 import epmc.jani.model.component.JANIExporter_SynchronisationVectorSyncProcessor;
 import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANIExporter_JANITypeBoolProcessor;
@@ -233,14 +239,15 @@ public class ProcessorRegistrar {
         processors.put(Rate.class, JANIExporter_RateProcessor.class);
 
         //JANI properties
-//        processors.put(JANIProperties.class, JANIPropertiesProcessor.class);
-//        processors.put(JANIPropertyEntry.class, JANIPropertyEntryProcessor.class);
+        processors.put(JANIProperties.class, JANIExporter_JANIPropertiesProcessor.class);
+        processors.put(JANIPropertyEntry.class, JANIExporter_JANIPropertyEntryProcessor.class);
 
         //SMG players
-//        processors.put(PlayersJANI.class, PlayersJANIProcessor.class);
-//        processors.put(PlayerJANI.class, PlayerJANIProcessor.class);
+//        processors.put(PlayersJANI.class, JANIExporter_PlayersJANIProcessor.class);
+//        processors.put(PlayerJANI.class, JANIExporter_PlayerJANIProcessor.class);
 
         // expressions
+        processors.put(ExpressionFilter.class, JANIExporter_ExpressionFilterProcessor.class);
         processors.put(ExpressionIdentifierStandard.class, JANIExporter_ExpressionIdentifierStandardProcessor.class);
         processors.put(ExpressionLiteral.class, JANIExporter_ExpressionLiteralProcessor.class);
         processors.put(ExpressionOperator.class, JANIExporter_ExpressionOperatorProcessor.class);

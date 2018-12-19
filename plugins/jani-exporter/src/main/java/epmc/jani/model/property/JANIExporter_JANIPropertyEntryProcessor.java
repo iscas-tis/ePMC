@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.expression.standard;
+package epmc.jani.model.property;
 
 import javax.json.Json;
 import javax.json.JsonObjectBuilder;
@@ -26,40 +26,38 @@ import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
-import epmc.jani.model.UtilModelParser;
 
-public class JANIExporter_ExpressionFilterProcessor implements JANIProcessor {
-    private final static String OP = "op";
-    private final static String FILTER = "filter";
-    private final static String FUN = "fun";
-    private final static String VALUES = "values";
-    private final static String STATES = "states";
+public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
+    private final static String NAME = "name";
+    private final static String EXPRESSION = "expression";
+    private final static String COMMENT = "comment";
 
-    private ExpressionFilter expressionFilter = null;
+    private JANIPropertyEntry propertyEntry = null;
 
     @Override
-    public JANIProcessor setElement(Object obj) {
-        assert obj != null;
-        assert obj instanceof ExpressionFilter; 
+    public JANIProcessor setElement(Object component) {
+        assert component != null;
+        assert component instanceof JANIPropertyEntry; 
 
-        expressionFilter = (ExpressionFilter) obj;
+        propertyEntry = (JANIPropertyEntry) component;
+
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert expressionFilter != null;
+        assert propertyEntry != null;
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
+
+        builder.add(NAME, propertyEntry.getName());
+        builder.add(EXPRESSION, ProcessorRegistrar.getProcessor(propertyEntry.getExpression())
+                .toJSON());
         
-        builder.add(OP, FILTER);
-        builder.add(FUN, ProcessorRegistrar.getProcessor(expressionFilter.getFilterType())
-                .toJSON());
-        builder.add(VALUES, ProcessorRegistrar.getProcessor(expressionFilter.getProp())
-                .toJSON());
-        builder.add(STATES, ProcessorRegistrar.getProcessor(expressionFilter.getStates())
-                .toJSON());
-        UtilModelParser.addPositional(builder, expressionFilter.getPositional());
+        String comment = propertyEntry.getComment();
+        if (comment != null) {
+            builder.add(COMMENT, comment);
+        }
 
         return builder.build();
     }
