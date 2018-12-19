@@ -143,6 +143,14 @@ public final class JANIProperties implements JANINode, Properties {
         return rawProperties;
     }
 
+    List<JANIPropertyEntry> getJANIProperties() {
+        List<JANIPropertyEntry> janiProperties = new ArrayList<>(properties.values().size());
+        for (JANIPropertyEntry entry : this.properties.values()) {
+            janiProperties.add(entry);
+        }
+        return janiProperties;
+    }
+
     @Override
     public Expression getParsedProperty(RawProperty property) {
         return model.replaceConstants(properties.get(property.getName()).getExpression());
