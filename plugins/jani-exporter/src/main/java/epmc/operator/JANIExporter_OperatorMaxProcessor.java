@@ -26,24 +26,32 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
+import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
+import epmc.options.Options;
 
 /**
  * @author Andrea Turrini
  *
  */
-public class JANIExporter_OperatorFloorProcessor implements OperatorProcessor {
+public class JANIExporter_OperatorMaxProcessor implements OperatorProcessor {
     private final static String OP = "op";
-    private final static String FLOOR = "floor";
-    private final static String EXP = "exp";
+    private final static String MAX = "max";
+    private final static String LEFT = "left";
+    private final static String RIGHT = "right";
+    private final static String LT = "<";
+    private final static String ITE = "ite";
+    private final static String IF = "if";
+    private final static String THEN = "then";
+    private final static String ELSE = "else";
     
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        assert expressionOperator.getOperator().equals(OperatorFloor.FLOOR);
+        assert expressionOperator.getOperator().equals(OperatorMax.MAX);
     
         this.expressionOperator = expressionOperator;
 
@@ -56,9 +64,27 @@ public class JANIExporter_OperatorFloorProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        builder.add(OP, FLOOR);
-        builder.add(EXP, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
-                .toJSON());
+        if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_DERIVED_OPERATORS)) {
+            builder.add(OP, MAX);
+            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toJSON());
+            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toJSON());
+        } else {
+            JsonObjectBuilder builderLt = Json.createObjectBuilder();
+            builderLt.add(OP, LT);
+            builderLt.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toJSON());
+            builderLt.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toJSON());
+            
+            builder.add(OP, ITE);
+            builder.add(IF, builderLt.build());
+            builder.add(THEN, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                    .toJSON());
+            builder.add(ELSE, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                    .toJSON());
+        }        
 
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         

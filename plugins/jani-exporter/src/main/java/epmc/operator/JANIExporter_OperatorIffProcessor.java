@@ -45,16 +45,15 @@ public class JANIExporter_OperatorIffProcessor implements OperatorProcessor {
     private final static String NOT = "¬";
     private final static String EXP = "exp";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
-        assert expressionOperator.getOperator().equals(OperatorImplies.IMPLIES);
+        assert expressionOperator.getOperator().equals(OperatorIff.IFF);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 

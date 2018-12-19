@@ -39,16 +39,15 @@ public class JANIExporter_OperatorMultiplyInverseProcessor implements OperatorPr
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorMultiplyInverse.MULTIPLY_INVERSE);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -60,9 +59,7 @@ public class JANIExporter_OperatorMultiplyInverseProcessor implements OperatorPr
 
         // multiply_inverse(x) => 1/x
         builder.add(OP, MULTIPLY_INVERSE);
-        
         builder.add(LEFT, 1);
-        
         builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         

@@ -45,10 +45,10 @@ public class JANIExporter_OperatorModProcessor implements OperatorProcessor {
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorMod.MOD);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -59,10 +59,8 @@ public class JANIExporter_OperatorModProcessor implements OperatorProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         builder.add(OP, MOD);
-        
         builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
-        
         builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                 .toJSON());
         

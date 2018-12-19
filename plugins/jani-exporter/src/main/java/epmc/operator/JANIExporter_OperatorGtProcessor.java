@@ -39,16 +39,15 @@ public class JANIExporter_OperatorGtProcessor implements OperatorProcessor {
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorGt.GT);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -60,10 +59,8 @@ public class JANIExporter_OperatorGtProcessor implements OperatorProcessor {
 
         // op1 > op2 ==> op2 < op1
         builder.add(OP, LT);
-        
         builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                 .toJSON());
-        
         builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         

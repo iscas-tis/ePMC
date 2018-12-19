@@ -40,16 +40,15 @@ public class JANIExporter_OperatorIteProcessor implements OperatorProcessor {
     private final static String THEN = "then";
     private final static String ELSE = "else";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorIte.ITE);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -60,13 +59,10 @@ public class JANIExporter_OperatorIteProcessor implements OperatorProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         builder.add(OP, ITE);
-        
         builder.add(IF, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
-        
         builder.add(THEN, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                 .toJSON());
-        
         builder.add(ELSE, ProcessorRegistrar.getProcessor(expressionOperator.getOperand3())
                 .toJSON());
         

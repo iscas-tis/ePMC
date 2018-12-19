@@ -38,17 +38,16 @@ public class JANIExporter_OperatorExpProcessor implements OperatorProcessor {
     private final static String EXP = "pow";
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
-    
 
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
-        assert expressionOperator.getOperator().equals(OperatorLn.LN);
+        assert expressionOperator.getOperator().equals(OperatorExp.EXP);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -58,13 +57,12 @@ public class JANIExporter_OperatorExpProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        // exp(x) = pow(e, x)
-        builder.add(OP, EXP);
-        
         JsonObjectBuilder builderE = Json.createObjectBuilder();
         builderE.add("constant", "e");
+
+        // exp(x) = pow(e, x)
+        builder.add(OP, EXP);
         builder.add(LEFT, builderE.build());
-        
         builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         

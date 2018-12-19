@@ -39,16 +39,15 @@ public class JANIExporter_OperatorSqrtProcessor implements OperatorProcessor {
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorSqrt.SQRT);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -60,10 +59,8 @@ public class JANIExporter_OperatorSqrtProcessor implements OperatorProcessor {
 
         // sqrt(x) ==> pow(x,0.5)
         builder.add(OP, SQRT);
-        
         builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
-        
         builder.add(RIGHT, 0.5);
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());

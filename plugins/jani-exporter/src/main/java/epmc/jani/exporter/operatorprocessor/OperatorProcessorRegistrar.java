@@ -27,6 +27,7 @@ import java.util.Map;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
+import epmc.operator.JANIExporter_OperatorAbsProcessor;
 import epmc.operator.JANIExporter_OperatorAddInverseProcessor;
 import epmc.operator.JANIExporter_OperatorAddProcessor;
 import epmc.operator.JANIExporter_OperatorAndProcessor;
@@ -44,6 +45,8 @@ import epmc.operator.JANIExporter_OperatorLeProcessor;
 import epmc.operator.JANIExporter_OperatorLnProcessor;
 import epmc.operator.JANIExporter_OperatorLogProcessor;
 import epmc.operator.JANIExporter_OperatorLtProcessor;
+import epmc.operator.JANIExporter_OperatorMaxProcessor;
+import epmc.operator.JANIExporter_OperatorMinProcessor;
 import epmc.operator.JANIExporter_OperatorModProcessor;
 import epmc.operator.JANIExporter_OperatorMultiplyInverseProcessor;
 import epmc.operator.JANIExporter_OperatorMultiplyProcessor;
@@ -54,6 +57,7 @@ import epmc.operator.JANIExporter_OperatorPowProcessor;
 import epmc.operator.JANIExporter_OperatorSqrtProcessor;
 import epmc.operator.JANIExporter_OperatorSubtractProcessor;
 import epmc.operator.Operator;
+import epmc.operator.OperatorAbs;
 import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorAddInverse;
 import epmc.operator.OperatorAnd;
@@ -71,6 +75,8 @@ import epmc.operator.OperatorLe;
 import epmc.operator.OperatorLn;
 import epmc.operator.OperatorLog;
 import epmc.operator.OperatorLt;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
 import epmc.operator.OperatorMod;
 import epmc.operator.OperatorMultiply;
 import epmc.operator.OperatorMultiplyInverse;
@@ -128,6 +134,7 @@ public class OperatorProcessorRegistrar {
     private static Map<Class<? extends Operator>, Class<? extends OperatorProcessor>> registerStrictOperatorProcessors() {
         Map<Class<? extends Operator>, Class<? extends OperatorProcessor>> operatorProcessors = new HashMap<>();
         
+        operatorProcessors.put(OperatorAbs.class, JANIExporter_OperatorAbsProcessor.class);
         operatorProcessors.put(OperatorAddInverse.class, JANIExporter_OperatorAddInverseProcessor.class);
         operatorProcessors.put(OperatorAdd.class, JANIExporter_OperatorAddProcessor.class);
         operatorProcessors.put(OperatorAnd.class, JANIExporter_OperatorAndProcessor.class);
@@ -145,8 +152,8 @@ public class OperatorProcessorRegistrar {
         operatorProcessors.put(OperatorLn.class, JANIExporter_OperatorLnProcessor.class);
         operatorProcessors.put(OperatorLog.class, JANIExporter_OperatorLogProcessor.class);
         operatorProcessors.put(OperatorLt.class, JANIExporter_OperatorLtProcessor.class);
-//        operatorProcessors.put(OperatorMax.class, JANIExporter_OperatorMaxProcessor.class);
-//        operatorProcessors.put(OperatorMin.class, JANIExporter_OperatorMinProcessor.class);
+        operatorProcessors.put(OperatorMax.class, JANIExporter_OperatorMaxProcessor.class);
+        operatorProcessors.put(OperatorMin.class, JANIExporter_OperatorMinProcessor.class);
         operatorProcessors.put(OperatorMod.class, JANIExporter_OperatorModProcessor.class);
         operatorProcessors.put(OperatorMultiplyInverse.class, JANIExporter_OperatorMultiplyInverseProcessor.class);
         operatorProcessors.put(OperatorMultiply.class, JANIExporter_OperatorMultiplyProcessor.class);

@@ -38,16 +38,15 @@ public class JANIExporter_OperatorCeilProcessor implements OperatorProcessor {
     private final static String CEIL = "ceil";
     private final static String EXP = "exp";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorCeil.CEIL);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -58,10 +57,9 @@ public class JANIExporter_OperatorCeilProcessor implements OperatorProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         builder.add(OP, CEIL);
-        
         builder.add(EXP, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
-        
+
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         
         return builder.build();

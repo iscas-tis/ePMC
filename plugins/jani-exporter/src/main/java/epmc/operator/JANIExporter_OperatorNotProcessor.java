@@ -38,16 +38,15 @@ public class JANIExporter_OperatorNotProcessor implements OperatorProcessor {
     private final static String NOT = "¬";
     private final static String EXP = "exp";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorNot.NOT);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -58,7 +57,6 @@ public class JANIExporter_OperatorNotProcessor implements OperatorProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         builder.add(OP, NOT);
-        
         builder.add(EXP, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         

@@ -38,17 +38,16 @@ public class JANIExporter_OperatorAddInverseProcessor implements OperatorProcess
     private final static String ADD_INVERSE = "-";
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
-    
 
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorAddInverse.ADD_INVERSE);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -60,9 +59,7 @@ public class JANIExporter_OperatorAddInverseProcessor implements OperatorProcess
 
         // add_inverse(x) ==> -x
         builder.add(OP, ADD_INVERSE);
-        
         builder.add(LEFT, 1);
-        
         builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         

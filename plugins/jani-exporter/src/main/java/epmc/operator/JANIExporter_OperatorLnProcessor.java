@@ -39,16 +39,15 @@ public class JANIExporter_OperatorLnProcessor implements OperatorProcessor {
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
     
-
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        
         assert expressionOperator.getOperator().equals(OperatorLn.LN);
     
         this.expressionOperator = expressionOperator;
+
         return this;
     }
 
@@ -58,14 +57,13 @@ public class JANIExporter_OperatorLnProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        // ln(x) = log(x, e)
-        builder.add(OP, LN);
-        
-        builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
-                .toJSON());
-        
         JsonObjectBuilder builderE = Json.createObjectBuilder();
         builderE.add("constant", "e");
+
+        // ln(x) = log(x, e)
+        builder.add(OP, LN);
+        builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
         builder.add(RIGHT, builderE.build());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
