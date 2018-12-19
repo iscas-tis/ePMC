@@ -100,6 +100,15 @@ public final class AfterOptionsCreationJANIExporter implements AfterOptionsCreat
 
         options.addOption()
             .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_USE_DERIVED_OPERATORS)
+            .setType(typeBoolean)
+            .setDefault(true)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
+
+        options.addOption()
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
             .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_SYNCHRONISE_SILENT)
             .setType(typeBoolean)
             .setDefault(false)
