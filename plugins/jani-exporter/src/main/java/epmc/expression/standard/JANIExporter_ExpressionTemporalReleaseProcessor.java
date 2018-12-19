@@ -28,47 +28,57 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
-public class JANIExporter_ExpressionTemporalFinallyProcessor implements JANIProcessor {
+public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIProcessor {
     private final static String OP = "op";
-    private final static String F = "F";
-    private final static String EXP = "exp";
+    private final static String R = "R";
     private final static String U = "U";
     private final static String LEFT = "left";
     private final static String RIGHT = "right";
+    private final static String AND = "∧";
     private final static String STEP_BOUNDS = "step-bounds";
     private final static String TIME_BOUNDS = "time-bounds";
 
-    private ExpressionTemporalFinally expressionTemporalFinally = null;
+    private ExpressionTemporalRelease expressionTemporalRelease = null;
 
     @Override
     public JANIProcessor setElement(Object obj) {
         assert obj != null;
-        assert obj instanceof ExpressionTemporalFinally; 
+        assert obj instanceof ExpressionTemporalRelease; 
 
-        expressionTemporalFinally = (ExpressionTemporalFinally) obj;
+        expressionTemporalRelease = (ExpressionTemporalRelease) obj;
         
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert expressionTemporalFinally != null;
+        assert expressionTemporalRelease != null;
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         if (ProcessorRegistrar.useDerivedOperators()) {
-            builder.add(OP, F);
-            builder.add(EXP, ProcessorRegistrar.getProcessor(expressionTemporalFinally.getOperand())
+            builder.add(OP, R);
+            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
+                    .toJSON());
+            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
                     .toJSON());
         } else {
-            //F op = true U op
-            builder.add(OP, U);
-            builder.add(LEFT, true);
-            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalFinally.getOperand())
+            //op1 R op2 = op2 W (op2 /\ op1)
+            JsonValue op2 = ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
+                   .toJSON();
+           
+            JsonObjectBuilder builderAnd = Json.createObjectBuilder();
+            builderAnd.add(OP, AND);
+            builderAnd.add(LEFT, op2);
+            builderAnd.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandLeft())
                     .toJSON());
+            
+            builder.add(OP, U);
+            builder.add(LEFT, op2);
+            builder.add(RIGHT, builderAnd.build());
         }
         
-        TimeBound timeBound = expressionTemporalFinally.getTimeBound();
+        TimeBound timeBound = expressionTemporalRelease.getTimeBound();
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
             if (ProcessorRegistrar.isTimedModel()) {
                 builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
@@ -79,7 +89,7 @@ public class JANIExporter_ExpressionTemporalFinallyProcessor implements JANIProc
             }
         }
 
-        UtilModelParser.addPositional(builder, expressionTemporalFinally.getPositional());
+        UtilModelParser.addPositional(builder, expressionTemporalRelease.getPositional());
 
         return builder.build();
     }

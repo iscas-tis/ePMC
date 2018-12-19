@@ -31,7 +31,9 @@ import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.ExpressionTemporalFinally;
+import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
+import epmc.expression.standard.ExpressionTemporalRelease;
 import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.JANIExporter_ExpressionFilterProcessor;
@@ -40,7 +42,9 @@ import epmc.expression.standard.JANIExporter_ExpressionLiteralProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionOperatorProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionQuantifierProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalFinallyProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionTemporalGloballyProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalNextProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionTemporalReleaseProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.JANIExporter_FilterTypeProcessor;
 import epmc.expression.standard.JANIExporter_TimeBoundProcessor;
@@ -323,8 +327,12 @@ public class ProcessorRegistrar {
                 JANIExporter_ExpressionQuantifierProcessor.class);
         processors.put(ExpressionTemporalFinally.class, 
                 JANIExporter_ExpressionTemporalFinallyProcessor.class);
+        processors.put(ExpressionTemporalGlobally.class, 
+                JANIExporter_ExpressionTemporalGloballyProcessor.class);
         processors.put(ExpressionTemporalNext.class, 
                 JANIExporter_ExpressionTemporalNextProcessor.class);
+        processors.put(ExpressionTemporalRelease.class, 
+                JANIExporter_ExpressionTemporalReleaseProcessor.class);
         processors.put(ExpressionTemporalUntil.class, 
                 JANIExporter_ExpressionTemporalUntilProcessor.class);
         processors.put(FilterType.class, 
