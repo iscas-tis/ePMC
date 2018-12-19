@@ -57,7 +57,7 @@ public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProces
         builder.add(OP, U);
         builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandLeft())
                 .toJSON());
-        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandLeft())
+        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandRight())
                 .toJSON());
         
         TimeBound timeBound = expressionTemporalUntil.getTimeBound();
