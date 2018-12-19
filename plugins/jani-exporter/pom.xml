@@ -49,11 +49,11 @@
   </build>
   <dependencies>
     <dependency>
-      <groupId>epmc.jani</groupId>
-      <artifactId>epmc-jani-model</artifactId>
+      <groupId>epmc.expression.standard</groupId>
+      <artifactId>epmc-expression-basic</artifactId>
       <version>0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/../jani-model/target/epmc-jani-model-0.jar</systemPath>
+      <systemPath>${project.basedir}/../expression-basic/target/epmc-expression-basic-0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>epmc.value.standard</groupId>
@@ -61,6 +61,20 @@
       <version>0</version>
       <scope>system</scope>
       <systemPath>${project.basedir}/../value-basic/target/epmc-value-basic-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.graph</groupId>
+      <artifactId>epmc-graph</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../graph/target/epmc-graph-0.jar</systemPath>
+    </dependency>
+    <dependency>
+      <groupId>epmc.jani</groupId>
+      <artifactId>epmc-jani-model</artifactId>
+      <version>0</version>
+      <scope>system</scope>
+      <systemPath>${project.basedir}/../jani-model/target/epmc-jani-model-0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>epmc.util</groupId>
