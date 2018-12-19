@@ -23,7 +23,9 @@ package epmc.jani.exporter.processor;
 import static epmc.error.UtilError.ensure;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 import epmc.expression.standard.ExpressionFilter;
 import epmc.expression.standard.ExpressionIdentifierStandard;
@@ -35,6 +37,10 @@ import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTemporalRelease;
 import epmc.expression.standard.ExpressionTemporalUntil;
+import epmc.expression.standard.ExpressionType;
+import epmc.expression.standard.ExpressionTypeBoolean;
+import epmc.expression.standard.ExpressionTypeInteger;
+import epmc.expression.standard.ExpressionTypeReal;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.JANIExporter_ExpressionFilterProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionIdentifierStandardProcessor;
@@ -130,7 +136,9 @@ import epmc.util.Util;
  *
  */
 public class ProcessorRegistrar {
-    private static Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
+    private final static Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
+    private final static Set<ExpressionType> numericTypes = nativeNumericTypes();
+    private final static Set<ExpressionType> booleanTypes = nativeBooleanTypes();
     
     private static ModelJANI model = null;
     private static Boolean useDerivedOperators = null;
@@ -159,6 +167,14 @@ public class ProcessorRegistrar {
         return SemanticsTimed.isTimed(model.getSemantics());
     }
     
+    public static boolean isBooleanType(ExpressionType expressionType) {
+        return booleanTypes.contains(expressionType);
+    }
+    
+    public static boolean isNumericType(ExpressionType expressionType) {
+        return numericTypes.contains(expressionType);
+    }
+
     /**
      * Add a new processor for a JANI component in the set of known processors.
      * 
@@ -341,5 +357,22 @@ public class ProcessorRegistrar {
                 JANIExporter_TimeBoundProcessor.class);
         
         return processors;
+    }
+    
+    private static Set<ExpressionType> nativeNumericTypes() {
+        Set<ExpressionType> set = new HashSet<>();
+
+        set.add(ExpressionTypeReal.TYPE_REAL);
+        set.add(ExpressionTypeInteger.TYPE_INTEGER);
+        
+        return set;
+    }
+    
+    private static Set<ExpressionType> nativeBooleanTypes() {
+        Set<ExpressionType> set = new HashSet<>();
+
+        set.add(ExpressionTypeBoolean.TYPE_BOOLEAN);
+        
+        return set;
     }
 }

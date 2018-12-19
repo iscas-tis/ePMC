@@ -23,6 +23,7 @@ package epmc.expression.standard;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.util.UtilJSON;
 
 public class JANIExporter_ExpressionLiteralProcessor implements JANIProcessor {
@@ -42,6 +43,12 @@ public class JANIExporter_ExpressionLiteralProcessor implements JANIProcessor {
     public JsonValue toJSON() {
         assert literal != null;
         
-        return UtilJSON.toStringValue(literal.getValue());
+        if (ProcessorRegistrar.isBooleanType(literal.getType())) {
+            return UtilJSON.toBooleanValue(literal.getValue());
+        } else if (ProcessorRegistrar.isNumericType(literal.getType())) {
+            return UtilJSON.toNumberValue(literal.getValue());
+        } else {
+            return UtilJSON.toStringValue(literal.getValue());
+        }
     }
 }
