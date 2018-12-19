@@ -29,11 +29,11 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_ExpressionFilterProcessor implements JANIProcessor {
-    private final static String OP = "op";
-    private final static String FILTER = "filter";
-    private final static String FUN = "fun";
-    private final static String VALUES = "values";
-    private final static String STATES = "states";
+    private static final String OP = "op";
+    private static final String FILTER = "filter";
+    private static final String FUN = "fun";
+    private static final String VALUES = "values";
+    private static final String STATES = "states";
 
     private ExpressionFilter expressionFilter = null;
 

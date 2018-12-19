@@ -27,7 +27,7 @@ import epmc.util.UtilJSON;
 
 public final class JANIExporter_JANITypeIntProcessor implements JANIProcessor {
     /** Identifier for integer type. */
-    private final static String INT = "int";
+    private static final String INT = "int";
 
     private JANITypeInt integer = null;
 

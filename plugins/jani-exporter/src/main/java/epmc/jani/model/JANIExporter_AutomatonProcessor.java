@@ -30,19 +30,19 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_AutomatonProcessor implements JANIProcessor {
     /** String identifying the name of an automaton. */
-    private final static String NAME = "name";
+    private static final String NAME = "name";
     /** String identifying the variables of an automaton. */
-    private final static String VARIABLES = "variables";
+    private static final String VARIABLES = "variables";
     /** String identifying the locations of an automaton. */
-    private final static String LOCATIONS = "locations";
+    private static final String LOCATIONS = "locations";
     /** String identifying the initial location of an automaton. */
-    private final static String INITIAL_LOCATIONS = "initial-locations";
+    private static final String INITIAL_LOCATIONS = "initial-locations";
     /** String identifying the edges of an automaton. */
-    private final static String EDGES = "edges";
+    private static final String EDGES = "edges";
     /** String identifying comment for this automaton. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
     /** String identifying initial variable values of this automaton. */
-    private final static String RESTRICT_INITIAL = "restrict-initial";
+    private static final String RESTRICT_INITIAL = "restrict-initial";
 
     private Automaton automaton = null;
 

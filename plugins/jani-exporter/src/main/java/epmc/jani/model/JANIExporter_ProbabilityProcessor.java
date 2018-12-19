@@ -28,8 +28,8 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_ProbabilityProcessor implements JANIProcessor {
-    private final static String EXP = "exp";
-    private final static String COMMENT = "comment";
+    private static final String EXP = "exp";
+    private static final String COMMENT = "comment";
 
     private Probability probability = null;
 

@@ -33,31 +33,31 @@ import epmc.modelchecker.Properties;
 
 public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
     /** Identifier of this model class. */
-    public final static String IDENTIFIER = "jani";
+    public static final String IDENTIFIER = "jani";
     /** Identifies the part of a model where its system components are given. */
-    private final static String SYSTEM = "system";
+    private static final String SYSTEM = "system";
     /** Identifies the part of a model where its automata are specified. */
-    private final static String AUTOMATA = "automata";
+    private static final String AUTOMATA = "automata";
     /** Identifies the part of a model where its properties are specified. */
-    private final static String PROPERTIES = "properties";
+    private static final String PROPERTIES = "properties";
     /** Identifies the variable declaration part of a model. */
-    private final static String VARIABLES = "variables";
+    private static final String VARIABLES = "variables";
     /** Identifies the action set of a model. */
-    private final static String ACTIONS = "actions";
+    private static final String ACTIONS = "actions";
     /** Name of the model (e.g. filename). */
-    private final static String NAME = "name";
+    private static final String NAME = "name";
     /** JANI version. */
-    private final static String JANI_VERSION = "jani-version";
+    private static final String JANI_VERSION = "jani-version";
     /** Identifies the semantics type of a model. */
-    private final static String TYPE = "type";
+    private static final String TYPE = "type";
     /** String denoting model features (extensions) field. */
-    private final static String FEATURES = "features";
+    private static final String FEATURES = "features";
     /** Denotes metadata field. */
-    private final static String METADATA = "metadata";
+    private static final String METADATA = "metadata";
     /** Initial assignment to global variables. */
-    private final static String RESTRICT_INITIAL = "restrict-initial";
+    private static final String RESTRICT_INITIAL = "restrict-initial";
     /** Denotes model constants. */
-    private final static String CONSTANTS = "constants";
+    private static final String CONSTANTS = "constants";
 
     private ModelJANI jani = null;
 

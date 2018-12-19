@@ -34,10 +34,10 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorAddProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String ADD = "+";
-    private final static String LEFT = "left";
-    private final static String RIGHT = "right";
+    private static final String OP = "op";
+    private static final String ADD = "+";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
     
     private ExpressionOperator expressionOperator = null;
     

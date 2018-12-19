@@ -29,12 +29,12 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_ExpressionTemporalNextProcessor implements JANIProcessor {
-    private final String OP = "op";
-    private final String U = "U";
-    private final String LEFT = "left";
-    private final String RIGHT = "right";
-    private final String STEP_BOUNDS = "step-bounds";
-    private final String TIME_BOUNDS = "time-bounds";
+    private static final String OP = "op";
+    private static final String U = "U";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
+    private static final String STEP_BOUNDS = "step-bounds";
+    private static final String TIME_BOUNDS = "time-bounds";
 
     private ExpressionTemporalNext expressionTemporalNext = null;
 

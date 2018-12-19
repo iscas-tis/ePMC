@@ -28,9 +28,9 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
-    private final static String NAME = "name";
-    private final static String EXPRESSION = "expression";
-    private final static String COMMENT = "comment";
+    private static final String NAME = "name";
+    private static final String EXPRESSION = "expression";
+    private static final String COMMENT = "comment";
 
     private JANIPropertyEntry propertyEntry = null;
 

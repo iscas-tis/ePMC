@@ -28,8 +28,8 @@ import epmc.jani.exporter.processor.JANIProcessor;
 
 public class JANIExporter_ActionProcessor implements JANIProcessor {
     /** Identifies the name of a given action. */
-    private final static String NAME = "name";
-    private final static String COMMENT = "comment";
+    private static final String NAME = "name";
+    private static final String COMMENT = "comment";
 
     private Action action = null;
 

@@ -33,9 +33,9 @@ import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 
 public class JANIExporter_SynchronisationVectorElementProcessor implements JANIProcessor {
-    private final static String AUTOMATON = "automaton";
-    private final static String INPUT_ENABLE = "input-enable";
-    private final static String COMMENT = "comment";
+    private static final String AUTOMATON = "automaton";
+    private static final String INPUT_ENABLE = "input-enable";
+    private static final String COMMENT = "comment";
 
     private SynchronisationVectorElement syncVectorElement = null;
 

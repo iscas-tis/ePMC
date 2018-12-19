@@ -34,9 +34,9 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorNotProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String NOT = "¬";
-    private final static String EXP = "exp";
+    private static final String OP = "op";
+    private static final String NOT = "¬";
+    private static final String EXP = "exp";
     
     private ExpressionOperator expressionOperator = null;
     

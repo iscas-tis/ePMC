@@ -27,7 +27,7 @@ import epmc.util.UtilJSON;
 
 public final class JANIExporter_JANITypeClockProcessor implements JANIProcessor {
     /** Identifier for boolean type. */
-    private final static String CLOCK = "clock";
+    private static final String CLOCK = "clock";
 
     private JANITypeClock clock = null;
 

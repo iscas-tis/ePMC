@@ -34,9 +34,9 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorFloorProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String FLOOR = "floor";
-    private final static String EXP = "exp";
+    private static final String OP = "op";
+    private static final String FLOOR = "floor";
+    private static final String EXP = "exp";
     
     private ExpressionOperator expressionOperator = null;
     

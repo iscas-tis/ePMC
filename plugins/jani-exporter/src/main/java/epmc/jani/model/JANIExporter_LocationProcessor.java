@@ -29,13 +29,13 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_LocationProcessor implements JANIProcessor {
     /** String identifying the name of the location. */
-    private final static String NAME = "name";
+    private static final String NAME = "name";
     /** String identifying time progress condition of this location. */
-    private final static String TIME_PROGRESS = "time-progress";
+    private static final String TIME_PROGRESS = "time-progress";
     /** String identifying comment of this location. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
     /** String identifying state transient values of this location. */
-    private final static String TRANSIENT_VALUES = "transient-values";
+    private static final String TRANSIENT_VALUES = "transient-values";
 
     private Location location = null;
 

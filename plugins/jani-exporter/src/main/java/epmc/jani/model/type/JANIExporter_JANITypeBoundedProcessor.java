@@ -29,19 +29,19 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public final class JANIExporter_JANITypeBoundedProcessor implements JANIProcessor {
-    public final static String IDENTIFIER = "bounded";
+    public static final String IDENTIFIER = "bounded";
     /** Identifies the type of variable type specification. */
-    private final static String KIND = "kind";
+    private static final String KIND = "kind";
     /** Identifier for bounded type. */
-    private final static String BOUNDED = "bounded";
+    private static final String BOUNDED = "bounded";
     /** Identifier for base type of bounded type. */
-    private final static String BASE = "base";
+    private static final String BASE = "base";
     /** Identifier for integer base type of bounded type. */
-    private final static String INT = "int";
+    private static final String INT = "int";
     /** Identifier of lower bound of bounded type. */
-    private final static String LOWER_BOUND = "lower-bound";
+    private static final String LOWER_BOUND = "lower-bound";
     /** Identifier for upper bond of bounded type. */
-    private final static String UPPER_BOUND = "upper-bound";
+    private static final String UPPER_BOUND = "upper-bound";
 
 
     private JANITypeBounded bounded = null;

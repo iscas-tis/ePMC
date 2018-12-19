@@ -136,9 +136,9 @@ import epmc.util.Util;
  *
  */
 public class ProcessorRegistrar {
-    private final static Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
-    private final static Set<ExpressionType> numericTypes = nativeNumericTypes();
-    private final static Set<ExpressionType> booleanTypes = nativeBooleanTypes();
+    private static final Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
+    private static final Set<ExpressionType> numericTypes = nativeNumericTypes();
+    private static final Set<ExpressionType> booleanTypes = nativeBooleanTypes();
     
     private static ModelJANI model = null;
     private static Boolean useDerivedOperators = null;

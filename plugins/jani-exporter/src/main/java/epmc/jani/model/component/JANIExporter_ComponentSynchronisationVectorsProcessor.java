@@ -32,10 +32,10 @@ import epmc.jani.model.Action;
 import epmc.options.Options;
 
 public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JANIProcessor {
-    public final static String IDENTIFIER = "synchronisation-vectors";
-    private final static String ELEMENTS = "elements";
-    private final static String SYNCS = "syncs";
-    private final static String COMMENT = "comment";
+    public static final String IDENTIFIER = "synchronisation-vectors";
+    private static final String ELEMENTS = "elements";
+    private static final String SYNCS = "syncs";
+    private static final String COMMENT = "comment";
 
     private ComponentSynchronisationVectors syncVectors = null;
 

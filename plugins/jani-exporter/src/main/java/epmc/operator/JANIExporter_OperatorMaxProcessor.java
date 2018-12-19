@@ -34,15 +34,15 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorMaxProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String MAX = "max";
-    private final static String LEFT = "left";
-    private final static String RIGHT = "right";
-    private final static String LT = "<";
-    private final static String ITE = "ite";
-    private final static String IF = "if";
-    private final static String THEN = "then";
-    private final static String ELSE = "else";
+    private static final String OP = "op";
+    private static final String MAX = "max";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
+    private static final String LT = "<";
+    private static final String ITE = "ite";
+    private static final String IF = "if";
+    private static final String THEN = "then";
+    private static final String ELSE = "else";
     
     private ExpressionOperator expressionOperator = null;
     

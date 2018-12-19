@@ -34,17 +34,17 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorAbsProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String ABS = "abs";
-    private final static String EXP = "exp";
-    private final static String ITE = "ite";
-    private final static String IF = "if";
-    private final static String THEN = "then";
-    private final static String ELSE = "else";
-    private final static String SUBTRACT = "-";
-    private final static String LT = "<";
-    private final static String LEFT = "left";
-    private final static String RIGHT = "right";
+    private static final String OP = "op";
+    private static final String ABS = "abs";
+    private static final String EXP = "exp";
+    private static final String ITE = "ite";
+    private static final String IF = "if";
+    private static final String THEN = "then";
+    private static final String ELSE = "else";
+    private static final String SUBTRACT = "-";
+    private static final String LT = "<";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
 
     private ExpressionOperator expressionOperator = null;
     

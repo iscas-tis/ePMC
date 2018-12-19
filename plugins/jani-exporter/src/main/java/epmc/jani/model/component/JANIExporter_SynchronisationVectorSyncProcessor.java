@@ -30,9 +30,9 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.Action;
 
 public class JANIExporter_SynchronisationVectorSyncProcessor implements JANIProcessor {
-    private final static String SYNCHRONISE = "synchronise";
-    private final static String RESULT = "result";
-    private final static String COMMENT = "comment";
+    private static final String SYNCHRONISE = "synchronise";
+    private static final String RESULT = "result";
+    private static final String COMMENT = "comment";
 
     private SynchronisationVectorSync syncVectorSync = null;
 

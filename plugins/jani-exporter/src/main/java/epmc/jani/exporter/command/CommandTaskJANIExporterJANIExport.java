@@ -55,9 +55,9 @@ import epmc.util.UtilJSON;
  */
 public final class CommandTaskJANIExporterJANIExport implements CommandTask {
     /** Unique identifier of JANI converter start command. */
-    public final static String IDENTIFIER = "jani-export";
+    public static final String IDENTIFIER = "jani-export";
 
-    public final static String JANI_EXTENSION = ".jani";
+    public static final String JANI_EXTENSION = ".jani";
 
     private ModelChecker modelChecker;
 

@@ -11,16 +11,16 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.util.UtilJSON;
 
 public class JANIExporter_FilterTypeProcessor implements JANIProcessor {
-    private final static String FUN_MIN = "min";
-    private final static String FUN_MAX = "max";
-    private final static String FUN_SUM = "sum";
-    private final static String FUN_AVG = "avg";
-    private final static String FUN_COUNT = "count";
-    private final static String FUN_FORALL = "∀";
-    private final static String FUN_EXIST = "∃";
-    private final static String FUN_ARGMIN = "argmin";
-    private final static String FUN_ARGMAX = "argmax";
-    private final static String FUN_VALUES = "values";
+    private static final String FUN_MIN = "min";
+    private static final String FUN_MAX = "max";
+    private static final String FUN_SUM = "sum";
+    private static final String FUN_AVG = "avg";
+    private static final String FUN_COUNT = "count";
+    private static final String FUN_FORALL = "∀";
+    private static final String FUN_EXIST = "∃";
+    private static final String FUN_ARGMIN = "argmin";
+    private static final String FUN_ARGMAX = "argmax";
+    private static final String FUN_VALUES = "values";
 
     private FilterType filterType = null;
     

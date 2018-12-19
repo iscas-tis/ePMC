@@ -39,7 +39,7 @@ import epmc.plugin.AfterOptionsCreation;
  */
 public final class AfterOptionsCreationJANIExporter implements AfterOptionsCreation {
     /** Identifier of this class. */
-    private final static String IDENTIFIER = "after-options-creation-jani-exporter";
+    private static final String IDENTIFIER = "after-options-creation-jani-exporter";
 
     @Override
     public String getIdentifier() {

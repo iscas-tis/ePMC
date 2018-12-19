@@ -34,11 +34,11 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorIteProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String ITE = "ite";
-    private final static String IF = "if";
-    private final static String THEN = "then";
-    private final static String ELSE = "else";
+    private static final String OP = "op";
+    private static final String ITE = "ite";
+    private static final String IF = "if";
+    private static final String THEN = "then";
+    private static final String ELSE = "else";
     
     private ExpressionOperator expressionOperator = null;
     

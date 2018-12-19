@@ -28,7 +28,7 @@ import epmc.util.UtilJSON;
 public final class JANIExporter_JANITypeBoolProcessor implements JANIProcessor {
 
     /** Identifier for boolean type. */
-    private final static String BOOL = "bool";
+    private static final String BOOL = "bool";
 
     private JANITypeBool bool = null;
 

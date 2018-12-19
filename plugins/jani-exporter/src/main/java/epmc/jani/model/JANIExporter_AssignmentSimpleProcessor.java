@@ -29,13 +29,13 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_AssignmentSimpleProcessor implements JANIProcessor {
     /** String specifying to which variable to assign to. */
-    private final static String REF = "ref";
+    private static final String REF = "ref";
     /** String specifying expression of value to be assigned. */
-    private final static String VALUE = "value";
+    private static final String VALUE = "value";
     /** String identifying index of this assignment. */
-    private final static String INDEX = "index";
+    private static final String INDEX = "index";
     /** String specifying comment for this assignment. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
 
     private AssignmentSimple assignment = null;
 

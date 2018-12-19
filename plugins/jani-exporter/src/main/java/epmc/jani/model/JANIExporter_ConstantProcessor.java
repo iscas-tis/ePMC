@@ -30,13 +30,13 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_ConstantProcessor implements JANIProcessor {
     /** Identifier for the name of the constant. */
-    private final static String NAME = "name";
+    private static final String NAME = "name";
     /** Identifier for the type of the constant. */
-    private final static String TYPE = "type";
+    private static final String TYPE = "type";
     /** Identifier for the value of the constant. */
-    private final static String VALUE = "value";
+    private static final String VALUE = "value";
     /** Identifier for the comment of the constant. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
 
     private Constant constant = null;
 

@@ -31,10 +31,10 @@ import epmc.jani.model.UtilModelParser;
 import epmc.jani.model.property.JANIPropertyExpressionProbabilityQuantifier;
 
 public class JANIExporter_JANIPropertyExpressionProbabilityQuantifierProcessor implements JANIProcessor {
-    private final static String OP = "op";
-    private final static String PMAX = "Pmax";
-    private final static String PMIN = "Pmin";
-    private final static String EXP = "exp";
+    private static final String OP = "op";
+    private static final String PMAX = "Pmax";
+    private static final String PMIN = "Pmin";
+    private static final String EXP = "exp";
 
     private JANIPropertyExpressionProbabilityQuantifier expressionProbabilityQuantifier = null;
 

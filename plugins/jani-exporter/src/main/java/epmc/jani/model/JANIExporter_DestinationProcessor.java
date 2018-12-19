@@ -29,13 +29,13 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_DestinationProcessor implements JANIProcessor {
     /** String indicating the probability of this destination. */
-    private final static String PROBABILITY = "probability";
+    private static final String PROBABILITY = "probability";
     /** String indicating the source location of this edge. */
-    private final static String LOCATION = "location";
+    private static final String LOCATION = "location";
     /** String indicating the assignments of this edge. */
-    private final static String ASSIGNMENTS = "assignments";
+    private static final String ASSIGNMENTS = "assignments";
     /** String indicating comment of this destination. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
 
     private Destination destination = null;
 

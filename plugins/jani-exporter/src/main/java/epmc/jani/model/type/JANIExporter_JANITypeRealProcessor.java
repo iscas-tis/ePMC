@@ -27,7 +27,7 @@ import epmc.util.UtilJSON;
 
 public final class JANIExporter_JANITypeRealProcessor implements JANIProcessor {
     /** Identifier for real type. */
-    private final static String REAL = "real";
+    private static final String REAL = "real";
 
     private JANITypeReal real = null;
 

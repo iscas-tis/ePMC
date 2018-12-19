@@ -29,17 +29,17 @@ import epmc.jani.exporter.processor.ProcessorRegistrar;
 
 public class JANIExporter_EdgeProcessor implements JANIProcessor {
     /** String identifying the source location. */
-    private final static String LOCATION = "location";
+    private static final String LOCATION = "location";
     /** String identifying the action, if given. */
-    private final static String ACTION = "action";
+    private static final String ACTION = "action";
     /** String identifying the rate, if given. */
-    private final static String RATE = "rate";
+    private static final String RATE = "rate";
     /** String identifying the guard. */
-    private final static String GUARD = "guard";
+    private static final String GUARD = "guard";
     /** String identifying the list of destinations. */
-    private final static String DESTINATIONS = "destinations";
+    private static final String DESTINATIONS = "destinations";
     /** String identifying comment of edge. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
 
     private Edge edge = null;
 

@@ -32,15 +32,15 @@ import epmc.jani.valuejson.UtilValueJSON;
 
 public class JANIExporter_VariableProcessor implements JANIProcessor {
     /** Identifies a variable. */
-    private final static String TYPE = "type";
+    private static final String TYPE = "type";
     /** Identifies the name of a variable. */
-    private final static String NAME = "name";
+    private static final String NAME = "name";
     /** Identifies whether the variable is transient. */
-    private final static String TRANSIENT = "transient";
+    private static final String TRANSIENT = "transient";
     /** Identifier for initial value of the variable. */
-    private final static String INITIAL_VALUE = "initial-value";
+    private static final String INITIAL_VALUE = "initial-value";
     /** String identifying comment of this variable. */
-    private final static String COMMENT = "comment";
+    private static final String COMMENT = "comment";
 
     private Variable variable = null;
 

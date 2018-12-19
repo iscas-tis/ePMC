@@ -34,9 +34,9 @@ import epmc.jani.model.UtilModelParser;
  *
  */
 public class JANIExporter_OperatorCeilProcessor implements OperatorProcessor {
-    private final static String OP = "op";
-    private final static String CEIL = "ceil";
-    private final static String EXP = "exp";
+    private static final String OP = "op";
+    private static final String CEIL = "ceil";
+    private static final String EXP = "exp";
     
     private ExpressionOperator expressionOperator = null;
     
