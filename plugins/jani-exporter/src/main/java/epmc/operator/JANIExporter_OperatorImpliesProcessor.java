@@ -26,10 +26,8 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
-import epmc.options.Options;
 
 /**
  * @author Andrea Turrini
@@ -62,7 +60,7 @@ public class JANIExporter_OperatorImpliesProcessor implements OperatorProcessor 
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_DERIVED_OPERATORS)) {
+        if (ProcessorRegistrar.useDerivedOperators()) {
             builder.add(OP, IMPLIES);
             builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());

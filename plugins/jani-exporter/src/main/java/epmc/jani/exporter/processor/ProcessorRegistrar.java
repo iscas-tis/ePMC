@@ -30,6 +30,7 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
+import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.FilterType;
@@ -38,6 +39,7 @@ import epmc.expression.standard.JANIExporter_ExpressionIdentifierStandardProcess
 import epmc.expression.standard.JANIExporter_ExpressionLiteralProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionOperatorProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionQuantifierProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionTemporalFinallyProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalNextProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.JANIExporter_FilterTypeProcessor;
@@ -45,6 +47,7 @@ import epmc.expression.standard.JANIExporter_TimeBoundProcessor;
 import epmc.expression.standard.TimeBound;
 import epmc.graph.SemanticsTimed;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
+import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.jani.model.Action;
 import epmc.jani.model.Actions;
 import epmc.jani.model.AssignmentSimple;
@@ -101,10 +104,8 @@ import epmc.jani.model.property.ExpressionInitial;
 import epmc.jani.model.property.JANIExporter_ExpressionInitialProcessor;
 import epmc.jani.model.property.JANIExporter_JANIPropertiesProcessor;
 import epmc.jani.model.property.JANIExporter_JANIPropertyEntryProcessor;
-import epmc.jani.model.property.JANIExporter_JANIPropertyExpressionProbabilityQuantifierProcessor;
 import epmc.jani.model.property.JANIProperties;
 import epmc.jani.model.property.JANIPropertyEntry;
-import epmc.jani.model.property.JANIPropertyExpressionProbabilityQuantifier;
 import epmc.jani.model.type.JANIExporter_JANITypeBoolProcessor;
 import epmc.jani.model.type.JANIExporter_JANITypeBoundedProcessor;
 import epmc.jani.model.type.JANIExporter_JANITypeIntProcessor;
@@ -113,6 +114,7 @@ import epmc.jani.model.type.JANITypeBool;
 import epmc.jani.model.type.JANITypeBounded;
 import epmc.jani.model.type.JANITypeInt;
 import epmc.jani.model.type.JANITypeReal;
+import epmc.options.Options;
 import epmc.time.JANIExporter_JANITypeClockProcessor;
 import epmc.time.JANITypeClock;
 import epmc.util.Util;
@@ -127,11 +129,19 @@ public class ProcessorRegistrar {
     private static Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
     
     private static ModelJANI model = null;
+    private static Boolean useDerivedOperators = null;
     
     public static void setModel(ModelJANI model) {
         assert model != null;
         
         ProcessorRegistrar.model = model;
+        useDerivedOperators = Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_DERIVED_OPERATORS);
+    }
+    
+    public static boolean useDerivedOperators() {
+        assert model != null;
+
+        return useDerivedOperators;
     }
     
     public static boolean isSilentAction(Action action) {
@@ -311,6 +321,8 @@ public class ProcessorRegistrar {
                 JANIExporter_ExpressionOperatorProcessor.class);
         processors.put(ExpressionQuantifier.class, 
                 JANIExporter_ExpressionQuantifierProcessor.class);
+        processors.put(ExpressionTemporalFinally.class, 
+                JANIExporter_ExpressionTemporalFinallyProcessor.class);
         processors.put(ExpressionTemporalNext.class, 
                 JANIExporter_ExpressionTemporalNextProcessor.class);
         processors.put(ExpressionTemporalUntil.class, 
