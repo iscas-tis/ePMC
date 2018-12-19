@@ -55,6 +55,8 @@ import epmc.expression.standard.JANIExporter_ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.JANIExporter_FilterTypeProcessor;
 import epmc.expression.standard.JANIExporter_TimeBoundProcessor;
 import epmc.expression.standard.TimeBound;
+import epmc.graph.SemanticsContinuousTime;
+import epmc.graph.SemanticsDiscreteTime;
 import epmc.graph.SemanticsTimed;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.exporter.options.OptionsJANIExporter;
@@ -142,12 +144,18 @@ public class ProcessorRegistrar {
     
     private static ModelJANI model = null;
     private static Boolean useDerivedOperators = null;
+    private static Boolean isContinuousTimeModel = null;
+    private static Boolean isDiscreteTimeModel = null;
+    private static Boolean isTimedModel = null;
     
     public static void setModel(ModelJANI model) {
         assert model != null;
         
         ProcessorRegistrar.model = model;
         useDerivedOperators = Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_DERIVED_OPERATORS);
+        isContinuousTimeModel = SemanticsContinuousTime.isContinuousTime(model.getSemantics());
+        isDiscreteTimeModel = SemanticsDiscreteTime.isDiscreteTime(model.getSemantics());
+        isTimedModel = SemanticsTimed.isTimed(model.getSemantics());
     }
     
     public static boolean useDerivedOperators() {
@@ -163,8 +171,22 @@ public class ProcessorRegistrar {
         return model.getSilentAction().equals(action);
     }
     
+    public static boolean isContinuousTimeModel() {
+        assert model != null;
+
+        return isContinuousTimeModel;
+    }
+    
+    public static boolean isDiscreteTimeModel() {
+        assert model != null;
+
+        return isDiscreteTimeModel;
+    }
+    
     public static boolean isTimedModel() {
-        return SemanticsTimed.isTimed(model.getSemantics());
+        assert model != null;
+
+        return isTimedModel;
     }
     
     public static boolean isBooleanType(ExpressionType expressionType) {
