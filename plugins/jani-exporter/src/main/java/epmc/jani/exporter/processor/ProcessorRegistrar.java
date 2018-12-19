@@ -30,6 +30,7 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
+import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.FilterType;
 import epmc.expression.standard.JANIExporter_ExpressionFilterProcessor;
@@ -37,6 +38,7 @@ import epmc.expression.standard.JANIExporter_ExpressionIdentifierStandardProcess
 import epmc.expression.standard.JANIExporter_ExpressionLiteralProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionOperatorProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionQuantifierProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionTemporalNextProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalUntilProcessor;
 import epmc.expression.standard.JANIExporter_FilterTypeProcessor;
 import epmc.expression.standard.JANIExporter_TimeBoundProcessor;
@@ -95,6 +97,8 @@ import epmc.jani.model.component.JANIExporter_SynchronisationVectorElementProces
 import epmc.jani.model.component.JANIExporter_SynchronisationVectorSyncProcessor;
 import epmc.jani.model.component.SynchronisationVectorElement;
 import epmc.jani.model.component.SynchronisationVectorSync;
+import epmc.jani.model.property.ExpressionInitial;
+import epmc.jani.model.property.JANIExporter_ExpressionInitialProcessor;
 import epmc.jani.model.property.JANIExporter_JANIPropertiesProcessor;
 import epmc.jani.model.property.JANIExporter_JANIPropertyEntryProcessor;
 import epmc.jani.model.property.JANIExporter_JANIPropertyExpressionProbabilityQuantifierProcessor;
@@ -283,12 +287,14 @@ public class ProcessorRegistrar {
                 JANIExporter_RateProcessor.class);
 
         //JANI properties
+        processors.put(ExpressionInitial.class,
+                JANIExporter_ExpressionInitialProcessor.class);
         processors.put(JANIProperties.class, 
                 JANIExporter_JANIPropertiesProcessor.class);
         processors.put(JANIPropertyEntry.class, 
                 JANIExporter_JANIPropertyEntryProcessor.class);
-        processors.put(JANIPropertyExpressionProbabilityQuantifier.class, 
-                JANIExporter_JANIPropertyExpressionProbabilityQuantifierProcessor.class);
+//        processors.put(JANIPropertyExpressionProbabilityQuantifier.class, 
+//                JANIExporter_JANIPropertyExpressionProbabilityQuantifierProcessor.class);
 
         //SMG players
 //        processors.put(PlayersJANI.class, JANIExporter_PlayersJANIProcessor.class);
@@ -305,6 +311,8 @@ public class ProcessorRegistrar {
                 JANIExporter_ExpressionOperatorProcessor.class);
         processors.put(ExpressionQuantifier.class, 
                 JANIExporter_ExpressionQuantifierProcessor.class);
+        processors.put(ExpressionTemporalNext.class, 
+                JANIExporter_ExpressionTemporalNextProcessor.class);
         processors.put(ExpressionTemporalUntil.class, 
                 JANIExporter_ExpressionTemporalUntilProcessor.class);
         processors.put(FilterType.class, 

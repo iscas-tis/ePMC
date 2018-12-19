@@ -9,6 +9,7 @@ import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
     private static final String LOWER = "lower";
@@ -46,6 +47,8 @@ public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
             builder.add(UPPER_EXCLUSIVE, timeBound.isRightOpen());
         }
 
+        UtilModelParser.addPositional(builder, timeBound.getPositional());
+        
         return builder.build();
     }
 }

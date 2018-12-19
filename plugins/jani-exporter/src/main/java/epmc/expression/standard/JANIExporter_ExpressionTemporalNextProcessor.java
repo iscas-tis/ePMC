@@ -28,7 +28,7 @@ import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
-public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProcessor {
+public class JANIExporter_ExpressionTemporalNextProcessor implements JANIProcessor {
     private final String OP = "op";
     private final String U = "U";
     private final String LEFT = "left";
@@ -36,31 +36,30 @@ public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProces
     private final String STEP_BOUNDS = "step-bounds";
     private final String TIME_BOUNDS = "time-bounds";
 
-    private ExpressionTemporalUntil expressionTemporalUntil = null;
+    private ExpressionTemporalNext expressionTemporalNext = null;
 
     @Override
     public JANIProcessor setElement(Object obj) {
         assert obj != null;
-        assert obj instanceof ExpressionTemporalUntil; 
+        assert obj instanceof ExpressionTemporalNext; 
 
-        expressionTemporalUntil = (ExpressionTemporalUntil) obj;
+        expressionTemporalNext = (ExpressionTemporalNext) obj;
         
         return this;
     }
 
     @Override
     public JsonValue toJSON() {
-        assert expressionTemporalUntil != null;
+        assert expressionTemporalNext != null;
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         builder.add(OP, U);
-        builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandLeft())
-                .toJSON());
-        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandLeft())
+        builder.add(LEFT, true);
+        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalNext.getOperand())
                 .toJSON());
         
-        TimeBound timeBound = expressionTemporalUntil.getTimeBound();
+        TimeBound timeBound = expressionTemporalNext.getTimeBound();
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
             if (ProcessorRegistrar.isTimedModel()) {
                 builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
@@ -70,8 +69,8 @@ public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProces
                         .toJSON());
             }
         }
-        
-        UtilModelParser.addPositional(builder, expressionTemporalUntil.getPositional());
+
+        UtilModelParser.addPositional(builder, expressionTemporalNext.getPositional());
 
         return builder.build();
     }
