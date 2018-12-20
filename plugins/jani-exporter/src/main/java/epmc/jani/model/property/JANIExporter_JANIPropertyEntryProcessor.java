@@ -26,10 +26,8 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
-import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
-import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
     private static final String NAME = "name";
