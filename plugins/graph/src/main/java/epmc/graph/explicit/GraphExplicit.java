@@ -237,7 +237,11 @@ public interface GraphExplicit extends LowLevel {
 
     default Type getEdgePropertyType(Object property) {
         assert property != null;
-        return getEdgeProperty(property).getType();
+        EdgeProperty edgeProperty = getEdgeProperty(property);
+        if (edgeProperty == null) {
+            return null;
+        }
+        return edgeProperty.getType();
     }
 
     default void registerGraphProperty(Object propertyName, Value value) {
