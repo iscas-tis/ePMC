@@ -81,8 +81,10 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
 //        PRISM2JANIConverter.setRewardPrefix(options.getString(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX));
         try {
             List<String> modelFilenames = options.get(OptionsEPMC.MODEL_INPUT_FILES);
-            ensure(modelFilenames != null, ProblemsJANIExporter.JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES);
-            ensure(modelFilenames.size() > 0, ProblemsJANIExporter.JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES);
+            ensure(modelFilenames != null, 
+                    ProblemsJANIExporter.JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES);
+            ensure(modelFilenames.size() > 0, 
+                    ProblemsJANIExporter.JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES);
 
             String modelFilename = modelFilenames.get(0);
 
@@ -103,19 +105,31 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                     janiFilename = janiFilename.substring(0, index);
                 }
                 janiFilename = janiFilename + JANI_EXTENSION;
-                log.send(MessagesJANIExporter.JANI_EXPORTER_MISSING_JANI_FILENAME, janiFilename, modelFilename);
+                log.send(MessagesJANIExporter.JANI_EXPORTER_MISSING_JANI_FILENAME, 
+                        janiFilename, 
+                        modelFilename);
             }
             File janiFile = new File(janiFilename); 
             if (janiFile.exists()) { 
                 if (!janiFile.canWrite()) {
-                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITEABLE_JANI_FILE, janiFilename, modelFilename);
+                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITEABLE_JANI_FILE, 
+                            janiFilename, 
+                            modelFilename);
                     return;
                 } else {
                     if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_OVERWRITE_JANI_FILE)) {
-                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_OVERWRITE, janiFilename, modelFilename);
+                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_OVERWRITE, 
+                                janiFilename, 
+                                modelFilename);
                     } else {
-                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_ABORT, janiFilename, modelFilename);
-                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_HELP, Options.get().getString(OptionsJANIExporter.JANI_EXPORTER_OVERWRITE_JANI_FILE));
+                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_ABORT, 
+                                janiFilename, 
+                                modelFilename);
+                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_HELP, 
+                                janiFilename, 
+                                "--" + Options.get()
+                                    .getOption(OptionsJANIExporter.JANI_EXPORTER_OVERWRITE_JANI_FILE)
+                                    .getIdentifier());
                         return;
                     }
                 }
@@ -123,11 +137,14 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
 
             if (modelChecker.getModel() instanceof ModelJANIConverter) {
                 ModelJANIConverter model = (ModelJANIConverter) modelChecker.getModel();
-                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION, modelName);
+                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION, 
+                        modelName);
                 ModelJANI jani = model.toJANI(true);
                 jani.setName(modelName);
-                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION_DONE, modelName);
-                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION, janiFilename);
+                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION_DONE, 
+                        modelName);
+                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION, 
+                        janiFilename);
                 JsonValue jsonContent = null;
                 if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER)) {
                     ProcessorRegistrar.setModel(jani);
@@ -143,7 +160,8 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                 } catch (UnsupportedEncodingException e) {
                     throw new RuntimeException(e);
                 }
-                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION_DONE, janiFilename);
+                log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION_DONE, 
+                        janiFilename);
             }
         } catch (EPMCException e) {
             log.send(e);
