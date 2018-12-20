@@ -32,6 +32,7 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.expression.standard.ExpressionLiteral;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionQuantifier;
+import epmc.expression.standard.ExpressionSteadyState;
 import epmc.expression.standard.ExpressionTemporalFinally;
 import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
@@ -47,6 +48,7 @@ import epmc.expression.standard.JANIExporter_ExpressionIdentifierStandardProcess
 import epmc.expression.standard.JANIExporter_ExpressionLiteralProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionOperatorProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionQuantifierProcessor;
+import epmc.expression.standard.JANIExporter_ExpressionSteadyStateProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalFinallyProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalGloballyProcessor;
 import epmc.expression.standard.JANIExporter_ExpressionTemporalNextProcessor;
@@ -361,6 +363,8 @@ public class ProcessorRegistrar {
                 JANIExporter_ExpressionOperatorProcessor.class);
         processors.put(ExpressionQuantifier.class, 
                 JANIExporter_ExpressionQuantifierProcessor.class);
+        processors.put(ExpressionSteadyState.class, 
+                JANIExporter_ExpressionSteadyStateProcessor.class);
         processors.put(ExpressionTemporalFinally.class, 
                 JANIExporter_ExpressionTemporalFinallyProcessor.class);
         processors.put(ExpressionTemporalGlobally.class, 
