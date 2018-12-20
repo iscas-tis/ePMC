@@ -62,11 +62,12 @@ public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProces
         
         TimeBound timeBound = expressionTemporalUntil.getTimeBound();
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
-            if (ProcessorRegistrar.isTimedModel()) {
-                builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
-                        .toJSON());
-            } else {
+            if (ProcessorRegistrar.isDiscreteTimeModel()) {
                 builder.add(STEP_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+                        .toJSON());
+            }
+            if (ProcessorRegistrar.isContinuousTimeModel() || ProcessorRegistrar.isTimedModel()){
+                builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
         }

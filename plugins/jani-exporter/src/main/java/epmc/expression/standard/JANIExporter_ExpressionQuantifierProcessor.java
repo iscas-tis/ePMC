@@ -56,7 +56,6 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
     private static final String REACH = "reach";
     private static final String STEP_INSTANT = "step-instant";
     private static final String TIME_INSTANT = "time-instant";
-    private static final String REWARD_INSTANTS = "reward-instants";
 
     private ExpressionQuantifier expressionQuantifier = null;
 
