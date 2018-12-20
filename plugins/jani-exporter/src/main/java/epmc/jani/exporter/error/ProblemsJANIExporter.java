@@ -30,11 +30,14 @@ import epmc.error.UtilError;
  */
 public final class ProblemsJANIExporter {
     /** Base name of resource file containing plugin problem descriptions. */
-    private final static String ERROR_JANI_EXPORTER = "ErrorJANIExporter";
+    private static final String ERROR_JANI_EXPORTER = "ErrorJANIExporter";
     /** Missing PRISM file name. */
-    public final static Problem JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES = newProblem("jani-exporter-missing-input-model-filenames");
+    public static final Problem JANI_EXPORTER_MISSING_INPUT_MODEL_FILENAMES = newProblem("jani-exporter-missing-input-model-filenames");
     /** Unaccessible PRISM file name. */
-    public final static Problem JANI_EXPORTER_UNACCESSIBLE_FILENAME = newProblem("jani-exporter-unaccessible-filename");
+    public static final Problem JANI_EXPORTER_UNACCESSIBLE_FILENAME = newProblem("jani-exporter-unaccessible-filename");
+    public static final Problem JANI_EXPORTER_ERROR_UNKNOWN_PROCESSOR = newProblem("jani-exporter-error-unknown-processor");
+    public static final Problem JANI_EXPORTER_ERROR_UNKNOWN_FILTERTYPE = newProblem("jani-exporter-error-unknown-filtertype");
+    public static final Problem JANI_EXPORTER_ERROR_UNSUPPORTED_DIRTYPE = newProblem("jani-exporter-error-unsupported-dir-type");
 
     /**
      * Create new problem object using plugin resource file.

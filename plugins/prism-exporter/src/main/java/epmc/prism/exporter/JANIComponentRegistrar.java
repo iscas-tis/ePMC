@@ -37,7 +37,7 @@ import epmc.jani.model.Constant;
 import epmc.jani.model.InitialStates;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.Location;
-import epmc.jani.model.ModelJANIProcessor;
+import epmc.jani.model.PRISMExporter_ModelJANIProcessor;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
@@ -492,14 +492,14 @@ public class JANIComponentRegistrar {
 	            expression = rewardStateExpressions.get(reward);
 	            if (expression != null) {
 	                processor = ProcessorRegistrar.getProcessor(expression);
-	                prism.append(ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM()).append(";\n");
+	                prism.append(PRISMExporter_ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM()).append(";\n");
 	            }
 	            Map<Action, Expression> mapAA = rewardTransitionExpressions.get(reward);
 	            if (mapAA != null) {
 	                for(Entry<Action, Expression> entryAA : mapAA.entrySet()) {
 	                    action = entryAA.getKey();
 	                    processor = ProcessorRegistrar.getProcessor(action);
-	                    prism.append(ModelJANIProcessor.INDENT).append(processor.toPRISM()).append(" true : ");
+	                    prism.append(PRISMExporter_ModelJANIProcessor.INDENT).append(processor.toPRISM()).append(" true : ");
 	
 	                    expression = entryAA.getValue();
 	                    processor = ProcessorRegistrar.getProcessor(expression);
@@ -677,7 +677,7 @@ public class JANIComponentRegistrar {
 
         if (usesInitialConditions) {
             prism.append("init\n")
-                .append(ModelJANIProcessor.INDENT);
+                .append(PRISMExporter_ModelJANIProcessor.INDENT);
             
             boolean addAnd = false;
 
@@ -706,14 +706,14 @@ public class JANIComponentRegistrar {
             if (initialStates != null) {
                 if (addAnd) {
                     prism.append("\n")
-                        .append(ModelJANIProcessor.INDENT)
+                        .append(PRISMExporter_ModelJANIProcessor.INDENT)
                         .append("&\n")
-                        .append(ModelJANIProcessor.INDENT);
+                        .append(PRISMExporter_ModelJANIProcessor.INDENT);
                 }
                 String comment = initialStates.getComment();
                 if (comment != null) {
                     prism.append("// ").append(comment).append("\n")
-                        .append(ModelJANIProcessor.INDENT);
+                        .append(PRISMExporter_ModelJANIProcessor.INDENT);
                 }
                 prism.append(ProcessorRegistrar.getProcessor(initialStates.getExp())
                         .toPRISM());

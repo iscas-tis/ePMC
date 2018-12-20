@@ -105,6 +105,8 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
+import epmc.graphsolver.OptionsGraphsolver;
+import epmc.graphsolver.objective.GraphSolverObjectiveExplicitLump;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.messages.TimeStampFormatSecondsStarted;
@@ -159,17 +161,26 @@ public final class CheckExplicitTest {
         options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
         options.set(TestHelper.ITERATION_STOP_CRITERION, "absolute");
         options.set(OptionsLTLLazy.LTL_LAZY_INCREMENTAL, "true");
-        options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%.16f");
+        options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, "true");
         return options;
     }
 
+    private final static Options preparePRISMOptions(String outputLog) {
+        try {
+            System.setOut(new PrintStream(new FileOutputStream(outputLog + ".log", false)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return preparePRISMOptions();
+    }
 
     @Test
     public void testPRISMTest() {
         Map<String, Object> constants = new LinkedHashMap<>();
 //    	constants.put("N", "4");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(System.getProperty("user.home") + "/test.prism");
         options.set(OptionsModelChecker.CONST, constants);
+//        options.set(OptionsGraphsolver.GRAPHSOLVER_SOLVER, "graph-solver-lp");
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop");
 
@@ -183,7 +194,7 @@ public final class CheckExplicitTest {
     public void testPRISMRandomWalk() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("p", "0.5");
-    	Options options = preparePRISMOptions();
+    	Options options = preparePRISMOptions(System.getProperty("user.home") + "/randomWalkNegative.prism");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/randomWalkNegative.prism", System.getProperty("user.home") + "/randomWalk.pctl");
@@ -198,7 +209,7 @@ public final class CheckExplicitTest {
     public void testPRISMTest1() {
     	Map<String, Object> constants = new LinkedHashMap<>();
     	constants.put("N", "10");
-    	Options options = preparePRISMOptions();
+    	Options options = preparePRISMOptions(System.getProperty("user.home") + "/test1.prism");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/test1.prism", System.getProperty("user.home") + "/test1.props");
@@ -212,7 +223,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISMClusterDTMC3() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism", System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prop");
@@ -226,7 +237,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISMPeterson() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP-nostorage-rid.prism");
         options.set(OptionsModelChecker.CONST, constants);
         options.set(OptionsLTLLazy.LTL_LAZY_USE_BREAKPOINT_SINGLETONS, "true");
         options.set(OptionsLTLLazy.LTL_LAZY_USE_RABIN, "false");
@@ -244,7 +255,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("MAX", "4");
         constants.put("N", "64");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(BRP_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, BRP_MODEL, BRP_PROPERTY);
@@ -265,7 +276,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "0.5");
         constants.put("N", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(CELL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, CELL_MODEL, CELL_PROPERTY);
@@ -286,7 +297,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "10");
         constants.put("N", "20");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(CLUSTER_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, CLUSTER_MODEL, CLUSTER_PROPERTY);
@@ -310,7 +321,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 2), COIN_PROPERTY);
@@ -331,7 +342,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 4), COIN_PROPERTY);
@@ -354,7 +365,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 6), COIN_PROPERTY);
@@ -377,7 +388,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 8), COIN_PROPERTY);
@@ -400,7 +411,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(COIN_MODEL, 10), COIN_PROPERTY);
@@ -420,7 +431,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_2_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,2,2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,2,2), CSMA_PROPERTY);
@@ -442,7 +453,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_2_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,2,4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,2,4), CSMA_PROPERTY);
@@ -464,7 +475,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_2_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,2,6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,2,6), CSMA_PROPERTY);
@@ -486,7 +497,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_3_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,3,2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,3,2), CSMA_PROPERTY);
@@ -508,7 +519,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_3_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,3,4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,3,4), CSMA_PROPERTY);
@@ -532,7 +543,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_3_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,3,6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,3,6), CSMA_PROPERTY);
@@ -554,7 +565,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_4_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,4,2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,4,2), CSMA_PROPERTY);
@@ -578,7 +589,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,4,4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,4,4), CSMA_PROPERTY);
@@ -602,7 +613,7 @@ public final class CheckExplicitTest {
     public void testPRISM_CSMA_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,4,6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(CSMA_MODEL,4,6), CSMA_PROPERTY);
@@ -624,7 +635,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Dice() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("x", "3");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(DICE_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, DICE_MODEL, DICE_PROPERTY);
@@ -640,7 +651,7 @@ public final class CheckExplicitTest {
     public void testPRISM_TwoDice() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("x", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(TWO_DICE_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, TWO_DICE_MODEL, TWO_DICE_PROPERTY);
@@ -656,7 +667,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 3), DINING_CRYPT_PROPERTY);
@@ -670,7 +681,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 4), DINING_CRYPT_PROPERTY);
@@ -684,7 +695,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 5), DINING_CRYPT_PROPERTY);
@@ -698,7 +709,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 6), DINING_CRYPT_PROPERTY);
@@ -712,7 +723,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 7), DINING_CRYPT_PROPERTY);
@@ -726,7 +737,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 8), DINING_CRYPT_PROPERTY);
@@ -742,7 +753,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 9), DINING_CRYPT_PROPERTY);
@@ -758,7 +769,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 10), DINING_CRYPT_PROPERTY);
@@ -774,7 +785,7 @@ public final class CheckExplicitTest {
     public void testPRISM_DiningCrypt_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(DINING_CRYPT_MODEL, 15), DINING_CRYPT_PROPERTY);
@@ -789,7 +800,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("delay", "36");
         constants.put("fast", "0.5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(FIREWIRE_ABST_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, FIREWIRE_ABST_MODEL, FIREWIRE_ABST_PROPERTY);
@@ -803,7 +814,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("delay", "36");
         constants.put("fast", "0.5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(FIREWIRE_IMPL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY);
@@ -818,7 +829,7 @@ public final class CheckExplicitTest {
     public void testPRISM_FMS() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("n", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(FMS_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, FMS_MODEL, FMS_PROPERTY);
@@ -837,7 +848,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Kanban() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("t", "4");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(KANBAN_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, KANBAN_MODEL, KANBAN_PROPERTY);
@@ -854,7 +865,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 3), LEADER_ASYNC_PROPERTY);
@@ -872,7 +883,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 4), LEADER_ASYNC_PROPERTY);
@@ -890,7 +901,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 5), LEADER_ASYNC_PROPERTY);
@@ -908,7 +919,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 6), LEADER_ASYNC_PROPERTY);
@@ -926,7 +937,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 7), LEADER_ASYNC_PROPERTY);
@@ -946,7 +957,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 8), LEADER_ASYNC_PROPERTY);
@@ -966,7 +977,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 9), LEADER_ASYNC_PROPERTY);
@@ -986,7 +997,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderAsync_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_ASYNC_MODEL, 10), LEADER_ASYNC_PROPERTY);
@@ -1004,7 +1015,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_3_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 2), LEADER_SYNC_PROPERTY);
@@ -1019,7 +1030,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_3_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 3), LEADER_SYNC_PROPERTY);
@@ -1034,7 +1045,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_3_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 4), LEADER_SYNC_PROPERTY);
@@ -1049,7 +1060,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_3_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 5), LEADER_SYNC_PROPERTY);
@@ -1064,7 +1075,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_3_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 6), LEADER_SYNC_PROPERTY);
@@ -1079,7 +1090,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_3_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 3, 8), LEADER_SYNC_PROPERTY);
@@ -1094,7 +1105,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_4_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 2), LEADER_SYNC_PROPERTY);
@@ -1109,7 +1120,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_4_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 3), LEADER_SYNC_PROPERTY);
@@ -1124,7 +1135,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 4), LEADER_SYNC_PROPERTY);
@@ -1139,7 +1150,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_4_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 5), LEADER_SYNC_PROPERTY);
@@ -1154,7 +1165,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 6), LEADER_SYNC_PROPERTY);
@@ -1169,7 +1180,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_4_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 4, 8), LEADER_SYNC_PROPERTY);
@@ -1184,7 +1195,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_5_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 2), LEADER_SYNC_PROPERTY);
@@ -1199,7 +1210,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_5_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 3), LEADER_SYNC_PROPERTY);
@@ -1214,7 +1225,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_5_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 4), LEADER_SYNC_PROPERTY);
@@ -1229,7 +1240,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_5_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 5), LEADER_SYNC_PROPERTY);
@@ -1244,7 +1255,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_5_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 6), LEADER_SYNC_PROPERTY);
@@ -1259,7 +1270,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_5_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 5, 8), LEADER_SYNC_PROPERTY);
@@ -1274,7 +1285,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_6_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 2), LEADER_SYNC_PROPERTY);
@@ -1289,7 +1300,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_6_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 3), LEADER_SYNC_PROPERTY);
@@ -1304,7 +1315,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_6_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 4), LEADER_SYNC_PROPERTY);
@@ -1319,7 +1330,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_6_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 5), LEADER_SYNC_PROPERTY);
@@ -1334,7 +1345,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_6_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 6), LEADER_SYNC_PROPERTY);
@@ -1351,7 +1362,7 @@ public final class CheckExplicitTest {
     public void testPRISM_LeaderSync_6_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(LEADER_SYNC_MODEL, 6, 8), LEADER_SYNC_PROPERTY);
@@ -1372,7 +1383,7 @@ public final class CheckExplicitTest {
         constants.put("T", "0.002");
         constants.put("i", "0");
         constants.put("N3", "10");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(KNACL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, KNACL_MODEL, KNACL_PROPERTY);
@@ -1395,7 +1406,7 @@ public final class CheckExplicitTest {
         constants.put("N2", "10");
         constants.put("T", "0.002");
         constants.put("i", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(NACL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, NACL_MODEL, NACL_PROPERTY);
@@ -1415,7 +1426,7 @@ public final class CheckExplicitTest {
         constants.put("N2", "10");
         constants.put("T", "0.002");
         constants.put("i", "0");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(MC_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, MC_MODEL, MC_PROPERTY);
@@ -1435,7 +1446,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Mutual_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 3), MUTUAL_PROPERTY);
@@ -1450,7 +1461,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Mutual_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 4), MUTUAL_PROPERTY);
@@ -1465,7 +1476,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Mutual_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 5), MUTUAL_PROPERTY);
@@ -1482,7 +1493,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Mutual_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 8), MUTUAL_PROPERTY);
@@ -1499,7 +1510,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Mutual_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(MUTUAL_MODEL, 10), MUTUAL_PROPERTY);
@@ -1515,7 +1526,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 4), PEER2PEER_PROPERTY);
@@ -1529,7 +1540,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_4_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 5), PEER2PEER_PROPERTY);
@@ -1545,7 +1556,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 6), PEER2PEER_PROPERTY);
@@ -1561,7 +1572,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_4_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 7), PEER2PEER_PROPERTY);
@@ -1577,7 +1588,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_4_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 4, 8), PEER2PEER_PROPERTY);
@@ -1591,7 +1602,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_5_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 4), PEER2PEER_PROPERTY);
@@ -1607,7 +1618,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_5_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 5), PEER2PEER_PROPERTY);
@@ -1623,7 +1634,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_5_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 6), PEER2PEER_PROPERTY);
@@ -1639,7 +1650,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_5_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 7), PEER2PEER_PROPERTY);
@@ -1655,7 +1666,7 @@ public final class CheckExplicitTest {
     public void testPRISM_P2P_5_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PEER2PEER_MODEL, 5, 8), PEER2PEER_PROPERTY);
@@ -1668,7 +1679,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 3), PHIL_PROPERTY);
@@ -1680,7 +1691,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 4), PHIL_PROPERTY);
@@ -1692,7 +1703,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 5), PHIL_PROPERTY);
@@ -1704,7 +1715,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 6), PHIL_PROPERTY);
@@ -1718,7 +1729,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 7), PHIL_PROPERTY);
@@ -1732,7 +1743,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 8), PHIL_PROPERTY);
@@ -1746,7 +1757,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 9), PHIL_PROPERTY);
@@ -1774,7 +1785,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 15), PHIL_PROPERTY);
@@ -1788,7 +1799,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_20() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 20));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 20), PHIL_PROPERTY);
@@ -1802,7 +1813,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_25() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 25));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 25), PHIL_PROPERTY);
@@ -1816,7 +1827,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISM_Phil_30() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 30));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_MODEL, 30), PHIL_PROPERTY);
@@ -1829,7 +1840,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 3), PHIL_NOFAIR_PROPERTY);
@@ -1844,7 +1855,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 4), PHIL_NOFAIR_PROPERTY);
@@ -1859,7 +1870,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 5), PHIL_NOFAIR_PROPERTY);
@@ -1876,7 +1887,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 6), PHIL_NOFAIR_PROPERTY);
@@ -1893,7 +1904,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 7), PHIL_NOFAIR_PROPERTY);
@@ -1910,7 +1921,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 8), PHIL_NOFAIR_PROPERTY);
@@ -1927,7 +1938,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 9), PHIL_NOFAIR_PROPERTY);
@@ -1944,7 +1955,7 @@ public final class CheckExplicitTest {
     public void testPRISM_PhilNofair_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_NOFAIR_MODEL, 10), PHIL_NOFAIR_PROPERTY);
@@ -1960,7 +1971,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "3");
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_LSS_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_LSS_MODEL, 3), String.format(PHIL_LSS_PROPERTY, 3));
@@ -1976,7 +1987,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "3");
         constants.put("L", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_LSS_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(PHIL_LSS_MODEL, 4), String.format(PHIL_LSS_PROPERTY, 4));
@@ -1993,7 +2004,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 2), POLLING_PROPERTY);
@@ -2014,7 +2025,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 3), POLLING_PROPERTY);
@@ -2035,7 +2046,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 4), POLLING_PROPERTY);
@@ -2056,7 +2067,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 5), POLLING_PROPERTY);
@@ -2077,7 +2088,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 6), POLLING_PROPERTY);
@@ -2098,7 +2109,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 7), POLLING_PROPERTY);
@@ -2119,7 +2130,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 8), POLLING_PROPERTY);
@@ -2140,7 +2151,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 9), POLLING_PROPERTY);
@@ -2161,7 +2172,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 10), POLLING_PROPERTY);
@@ -2182,7 +2193,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 11), POLLING_PROPERTY);
@@ -2203,7 +2214,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_12() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 12));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 12), POLLING_PROPERTY);
@@ -2224,7 +2235,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_13() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 13));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 13), POLLING_PROPERTY);
@@ -2245,7 +2256,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_14() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 14));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 14), POLLING_PROPERTY);
@@ -2266,7 +2277,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 15), POLLING_PROPERTY);
@@ -2287,7 +2298,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_16() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 16));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 16), POLLING_PROPERTY);
@@ -2308,7 +2319,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_17() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 17));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 17), POLLING_PROPERTY);
@@ -2329,7 +2340,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_18() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 18));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 18), POLLING_PROPERTY);
@@ -2350,7 +2361,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_19() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 19));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 19), POLLING_PROPERTY);
@@ -2371,7 +2382,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Polling_20() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 20));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(POLLING_MODEL, 20), POLLING_PROPERTY);
@@ -2390,7 +2401,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 3), RABIN_PROPERTY);
@@ -2406,7 +2417,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 4), RABIN_PROPERTY);
@@ -2424,7 +2435,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 5), RABIN_PROPERTY);
@@ -2442,7 +2453,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 6), RABIN_PROPERTY);
@@ -2460,7 +2471,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 7), RABIN_PROPERTY);
@@ -2478,7 +2489,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 8), RABIN_PROPERTY);
@@ -2496,7 +2507,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 9), RABIN_PROPERTY);
@@ -2514,7 +2525,7 @@ public final class CheckExplicitTest {
     public void testPRISM_Rabin_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(RABIN_MODEL, 10), RABIN_PROPERTY);
@@ -2531,7 +2542,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 3), BEAUQUIER_PROPERTY);
@@ -2549,7 +2560,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 5), BEAUQUIER_PROPERTY);
@@ -2567,7 +2578,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 7), BEAUQUIER_PROPERTY);
@@ -2585,7 +2596,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 9), BEAUQUIER_PROPERTY);
@@ -2605,7 +2616,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(BEAUQUIER_MODEL, 11), BEAUQUIER_PROPERTY);
@@ -2623,7 +2634,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 3), HERMAN_PROPERTY);
@@ -2641,7 +2652,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 5), HERMAN_PROPERTY);
@@ -2659,7 +2670,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 7), HERMAN_PROPERTY);
@@ -2677,7 +2688,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 9), HERMAN_PROPERTY);
@@ -2695,7 +2706,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 11), HERMAN_PROPERTY);
@@ -2715,7 +2726,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 13));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 13), HERMAN_PROPERTY);
@@ -2735,7 +2746,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 15), HERMAN_PROPERTY);
@@ -2755,7 +2766,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 17));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 17), HERMAN_PROPERTY);
@@ -2775,7 +2786,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 19));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 19), HERMAN_PROPERTY);
@@ -2795,7 +2806,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 21));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(HERMAN_MODEL, 21), HERMAN_PROPERTY);
@@ -2813,7 +2824,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 3), IJ_PROPERTY);
@@ -2831,7 +2842,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 4), IJ_PROPERTY);
@@ -2849,7 +2860,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 5), IJ_PROPERTY);
@@ -2867,7 +2878,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 6), IJ_PROPERTY);
@@ -2885,7 +2896,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 7), IJ_PROPERTY);
@@ -2903,7 +2914,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 8), IJ_PROPERTY);
@@ -2921,7 +2932,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 9), IJ_PROPERTY);
@@ -2939,7 +2950,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 10), IJ_PROPERTY);
@@ -2957,7 +2968,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 11), IJ_PROPERTY);
@@ -2975,7 +2986,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 12));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 12), IJ_PROPERTY);
@@ -2993,7 +3004,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 13));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 13), IJ_PROPERTY);
@@ -3011,7 +3022,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 14));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 14), IJ_PROPERTY);
@@ -3029,7 +3040,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 15), IJ_PROPERTY);
@@ -3047,7 +3058,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 16));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 16), IJ_PROPERTY);
@@ -3065,7 +3076,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 17));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 17), IJ_PROPERTY);
@@ -3085,7 +3096,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 18));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 18), IJ_PROPERTY);
@@ -3105,7 +3116,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 19));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 19), IJ_PROPERTY);
@@ -3125,7 +3136,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 20));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 20), IJ_PROPERTY);
@@ -3145,7 +3156,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 21));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(IJ_MODEL, 21), IJ_PROPERTY);
@@ -3165,7 +3176,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("c", "10");
         constants.put("T", "1");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(TANDEM_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, TANDEM_MODEL, TANDEM_PROPERTY);
@@ -3183,7 +3194,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 0));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 0), WLAN_PROPERTY);
@@ -3205,7 +3216,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 1));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 1), WLAN_PROPERTY);
@@ -3227,7 +3238,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 2), WLAN_PROPERTY);
@@ -3249,7 +3260,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 3), WLAN_PROPERTY);
@@ -3271,7 +3282,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 4), WLAN_PROPERTY);
@@ -3293,7 +3304,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 5), WLAN_PROPERTY);
@@ -3317,7 +3328,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_MODEL, 6), WLAN_PROPERTY);
@@ -3340,7 +3351,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 0));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 0), WLAN_COLLIDE_PROPERTY);
@@ -3355,7 +3366,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 1));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 1), WLAN_COLLIDE_PROPERTY);
@@ -3370,7 +3381,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 2), WLAN_COLLIDE_PROPERTY);
@@ -3385,7 +3396,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 3), WLAN_COLLIDE_PROPERTY);
@@ -3400,7 +3411,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 4), WLAN_COLLIDE_PROPERTY);
@@ -3415,7 +3426,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 5), WLAN_COLLIDE_PROPERTY);
@@ -3430,7 +3441,7 @@ public final class CheckExplicitTest {
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_COLLIDE_MODEL, 6), WLAN_COLLIDE_PROPERTY);
@@ -3444,7 +3455,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 0));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 0), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3460,7 +3471,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 1));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 1), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3476,7 +3487,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 2), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3492,7 +3503,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 3), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3508,7 +3519,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 4), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3526,7 +3537,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 5), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3544,7 +3555,7 @@ public final class CheckExplicitTest {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, String.format(WLAN_TIME_BOUNDED_MODEL, 6), WLAN_TIME_BOUNDED_PROPERTY);
@@ -3562,7 +3573,7 @@ public final class CheckExplicitTest {
         constants.put("K", "4");
         constants.put("reset", "true");
         constants.put("N", "1000");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(ZEROCONF_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, ZEROCONF_MODEL, ZEROCONF_PROPERTY);
@@ -3582,7 +3593,7 @@ public final class CheckExplicitTest {
         constants.put("bound", "10");
         constants.put("reset", "true");
         constants.put("N", "1000");
-        Options options = preparePRISMOptions();
+        Options options = preparePRISMOptions(ZEROCONF_TIME_BOUNDED_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
         model = loadModel(options, ZEROCONF_TIME_BOUNDED_MODEL, ZEROCONF_TIME_BOUNDED_PROPERTY);

@@ -3244,7 +3244,7 @@ public final class CheckExplicitTest {
         assertEquals("223934.2428000538", result.get("Property_16"), 2.0E-7);
     }
 
-    //too slow
+    //Fails with 8G of memory
     @Ignore
     @Test
     public void testPRISMExportedWLAN_6() {

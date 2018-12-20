@@ -34,8 +34,17 @@ public enum OptionsJANIExporter {
     JANI_EXPORTER_JANI_FILE_NAME,
     /** Name of the generated JANI model. */
     JANI_EXPORTER_JANI_MODEL_NAME,
+    /** Whether to overwrite an existing output JANI file. */
+    JANI_EXPORTER_OVERWRITE_JANI_FILE,
     /** Whether to print out messages during the export. */
     JANI_EXPORTER_PRINT_MESSAGES,
     /** Prefix for reward structure names. */
-    JANI_EXPORTER_REWARD_NAME_PREFIX;
+    JANI_EXPORTER_REWARD_NAME_PREFIX,
+    /** Whether to use the new exporter. */
+    JANI_EXPORTER_USE_NEW_EXPORTER,
+    /** Whether to use derived operators instead of only native JANI operators. */ 
+    JANI_EXPORTER_USE_DERIVED_OPERATORS,
+    /** Whether to generate the synchronisation information for the silent action. */
+    JANI_EXPORTER_SYNCHRONISE_SILENT
+    ;
 }

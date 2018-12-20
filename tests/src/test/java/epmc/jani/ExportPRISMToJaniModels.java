@@ -20,8 +20,102 @@
 
 package epmc.jani;
 
-import static epmc.ModelNamesPRISM.*;
-import static epmc.jani.ModelNames.*;
+import static epmc.ModelNamesPRISM.BEAUQUIER_MODEL;
+import static epmc.ModelNamesPRISM.BEAUQUIER_PROPERTY;
+import static epmc.ModelNamesPRISM.BRP_MODEL;
+import static epmc.ModelNamesPRISM.BRP_PROPERTY;
+import static epmc.ModelNamesPRISM.BYZANTINE_MODEL;
+import static epmc.ModelNamesPRISM.CC_EDF_MODEL;
+import static epmc.ModelNamesPRISM.CELL_MODEL;
+import static epmc.ModelNamesPRISM.CELL_PROPERTY;
+import static epmc.ModelNamesPRISM.CIRCADIAN_MODEL;
+import static epmc.ModelNamesPRISM.CLUSTER_MODEL;
+import static epmc.ModelNamesPRISM.CLUSTER_PROPERTY;
+import static epmc.ModelNamesPRISM.COIN_MODEL;
+import static epmc.ModelNamesPRISM.COIN_PROPERTY;
+import static epmc.ModelNamesPRISM.CONTRACT_BMGR_MODEL;
+import static epmc.ModelNamesPRISM.CROWDS_MODEL;
+import static epmc.ModelNamesPRISM.CSMA_MODEL;
+import static epmc.ModelNamesPRISM.CSMA_PROPERTY;
+import static epmc.ModelNamesPRISM.CYCLIN_MODEL;
+import static epmc.ModelNamesPRISM.DICE_MODEL;
+import static epmc.ModelNamesPRISM.DICE_PROPERTY;
+import static epmc.ModelNamesPRISM.DINING_CRYPT_MODEL;
+import static epmc.ModelNamesPRISM.DINING_CRYPT_PROPERTY;
+import static epmc.ModelNamesPRISM.FAIR_EXCHANGE_MODEL;
+import static epmc.ModelNamesPRISM.FGF_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_ABST_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_ABST_PROPERTY;
+import static epmc.ModelNamesPRISM.FIREWIRE_IMPL_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_IMPL_PROPERTY;
+import static epmc.ModelNamesPRISM.FMS_MODEL;
+import static epmc.ModelNamesPRISM.FMS_PROPERTY;
+import static epmc.ModelNamesPRISM.GOSSIP_MODEL;
+import static epmc.ModelNamesPRISM.GRAPH_MODEL;
+import static epmc.ModelNamesPRISM.HERMAN_MODEL;
+import static epmc.ModelNamesPRISM.HERMAN_PROPERTY;
+import static epmc.ModelNamesPRISM.IJ_MODEL;
+import static epmc.ModelNamesPRISM.IJ_PROPERTY;
+import static epmc.ModelNamesPRISM.INVESTOR_MODEL;
+import static epmc.ModelNamesPRISM.KAMINSKY_MODEL;
+import static epmc.ModelNamesPRISM.KANBAN_MODEL;
+import static epmc.ModelNamesPRISM.KANBAN_PROPERTY;
+import static epmc.ModelNamesPRISM.KNACL_MODEL;
+import static epmc.ModelNamesPRISM.KNACL_PROPERTY;
+import static epmc.ModelNamesPRISM.LEADER_ASYNC_MODEL;
+import static epmc.ModelNamesPRISM.LEADER_ASYNC_PROPERTY;
+import static epmc.ModelNamesPRISM.LEADER_SYNC_MODEL;
+import static epmc.ModelNamesPRISM.LEADER_SYNC_PROPERTY;
+import static epmc.ModelNamesPRISM.MAPK_CASCADE_MODEL;
+import static epmc.ModelNamesPRISM.MC_MODEL;
+import static epmc.ModelNamesPRISM.MC_PROPERTY;
+import static epmc.ModelNamesPRISM.MDPTT_MODEL;
+import static epmc.ModelNamesPRISM.MUTUAL_MODEL;
+import static epmc.ModelNamesPRISM.MUTUAL_PROPERTY;
+import static epmc.ModelNamesPRISM.NACL_MODEL;
+import static epmc.ModelNamesPRISM.NACL_PROPERTY;
+import static epmc.ModelNamesPRISM.NAND_MODEL;
+import static epmc.ModelNamesPRISM.NEGOTIATION_MODEL;
+import static epmc.ModelNamesPRISM.OPTIMAL_TWO_DICE_MODEL;
+import static epmc.ModelNamesPRISM.PEER2PEER_MODEL;
+import static epmc.ModelNamesPRISM.PEER2PEER_PROPERTY;
+import static epmc.ModelNamesPRISM.PHIL_LSS_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_LSS_PROPERTY;
+import static epmc.ModelNamesPRISM.PHIL_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_NOFAIR_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_NOFAIR_PROPERTY;
+import static epmc.ModelNamesPRISM.PHIL_PROPERTY;
+import static epmc.ModelNamesPRISM.PINCRACKING_MODEL;
+import static epmc.ModelNamesPRISM.POLLING_MODEL;
+import static epmc.ModelNamesPRISM.POLLING_PROPERTY;
+import static epmc.ModelNamesPRISM.RABIN_CHOICE_MODEL;
+import static epmc.ModelNamesPRISM.RABIN_MODEL;
+import static epmc.ModelNamesPRISM.RABIN_PROPERTY;
+import static epmc.ModelNamesPRISM.ROBOT_MODEL;
+import static epmc.ModelNamesPRISM.STABLE_MATCHING_MODEL;
+import static epmc.ModelNamesPRISM.STATIC_EDF_MODEL;
+import static epmc.ModelNamesPRISM.TANDEM_MODEL;
+import static epmc.ModelNamesPRISM.TANDEM_PROPERTY;
+import static epmc.ModelNamesPRISM.TEST_AND_SET_MODEL;
+import static epmc.ModelNamesPRISM.THINKTEAM_RETRIAL_MODEL;
+import static epmc.ModelNamesPRISM.TWO_DICE_MODEL;
+import static epmc.ModelNamesPRISM.TWO_DICE_PROPERTY;
+import static epmc.ModelNamesPRISM.UAV_MDP_MODEL;
+import static epmc.ModelNamesPRISM.VIRUS_MODEL;
+import static epmc.ModelNamesPRISM.WALKERS_RING_LL_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_COLLIDE_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_COLLIDE_PROPERTY;
+import static epmc.ModelNamesPRISM.WLAN_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_PROPERTY;
+import static epmc.ModelNamesPRISM.WLAN_TIME_BOUNDED_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_TIME_BOUNDED_PROPERTY;
+import static epmc.ModelNamesPRISM.ZEROCONF_MODEL;
+import static epmc.ModelNamesPRISM.ZEROCONF_PROPERTY;
+import static epmc.ModelNamesPRISM.ZEROCONF_TIME_BOUNDED_MODEL;
+import static epmc.ModelNamesPRISM.ZEROCONF_TIME_BOUNDED_PROPERTY;
+import static epmc.jani.ModelNames.JANI_EXPORT_DIR;
+import static epmc.jani.ModelNames.JANI_EXTENSION;
+import static epmc.jani.ModelNames.getJANIFilenameFromPRISMFilename;
 import static epmc.modelchecker.TestHelper.prepare;
 
 import java.io.File;
@@ -33,6 +127,8 @@ import javax.json.JsonValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import epmc.jani.exporter.options.OptionsJANIExporter;
+import epmc.jani.exporter.processor.ProcessorRegistrar;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
 import epmc.modelchecker.TestHelper;
@@ -50,12 +146,14 @@ public final class ExportPRISMToJaniModels {
 
     @Test
     public void convertTest() {
-        export(System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop", System.getProperty("user.home") + "/test.jani");
+        export(System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.props", System.getProperty("user.home") + "/test.jani");
     }
 
     @Test
     public void convertSingle() {
-        export(String.format(COIN_MODEL, 2), COIN_PROPERTY);
+//        export(CELL_MODEL, CELL_PROPERTY);
+//        export(String.format(PEER2PEER_MODEL, 4, 4), PEER2PEER_PROPERTY);
+        export(String.format(WLAN_MODEL, 0), WLAN_PROPERTY);
     }
 
     @Test
@@ -215,6 +313,7 @@ public final class ExportPRISMToJaniModels {
         System.out.println("Loading");
         Options options = ConvertTestConfiguration.prepareJANIOptions(null);
         options.set("prism-flatten", false);
+        options.set(OptionsJANIExporter.JANI_EXPORTER_SYNCHRONISE_SILENT, false);
         ModelJANIConverter prism;
         if (propertyFilename == null) {
             prism = (ModelJANIConverter) TestHelper.loadModel(options, prismFilename);
@@ -225,7 +324,14 @@ public final class ExportPRISMToJaniModels {
         ModelJANI jani = prism.toJANI(true);
         jani.setName(modelName);
         System.out.println("Generating JSON");
-        JsonValue json = jani.generate();
+        JsonValue json = null;
+        if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER)) {
+            ProcessorRegistrar.setModel(jani);
+            json = ProcessorRegistrar.getProcessor(jani)
+                    .toJSON();
+        } else {
+            json = jani.generate();
+        }
         System.out.println("Writing " + janiFilename);
         try (PrintWriter out = new PrintWriter(janiFilename)) {
             out.println(UtilJSON.prettyString(json));

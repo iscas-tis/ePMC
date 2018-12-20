@@ -146,7 +146,7 @@ public final class PRISM2JANIConverter {
     /** Empty string. */
     final static String EMPTY = "";
     /** Name of silent identifier. */
-    private final static String TAU = "τ";
+    private final static String TAU = ""; //"τ";
     /** JANI version to which the converter converts. */
     private final static int JANI_VERSION = 1;
     /** Initial states identifier name. */
