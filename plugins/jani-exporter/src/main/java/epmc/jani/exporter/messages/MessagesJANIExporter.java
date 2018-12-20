@@ -34,6 +34,9 @@ public final class MessagesJANIExporter {
     public static final String MESSAGES_JANI_EXPORTER = "MessagesJANIExporter";
     public static final Message JANI_EXPORTER_MISSING_JANI_FILENAME = newMessage().setIdentifier("jani-exporter-missing-jani-filename").build();
     public static final Message JANI_EXPORTER_UNWRITEABLE_JANI_FILE = newMessage().setIdentifier("jani-exporter-unwriteable-jani-file").build();
+    public static final Message JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_ABORT = newMessage().setIdentifier("jani-exporter-already-existing-jani-file-abort").build();
+    public static final Message JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_HELP = newMessage().setIdentifier("jani-exporter-already-existing-jani-file-help").build();
+    public static final Message JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_OVERWRITE = newMessage().setIdentifier("jani-exporter-already-existing-jani-file-overwrite").build();
     public static final Message JANI_EXPORTER_JANI_MODEL_CREATION = newMessage().setIdentifier("jani-exporter-jani-model-creation").build();
     public static final Message JANI_EXPORTER_JANI_MODEL_CREATION_DONE = newMessage().setIdentifier("jani-exporter-jani-model-creation-done").build();
     public static final Message JANI_EXPORTER_JANI_FILE_CREATION = newMessage().setIdentifier("jani-exporter-jani-file-creation").build();

@@ -83,6 +83,15 @@ public final class AfterOptionsCreationJANIExporter implements AfterOptionsCreat
 
         options.addOption()
             .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
+            .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_OVERWRITE_JANI_FILE)
+            .setType(typeBoolean)
+            .setDefault(false)
+            .setCommandLine()
+            .setCategory(category)
+            .build();
+
+        options.addOption()
+            .setBundleName(OptionsJANIExporter.OPTIONS_JANI_EXPORTER)
             .setIdentifier(OptionsJANIExporter.JANI_EXPORTER_JANI_MODEL_NAME)
             .setType(typeString)
             .setCommandLine()

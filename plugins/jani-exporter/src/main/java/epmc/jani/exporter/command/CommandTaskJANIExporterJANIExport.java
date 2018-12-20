@@ -106,8 +106,19 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                 log.send(MessagesJANIExporter.JANI_EXPORTER_MISSING_JANI_FILENAME, janiFilename, modelFilename);
             }
             File janiFile = new File(janiFilename); 
-            if (janiFile.exists() && !janiFile.canWrite()) {
-                log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITEABLE_JANI_FILE, janiFilename, modelFilename);
+            if (janiFile.exists()) { 
+                if (!janiFile.canWrite()) {
+                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITEABLE_JANI_FILE, janiFilename, modelFilename);
+                    return;
+                } else {
+                    if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_OVERWRITE_JANI_FILE)) {
+                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_OVERWRITE, janiFilename, modelFilename);
+                    } else {
+                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_ABORT, janiFilename, modelFilename);
+                        log.send(MessagesJANIExporter.JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_HELP, Options.get().getString(OptionsJANIExporter.JANI_EXPORTER_OVERWRITE_JANI_FILE));
+                        return;
+                    }
+                }
             }
 
             if (modelChecker.getModel() instanceof ModelJANIConverter) {
