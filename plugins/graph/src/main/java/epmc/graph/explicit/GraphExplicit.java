@@ -64,16 +64,17 @@ public interface GraphExplicit extends LowLevel {
     int getNumSuccessors(int node);
 
     /**
-     * Get the successor node with the given number.
-     * The method must not be called before {@link #queryNode(int)} has been
-     * called. The successor parameter must be nonnegative and strictly smaller
-     * than the value of a call to {@link #getNumSuccessors()} after the latest
-     * call to {@link #queryNode(int)}.
+     * Get the successor node with the given number. The method must not be
+     * called before {@link #queryNode(int)} has been called. The successor
+     * parameter must be nonnegative and strictly smaller than the value of a
+     * call to {@link #getNumSuccessors()} after the latest call to
+     * {@link #queryNode(int)}.
      * 
-     * @param successor successor number
+     * @param successor
+     *            successor number
      * @return successor with the given number of the queried node
      */
-    int getSuccessorNode(int node, int successor);    
+    int getSuccessorNode(int node, int successor);
 
     /**
      * Get the properties of this graph.
@@ -81,7 +82,6 @@ public interface GraphExplicit extends LowLevel {
      * @return properties of this graph
      */
     GraphExplicitProperties getProperties();
-
 
     // default fail / convenience
 
@@ -117,8 +117,7 @@ public interface GraphExplicit extends LowLevel {
         return getProperties().getNodeProperties();
     }
 
-    default void registerEdgeProperty(Object propertyName,
-            EdgeProperty property) {
+    default void registerEdgeProperty(Object propertyName, EdgeProperty property) {
         getProperties().registerEdgeProperty(propertyName, property);
     }
 
@@ -150,9 +149,7 @@ public interface GraphExplicit extends LowLevel {
         return getProperties().getGraphProperty(property);
     }
 
-
-    default Value addSettableGraphProperty(Object property, Type type)
-    {
+    default Value addSettableGraphProperty(Object property, Type type) {
         assert false;
         return null;
     }
@@ -171,8 +168,7 @@ public interface GraphExplicit extends LowLevel {
         assert false;
     }
 
-    default void prepareNode(int node, int numSuccessors)
-    {
+    default void prepareNode(int node, int numSuccessors) {
         assert false;
     }
 
@@ -219,8 +215,7 @@ public interface GraphExplicit extends LowLevel {
         return ValueEnum.as(getGraphProperty(property)).getEnum();
     }
 
-    default boolean getGraphPropertyBoolean(Object property)
-    {
+    default boolean getGraphPropertyBoolean(Object property) {
         assert property != null;
         return ValueBoolean.as(getGraphProperty(property)).getBoolean();
     }
@@ -245,21 +240,19 @@ public interface GraphExplicit extends LowLevel {
         return getEdgeProperty(property).getType();
     }
 
-    default void registerGraphProperty(Object propertyName, Value value)
-    {
+    default void registerGraphProperty(Object propertyName, Value value) {
         assert propertyName != null;
         assert value != null;
         registerGraphProperty(propertyName, value.getType());
         setGraphProperty(propertyName, value);
     }
 
-    default void registerGraphProperty(Object propertyName, Type type,
-            Object object) {
+    default void registerGraphProperty(Object propertyName, Type type, Object object) {
         registerGraphProperty(propertyName, type);
         setGraphProperty(propertyName, object);
     }
 
-    default void explore()  {
+    default void explore() {
         explore(getInitialNodes());
     }
 
@@ -269,12 +262,12 @@ public interface GraphExplicit extends LowLevel {
     }
 
     /**
-     * Get the successor number of the given successor state.
-     * The node parameter must be a node which is a successor of the currently
-     * queried state. The method will then return the successor number of this
-     * node.
+     * Get the successor number of the given successor state. The node parameter
+     * must be a node which is a successor of the currently queried state. The
+     * method will then return the successor number of this node.
      * 
-     * @param node a successor node of the currently queried node
+     * @param node
+     *            a successor node of the currently queried node
      * @return successor number of this node
      */
     default int getSuccessorNumber(int fromNode, int toNode) {
