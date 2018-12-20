@@ -29,7 +29,7 @@ public final class TypeObject implements TypeNumBitsKnown {
         return type instanceof TypeObject;
     }
 
-    public TypeObject as(Type type) {
+    public static TypeObject as(Type type) {
         if (type instanceof TypeObject) {
             return (TypeObject) type;
         } else {
