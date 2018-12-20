@@ -38,6 +38,8 @@ public enum OptionsJANIExporter {
     JANI_EXPORTER_PRINT_MESSAGES,
     /** Prefix for reward structure names. */
     JANI_EXPORTER_REWARD_NAME_PREFIX,
+    /** Whether to use the new exporter. */
+    JANI_EXPORTER_USE_NEW_EXPORTER,
     /** Whether to use derived operators instead of only native JANI operators. */ 
     JANI_EXPORTER_USE_DERIVED_OPERATORS,
     /** Whether to generate the synchronisation information for the silent action. */

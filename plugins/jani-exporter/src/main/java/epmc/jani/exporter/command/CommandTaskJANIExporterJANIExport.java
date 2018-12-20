@@ -29,6 +29,8 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+import javax.json.JsonValue;
+
 import epmc.error.EPMCException;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.exporter.messages.MessagesJANIExporter;
@@ -115,10 +117,16 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                 jani.setName(modelName);
                 log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_MODEL_CREATION_DONE, modelName);
                 log.send(MessagesJANIExporter.JANI_EXPORTER_JANI_FILE_CREATION, janiFilename);
-                ProcessorRegistrar.setModel(jani);
+                JsonValue jsonContent = null;
+                if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER)) {
+                    ProcessorRegistrar.setModel(jani);
+                    jsonContent = ProcessorRegistrar.getProcessor(jani)
+                            .toJSON();
+                } else {
+                    jsonContent = jani.generate();
+                }
                 try (PrintWriter out = new PrintWriter(janiFile, StandardCharsets.UTF_8.name())) {
-                    out.println(UtilJSON.prettyString(ProcessorRegistrar.getProcessor(jani)
-                            .toJSON()));
+                    out.println(UtilJSON.prettyString(jsonContent));
                 } catch (FileNotFoundException e) {
                     throw new RuntimeException(e);
                 } catch (UnsupportedEncodingException e) {
