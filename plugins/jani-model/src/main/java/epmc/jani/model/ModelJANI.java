@@ -280,7 +280,7 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         metadata = UtilModelParser.parseOptional(this, Metadata.class, object, METADATA);
         actions = UtilModelParser.parseOptional(this, Actions.class, object, ACTIONS);
         // the silent action is always available
-        actions.addAction(silentAction);
+//        actions.addAction(silentAction);
 
         modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS);
         constants = computeConstants();
