@@ -92,7 +92,7 @@ import epmc.value.Value;
  * @author Ernst Moritz Hahn
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class CheckExplicitTest {
+public final class CheckExplicitTestReduced {
     /** Location of plugin directory in file system. */
     //    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
@@ -131,7 +131,7 @@ public final class CheckExplicitTest {
     @Test
     public void testPRISMExportedTest() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        constants.put("p", "0.5");
+//        constants.put("p", "0.5");
         Options options = prepareJANIOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
@@ -253,6 +253,7 @@ public final class CheckExplicitTest {
         assertEquals("74.999999973388130", result.get("Property_14"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedCoin_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -365,6 +366,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Property_18"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedCSMA_2_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -387,6 +389,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Property_18"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedCSMA_2_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -409,6 +412,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Property_18"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedCSMA_3_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -479,6 +483,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0000000000000000", result.get("Property_18"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedCSMA_4_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -595,6 +600,7 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("Property_1"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedDiningCrypt_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -609,6 +615,7 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("Property_1"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedDiningCrypt_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -623,6 +630,7 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("Property_1"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedDiningCrypt_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -637,6 +645,7 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("Property_1"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedDiningCrypt_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -651,6 +660,7 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("Property_1"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedDiningCrypt_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -727,6 +737,7 @@ public final class CheckExplicitTest {
         assertEquals(true, result.get("Property_0"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedFireweireImpl() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -797,6 +808,7 @@ public final class CheckExplicitTest {
         assertEquals("3.3333333290839740", result.get("Property_8"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderAsync_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -815,6 +827,7 @@ public final class CheckExplicitTest {
         assertEquals("4.2857142809989710", result.get("Property_8"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderAsync_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -833,6 +846,7 @@ public final class CheckExplicitTest {
         assertEquals("5.0349206294145750", result.get("Property_8"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderAsync_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -946,6 +960,7 @@ public final class CheckExplicitTest {
         assertEquals("1.3333333330228925", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_3_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -961,6 +976,7 @@ public final class CheckExplicitTest {
         assertEquals("1.1249999999641502", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_3_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -976,6 +992,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0666666666511446", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_3_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -991,6 +1008,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0416666666598398", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_3_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1006,6 +1024,7 @@ public final class CheckExplicitTest {
         assertEquals("1.028571428558303", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_3_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1021,6 +1040,7 @@ public final class CheckExplicitTest {
         assertEquals("1.015873015858233", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_4_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1036,6 +1056,7 @@ public final class CheckExplicitTest {
         assertEquals("1.9999999990686774", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_4_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1051,6 +1072,7 @@ public final class CheckExplicitTest {
         assertEquals("1.3499999998541794", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1066,6 +1088,7 @@ public final class CheckExplicitTest {
         assertEquals("1.1851851851459685", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_4_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1081,6 +1104,7 @@ public final class CheckExplicitTest {
         assertEquals("1.116071428554253", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1096,6 +1120,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0799999999274945", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_4_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1111,6 +1136,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0448979591715250", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_5_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1126,6 +1152,7 @@ public final class CheckExplicitTest {
         assertEquals("3.1999999983029497", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_5_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1141,6 +1168,7 @@ public final class CheckExplicitTest {
         assertEquals("1.3499999998541794", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_5_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1156,6 +1184,7 @@ public final class CheckExplicitTest {
         assertEquals("1.1377777776843780", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_5_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1171,6 +1200,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0702054794279550", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_5_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1186,6 +1216,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0409638554156673", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_5_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1201,6 +1232,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0176397515523004", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_6_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1216,6 +1248,7 @@ public final class CheckExplicitTest {
         assertEquals("5.3333333291726870", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_6_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1231,6 +1264,7 @@ public final class CheckExplicitTest {
         assertEquals("1.4999999995698403", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_6_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1246,6 +1280,7 @@ public final class CheckExplicitTest {
         assertEquals("1.1934731934093925", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_6_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1261,6 +1296,7 @@ public final class CheckExplicitTest {
         assertEquals("1.0988045006652094", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedLeaderSync_6_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1378,6 +1414,7 @@ public final class CheckExplicitTest {
         assertEquals(false, result.get("Property_3"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedMutual_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1393,6 +1430,7 @@ public final class CheckExplicitTest {
         assertEquals(false, result.get("Property_3"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedMutual_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1456,6 +1494,7 @@ public final class CheckExplicitTest {
         assertEquals("0.997522509145874", result.get("Property_2"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedP2P_4_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1518,6 +1557,7 @@ public final class CheckExplicitTest {
         assertEquals("", result.get("Property_2"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedP2P_5_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1608,6 +1648,7 @@ public final class CheckExplicitTest {
         assertEquals(false, result.get("Property_0"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedPhil_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1620,6 +1661,7 @@ public final class CheckExplicitTest {
         assertEquals(false, result.get("Property_0"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedPhil_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1632,6 +1674,7 @@ public final class CheckExplicitTest {
         assertEquals(false, result.get("Property_0"));
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedPhil_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1771,6 +1814,7 @@ public final class CheckExplicitTest {
         assertEquals("50.99999997907168", result.get("Property_2"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedPhilNofair_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1786,6 +1830,7 @@ public final class CheckExplicitTest {
         assertEquals("88.99999997307707", result.get("Property_2"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedPhilNofair_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -1902,6 +1947,7 @@ public final class CheckExplicitTest {
         assertEquals("23.33333333081100", result.get("Property_2"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedPhilLSS_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2333,6 +2379,7 @@ public final class CheckExplicitTest {
         assertEquals("0.030273437500000", result.get("Property_3"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedRabin_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2475,6 +2522,7 @@ public final class CheckExplicitTest {
         assertEquals("0.500000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedBeauquier_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2493,6 +2541,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedBeauquier_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2511,6 +2560,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedBeauquier_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2566,6 +2616,7 @@ public final class CheckExplicitTest {
         assertEquals("0.750000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedHerman_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2584,6 +2635,7 @@ public final class CheckExplicitTest {
         assertEquals("0.250000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedHerman_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2602,6 +2654,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedHerman_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2620,6 +2673,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedHerman_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2756,6 +2810,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2774,6 +2829,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2792,6 +2848,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2810,6 +2867,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2828,6 +2886,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2846,6 +2905,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2864,6 +2924,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2882,6 +2943,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2900,6 +2962,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_12() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2918,6 +2981,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_13() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2936,6 +3000,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_14() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2954,6 +3019,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -2992,6 +3058,7 @@ public final class CheckExplicitTest {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedIJ_17() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3132,6 +3199,7 @@ public final class CheckExplicitTest {
         assertEquals("25893.14159291617", result.get("Property_16"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_1() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3154,6 +3222,7 @@ public final class CheckExplicitTest {
         assertEquals("224850.5432588780", result.get("Property_16"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3176,6 +3245,7 @@ public final class CheckExplicitTest {
         assertEquals("223953.0307549974", result.get("Property_16"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3198,6 +3268,7 @@ public final class CheckExplicitTest {
         assertEquals("223934.4084838491", result.get("Property_16"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLAN_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3284,6 +3355,7 @@ public final class CheckExplicitTest {
         assertEquals("0.183593750000000", result.get("Property_1"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANCollide_1() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3300,6 +3372,7 @@ public final class CheckExplicitTest {
         assertEquals("0.183593750000000", result.get("Property_1"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANCollide_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3316,6 +3389,7 @@ public final class CheckExplicitTest {
         assertEquals("0.183593750000000", result.get("Property_1"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANCollide_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3332,6 +3406,7 @@ public final class CheckExplicitTest {
         assertEquals("0.183593750000000", result.get("Property_1"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANCollide_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3348,6 +3423,7 @@ public final class CheckExplicitTest {
         assertEquals("0.183593750000000", result.get("Property_1"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANCollide_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3364,6 +3440,7 @@ public final class CheckExplicitTest {
         assertEquals("0.183593750000000", result.get("Property_1"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANCollide_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3399,6 +3476,7 @@ public final class CheckExplicitTest {
         assertEquals("0.9363574981689453", result.get("Property_5"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANTimeBounded_1() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3418,6 +3496,7 @@ public final class CheckExplicitTest {
         assertEquals("0.9004454463720322", result.get("Property_5"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANTimeBounded_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
@@ -3437,6 +3516,7 @@ public final class CheckExplicitTest {
         assertEquals("0.9002140127122402", result.get("Property_5"), 2.0E-7);
     }
 
+    @Ignore
     @Test
     public void testPRISMExportedWLANTimeBounded_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
