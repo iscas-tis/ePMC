@@ -24,13 +24,25 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
+import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionFilter;
+import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.processor.JANIProcessor;
 import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
     private static final String NAME = "name";
     private static final String EXPRESSION = "expression";
     private static final String COMMENT = "comment";
+
+    private static final String OP = "op";
+    private static final String FILTER = "filter";
+    private static final String FUN = "fun";
+    private static final String FUN_VALUES = "values";
+    private static final String VALUES = "values";
+    private static final String STATES = "states";
+    private static final ExpressionInitial INITIAL = ExpressionInitial.getExpressionInitial();
 
     private JANIPropertyEntry propertyEntry = null;
 
@@ -51,8 +63,8 @@ public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
         builder.add(NAME, propertyEntry.getName());
-        builder.add(EXPRESSION, ProcessorRegistrar.getProcessor(propertyEntry.getExpression())
-                .toJSON());
+        JsonValue filteredExpression = addTopLevelFilter(propertyEntry.getExpression());
+        builder.add(EXPRESSION, filteredExpression);
         
         String comment = propertyEntry.getComment();
         if (comment != null) {
@@ -60,5 +72,23 @@ public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
         }
 
         return builder.build();
+    }
+    
+    private JsonValue addTopLevelFilter(Expression expression) {
+        if (expression instanceof ExpressionFilter) {
+            return ProcessorRegistrar.getProcessor(expression)
+                    .toJSON();
+        } else {
+            JsonObjectBuilder builder = Json.createObjectBuilder();
+            
+            builder.add(OP, FILTER);
+            builder.add(FUN, FUN_VALUES);
+            builder.add(VALUES, ProcessorRegistrar.getProcessor(expression)
+                    .toJSON());
+            builder.add(STATES, ProcessorRegistrar.getProcessor(INITIAL)
+                    .toJSON());
+
+            return builder.build();
+        }
     }
 }
