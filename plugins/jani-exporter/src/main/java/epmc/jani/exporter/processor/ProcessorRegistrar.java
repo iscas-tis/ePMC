@@ -192,10 +192,14 @@ public class ProcessorRegistrar {
     }
     
     public static boolean isBooleanType(ExpressionType expressionType) {
+        assert model != null;
+        
         return booleanTypes.contains(expressionType);
     }
     
     public static boolean isNumericType(ExpressionType expressionType) {
+        assert model != null;
+        
         return numericTypes.contains(expressionType);
     }
 
