@@ -29,38 +29,29 @@ final class AutomatonBreakpointState implements AutomatonStateUtil, AutomatonSta
     private final BitSet states;
     private final int acceptance;
     private final BitSet children;
-    private final AutomatonBreakpoint automaton;
     private int number = 0;
 
-    AutomatonBreakpointState(AutomatonBreakpoint automaton,
-            BitSet states, int acceptance, BitSet children) {
-        this.automaton = automaton;
+    AutomatonBreakpointState(BitSet states, int acceptance, BitSet children) {
         this.states = states.clone();
         this.acceptance = acceptance;
         this.children = children;
     }
 
-    AutomatonBreakpointState(AutomatonBreakpoint automaton, BitSet states) {
-        this(automaton, states, 0, UtilBitSet.newBitSetUnbounded());
+    AutomatonBreakpointState(BitSet states) {
+        this(states, 0, UtilBitSet.newBitSetUnbounded());
     }
 
-    AutomatonBreakpointState(AutomatonBreakpoint automaton,
-            AutomatonSubsetState state) {
-        this(automaton, state.getStates().clone(), 0, UtilBitSet.newBitSetUnbounded());
+    AutomatonBreakpointState(AutomatonSubsetState state) {
+        this(state.getStates().clone(), 0, UtilBitSet.newBitSetUnbounded());
     }
 
     AutomatonBreakpointState(AutomatonBreakpointState other) {
-        this(other.getAutomaton(), other.states, other.acceptance, other.children);
+        this(other.states, other.acceptance, other.children);
     }
 
     @Override
     protected AutomatonBreakpointState clone() {
         return new AutomatonBreakpointState(this);
-    }
-
-    @Override
-    public AutomatonBreakpoint getAutomaton() {
-        return automaton;
     }
 
     @Override

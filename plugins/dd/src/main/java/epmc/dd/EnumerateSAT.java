@@ -33,6 +33,7 @@ public final class EnumerateSAT {
         void call(Value[] values);
     }
 
+    private boolean closed;
     private DD dd;
     private VariableDD[] variables;
     private EnumerateSATCallback callback;

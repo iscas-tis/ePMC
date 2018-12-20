@@ -205,7 +205,7 @@ public final class UtilAutomaton {
         }
     }
 
-    static Set<Expression> collectLTLInner(Expression expression) {
+    public static Set<Expression> collectLTLInner(Expression expression) {
         if (ExpressionPropositional.is(expression)) {
             return Collections.singleton(expression);
         } else if (ExpressionTemporalFinally.is(expression)) {
