@@ -242,7 +242,7 @@ public final class TimeBound {
         }
         ExpressionLiteral leftLit = ExpressionLiteral.as(getLeft());
         if (Double.valueOf(leftLit.getValue()) != 0.0) {
-            return false;
+            return true;
         }
         return true;
     }
