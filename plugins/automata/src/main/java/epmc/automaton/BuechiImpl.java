@@ -47,6 +47,7 @@ import epmc.expression.standard.ExpressionTemporalGlobally;
 import epmc.expression.standard.ExpressionTemporalNext;
 import epmc.expression.standard.ExpressionTemporalRelease;
 import epmc.expression.standard.ExpressionTemporalUntil;
+import epmc.expression.standard.UtilExpressionStandard;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;
@@ -80,6 +81,7 @@ public class BuechiImpl implements Buechi {
     private final EvaluatorExplicit[] evaluators;
     private final Expression[] expressions;
     private final Type[] expressionTypes;
+    private final String name;
 
     @Override
     public String getIdentifier() {
@@ -88,6 +90,7 @@ public class BuechiImpl implements Buechi {
 
     public BuechiImpl(Expression expression, Expression[] expressions) {
         assert expression != null;
+        this.name = UtilExpressionStandard.niceForm(expression);
         // TODO does not work if used there
         //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
         //          expression = replaceNeOperator(expression);
@@ -470,5 +473,10 @@ public class BuechiImpl implements Buechi {
                 .setOperator(OperatorNot.NOT)
                 .setOperands(expression)
                 .build();
+    }
+
+    @Override
+    public String getName() {
+        return name;
     }
 }
