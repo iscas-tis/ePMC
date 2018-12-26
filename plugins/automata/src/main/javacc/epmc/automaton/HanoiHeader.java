@@ -25,6 +25,7 @@ import java.util.List;
 import java.util.Map;
 
 import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
 
@@ -36,7 +37,6 @@ final class HanoiHeader {
     private int numAcc;
 
     HanoiHeader(Map<String,Expression> ap2expr) {
-        assert ap2expr != null;
         this.ap2expr = ap2expr;
     }
 
@@ -58,8 +58,13 @@ final class HanoiHeader {
 
     void addAP(String name) {
         assert name != null;
-        assert ap2expr.containsKey(name);
-        aps.add(ap2expr.get(name));
+        assert ap2expr == null || ap2expr.containsKey(name);
+        if (ap2expr != null) {
+            aps.add(ap2expr.get(name));
+        } else {
+            aps.add(new ExpressionIdentifierStandard.Builder()
+                    .setName(name).build());
+        }
     }
 
     Expression numberToIdentifier(int number) {
@@ -74,5 +79,9 @@ final class HanoiHeader {
 
     public int getNumAcc() {
         return numAcc;
+    }
+    
+    public List<Expression> getAps() {
+        return aps;
     }
 }

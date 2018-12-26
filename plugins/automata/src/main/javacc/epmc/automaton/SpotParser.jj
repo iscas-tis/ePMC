@@ -11,7 +11,6 @@ import epmc.util.BitSetUnboundedLongArray;
 import java.util.Map;
 import epmc.automaton.ProblemsAutomaton;
 import static epmc.error.UtilError.ensure;
-import epmc.error.EPMCException;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.expression.standard.ExpressionLiteral;
@@ -22,9 +21,7 @@ import epmc.graph.explicit.GraphExplicitWrapper;
 
 public class SpotParser {
 
-  public GraphExplicitWrapper parseAutomaton(Map<String,Expression> ap2expr)
-       {
-    assert ap2expr != null;
+  public GraphExplicitWrapper parseAutomaton(Map<String,Expression> ap2expr) {
     try {
       return Automaton(ap2expr);
     } catch (ParseException e) {

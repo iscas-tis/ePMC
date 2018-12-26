@@ -148,6 +148,55 @@ public class BuechiImpl implements Buechi {
             }
         }
     }
+    
+    public BuechiImpl(String property) {
+        name = property;
+        this.ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
+        OptionsAutomaton.Ltl2BaAutomatonBuilder builder = Options.get().getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
+        if (builder == OptionsAutomaton.Ltl2BaAutomatonBuilder.SPOT) {
+            automaton = createSpotAutomaton(property, null);
+        } else {
+            automaton = null;
+        }
+        if (this.numLabels == 0) {
+            fixNoLabels();
+        }
+        trueState = findTrueState();
+        HanoiHeader header = automaton.getGraphPropertyObject(GraphPreparator.Properties.HANOI_HEADER);
+//        header.getAps();
+        this.expressions =  header.getAps().toArray(new Expression[0]);
+        expressionTypes = new Type[expressions.length];
+        for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
+            expressionTypes[exprNr] = TypeBoolean.get();
+        }
+        int totalSize = 0;
+        for (int node = 0; node < automaton.getNumNodes(); node++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
+                totalSize++;
+            }
+        }
+        this.evaluators = new EvaluatorExplicit[totalSize];
+        totalSize = 0;
+        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
+        for (int node = 0; node < automaton.getNumNodes(); node++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
+                BuechiTransition trans = labels.getObject(node, succNr);
+                Expression guard = trans.getExpression();
+                evaluators[totalSize] = UtilEvaluatorExplicit.newEvaluator(guard,
+                        new ExpressionToTypeBoolean(expressions), expressions);
+                totalSize++;
+            }
+        }
+        totalSize = 0;
+        for (int node = 0; node < automaton.getNumNodes(); node++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
+                BuechiTransition trans = labels.getObject(node, succNr);
+                ((BuechiTransitionImpl) trans).setResult(ValueBoolean.as(evaluators[totalSize].getResultValue()));
+                totalSize++;
+            }
+        }
+    }
+
 
     @Override
     public Expression[] getExpressions() {
@@ -189,10 +238,15 @@ public class BuechiImpl implements Buechi {
         expressionsSeen.addAll(expr2str.keySet());
         String spotFn = expr2spot(expression, expr2str);
         assert spotFn != null;
+        
         Map<String,Expression> ap2expr = new LinkedHashMap<>();
         for (Entry<Expression,String> entry : expr2str.entrySet()) {
             ap2expr.put(entry.getValue(), entry.getKey());
         }
+        return createSpotAutomaton(spotFn, ap2expr);
+    }
+
+    private GraphExplicit createSpotAutomaton(String spotFn, Map<String, Expression> ap2expr) {
         try {
             // TODO it seems that one cannot produce both the automaton and the
             // statistics in a single call. Quite annoying. Check whether this
@@ -213,8 +267,8 @@ public class BuechiImpl implements Buechi {
                 Thread.currentThread().interrupt();
             }
             this.numLabels = ValueInteger.as(automaton.getGraphProperty(CommonProperties.NUM_LABELS)).getInt();
-            final String[] detExecArr = {ltl2tgba, SPOT_PARAM_FORMULA, spotFn, "--stats", "%d",
-            "--low"};
+            final String[] detExecArr = {ltl2tgba, SPOT_PARAM_FORMULA, spotFn,
+                    "--stats", "%d", "--low"};
             final Process detProcess = Runtime.getRuntime().exec(detExecArr);
             int detResult = detProcess.getInputStream().read();
             ensure(detResult != -1, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO);

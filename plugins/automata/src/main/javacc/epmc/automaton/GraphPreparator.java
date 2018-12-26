@@ -37,6 +37,10 @@ import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 
 final class GraphPreparator {
+    enum Properties {
+        HANOI_HEADER
+    }
+    
     private final static class Transition {
         private final int to;
         private final Expression guard;
@@ -112,6 +116,11 @@ final class GraphPreparator {
         BitSet init = graph.getInitialNodes();
         init.or(header.getStartStates());
         graph.setGraphProperty(CommonProperties.NUM_LABELS, numLabels);
+        TypeObject typeHeader = new TypeObject.Builder()
+                .setClazz(HanoiHeader.class)
+                .build();
+        graph.addSettableGraphProperty(Properties.HANOI_HEADER, typeHeader);
+        graph.setGraphProperty(Properties.HANOI_HEADER, header);
         return graph;
     }
 
