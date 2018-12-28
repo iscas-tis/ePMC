@@ -467,7 +467,7 @@ public class JANIComponentRegistrar {
             automata = new HashSet<>();
             assignedByAutomataByAction.put(action, automata);
         }
-        ensure(isSilentAction(action) || (automata.size() == 1 && automata.contains(automaton)),
+        ensure(isSilentAction(action) || automata.isEmpty() || automata.contains(automaton),
                 ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA,
                 getIdentifierNameByIdentifier(variable)
                 );

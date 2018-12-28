@@ -21,6 +21,7 @@
 package epmc.jani.model.type;
 
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.ProcessorRegistrar;
 
 public final class PRISMExporter_JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict {
 
@@ -37,8 +38,17 @@ public final class PRISMExporter_JANITypeBoundedProcessor implements JANI2PRISMP
     @Override
     public String toPRISM() {
         assert bounded != null;
-
-        return bounded.toType().toString();
+        
+        StringBuilder prism = new StringBuilder();
+        prism.append("[")
+            .append(ProcessorRegistrar.getProcessor(bounded.getLowerBound())
+                    .toPRISM())
+            .append("..")
+            .append(ProcessorRegistrar.getProcessor(bounded.getUpperBound())
+                    .toPRISM())
+            .append("]");
+        
+        return prism.toString();
     }
 
     @Override
