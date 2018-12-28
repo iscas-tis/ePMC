@@ -48,7 +48,8 @@ public interface Buechi {
 
     void query(Value[] get);
 
-
+    String getName();
+    
     /* default methods */
 
     default int getNumStates() {

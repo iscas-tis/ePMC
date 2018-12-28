@@ -139,6 +139,20 @@ public final class UtilAutomaton {
         return buechi;
     }
 
+    public static Buechi newBuechi(String property) {
+        assert property != null;
+        Options options = Options.get();
+        Buechi buechi = null;
+        Log log = options.get(OptionsMessages.LOG);
+        log.send(MessagesAutomaton.COMPUTING_ORIG_BUECHI);
+        buechi = new BuechiImpl(property);
+        Message buechiDone = buechi.isDeterministic() ?
+                MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
+                : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
+        log.send(buechiDone, buechi.getNumLabels(), buechi.getNumStates());
+        return buechi;
+    }
+    
     public static Buechi computeBuechi(Expression property, Expression[] expressions) {
         assert property != null;
         assert expressions != null;

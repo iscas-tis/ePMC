@@ -20,8 +20,6 @@
 
 package epmc.dd;
 
-import java.util.Arrays;
-
 import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
