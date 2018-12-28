@@ -21,6 +21,7 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
+import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.ProcessorRegistrar;
 
@@ -57,7 +58,9 @@ public class PRISMExporter_ExpressionQuantifierProcessor implements JANI2PRISMPr
             prism.append("P");
         }
 
-        prism.append(quantifier.getDirType().toString());
+        if (JANIComponentRegistrar.isNonDeterministicModel()) {
+            prism.append(quantifier.getDirType().toString());
+        }
 
         CmpType cmpType = quantifier.getCompareType();
         prism.append(cmpType.toString());

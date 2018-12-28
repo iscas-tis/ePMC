@@ -41,11 +41,9 @@ public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStri
     public void findAssignedVariables() {
         for (Edge edge : automaton.getEdges()) {
             Action action = edge.getActionOrSilent();
-            if (!JANIComponentRegistrar.isSilentAction(action)) {
-                for (Destination destination : edge.getDestinations()) {
-                    for (AssignmentSimple assignment : destination.getAssignmentsOrEmpty()) {
-                        JANIComponentRegistrar.registerNonTransientVariableAssignment(assignment.getRef(), automaton);
-                    }
+            for (Destination destination : edge.getDestinations()) {
+                for (AssignmentSimple assignment : destination.getAssignmentsOrEmpty()) {
+                    JANIComponentRegistrar.registerNonTransientVariableAssignment(assignment.getRef(), action, automaton);
                 }
             }
         }
@@ -84,7 +82,7 @@ public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStri
                         .toPRISM());
             }
         }
-        for (Variable variable : JANIComponentRegistrar.getAssignedVariablesOrEmpty(automaton)) {
+        for (Variable variable : JANIComponentRegistrar.getLocalVariablesOrEmpty(automaton)) {
             prism.append(ProcessorRegistrar.getProcessor(variable)
                     .setPrefix(PRISMExporter_ModelJANIProcessor.INDENT)
                     .setForDefinition(true)

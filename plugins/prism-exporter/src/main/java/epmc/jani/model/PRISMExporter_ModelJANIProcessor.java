@@ -20,6 +20,7 @@
 
 package epmc.jani.model;
 
+import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsTimed;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
@@ -39,6 +40,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         jani = (ModelJANI) obj;
 
         JANIComponentRegistrar.setIsTimedModel(SemanticsTimed.isTimed(jani.getSemantics()));
+        JANIComponentRegistrar.setIsNonDeterministicModel(SemanticsNonDet.isNonDet(jani.getSemantics()));
         JANIComponentRegistrar.addSilentAction(jani.getSilentAction());
         return this;
     }
@@ -118,15 +120,15 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
 
     private void initialise() {
 
-        // Global variables to be registered
-        for (Variable variable : jani.getGlobalVariables()) {
-            JANIComponentRegistrar.registerIdentifier(variable);
-        }
-
         // Variable assignment to be registered
         for (Automaton automaton : jani.getAutomata()) {
             JANIComponentRegistrar.setDefaultAutomatonForUnassignedClocks(automaton);
             ProcessorRegistrar.getProcessor(automaton).findAssignedVariables();
+        }
+
+        // Global variables to be registered
+        for (Variable variable : jani.getGlobalVariables()) {
+            JANIComponentRegistrar.registerIdentifier(variable);
         }
 
         // Global variables non transient to be registered

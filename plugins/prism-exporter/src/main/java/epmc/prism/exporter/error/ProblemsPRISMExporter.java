@@ -41,6 +41,7 @@ public final class ProblemsPRISMExporter {
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE = newProblem("prism-exporter-unsupported-feature-transient-variable-for-normal-variable");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_MULTIPLE_LOCATIONS = newProblem("prism-exporter-unsupported-feature-multiple-locations");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_AUTOMATON_INPUT_ENABLED = newProblem("prism-exporter-unsupported-feature-automaton-input-enabled");
+    public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA = newProblem("prism-exporter-unsupported-feature-variable-defined-assigned-multiple-automata");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNSUPPORTED_MODEL = newProblem("prism-exporter-unsupported-feature-unsupported-model");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_DIFFERENT_EXPRESSIONS = newProblem("prism-exporter-unsupported-feature-transient-variable-different-expression");
     public final static Problem PRISM_EXPORTER_UNSUPPORTED_FEATURE_ACTION_HIDING = newProblem("prism-exporter-unsupported-feature-action-hiding");

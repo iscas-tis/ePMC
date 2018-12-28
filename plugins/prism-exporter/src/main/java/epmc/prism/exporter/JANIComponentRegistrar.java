@@ -120,7 +120,7 @@ public class JANIComponentRegistrar {
     private static Map<Variable, Expression> rewardStateExpressions;
 
     private static Set<Variable> variablesAssignedByAutomata;
-    private static Map<Automaton, Set<Variable>> automatonAssignsVariables;
+    private static Map<Variable, Map<Action, Set<Automaton>>> variablesAssignedByAutomataByAction;
 
     private static Map<Action, String> actionNames;
     private static Action silentAction;
@@ -136,6 +136,7 @@ public class JANIComponentRegistrar {
     private static Boolean usesInitialConditions;
 
     private static boolean isTimedModel;
+    private static boolean isNonDeterministicModel;
 
     private static int reward_counter;
     private static int identifier_counter;
@@ -154,7 +155,7 @@ public class JANIComponentRegistrar {
         rewardTransitionExpressions = new HashMap<>();
         rewardStateExpressions = new HashMap<>();
         variablesAssignedByAutomata = new HashSet<>();
-        automatonAssignsVariables = new HashMap<>();
+        variablesAssignedByAutomataByAction = new HashMap<>();
         actionNames = new HashMap<>();
         silentAction = null;
 
@@ -169,6 +170,7 @@ public class JANIComponentRegistrar {
         unassignedClockVariables = new HashSet<>();
 
         isTimedModel = false;
+        isNonDeterministicModel = false;
         reward_counter = 0;
         identifier_counter = 0;
         action_counter = 0;
@@ -190,6 +192,14 @@ public class JANIComponentRegistrar {
 
     public static boolean isTimedModel() {
         return isTimedModel;
+    }
+
+    public static void setIsNonDeterministicModel(boolean isNonDeterministicModel) {
+        JANIComponentRegistrar.isNonDeterministicModel = isNonDeterministicModel;
+    }
+
+    public static boolean isNonDeterministicModel() {
+        return isNonDeterministicModel;
     }
 
     public static void setDefaultAutomatonForUnassignedClocks(Automaton defaultAutomatonForUnassignedClocks) {
@@ -431,12 +441,13 @@ public class JANIComponentRegistrar {
     }
 
     /**
-     * Register a new automaton for the given action 
+     * Register which automata assign variables for the given action 
      * 
      * @param variable the variable
+     * @param action the action
      * @param automaton the automaton
      */
-    public static void registerNonTransientVariableAssignment(Variable variable, Automaton automaton) {
+    public static void registerNonTransientVariableAssignment(Variable variable, Action action, Automaton automaton) {
         assert variable != null;
         assert automaton != null;
 
@@ -446,23 +457,38 @@ public class JANIComponentRegistrar {
 
         variablesAssignedByAutomata.add(variable);
 
-        Set<Variable> assignedVariables = automatonAssignsVariables.get(automaton);
-        if (assignedVariables == null) {
-            assignedVariables = new HashSet<>();
-            automatonAssignsVariables.put(automaton, assignedVariables);
+        Map<Action, Set<Automaton>> assignedByAutomataByAction = variablesAssignedByAutomataByAction.get(variable);
+        if (assignedByAutomataByAction == null) {
+            assignedByAutomataByAction = new HashMap<>();
+            variablesAssignedByAutomataByAction.put(variable, assignedByAutomataByAction);
         }
-        assignedVariables.add(variable);
+        Set<Automaton> automata = assignedByAutomataByAction.get(action);
+        if (automata == null) {
+            automata = new HashSet<>();
+            assignedByAutomataByAction.put(action, automata);
+        }
+        ensure(isSilentAction(action) || (automata.size() == 1 && automata.contains(automaton)),
+                ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_VARIABLE_ASSIGNED_MULTIPLE_AUTOMATA,
+                getIdentifierNameByIdentifier(variable)
+                );
+        automata.add(automaton);
     }
 
-    public static Set<Variable> getAssignedVariablesOrEmpty(Automaton automaton) {
+    public static Set<Variable> getLocalVariablesOrEmpty(Automaton automaton) {
         assert automaton != null;
 
-        Set<Variable> assignedVariables = automatonAssignsVariables.get(automaton);
-        if (assignedVariables == null) {
-            assignedVariables = new HashSet<>();
+        Set<Variable> assignedVariables = new HashSet<>();
+        for (Variable variable : variablesAssignedByAutomataByAction.keySet()) {
+            for (Map.Entry<Action, Set<Automaton>> entry : variablesAssignedByAutomataByAction.get(variable).entrySet()) {
+                if (entry.getValue().contains(automaton)) {
+                    if (!isSilentAction(entry.getKey()) || entry.getValue().size() == 1) {
+                        assignedVariables.add(variable);
+                    }
+                }
+            }
         }
-
-        return Collections.unmodifiableSet(assignedVariables);
+        
+        return assignedVariables;
     }
 
     public static String toPRISMRewards() {
@@ -520,14 +546,13 @@ public class JANIComponentRegistrar {
      * @param action the variable to register
      */
     public static void registerAction(Action action) {
+        if (isSilentAction(action)) {
+            return;
+        }
         if (!actionNames.containsKey(action)) {
             String name;
             //TODO: manage the case the variable name contains unexpected characters
-            if (isSilentAction(action)) {
-                name = "";
-            } else {
-                name = action.getName();
-            }
+            name = action.getName();
             if (!name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
                 name = "action_" + action_counter;
             }
