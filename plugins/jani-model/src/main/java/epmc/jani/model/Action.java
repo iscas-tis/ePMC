@@ -105,4 +105,9 @@ public final class Action implements JANINode {
         }
         return false;
     }
+    
+    @Override
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
