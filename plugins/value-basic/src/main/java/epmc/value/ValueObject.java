@@ -39,7 +39,6 @@ public final class ValueObject implements Value {
 
     private Object content;
     private final TypeObject type;
-    private boolean immutable;
 
     ValueObject(TypeObject type) {
         assert type != null;
@@ -57,7 +56,6 @@ public final class ValueObject implements Value {
     }
 
     public void set(Object content) {
-        assert !isImmutable();
         assert content == null ||
                 getType().getUsedClass().isInstance(content) :
                     content + SPACE + content.getClass()
@@ -83,13 +81,5 @@ public final class ValueObject implements Value {
     @Override
     public String toString() {
         return "value(" + content + ")";
-    }
-
-    void setImmutable() {
-        this.immutable = true;
-    }
-
-    boolean isImmutable() {
-        return immutable;
     }
 }
