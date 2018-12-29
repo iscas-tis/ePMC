@@ -44,6 +44,12 @@ public class PRISMExporter_JANIPropertiesProcessor implements JANI2PRISMProcesso
         StringBuilder prism = new StringBuilder();
 
         for (RawProperty raw : properties.getRawProperties()) {
+            String name = raw.getName(); 
+            if (name != null && name.length() > 0) {
+                prism.append("\"")
+                    .append(name)
+                    .append("\" : ");
+            }
             prism.append(ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
                     .toPRISM())
                 .append("\n");

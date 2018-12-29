@@ -123,7 +123,8 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         // Variable assignment to be registered
         for (Automaton automaton : jani.getAutomata()) {
             JANIComponentRegistrar.setDefaultAutomatonForUnassignedClocks(automaton);
-            ProcessorRegistrar.getProcessor(automaton).findAssignedVariables();
+            ProcessorRegistrar.getProcessor(automaton)
+                .findAssignedVariables();
         }
 
         // Global variables to be registered

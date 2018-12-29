@@ -122,6 +122,7 @@ public class JANIComponentRegistrar {
     private static Set<Variable> variablesAssignedByAutomata;
     private static Map<Variable, Map<Action, Set<Automaton>>> variablesAssignedByAutomataByAction;
 
+    private static Set<String> usedActionNames;
     private static Map<Action, String> actionNames;
     private static Action silentAction;
 
@@ -156,6 +157,7 @@ public class JANIComponentRegistrar {
         rewardStateExpressions = new HashMap<>();
         variablesAssignedByAutomata = new HashSet<>();
         variablesAssignedByAutomataByAction = new HashMap<>();
+        usedActionNames = new HashSet<>();
         actionNames = new HashMap<>();
         silentAction = null;
 
@@ -182,7 +184,7 @@ public class JANIComponentRegistrar {
     	assert (action != null) && action.getModel().getSilentAction().equals(action);
     	
     	actionNames.put(action, action.getName());
-    	usedNames.add(action.getName());
+    	usedActionNames.add(action.getName());
     	silentAction = action;
     }
 
@@ -472,6 +474,10 @@ public class JANIComponentRegistrar {
                 getIdentifierNameByIdentifier(variable)
                 );
         automata.add(automaton);
+        if (automata.size() > 1) {
+            // multiple automata assign to the variable, so it must be a global variable
+            globalVariables.add(variable);
+        }
     }
 
     public static Set<Variable> getLocalVariablesOrEmpty(Automaton automaton) {
@@ -556,11 +562,11 @@ public class JANIComponentRegistrar {
             if (!name.matches("^[A-Za-z_][A-Za-z0-9_]*$") || reservedWords.contains(name)) {
                 name = "action_" + action_counter;
             }
-            while (usedNames.contains(name)) {
+            while (usedActionNames.contains(name)) {
                 name = "action_" + action_counter;
                 action_counter++;
             }
-            usedNames.add(name);
+            usedActionNames.add(name);
             actionNames.put(action, name);
         }
     }

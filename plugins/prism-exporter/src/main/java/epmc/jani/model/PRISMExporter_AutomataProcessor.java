@@ -45,7 +45,8 @@ public class PRISMExporter_AutomataProcessor implements JANI2PRISMProcessorStric
 
         for (Automaton automaton : automata) {
             //AT: the location renaming is performed during the computation of AutomatonProcessor.toPRISM()
-            String automatonString = ProcessorRegistrar.getProcessor(automaton).toPRISM();
+            String automatonString = ProcessorRegistrar.getProcessor(automaton)
+                    .toPRISM();
             prism.append(JANIComponentRegistrar.locationRenaming(automaton))
                 .append(automatonString)
                 .append("\n");

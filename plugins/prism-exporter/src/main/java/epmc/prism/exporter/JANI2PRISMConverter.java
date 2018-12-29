@@ -37,12 +37,14 @@ public final class JANI2PRISMConverter {
     public String convertModel() {
         assert jani != null;
 
-        return ProcessorRegistrar.getProcessor(jani).toPRISM();
+        return ProcessorRegistrar.getProcessor(jani)
+                .toPRISM();
     }
 
     public String convertProperties() {
         assert jani != null;
 
-        return ProcessorRegistrar.getProcessor(jani.getPropertyList()).toPRISM();
+        return ProcessorRegistrar.getProcessor(jani.getPropertyList())
+                .toPRISM();
     }
 }
