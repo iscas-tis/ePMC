@@ -15,21 +15,24 @@ import static epmc.qmc.ModelNames.SUPERDENSE_CODING_PROPERTIES;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.json.JsonValue;
 
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.jani.ConvertTestConfiguration;
 import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
 import epmc.main.options.UtilOptionsEPMC;
+import epmc.modelchecker.EngineExplicit;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.plugin.OptionsPlugin;
 import epmc.qmc.model.ModelPRISMQMC;
 import epmc.qmc.model.PropertyPRISMQMC;
 import epmc.util.UtilJSON;
@@ -43,22 +46,26 @@ public final class ExportQMCToJANI {
     }
 
     private final static Options prepareQMCOptions() {
+        List<String> qmcPlugins = new ArrayList<>();
+        qmcPlugins.add(System.getProperty("user.dir") + "/../qmc/target/classes/");
+        qmcPlugins.add(System.getProperty("user.dir") + "/../qmc-exporter/target/classes/");
+        
         Options options = UtilOptionsEPMC.newOptions();
+        options.set(OptionsPlugin.PLUGIN, qmcPlugins);
         prepareOptions(options, ModelPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, PropertyPRISMQMC.IDENTIFIER);
+        options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         return options;
     }
 
     @Test
     public void keyDistributionTest() {
-        prepareQMCOptions();
         export(KEY_DISTRIBUTION_MODEL, KEY_DISTRIBUTION_PROPERTIES);
     }
 
     @Test
     public void loopTest() {
-        prepareQMCOptions();
         export(LOOP_MODEL, LOOP_PROPERTIES);
     }
 
@@ -71,13 +78,11 @@ public final class ExportQMCToJANI {
      */
     @Test
     public void loopAlternativeTest() {
-        prepareQMCOptions();
         export(LOOP_ALTERNATIVE_MODEL, LOOP_ALTERNATIVE_PROPERTIES);
     }
 
     @Test
     public void superdenseCodingTest() {
-        prepareQMCOptions();
         export(SUPERDENSE_CODING_MODEL, SUPERDENSE_CODING_PROPERTIES);
     }
 
@@ -87,7 +92,7 @@ public final class ExportQMCToJANI {
         String janiFilename = getJANIFilenameFromPRISMFilename(prismFilename);
         System.out.println("Exporting " + prismFilename + ":");
         System.out.println("Loading");
-        Options options = ConvertTestConfiguration.prepareJANIOptions(null);
+        Options options = prepareQMCOptions();
         options.set("prism-flatten", false);
         options.set(OptionsJANIExporter.JANI_EXPORTER_SYNCHRONISE_SILENT, false);
         ModelJANIConverter prism;

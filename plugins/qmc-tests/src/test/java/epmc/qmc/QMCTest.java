@@ -43,16 +43,15 @@ public final class QMCTest {
 
     private final static Options prepareQMCOptions() {
         List<String> qmcPlugins = new ArrayList<>();
-        qmcPlugins.add("epmc/qmc/target/classes/");
-        qmcPlugins.add("epmc/qmc-exporter/target/classes/");
-        qmcPlugins.add("epmc/qmc-tests/target/classes/");
+        qmcPlugins.add(System.getProperty("user.dir") + "/../qmc/target/classes/");
+        qmcPlugins.add(System.getProperty("user.dir") + "/../qmc-exporter/target/classes/");
         
         Options options = UtilOptionsEPMC.newOptions();
+        options.set(OptionsPlugin.PLUGIN, qmcPlugins);
         prepareOptions(options, ModelPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, PropertyPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
-        options.set(OptionsPlugin.PLUGIN, qmcPlugins);
         return options;
     }
 
