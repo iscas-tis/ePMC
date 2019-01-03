@@ -21,7 +21,7 @@
 package epmc.jani.model;
 
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ProbabilityProcessor implements JANI2PRISMProcessorStrict {
 
@@ -40,7 +40,7 @@ public class PRISMExporter_ProbabilityProcessor implements JANI2PRISMProcessorSt
     public String toPRISM() {
         assert probability != null;
 
-        return ProcessorRegistrar.getProcessor(probability.getExp())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(probability.getExp())
                 .toPRISM();
     }
 
@@ -48,7 +48,7 @@ public class PRISMExporter_ProbabilityProcessor implements JANI2PRISMProcessorSt
     public void validateTransientVariables() {
         assert probability != null;
 
-        ProcessorRegistrar.getProcessor(probability.getExp())
+        PRISMExporter_ProcessorRegistrar.getProcessor(probability.getExp())
             .validateTransientVariables();
     }
 
@@ -56,7 +56,7 @@ public class PRISMExporter_ProbabilityProcessor implements JANI2PRISMProcessorSt
     public boolean usesTransientVariables() {
         assert probability != null;
 
-        return ProcessorRegistrar.getProcessor(probability.getExp())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(probability.getExp())
                 .usesTransientVariables();
     }	
 }

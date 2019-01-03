@@ -22,7 +22,7 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ExpressionTemporalGloballyProcessor implements JANI2PRISMProcessorStrict {
     private ExpressionTemporalGlobally temporal = null;
@@ -43,10 +43,10 @@ public class PRISMExporter_ExpressionTemporalGloballyProcessor implements JANI2P
         StringBuilder prism = new StringBuilder();
 
         prism.append("G")
-            .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(temporal.getTimeBound())
                     .toPRISM())
             .append("(")
-            .append(ProcessorRegistrar.getProcessor(temporal.getOperand())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(temporal.getOperand())
                     .toPRISM())
             .append(")");
 
@@ -58,7 +58,7 @@ public class PRISMExporter_ExpressionTemporalGloballyProcessor implements JANI2P
         assert temporal != null;
 
         for (Expression child : temporal.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -69,7 +69,7 @@ public class PRISMExporter_ExpressionTemporalGloballyProcessor implements JANI2P
 
         boolean usesTransient = false;
         for (Expression child : temporal.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

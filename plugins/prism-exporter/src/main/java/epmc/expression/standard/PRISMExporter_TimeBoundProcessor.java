@@ -22,7 +22,7 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_TimeBoundProcessor implements JANI2PRISMProcessorStrict {
 
@@ -51,28 +51,28 @@ public class PRISMExporter_TimeBoundProcessor implements JANI2PRISMProcessorStri
         } else if (!timeBound.isLeftBounded()) {
             prism.append(timeBound.isRightOpen() ? "<" : "<=")
                 .append(leftBraceIfNeeded(right))
-                .append(ProcessorRegistrar.getProcessor(right)
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(right)
                         .toPRISM())
                 .append(rightBraceIfNeeded(right));        	
         } else if (!timeBound.isRightBounded()) {
             prism.append(timeBound.isLeftOpen() ? ">" : ">=")
                 .append(leftBraceIfNeeded(left))
-                .append(ProcessorRegistrar.getProcessor(left)
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(left)
                         .toPRISM())
                 .append(rightBraceIfNeeded(left));
         } else if (left.equals(right)) {
             prism.append("=")
                 .append(leftBraceIfNeeded(left))
-                .append(ProcessorRegistrar.getProcessor(left)
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(left)
                         .toPRISM())
                 .append(rightBraceIfNeeded(left));
         } else {
             prism.append(timeBound.isLeftOpen() ? "]" : "[")
                 .append(left)
-                .append(ProcessorRegistrar.getProcessor(left)
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(left)
                         .toPRISM())
                 .append(",")
-                .append(ProcessorRegistrar.getProcessor(right)
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(right)
                         .toPRISM())
                 .append(timeBound.isRightOpen() ? "[" : "]");
         }
@@ -84,9 +84,9 @@ public class PRISMExporter_TimeBoundProcessor implements JANI2PRISMProcessorStri
     public void validateTransientVariables() {
         assert timeBound != null;
 
-        ProcessorRegistrar.getProcessor(timeBound.getLeft())
+        PRISMExporter_ProcessorRegistrar.getProcessor(timeBound.getLeft())
             .validateTransientVariables();
-        ProcessorRegistrar.getProcessor(timeBound.getRight())
+        PRISMExporter_ProcessorRegistrar.getProcessor(timeBound.getRight())
             .validateTransientVariables();
     }
 
@@ -96,9 +96,9 @@ public class PRISMExporter_TimeBoundProcessor implements JANI2PRISMProcessorStri
         assert timeBound != null;
 
         boolean usesTransient = false;
-        usesTransient |= ProcessorRegistrar.getProcessor(timeBound.getLeft())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(timeBound.getLeft())
                 .usesTransientVariables();
-        usesTransient |= ProcessorRegistrar.getProcessor(timeBound.getRight())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(timeBound.getRight())
                 .usesTransientVariables();
 
         return usesTransient;

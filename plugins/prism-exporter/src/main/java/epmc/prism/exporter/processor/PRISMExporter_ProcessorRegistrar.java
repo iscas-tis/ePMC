@@ -144,7 +144,7 @@ import epmc.util.Util;
  * @author Andrea Turrini
  *
  */
-public class ProcessorRegistrar {
+public class PRISMExporter_ProcessorRegistrar {
     private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
     private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> extendedProcessors = registerExtendedProcessors();
     private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> nonPRISMProcessors = registerNonPRISMProcessors();
@@ -251,7 +251,7 @@ public class ProcessorRegistrar {
     }
 
     public static void setAllowMultipleLocations(boolean allowMultipleLocations) {
-        ProcessorRegistrar.allowMultipleLocations = allowMultipleLocations;
+        PRISMExporter_ProcessorRegistrar.allowMultipleLocations = allowMultipleLocations;
     }
 
     public static boolean getAllowMultipleLocations() {

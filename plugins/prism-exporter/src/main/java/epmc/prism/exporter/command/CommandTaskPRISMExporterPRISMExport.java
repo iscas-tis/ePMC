@@ -41,7 +41,7 @@ import epmc.prism.exporter.JANI2PRISMConverter;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.messages.MessagesPRISMExporter;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.value.OptionsValue;
 
 /**
@@ -73,9 +73,9 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
         Options options = Options.get();
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, true);
         if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
-            ProcessorRegistrar.useExtendedPRISMSyntax();
+            PRISMExporter_ProcessorRegistrar.useExtendedPRISMSyntax();
         }
-        ProcessorRegistrar.setAllowMultipleLocations(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS));
+        PRISMExporter_ProcessorRegistrar.setAllowMultipleLocations(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS));
 
         Log log = options.get(OptionsMessages.LOG);
         try {

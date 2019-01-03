@@ -22,7 +22,7 @@ package epmc.prism.exporter.util;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 /**
  * @author Andrea Turrini
@@ -30,7 +30,7 @@ import epmc.prism.exporter.processor.ProcessorRegistrar;
  */
 public final class UtilPRISMExporter {
     public static void appendWithParenthesesIfNeeded(JANI2PRISMOperatorProcessorStrict operatorProcessor, Expression operand, StringBuilder prism) {
-        String operandToPRISM = ProcessorRegistrar.getProcessor(operand).toPRISM();
+        String operandToPRISM = PRISMExporter_ProcessorRegistrar.getProcessor(operand).toPRISM();
         if (operatorProcessor.needsParentheses(operand)) {
             prism.append("(")
                 .append(operandToPRISM)

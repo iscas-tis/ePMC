@@ -22,7 +22,7 @@ package epmc.jani.model;
 
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorStrict {
 
@@ -66,13 +66,13 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
 
         Probability probability = destination.getProbability();
         if (probability == null) {
-            if (!ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
-                prism.append(ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+            if (!PRISMExporter_ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
+                prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
                         .toPRISM())
                     .append(" : ");
             }
         } else {
-            prism.append(ProcessorRegistrar.getProcessor(probability)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(probability)
                     .toPRISM())
                 .append(" : ");
         }
@@ -90,7 +90,7 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
             }
         }
         if (assignments != null) {
-            prism.append(ProcessorRegistrar.getProcessor(assignments)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(assignments)
                     .toPRISM());
         }
 
@@ -101,12 +101,12 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
     public void validateTransientVariables() {
         assert destination != null;
 
-        ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+        PRISMExporter_ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
             .validateTransientVariables();
 
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            ProcessorRegistrar.getProcessor(assignments)
+            PRISMExporter_ProcessorRegistrar.getProcessor(assignments)
                 .validateTransientVariables();
         }
     }
@@ -117,12 +117,12 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
 
         boolean usesTransient = false;
 
-        usesTransient |= ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
                 .usesTransientVariables();
 
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            usesTransient |= ProcessorRegistrar.getProcessor(assignments)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(assignments)
                     .usesTransientVariables();
         }
 

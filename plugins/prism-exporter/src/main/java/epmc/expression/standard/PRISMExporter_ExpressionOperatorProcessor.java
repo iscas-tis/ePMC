@@ -23,7 +23,7 @@ package epmc.expression.standard;
 import epmc.expression.Expression;
 import epmc.prism.exporter.operatorprocessor.OperatorProcessorRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
 
@@ -66,7 +66,7 @@ public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProc
         assert expressionOperator != null;
 
         for (Expression child : expressionOperator.getChildren()) {
-            ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+            PRISMExporter_ProcessorRegistrar.getProcessor(child).validateTransientVariables();
         }
     }
 
@@ -76,7 +76,7 @@ public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProc
 
         boolean usesTransient = false;
         for (Expression child : expressionOperator.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child).usesTransientVariables();
         }
 
         return usesTransient;

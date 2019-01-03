@@ -24,7 +24,7 @@ import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsTimed;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStrict {
 
@@ -56,21 +56,21 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         // Metadata
         Metadata metadata = jani.getMetadata();
         if (metadata != null) {
-            prism.append(ProcessorRegistrar.getProcessor(metadata)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(metadata)
                     .toPRISM())
             	.append("\n");
         }
 
         prism.append(JANIComponentRegistrar.actionsRenaming())
         // Semantic type
-        	.append(ProcessorRegistrar.getProcessor(jani.getSemanticsExtension())
+        	.append(PRISMExporter_ProcessorRegistrar.getProcessor(jani.getSemanticsExtension())
                 .toPRISM())
         	.append("\n");
         // Constants
         prism.append(JANIComponentRegistrar.constantsRenaming());
         Constants constants = jani.getModelConstants();
         if (constants != null) {
-            prism.append(ProcessorRegistrar.getProcessor(constants)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(constants)
                     .toPRISM())
                 .append("\n");
         }
@@ -78,7 +78,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         // Global variables
         prism.append(JANIComponentRegistrar.globalVariablesRenaming());
         for (Variable variable : JANIComponentRegistrar.getGlobalVariables()) {
-            prism.append(ProcessorRegistrar.getProcessor(variable)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(variable)
                     .setPrefix("global ")
                     .setForDefinition(true)
                     .toPRISM())
@@ -86,13 +86,13 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         }
 
         // Automata
-        prism.append(ProcessorRegistrar.getProcessor(jani.getAutomata())
+        prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(jani.getAutomata())
                 .toPRISM())
             .append("\n")
         //Initial conditions
             .append(JANIComponentRegistrar.processInitialConditions())
         //Synchronisation vectors / system
-            .append(ProcessorRegistrar.getProcessor(jani.getSystem())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(jani.getSystem())
                 .toPRISM())
             .append("\n")
         // Rewards
@@ -106,7 +106,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
     public void validateTransientVariables() {
         assert jani != null;
 
-        ProcessorRegistrar.getProcessor(jani.getAutomata())
+        PRISMExporter_ProcessorRegistrar.getProcessor(jani.getAutomata())
             .validateTransientVariables();
     }
 
@@ -114,7 +114,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
     public boolean usesTransientVariables() {
         assert jani != null;
 
-        return ProcessorRegistrar.getProcessor(jani.getAutomata())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(jani.getAutomata())
                 .usesTransientVariables();		
     }
 
@@ -123,7 +123,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         // Variable assignment to be registered
         for (Automaton automaton : jani.getAutomata()) {
             JANIComponentRegistrar.setDefaultAutomatonForUnassignedClocks(automaton);
-            ProcessorRegistrar.getProcessor(automaton)
+            PRISMExporter_ProcessorRegistrar.getProcessor(automaton)
                 .findAssignedVariables();
         }
 
@@ -143,7 +143,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
         }
 
         // check for transient variables being used in guards or in assigning values to non-transient variables
-        ProcessorRegistrar.getProcessor(jani.getAutomata()).validateTransientVariables();
+        PRISMExporter_ProcessorRegistrar.getProcessor(jani.getAutomata()).validateTransientVariables();
 
         // Initial states expression
         InitialStates initial = jani.getRestrictInitial();

@@ -22,7 +22,7 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ExpressionSteadyStateProcessor implements JANI2PRISMProcessorStrict {
 
@@ -41,7 +41,7 @@ public class PRISMExporter_ExpressionSteadyStateProcessor implements JANI2PRISMP
     public String toPRISM() {
         assert steadyState != null;
 
-        return ProcessorRegistrar.getProcessor(steadyState.getOperand1())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(steadyState.getOperand1())
                 .toPRISM();
     }
 
@@ -50,7 +50,7 @@ public class PRISMExporter_ExpressionSteadyStateProcessor implements JANI2PRISMP
         assert steadyState != null;
 
         for (Expression child: steadyState.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -61,7 +61,7 @@ public class PRISMExporter_ExpressionSteadyStateProcessor implements JANI2PRISMP
 
         boolean usesTransient = false;
         for (Expression child : steadyState.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

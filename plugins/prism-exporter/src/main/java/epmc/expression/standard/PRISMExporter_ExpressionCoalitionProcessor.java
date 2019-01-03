@@ -27,7 +27,7 @@ import epmc.expression.Expression;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended {
 
@@ -57,11 +57,11 @@ public class PRISMExporter_ExpressionCoalitionProcessor implements JANI2PRISMPro
             } else {
                 notFirst = true;
             }
-            prism.append(ProcessorRegistrar.getProcessor(player.getExpression())
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(player.getExpression())
                     .toPRISM());
         }
         prism.append(">>")
-            .append(ProcessorRegistrar.getProcessor(coalition.getInner())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(coalition.getInner())
                     .toPRISM());
 
         return prism.toString();
@@ -72,7 +72,7 @@ public class PRISMExporter_ExpressionCoalitionProcessor implements JANI2PRISMPro
         assert coalition != null;
 
         for (Expression child : coalition.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -83,7 +83,7 @@ public class PRISMExporter_ExpressionCoalitionProcessor implements JANI2PRISMPro
 
         boolean usesTransient = false;
         for (Expression child : coalition.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

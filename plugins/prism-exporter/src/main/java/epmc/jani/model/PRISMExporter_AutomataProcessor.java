@@ -22,7 +22,7 @@ package epmc.jani.model;
 
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_AutomataProcessor implements JANI2PRISMProcessorStrict {
 
@@ -45,7 +45,7 @@ public class PRISMExporter_AutomataProcessor implements JANI2PRISMProcessorStric
 
         for (Automaton automaton : automata) {
             //AT: the location renaming is performed during the computation of AutomatonProcessor.toPRISM()
-            String automatonString = ProcessorRegistrar.getProcessor(automaton)
+            String automatonString = PRISMExporter_ProcessorRegistrar.getProcessor(automaton)
                     .toPRISM();
             prism.append(JANIComponentRegistrar.locationRenaming(automaton))
                 .append(automatonString)
@@ -60,7 +60,7 @@ public class PRISMExporter_AutomataProcessor implements JANI2PRISMProcessorStric
         assert automata != null;
 
         for (Automaton automaton : automata) {
-            ProcessorRegistrar.getProcessor(automaton)
+            PRISMExporter_ProcessorRegistrar.getProcessor(automaton)
                 .validateTransientVariables();
         }
     }
@@ -71,7 +71,7 @@ public class PRISMExporter_AutomataProcessor implements JANI2PRISMProcessorStric
 
         boolean usesTransient = false;
         for (Automaton automaton : automata) {
-            usesTransient |= ProcessorRegistrar.getProcessor(automaton)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(automaton)
                     .usesTransientVariables();
         }
 

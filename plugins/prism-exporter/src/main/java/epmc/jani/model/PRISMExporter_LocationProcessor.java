@@ -21,7 +21,7 @@
 package epmc.jani.model;
 
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_LocationProcessor implements JANI2PRISMProcessorStrict {
 
@@ -49,11 +49,11 @@ public class PRISMExporter_LocationProcessor implements JANI2PRISMProcessorStric
 
         TimeProgress timeProgress = location.getTimeProgress();
         if (timeProgress != null) {
-            ProcessorRegistrar.getProcessor(timeProgress)
+            PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress)
                 .validateTransientVariables();
         }
         for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-            ProcessorRegistrar.getProcessor(assignment)
+            PRISMExporter_ProcessorRegistrar.getProcessor(assignment)
                 .validateTransientVariables();
         }
     }
@@ -65,11 +65,11 @@ public class PRISMExporter_LocationProcessor implements JANI2PRISMProcessorStric
         boolean usesTransient = false;
         TimeProgress timeProgress = location.getTimeProgress();
         if (timeProgress != null) {
-            usesTransient |= ProcessorRegistrar.getProcessor(timeProgress)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress)
                     .usesTransientVariables();
         }
         for (AssignmentSimple assignment : location.getTransientValueAssignmentsOrEmpty()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(assignment)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(assignment)
                     .usesTransientVariables();
         }
 

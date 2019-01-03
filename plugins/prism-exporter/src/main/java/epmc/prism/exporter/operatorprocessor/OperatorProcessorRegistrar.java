@@ -108,7 +108,7 @@ import epmc.operator.PRISMExporter_OperatorUnderflowProcessor;
 import epmc.operator.OperatorWiden;
 import epmc.operator.PRISMExporter_OperatorWidenProcessor;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.util.Util;
 
 /**
@@ -173,7 +173,7 @@ public class OperatorProcessorRegistrar {
             if (extendedOperatorProcessorClass != null) {
                 processor = Util.getInstance(extendedOperatorProcessorClass)
                         .setExpressionOperator(expressionOperator);
-                ensure(ProcessorRegistrar.getUseExtendedPRISMSyntax(), 
+                ensure(PRISMExporter_ProcessorRegistrar.getUseExtendedPRISMSyntax(), 
                         ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
                         ((JANI2PRISMOperatorProcessorExtended)processor).getUnsupportedFeature()
                             .toArray());
@@ -182,7 +182,7 @@ public class OperatorProcessorRegistrar {
                 if (nonPRISMOperatorProcessorClass != null) {
                     processor = Util.getInstance(nonPRISMOperatorProcessorClass)
                             .setExpressionOperator(expressionOperator);
-                    ensure(ProcessorRegistrar.getUseNonPRISMSyntax(), 
+                    ensure(PRISMExporter_ProcessorRegistrar.getUseNonPRISMSyntax(), 
                             ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
                             ((JANI2PRISMOperatorProcessorNonPRISM)processor).getUnsupportedFeature()
                                 .toArray());

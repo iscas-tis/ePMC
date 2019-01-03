@@ -22,7 +22,7 @@ package epmc.jani.model;
 
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStrict {
 
@@ -68,7 +68,7 @@ public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStri
 
         Variables local = automaton.getVariablesNonTransient();
         if (local != null) {
-            prism.append(ProcessorRegistrar.getProcessor(local)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(local)
                     .setPrefix(PRISMExporter_ModelJANIProcessor.INDENT)
                     .setForDefinition(true)
                     .toPRISM());
@@ -76,25 +76,25 @@ public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStri
 
         if (automaton.equals(JANIComponentRegistrar.getDefaultAutomatonForUnassignedClocks())) {
             for (Variable variable : JANIComponentRegistrar.getUnassignedClockVariables()) {
-                prism.append(ProcessorRegistrar.getProcessor(variable)
+                prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(variable)
                         .setPrefix(PRISMExporter_ModelJANIProcessor.INDENT)
                         .setForDefinition(true)
                         .toPRISM());
             }
         }
         for (Variable variable : JANIComponentRegistrar.getLocalVariablesOrEmpty(automaton)) {
-            prism.append(ProcessorRegistrar.getProcessor(variable)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(variable)
                     .setPrefix(PRISMExporter_ModelJANIProcessor.INDENT)
                     .setForDefinition(true)
                     .toPRISM());
         }
 
-        prism.append(ProcessorRegistrar.getProcessor(automaton.getLocations())
+        prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(automaton.getLocations())
                 .setPrefix(PRISMExporter_ModelJANIProcessor.INDENT)
                 .setAutomaton(automaton)
                 .toPRISM())
             .append("\n")
-            .append(ProcessorRegistrar.getProcessor(automaton.getEdges())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(automaton.getEdges())
                 .setPrefix(PRISMExporter_ModelJANIProcessor.INDENT)
                 .setAutomaton(automaton)
                 .toPRISM())
@@ -109,12 +109,12 @@ public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStri
 
         InitialStates initial = automaton.getInitialStates();
         if (initial != null) {
-            ProcessorRegistrar.getProcessor(initial)
+            PRISMExporter_ProcessorRegistrar.getProcessor(initial)
                 .validateTransientVariables();
         }
-        ProcessorRegistrar.getProcessor(automaton.getLocations())
+        PRISMExporter_ProcessorRegistrar.getProcessor(automaton.getLocations())
             .validateTransientVariables();
-        ProcessorRegistrar.getProcessor(automaton.getEdges())
+        PRISMExporter_ProcessorRegistrar.getProcessor(automaton.getEdges())
             .validateTransientVariables();
     }
 
@@ -125,12 +125,12 @@ public class PRISMExporter_AutomatonProcessor implements JANI2PRISMProcessorStri
         boolean usesTransient = false;
         InitialStates initial = automaton.getInitialStates();
         if (initial != null) {
-            usesTransient |= ProcessorRegistrar.getProcessor(initial)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(initial)
                     .usesTransientVariables();
         }
-        usesTransient |= ProcessorRegistrar.getProcessor(automaton.getLocations())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(automaton.getLocations())
                 .usesTransientVariables();
-        usesTransient |= ProcessorRegistrar.getProcessor(automaton.getEdges())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(automaton.getEdges())
                 .usesTransientVariables();
 
         return usesTransient;

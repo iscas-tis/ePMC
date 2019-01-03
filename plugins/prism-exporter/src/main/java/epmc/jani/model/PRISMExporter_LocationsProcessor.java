@@ -25,7 +25,7 @@ import static epmc.error.UtilError.ensure;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.prism.exporter.util.Range;
 
 public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStrict {
@@ -62,7 +62,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
         assert locations != null;
 
         // PRISM has no notion of locations, so it must be that there is exactly one location in order to be able to export the model
-        ensure(ProcessorRegistrar.getAllowMultipleLocations() || locations.size() == 1, 
+        ensure(PRISMExporter_ProcessorRegistrar.getAllowMultipleLocations() || locations.size() == 1, 
                 ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_MULTIPLE_LOCATIONS);
 
         StringBuilder prism = new StringBuilder();
@@ -78,7 +78,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
             for (Location location : locations) {
                 TimeProgress timeProgress = location.getTimeProgress();
                 if (timeProgress != null) {
-                    prism.append(ProcessorRegistrar.getProcessor(timeProgress)
+                    prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress)
                             .setPrefix(prefix)
                             .toPRISM())
                         .append("\n");
@@ -123,7 +123,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
                             .append("=")
                             .append(JANIComponentRegistrar.getLocationIdentifier(automaton, location))
                             .append(" => (")
-                            .append(ProcessorRegistrar.getProcessor(timeProgress.getExp())
+                            .append(PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress.getExp())
                                 .toPRISM())
                             .append("))\n");
                     }
@@ -140,7 +140,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
         assert locations != null;
 
         for (Location location : locations) {
-            ProcessorRegistrar.getProcessor(location)
+            PRISMExporter_ProcessorRegistrar.getProcessor(location)
                 .validateTransientVariables();
         }
     }
@@ -151,7 +151,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
 
         boolean usesTransient = false;
         for (Location location : locations) {
-            usesTransient |= ProcessorRegistrar.getProcessor(location)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(location)
                     .usesTransientVariables();
         }
 

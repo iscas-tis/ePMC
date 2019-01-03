@@ -21,7 +21,7 @@
 package epmc.jani.model;
 
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorStrict {
 
@@ -51,7 +51,7 @@ public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorS
 
         boolean notFirst = false;
         for (Destination destination : destinations) {
-            JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(destination);
+            JANI2PRISMProcessorStrict processor = PRISMExporter_ProcessorRegistrar.getProcessor(destination);
             if (notFirst) {
                 processor.setPrefix(" + ");
             } else {
@@ -69,7 +69,7 @@ public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorS
         assert destinations != null;
 
         for (Destination destination : destinations) {
-            ProcessorRegistrar.getProcessor(destination)
+            PRISMExporter_ProcessorRegistrar.getProcessor(destination)
                 .validateTransientVariables();
         }
     }
@@ -80,7 +80,7 @@ public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorS
 
         boolean usesTransient = false;
         for (Destination destination : destinations) {
-            usesTransient |= ProcessorRegistrar.getProcessor(destination)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(destination)
                     .usesTransientVariables();
         }
 

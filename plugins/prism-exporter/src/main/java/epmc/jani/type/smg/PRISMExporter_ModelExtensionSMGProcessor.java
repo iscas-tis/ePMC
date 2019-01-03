@@ -25,7 +25,7 @@ import java.util.List;
 
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public final class PRISMExporter_ModelExtensionSMGProcessor implements JANI2PRISMProcessorExtended {
 
@@ -47,7 +47,7 @@ public final class PRISMExporter_ModelExtensionSMGProcessor implements JANI2PRIS
         
         prism.append(ModelExtensionSMG.IDENTIFIER)
             .append("\n")
-            .append(ProcessorRegistrar.getProcessor(smg.getPlayers()).toPRISM());
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(smg.getPlayers()).toPRISM());
         
         return prism.toString();
     }
@@ -64,13 +64,13 @@ public final class PRISMExporter_ModelExtensionSMGProcessor implements JANI2PRIS
     public void validateTransientVariables() {
         assert smg != null;
 
-        ProcessorRegistrar.getProcessor(smg.getPlayers()).validateTransientVariables();
+        PRISMExporter_ProcessorRegistrar.getProcessor(smg.getPlayers()).validateTransientVariables();
     }
 
     @Override
     public boolean usesTransientVariables() {
         assert smg != null;
 
-        return ProcessorRegistrar.getProcessor(smg.getPlayers()).usesTransientVariables();
+        return PRISMExporter_ProcessorRegistrar.getProcessor(smg.getPlayers()).usesTransientVariables();
     }	
 }

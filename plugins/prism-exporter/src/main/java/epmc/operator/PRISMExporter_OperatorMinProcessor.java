@@ -22,7 +22,7 @@ package epmc.operator;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 /**
  * @author Andrea Turrini
@@ -55,10 +55,10 @@ public class PRISMExporter_OperatorMinProcessor implements JANI2PRISMOperatorPro
         StringBuilder prism = new StringBuilder();
 
         prism.append("min(")
-            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toPRISM())
             .append(", ")
-            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                         .toPRISM())
             .append(")");
 

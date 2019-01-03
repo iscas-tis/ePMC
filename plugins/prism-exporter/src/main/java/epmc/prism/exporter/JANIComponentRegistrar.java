@@ -41,7 +41,7 @@ import epmc.jani.model.PRISMExporter_ModelJANIProcessor;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.prism.exporter.util.Range;
 import epmc.time.TypeClock;
 
@@ -53,59 +53,57 @@ import epmc.time.TypeClock;
  */
 public class JANIComponentRegistrar {
 
-    private static final Collection<String> reservedWords;
+    private static final Collection<String> reservedWords = new HashSet<>();
     static {
-        Set<String> reservedWordsMutable = new HashSet<>();
-        reservedWordsMutable.add("A");
-        reservedWordsMutable.add("bool");
-        reservedWordsMutable.add("clock");
-        reservedWordsMutable.add("const");
-        reservedWordsMutable.add("ctmc");
-        reservedWordsMutable.add("C");
-        reservedWordsMutable.add("double");
-        reservedWordsMutable.add("dtmc");
-        reservedWordsMutable.add("E");
-        reservedWordsMutable.add("endinit");
-        reservedWordsMutable.add("endinvariant");
-        reservedWordsMutable.add("endmodule");
-        reservedWordsMutable.add("endrewards");
-        reservedWordsMutable.add("endsystem");
-        reservedWordsMutable.add("false");
-        reservedWordsMutable.add("formula");
-        reservedWordsMutable.add("filter");
-        reservedWordsMutable.add("func");
-        reservedWordsMutable.add("F");
-        reservedWordsMutable.add("global");
-        reservedWordsMutable.add("G");
-        reservedWordsMutable.add("init");
-        reservedWordsMutable.add("invariant");
-        reservedWordsMutable.add("I");
-        reservedWordsMutable.add("int");
-        reservedWordsMutable.add("label");
-        reservedWordsMutable.add("max");
-        reservedWordsMutable.add("mdp");
-        reservedWordsMutable.add("min");
-        reservedWordsMutable.add("module");
-        reservedWordsMutable.add("X");
-        reservedWordsMutable.add("nondeterministic");
-        reservedWordsMutable.add("Pmax");
-        reservedWordsMutable.add("Pmin");
-        reservedWordsMutable.add("P");
-        reservedWordsMutable.add("probabilistic");
-        reservedWordsMutable.add("prob");
-        reservedWordsMutable.add("pta");
-        reservedWordsMutable.add("rate");
-        reservedWordsMutable.add("rewards");
-        reservedWordsMutable.add("Rmax");
-        reservedWordsMutable.add("Rmin");
-        reservedWordsMutable.add("R");
-        reservedWordsMutable.add("S");
-        reservedWordsMutable.add("stochastic");
-        reservedWordsMutable.add("system");
-        reservedWordsMutable.add("true");
-        reservedWordsMutable.add("U");
-        reservedWordsMutable.add("W");
-        reservedWords = Collections.unmodifiableCollection(reservedWordsMutable);
+        reservedWords.add("A");
+        reservedWords.add("bool");
+        reservedWords.add("clock");
+        reservedWords.add("const");
+        reservedWords.add("ctmc");
+        reservedWords.add("C");
+        reservedWords.add("double");
+        reservedWords.add("dtmc");
+        reservedWords.add("E");
+        reservedWords.add("endinit");
+        reservedWords.add("endinvariant");
+        reservedWords.add("endmodule");
+        reservedWords.add("endrewards");
+        reservedWords.add("endsystem");
+        reservedWords.add("false");
+        reservedWords.add("formula");
+        reservedWords.add("filter");
+        reservedWords.add("func");
+        reservedWords.add("F");
+        reservedWords.add("global");
+        reservedWords.add("G");
+        reservedWords.add("init");
+        reservedWords.add("invariant");
+        reservedWords.add("I");
+        reservedWords.add("int");
+        reservedWords.add("label");
+        reservedWords.add("max");
+        reservedWords.add("mdp");
+        reservedWords.add("min");
+        reservedWords.add("module");
+        reservedWords.add("X");
+        reservedWords.add("nondeterministic");
+        reservedWords.add("Pmax");
+        reservedWords.add("Pmin");
+        reservedWords.add("P");
+        reservedWords.add("probabilistic");
+        reservedWords.add("prob");
+        reservedWords.add("pta");
+        reservedWords.add("rate");
+        reservedWords.add("rewards");
+        reservedWords.add("Rmax");
+        reservedWords.add("Rmin");
+        reservedWords.add("R");
+        reservedWords.add("S");
+        reservedWords.add("stochastic");
+        reservedWords.add("system");
+        reservedWords.add("true");
+        reservedWords.add("U");
+        reservedWords.add("W");
         reset();
     }
 
@@ -178,6 +176,12 @@ public class JANIComponentRegistrar {
         action_counter = 0;
         location_counter_name = 0;
         location_counter_id = 0;
+    }
+    
+    public static void addReservedWord(String word) {
+        assert word != null;
+        
+        reservedWords.add(word);
     }
     
     public static void addSilentAction(Action action) {
@@ -523,18 +527,18 @@ public class JANIComponentRegistrar {
 	            prism.append("rewards ").append(name).append("\n");
 	            expression = rewardStateExpressions.get(reward);
 	            if (expression != null) {
-	                processor = ProcessorRegistrar.getProcessor(expression);
+	                processor = PRISMExporter_ProcessorRegistrar.getProcessor(expression);
 	                prism.append(PRISMExporter_ModelJANIProcessor.INDENT).append("true : ").append(processor.toPRISM()).append(";\n");
 	            }
 	            Map<Action, Expression> mapAA = rewardTransitionExpressions.get(reward);
 	            if (mapAA != null) {
 	                for(Entry<Action, Expression> entryAA : mapAA.entrySet()) {
 	                    action = entryAA.getKey();
-	                    processor = ProcessorRegistrar.getProcessor(action);
+	                    processor = PRISMExporter_ProcessorRegistrar.getProcessor(action);
 	                    prism.append(PRISMExporter_ModelJANIProcessor.INDENT).append(processor.toPRISM()).append(" true : ");
 	
 	                    expression = entryAA.getValue();
-	                    processor = ProcessorRegistrar.getProcessor(expression);
+	                    processor = PRISMExporter_ProcessorRegistrar.getProcessor(expression);
 	                    prism.append(processor.toPRISM()).append(";\n");
 	
 	                }
@@ -746,7 +750,7 @@ public class JANIComponentRegistrar {
                     prism.append("// ").append(comment).append("\n")
                         .append(PRISMExporter_ModelJANIProcessor.INDENT);
                 }
-                prism.append(ProcessorRegistrar.getProcessor(initialStates.getExp())
+                prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(initialStates.getExp())
                         .toPRISM());
             }	
 

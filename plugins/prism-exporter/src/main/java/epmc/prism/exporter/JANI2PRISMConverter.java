@@ -21,7 +21,7 @@
 package epmc.prism.exporter;
 
 import epmc.jani.model.ModelJANI;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public final class JANI2PRISMConverter {
 
@@ -37,14 +37,14 @@ public final class JANI2PRISMConverter {
     public String convertModel() {
         assert jani != null;
 
-        return ProcessorRegistrar.getProcessor(jani)
+        return PRISMExporter_ProcessorRegistrar.getProcessor(jani)
                 .toPRISM();
     }
 
     public String convertProperties() {
         assert jani != null;
 
-        return ProcessorRegistrar.getProcessor(jani.getPropertyList())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(jani.getPropertyList())
                 .toPRISM();
     }
 }

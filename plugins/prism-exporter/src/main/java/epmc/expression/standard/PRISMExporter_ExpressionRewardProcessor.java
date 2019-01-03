@@ -22,7 +22,7 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_ExpressionRewardProcessor implements JANI2PRISMProcessorStrict {
 
@@ -48,22 +48,22 @@ public class PRISMExporter_ExpressionRewardProcessor implements JANI2PRISMProces
         switch(type) {
         case REACHABILITY:
             prism.append("(")
-                .append(ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(reward.getRewardReachSet())
                         .toPRISM())
                 .append(")");
             break;
         case INSTANTANEOUS:
         case CUMULATIVE:
             prism.append("(")
-                .append(ProcessorRegistrar.getProcessor(reward.getTime())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(reward.getTime())
                         .toPRISM())
                 .append(")");
             break;
         case DISCOUNTED:
-            prism.append(ProcessorRegistrar.getProcessor(reward.getTime())
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(reward.getTime())
                     .toPRISM())
                 .append(",")
-                .append(ProcessorRegistrar.getProcessor(reward.getDiscount())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(reward.getDiscount())
                         .toPRISM());
             break;
         default:
@@ -77,7 +77,7 @@ public class PRISMExporter_ExpressionRewardProcessor implements JANI2PRISMProces
         assert reward != null;
 
         for (Expression child : reward.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -88,7 +88,7 @@ public class PRISMExporter_ExpressionRewardProcessor implements JANI2PRISMProces
 
         boolean usesTransient = false;
         for (Expression child : reward.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

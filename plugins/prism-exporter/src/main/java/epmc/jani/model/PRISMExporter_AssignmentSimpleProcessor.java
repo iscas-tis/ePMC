@@ -24,7 +24,7 @@ import static epmc.error.UtilError.ensure;
 
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 public class PRISMExporter_AssignmentSimpleProcessor implements JANI2PRISMProcessorStrict {
 
@@ -56,10 +56,10 @@ public class PRISMExporter_AssignmentSimpleProcessor implements JANI2PRISMProces
             prism.append(prefix);
         }
         prism.append("(")
-            .append(ProcessorRegistrar.getProcessor(assignment.getRef())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(assignment.getRef())
                 .toPRISM())
             .append("'=")
-            .append(ProcessorRegistrar.getProcessor(assignment.getValue())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(assignment.getValue())
                 .toPRISM())
             .append(")");
         return prism.toString();
@@ -69,7 +69,7 @@ public class PRISMExporter_AssignmentSimpleProcessor implements JANI2PRISMProces
     public void validateTransientVariables() {
         assert assignment != null;
 
-        ensure(!ProcessorRegistrar.getProcessor(assignment.getValue())
+        ensure(!PRISMExporter_ProcessorRegistrar.getProcessor(assignment.getValue())
                     .usesTransientVariables(), 
                 ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_TRANSIENT_VARIABLE_FOR_NORMAL_VARIABLE, 
                 assignment.getRef()
@@ -81,9 +81,9 @@ public class PRISMExporter_AssignmentSimpleProcessor implements JANI2PRISMProces
         assert assignment != null;
 
         boolean usesTransient = false;
-        usesTransient |= ProcessorRegistrar.getProcessor(assignment.getRef())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(assignment.getRef())
                 .usesTransientVariables();
-        usesTransient |= ProcessorRegistrar.getProcessor(assignment.getValue())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(assignment.getValue())
                 .usesTransientVariables();
 
         return usesTransient;

@@ -23,7 +23,7 @@ package epmc.jani.model;
 import epmc.expression.Expression;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.time.TypeClock;
 
 public class PRISMExporter_VariableProcessor implements JANI2PRISMProcessorStrict {
@@ -83,7 +83,7 @@ public class PRISMExporter_VariableProcessor implements JANI2PRISMProcessorStric
         }
         prism.append(JANIComponentRegistrar.getIdentifierNameByIdentifier(variable))
             .append(" : ")
-            .append(ProcessorRegistrar.getProcessor(variable.getType())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(variable.getType())
                 .toPRISM());
 
         if (!JANIComponentRegistrar.areInitialConditionsUsed()) {
@@ -91,7 +91,7 @@ public class PRISMExporter_VariableProcessor implements JANI2PRISMProcessorStric
                 Expression initial = variable.getInitialValueOrNull();
                 if (initial != null) {
                     prism.append(" init ")
-                        .append(ProcessorRegistrar.getProcessor(initial)
+                        .append(PRISMExporter_ProcessorRegistrar.getProcessor(initial)
                             .toPRISM());
                 }
             }
