@@ -24,6 +24,9 @@ import epmc.value.ValueInteger;
 import static epmc.modelchecker.TestHelper.*;
 import static epmc.qmc.ModelNames.*;
 
+import java.util.ArrayList;
+import java.util.List;
+
 // TODO check why the tests have such a long set up time
 public final class QMCTest {
 
@@ -33,8 +36,14 @@ public final class QMCTest {
     }
 
     private final static Options prepareQMCOptions() {
+        List<String> qmcPlugins = new ArrayList<>();
+        qmcPlugins.add("epmc/qmc/target/classes/");
+        qmcPlugins.add("epmc/qmc-exporter/target/classes/");
+        qmcPlugins.add("epmc/qmc-tests/target/classes/");
+        
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, ModelPRISMQMC.IDENTIFIER);
+        options.set(OptionsPlugin.PLUGIN, qmcPlugins);
         return options;
     }
 
