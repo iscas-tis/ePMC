@@ -1,15 +1,15 @@
 package epmc.jani.model;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_TimeProgressProcessor implements PRISMExporter_ProcessorStrict {
 
     private TimeProgress timeProgress = null;
     private String prefix = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof TimeProgress; 
 
@@ -18,7 +18,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -28,7 +28,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
         assert timeProgress != null;
 
         StringBuilder prism = new StringBuilder();
-        JANI2PRISMProcessorStrict processor; 
+        PRISMExporter_ProcessorStrict processor; 
 
         String comment = timeProgress.getComment();
         if (comment != null) {

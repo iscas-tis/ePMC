@@ -21,15 +21,15 @@
 package epmc.jani.model;
 
 import epmc.prism.exporter.JANIComponentRegistrar;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_AutomataProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_AutomataProcessor implements PRISMExporter_ProcessorStrict {
 
     private Automata automata = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Automata;
 

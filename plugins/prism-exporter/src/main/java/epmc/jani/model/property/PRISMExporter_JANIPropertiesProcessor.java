@@ -21,15 +21,15 @@
 package epmc.jani.model.property;
 
 import epmc.modelchecker.RawProperty;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_JANIPropertiesProcessor implements PRISMExporter_ProcessorStrict {
 
     private JANIProperties properties = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof JANIProperties; 
 

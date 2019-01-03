@@ -23,17 +23,17 @@ package epmc.jani.model;
 import epmc.graph.SemanticsNonDet;
 import epmc.graph.SemanticsTimed;
 import epmc.prism.exporter.JANIComponentRegistrar;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ModelJANIProcessor implements PRISMExporter_ProcessorStrict {
 
     public static final String INDENT = "\t"; 
 
     private ModelJANI jani = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ModelJANI;
 

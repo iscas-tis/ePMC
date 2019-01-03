@@ -23,14 +23,14 @@ package epmc.expression.standard;
 import epmc.jani.model.JANIIdentifier;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.JANIComponentRegistrar;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 
-public class PRISMExporter_ExpressionIdentifierStandardProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionIdentifierStandardProcessor implements PRISMExporter_ProcessorStrict {
 
     private ExpressionIdentifierStandard identifier = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionIdentifierStandard; 
 

@@ -20,16 +20,16 @@
 
 package epmc.jani.model;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_VariablesProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_VariablesProcessor implements PRISMExporter_ProcessorStrict {
 
     private Variables variables = null;
     private String prefix = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Variables; 
 
@@ -38,7 +38,7 @@ public class PRISMExporter_VariablesProcessor implements JANI2PRISMProcessorStri
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }

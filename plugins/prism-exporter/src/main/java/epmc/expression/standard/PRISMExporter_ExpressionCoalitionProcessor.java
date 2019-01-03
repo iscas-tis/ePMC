@@ -25,16 +25,16 @@ import java.util.List;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorExtended;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionCoalitionProcessor implements JANI2PRISMProcessorExtended {
+public class PRISMExporter_ExpressionCoalitionProcessor implements PRISMExporter_ProcessorExtended {
 
     private ExpressionCoalition coalition = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionCoalition; 
 

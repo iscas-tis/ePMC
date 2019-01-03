@@ -22,7 +22,7 @@ package epmc.prism.exporter.processor;
 
 import java.util.List;
 
-public interface JANI2PRISMProcessorExtended extends JANI2PRISMProcessorStrict {
+public interface PRISMExporter_ProcessorNonPRISM extends PRISMExporter_ProcessorStrict {
 
     List<String> getUnsupportedFeature();
 }

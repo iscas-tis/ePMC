@@ -34,9 +34,9 @@ import epmc.operator.OperatorMod;
 import epmc.operator.OperatorPow;
 import epmc.operator.OperatorSqrt;
 
-public interface JANI2PRISMOperatorProcessorStrict {	
+public interface PRISMExporter_OperatorProcessorStrict {	
 
-    JANI2PRISMOperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator);
+    PRISMExporter_OperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator);
 
     /**
      * Decide whether the child operand needs to be wrapped with parentheses
