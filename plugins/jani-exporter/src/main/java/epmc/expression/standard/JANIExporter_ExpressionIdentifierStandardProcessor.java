@@ -22,15 +22,15 @@ package epmc.expression.standard;
 
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.util.UtilJSON;
 
-public class JANIExporter_ExpressionIdentifierStandardProcessor implements JANIProcessor {
+public class JANIExporter_ExpressionIdentifierStandardProcessor implements JANIExporter_Processor {
 
     private ExpressionIdentifierStandard identifier = null;
 
     @Override
-    public JANIProcessor setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionIdentifierStandard; 
 

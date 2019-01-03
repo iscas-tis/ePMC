@@ -26,12 +26,12 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.options.OptionsJANIExporter;
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.Action;
 import epmc.options.Options;
 
-public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JANIProcessor {
+public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JANIExporter_Processor {
     public static final String IDENTIFIER = "synchronisation-vectors";
     private static final String ELEMENTS = "elements";
     private static final String SYNCS = "syncs";
@@ -40,7 +40,7 @@ public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JA
     private ComponentSynchronisationVectors syncVectors = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof ComponentSynchronisationVectors; 
 

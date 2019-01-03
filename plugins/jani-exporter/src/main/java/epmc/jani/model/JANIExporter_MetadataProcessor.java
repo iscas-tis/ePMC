@@ -26,14 +26,14 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 
-public class JANIExporter_MetadataProcessor implements JANIProcessor {
+public class JANIExporter_MetadataProcessor implements JANIExporter_Processor {
 
     private Metadata metadata = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Metadata; 
 

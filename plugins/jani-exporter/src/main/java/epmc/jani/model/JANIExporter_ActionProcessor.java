@@ -24,9 +24,9 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 
-public class JANIExporter_ActionProcessor implements JANIProcessor {
+public class JANIExporter_ActionProcessor implements JANIExporter_Processor {
     /** Identifies the name of a given action. */
     private static final String NAME = "name";
     private static final String COMMENT = "comment";
@@ -34,7 +34,7 @@ public class JANIExporter_ActionProcessor implements JANIProcessor {
     private Action action = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Action; 
 

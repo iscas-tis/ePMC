@@ -22,17 +22,17 @@ package epmc.jani.model.type;
 
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.util.UtilJSON;
 
-public final class JANIExporter_JANITypeRealProcessor implements JANIProcessor {
+public final class JANIExporter_JANITypeRealProcessor implements JANIExporter_Processor {
     /** Identifier for real type. */
     private static final String REAL = "real";
 
     private JANITypeReal real = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof JANITypeReal;
 

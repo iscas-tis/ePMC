@@ -30,7 +30,7 @@ import javax.json.JsonValue;
 import epmc.expression.Expression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 import epmc.operator.OperatorIsPosInf;
@@ -40,7 +40,7 @@ import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
 
-public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor {
+public class JANIExporter_ExpressionQuantifierProcessor implements JANIExporter_Processor {
     private static final String OP = "op";
     private static final String PMAX = "Pmax";
     private static final String PMIN = "Pmin";
@@ -60,7 +60,7 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
     private ExpressionQuantifier expressionQuantifier = null;
 
     @Override
-    public JANIProcessor setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionQuantifier; 
 

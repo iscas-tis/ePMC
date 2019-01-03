@@ -22,9 +22,9 @@ package epmc.jani.exporter.processor;
 
 import javax.json.JsonValue;
 
-public interface JANIProcessor {	
+public interface JANIExporter_Processor {	
     
-    JANIProcessor setElement(Object component);
+    JANIExporter_Processor setElement(Object component);
 
     JsonValue toJSON();
 }

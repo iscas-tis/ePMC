@@ -24,11 +24,11 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
-public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIProcessor {
+public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIExporter_Processor {
     private static final String OP = "op";
     private static final String R = "R";
     private static final String U = "U";
@@ -41,7 +41,7 @@ public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIProc
     private ExpressionTemporalRelease expressionTemporalRelease = null;
 
     @Override
-    public JANIProcessor setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionTemporalRelease; 
 

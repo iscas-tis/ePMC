@@ -25,10 +25,10 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_ConstantProcessor implements JANIProcessor {
+public class JANIExporter_ConstantProcessor implements JANIExporter_Processor {
     /** Identifier for the name of the constant. */
     private static final String NAME = "name";
     /** Identifier for the type of the constant. */
@@ -41,7 +41,7 @@ public class JANIExporter_ConstantProcessor implements JANIProcessor {
     private Constant constant = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Constant; 
 

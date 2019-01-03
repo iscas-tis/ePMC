@@ -94,7 +94,7 @@ import epmc.util.Util;
  * @author Andrea Turrini
  *
  */
-public class OperatorProcessorRegistrar {
+public class JANIExporter_OperatorProcessorRegistrar {
     private static Map<Class<? extends Operator>, Class<? extends OperatorProcessor>> operatorProcessors = registerStrictOperatorProcessors();
 
     /**
@@ -125,7 +125,7 @@ public class OperatorProcessorRegistrar {
         } else {
             ensure(false, 
                     ProblemsJANIExporter.JANI_EXPORTER_ERROR_UNKNOWN_PROCESSOR, 
-                    expressionOperator.getClass().getSimpleName());
+                    expressionOperator.getOperator().getClass().getSimpleName());
         }
 
         return processor;
