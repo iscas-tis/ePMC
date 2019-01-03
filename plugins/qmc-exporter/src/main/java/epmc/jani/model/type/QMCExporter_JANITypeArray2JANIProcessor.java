@@ -20,22 +20,20 @@
 
 package epmc.jani.model.type;
 
-import javax.json.Json;
-import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.qmc.model.JANITypeArray;
 import epmc.util.UtilJSON;
 
-public final class QMCExporter_JANITypeArray2JANIProcessor implements JANIProcessor {
+public final class QMCExporter_JANITypeArray2JANIProcessor implements JANIExporter_Processor {
     /** Identifier for array type. */
     private static final String VECTOR = "vector";
 
     private JANITypeArray array = null;
 
     @Override
-    public JANIProcessor setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
         assert obj instanceof JANITypeArray;
 
         array = (JANITypeArray) obj;

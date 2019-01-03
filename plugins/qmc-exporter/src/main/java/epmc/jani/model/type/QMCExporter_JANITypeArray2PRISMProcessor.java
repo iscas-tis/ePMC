@@ -23,18 +23,18 @@ package epmc.jani.model.type;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorNonPRISM;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.qmc.exporter.messages.NonPRISMFeaturesQMCExporter;
 import epmc.qmc.model.JANITypeArray;
 
-public final class QMCExporter_JANITypeArray2PRISMProcessor implements JANI2PRISMProcessorNonPRISM {
+public final class QMCExporter_JANITypeArray2PRISMProcessor implements PRISMExporter_ProcessorNonPRISM {
 
     private JANITypeArray array = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj instanceof JANITypeArray;
 
         array = (JANITypeArray) obj;

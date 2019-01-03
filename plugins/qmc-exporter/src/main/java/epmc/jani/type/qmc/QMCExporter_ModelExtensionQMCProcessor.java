@@ -23,13 +23,13 @@ package epmc.jani.type.qmc;
 import java.util.LinkedList;
 import java.util.List;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorNonPRISM;
 import epmc.qmc.exporter.messages.NonPRISMFeaturesQMCExporter;
 
-public final class QMCExporter_ModelExtensionQMCProcessor implements JANI2PRISMProcessorNonPRISM {
+public final class QMCExporter_ModelExtensionQMCProcessor implements PRISMExporter_ProcessorNonPRISM {
 
     @Override
-    public JANI2PRISMProcessorNonPRISM setElement(Object obj) {
+    public PRISMExporter_ProcessorNonPRISM setElement(Object obj) {
         assert obj instanceof ModelExtensionQMC;
         return this;
     }
