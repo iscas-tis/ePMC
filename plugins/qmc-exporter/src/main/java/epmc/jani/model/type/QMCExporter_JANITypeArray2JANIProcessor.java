@@ -18,40 +18,35 @@
 
  *****************************************************************************/
 
-package epmc.jani.type.qmc;
+package epmc.jani.model.type;
 
-import java.util.LinkedList;
-import java.util.List;
+import javax.json.Json;
+import javax.json.JsonObjectBuilder;
+import javax.json.JsonValue;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
-import epmc.qmc.exporter.messages.NonPRISMFeaturesQMCExporter;
+import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.qmc.model.JANITypeArray;
+import epmc.util.UtilJSON;
 
-public final class QMCExporter_ModelExtensionQMCProcessor implements JANI2PRISMProcessorNonPRISM {
+public final class QMCExporter_JANITypeArray2JANIProcessor implements JANIProcessor {
+    /** Identifier for array type. */
+    private static final String VECTOR = "vector";
+
+    private JANITypeArray array = null;
 
     @Override
-    public JANI2PRISMProcessorNonPRISM setElement(Object obj) {
-        assert obj instanceof ModelExtensionQMC;
+    public JANIProcessor setElement(Object obj) {
+        assert obj instanceof JANITypeArray;
+
+        array = (JANITypeArray) obj;
         return this;
     }
 
+    
     @Override
-    public String toPRISM() {
-        return "qmc\n";
-    }
+    public JsonValue toJSON() {
+        assert array != null;
 
-    @Override
-    public void validateTransientVariables() {
-    }
-
-    @Override
-    public boolean usesTransientVariables() {
-        return false;
-    }	
-
-    @Override
-    public List<String> getUnsupportedFeature() {
-        List<String> ll = new LinkedList<>();
-        ll.add(NonPRISMFeaturesQMCExporter.QMC_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_QMC);
-        return ll;
+        return UtilJSON.toStringValue(VECTOR);
     }
 }

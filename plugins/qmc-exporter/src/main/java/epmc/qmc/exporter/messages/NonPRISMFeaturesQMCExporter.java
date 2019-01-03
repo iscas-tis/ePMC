@@ -45,6 +45,8 @@ public final class NonPRISMFeaturesQMCExporter {
     public final static String QMC_EXPORTER_NONPRISM_FEATURE_OPERATOR_UNDERFLOW = newMessage().setIdentifier("qmc-exporter-nonprism-feature-operator-underflow").build().toString();
     public final static String QMC_EXPORTER_NONPRISM_FEATURE_OPERATOR_WIDEN = newMessage().setIdentifier("qmc-exporter-nonprism-feature-operator-widen").build().toString();
     public final static String QMC_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_QMC = newMessage().setIdentifier("qmc-exporter-nonprism-feature-semantic-type-qmc").build().toString();
+    public final static String QMC_EXPORTER_NONPRISM_FEATURE_TYPE_ARRAY = newMessage().setIdentifier("qmc-exporter-nonprism-feature-type-array").build().toString();
+  
 
     /**
      * Creates a new message with given identifier with this resource bundle.

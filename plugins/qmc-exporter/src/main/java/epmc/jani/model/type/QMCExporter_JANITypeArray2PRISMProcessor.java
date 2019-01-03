@@ -20,31 +20,37 @@
 
 package epmc.jani.model.type;
 
+import java.util.LinkedList;
+import java.util.List;
+
+import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
 import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
+import epmc.qmc.exporter.messages.NonPRISMFeaturesQMCExporter;
+import epmc.qmc.model.JANITypeArray;
 
-public final class QMCExporter_JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict {
+public final class QMCExporter_JANITypeArray2PRISMProcessor implements JANI2PRISMProcessorNonPRISM {
 
-    private JANITypeBounded bounded = null;
+    private JANITypeArray array = null;
 
     @Override
     public JANI2PRISMProcessorStrict setElement(Object obj) {
-        assert obj instanceof JANITypeBounded;
+        assert obj instanceof JANITypeArray;
 
-        bounded = (JANITypeBounded) obj;
+        array = (JANITypeArray) obj;
         return this;
     }
 
     @Override
     public String toPRISM() {
-        assert bounded != null;
+        assert array != null;
         
         StringBuilder prism = new StringBuilder();
         prism.append("[")
-            .append(PRISMExporter_ProcessorRegistrar.getProcessor(bounded.getLowerBound())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(array)
                     .toPRISM())
             .append("..")
-            .append(PRISMExporter_ProcessorRegistrar.getProcessor(bounded.getUpperBound())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(array)
                     .toPRISM())
             .append("]");
         
@@ -53,13 +59,20 @@ public final class QMCExporter_JANITypeBoundedProcessor implements JANI2PRISMPro
 
     @Override
     public void validateTransientVariables() {
-        assert bounded != null;
+        assert array != null;
     }
 
     @Override
     public boolean usesTransientVariables() {
-        assert bounded != null;
+        assert array != null;
 
         return false;
     }	
+
+    @Override
+    public List<String> getUnsupportedFeature() {
+        List<String> ll = new LinkedList<>();
+        ll.add(NonPRISMFeaturesQMCExporter.QMC_EXPORTER_NONPRISM_FEATURE_TYPE_ARRAY);
+        return ll;
+    }
 }

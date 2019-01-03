@@ -20,7 +20,12 @@
 
 package epmc.qmc.exporter.plugin;
 
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
+import epmc.jani.model.type.QMCExporter_JANITypeArray2JANIProcessor;
+import epmc.jani.model.type.QMCExporter_JANITypeArray2PRISMProcessor;
 import epmc.plugin.BeforeModelCreation;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
+import epmc.qmc.model.JANITypeArray;
 
 /**
  * QMC exporter plugin class containing method to execute before model creation.
@@ -38,5 +43,10 @@ public final class BeforeModelCreationQMCExporter implements BeforeModelCreation
 
     @Override
     public void process() {
+        JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeArray.class, 
+                QMCExporter_JANITypeArray2JANIProcessor.class);
+        
+        PRISMExporter_ProcessorRegistrar.registerNonPRISMProcessor(JANITypeArray.class, 
+                QMCExporter_JANITypeArray2PRISMProcessor.class);        
     }
 }
