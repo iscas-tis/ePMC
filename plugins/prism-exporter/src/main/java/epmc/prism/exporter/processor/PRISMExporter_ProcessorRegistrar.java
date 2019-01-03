@@ -145,9 +145,9 @@ import epmc.util.Util;
  *
  */
 public class PRISMExporter_ProcessorRegistrar {
-    private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> strictProcessors = registerStrictProcessors();
-    private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> extendedProcessors = registerExtendedProcessors();
-    private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> nonPRISMProcessors = registerNonPRISMProcessors();
+    private static Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorStrict>> strictProcessors = registerStrictProcessors();
+    private static Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorExtended>> extendedProcessors = registerExtendedProcessors();
+    private static Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorNonPRISM>> nonPRISMProcessors = registerNonPRISMProcessors();
 
     private static boolean allowMultipleLocations = false;
     private static boolean useExtendedSyntax = false;
@@ -159,8 +159,8 @@ public class PRISMExporter_ProcessorRegistrar {
      * @param JANIComponent the JANI component to which associate the processor
      * @param JANI2PRISMProcessor the corresponding processor
      */
-    public static void registerStrictProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorStrict> JANI2PRISMProcessor) {
-        assert !JANI2PRISMProcessorExtended.class.isAssignableFrom(JANI2PRISMProcessor);
+    public static void registerStrictProcessor(Class<? extends Object> JANIComponent, Class<? extends PRISMExporter_ProcessorStrict> JANI2PRISMProcessor) {
+        assert !PRISMExporter_ProcessorExtended.class.isAssignableFrom(JANI2PRISMProcessor);
 
         strictProcessors.put(JANIComponent, JANI2PRISMProcessor);
     }
@@ -171,7 +171,7 @@ public class PRISMExporter_ProcessorRegistrar {
      * @param JANIComponent the JANI component to which associate the processor
      * @param JANI2PRISMProcessor the corresponding processor
      */
-    public static void registerExtendedProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorExtended> JANI2PRISMProcessor) {
+    public static void registerExtendedProcessor(Class<? extends Object> JANIComponent, Class<? extends PRISMExporter_ProcessorExtended> JANI2PRISMProcessor) {
         extendedProcessors.put(JANIComponent, JANI2PRISMProcessor);
     }
 
@@ -181,7 +181,7 @@ public class PRISMExporter_ProcessorRegistrar {
      * @param JANIComponent the JANI component to which associate the processor
      * @param JANI2PRISMProcessor the corresponding processor
      */
-    public static void registerNonPRISMProcessor(Class<? extends Object> JANIComponent, Class<? extends JANI2PRISMProcessorNonPRISM> JANI2PRISMProcessor) {
+    public static void registerNonPRISMProcessor(Class<? extends Object> JANIComponent, Class<? extends PRISMExporter_ProcessorNonPRISM> JANI2PRISMProcessor) {
         nonPRISMProcessors.put(JANIComponent, JANI2PRISMProcessor);
     }
 
@@ -191,31 +191,31 @@ public class PRISMExporter_ProcessorRegistrar {
      * @param JANIComponent the JANI component for which obtain the processor
      * @return the corresponding processor
      */
-    public static JANI2PRISMProcessorStrict getProcessor(Object JANIComponent) {
+    public static PRISMExporter_ProcessorStrict getProcessor(Object JANIComponent) {
         assert JANIComponent != null;
 
-        JANI2PRISMProcessorStrict processor = null;
-        Class<? extends JANI2PRISMProcessorStrict> processorClass = strictProcessors.get(JANIComponent.getClass());
+        PRISMExporter_ProcessorStrict processor = null;
+        Class<? extends PRISMExporter_ProcessorStrict> processorClass = strictProcessors.get(JANIComponent.getClass());
         if (processorClass != null) {
             processor = Util.getInstance(processorClass)
                     .setElement(JANIComponent);
         } else {
-            Class<? extends JANI2PRISMProcessorExtended> extendedProcessorClass = extendedProcessors.get(JANIComponent.getClass());
+            Class<? extends PRISMExporter_ProcessorExtended> extendedProcessorClass = extendedProcessors.get(JANIComponent.getClass());
             if (extendedProcessorClass != null) {
                 processor = Util.getInstance(extendedProcessorClass)
                         .setElement(JANIComponent);
                 ensure(useExtendedSyntax, 
                         ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
-                        ((JANI2PRISMProcessorExtended)processor).getUnsupportedFeature()
+                        ((PRISMExporter_ProcessorExtended)processor).getUnsupportedFeature()
                             .toArray());
             } else {
-                Class<? extends JANI2PRISMProcessorNonPRISM> nonPRISMProcessorClass = nonPRISMProcessors.get(JANIComponent.getClass());
+                Class<? extends PRISMExporter_ProcessorNonPRISM> nonPRISMProcessorClass = nonPRISMProcessors.get(JANIComponent.getClass());
                 if (nonPRISMProcessorClass != null) {
                     processor = Util.getInstance(nonPRISMProcessorClass)
                             .setElement(JANIComponent);
                     ensure(useNonPRISMSyntax, 
                             ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
-                            ((JANI2PRISMProcessorNonPRISM)processor).getUnsupportedFeature()
+                            ((PRISMExporter_ProcessorNonPRISM)processor).getUnsupportedFeature()
                                 .toArray());
                 } else {
                     ensure(false, 
@@ -258,8 +258,8 @@ public class PRISMExporter_ProcessorRegistrar {
         return allowMultipleLocations;
     }
 
-    private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> registerStrictProcessors() {
-        Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorStrict>> processors = new HashMap<>();
+    private static Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorStrict>> registerStrictProcessors() {
+        Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorStrict>> processors = new HashMap<>();
 
         //Semantic types
         processors.put(ModelExtensionCTMC.class, PRISMExporter_ModelExtensionCTMCProcessor.class);
@@ -352,8 +352,8 @@ public class PRISMExporter_ProcessorRegistrar {
         return processors;
     }
 
-    private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> registerExtendedProcessors() {
-        Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorExtended>> processors = new HashMap<>();
+    private static Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorExtended>> registerExtendedProcessors() {
+        Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorExtended>> processors = new HashMap<>();
 
         //Semantic types
         processors.put(ModelExtensionSMG.class, PRISMExporter_ModelExtensionSMGProcessor.class);
@@ -368,8 +368,8 @@ public class PRISMExporter_ProcessorRegistrar {
         return processors;
     }
 
-    private static Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> registerNonPRISMProcessors() {
-        Map<Class<? extends Object>, Class<? extends JANI2PRISMProcessorNonPRISM>> processors = new HashMap<>();
+    private static Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorNonPRISM>> registerNonPRISMProcessors() {
+        Map<Class<? extends Object>, Class<? extends PRISMExporter_ProcessorNonPRISM>> processors = new HashMap<>();
 
         //Semantic types
         processors.put(ModelExtensionLTS.class, PRISMExporter_ModelExtensionLTSProcessor.class);

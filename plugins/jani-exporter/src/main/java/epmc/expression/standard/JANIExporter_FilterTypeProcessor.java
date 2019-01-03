@@ -7,10 +7,10 @@ import static epmc.error.UtilError.ensure;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.error.ProblemsJANIExporter;
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.util.UtilJSON;
 
-public class JANIExporter_FilterTypeProcessor implements JANIProcessor {
+public class JANIExporter_FilterTypeProcessor implements JANIExporter_Processor {
     private static final String FUN_MIN = "min";
     private static final String FUN_MAX = "max";
     private static final String FUN_SUM = "sum";
@@ -25,7 +25,7 @@ public class JANIExporter_FilterTypeProcessor implements JANIProcessor {
     private FilterType filterType = null;
     
     @Override
-    public JANIProcessor setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
         assert obj != null;
         assert obj instanceof FilterType;
    

@@ -21,14 +21,14 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionTemporalUntilProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionTemporalUntilProcessor implements PRISMExporter_ProcessorStrict {
     private ExpressionTemporalUntil temporal = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionTemporalUntil; 
 

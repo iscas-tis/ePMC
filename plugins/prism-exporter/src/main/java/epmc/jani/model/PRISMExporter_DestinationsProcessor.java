@@ -20,22 +20,22 @@
 
 package epmc.jani.model;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_DestinationsProcessor implements PRISMExporter_ProcessorStrict {
 
     private Destinations destinations = null;
     private Automaton automaton = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+    public PRISMExporter_ProcessorStrict setAutomaton(Automaton automaton) {
         this.automaton = automaton;
         return this;
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Destinations; 
 
@@ -51,7 +51,7 @@ public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorS
 
         boolean notFirst = false;
         for (Destination destination : destinations) {
-            JANI2PRISMProcessorStrict processor = PRISMExporter_ProcessorRegistrar.getProcessor(destination);
+            PRISMExporter_ProcessorStrict processor = PRISMExporter_ProcessorRegistrar.getProcessor(destination);
             if (notFirst) {
                 processor.setPrefix(" + ");
             } else {

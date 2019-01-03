@@ -35,10 +35,10 @@ import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorMultiply;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_EdgeProcessor implements PRISMExporter_ProcessorStrict {
 
 	private static ExpressionOperator newOperator(Operator operator, Expression operand1, Expression operand2) {
         return new ExpressionOperator.Builder()
@@ -53,7 +53,7 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
     private Automaton automaton = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Edge; 
 
@@ -84,13 +84,13 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+    public PRISMExporter_ProcessorStrict setAutomaton(Automaton automaton) {
         this.automaton = automaton;
         return this;
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }

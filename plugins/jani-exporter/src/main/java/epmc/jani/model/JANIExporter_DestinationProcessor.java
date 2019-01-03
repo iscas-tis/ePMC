@@ -24,10 +24,10 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_DestinationProcessor implements JANIProcessor {
+public class JANIExporter_DestinationProcessor implements JANIExporter_Processor {
     /** String indicating the probability of this destination. */
     private static final String PROBABILITY = "probability";
     /** String indicating the source location of this edge. */
@@ -40,7 +40,7 @@ public class JANIExporter_DestinationProcessor implements JANIProcessor {
     private Destination destination = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Destination; 
 

@@ -22,17 +22,17 @@ package epmc.jani.model.type;
 
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.util.UtilJSON;
 
-public final class JANIExporter_JANITypeIntProcessor implements JANIProcessor {
+public final class JANIExporter_JANITypeIntProcessor implements JANIExporter_Processor {
     /** Identifier for integer type. */
     private static final String INT = "int";
 
     private JANITypeInt integer = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof JANITypeInt;
 

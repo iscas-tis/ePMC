@@ -9,6 +9,9 @@ import static epmc.qmc.ModelNames.LOOP_ALTERNATIVE_MODEL;
 import static epmc.qmc.ModelNames.LOOP_MODEL;
 import static epmc.qmc.ModelNames.SUPERDENSE_CODING_MODEL;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -18,6 +21,7 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
+import epmc.plugin.OptionsPlugin;
 import epmc.qmc.model.ModelPRISMQMC;
 import epmc.qmc.model.PropertyPRISMQMC;
 import epmc.qmc.value.TypeMatrix;
@@ -38,11 +42,17 @@ public final class QMCTest {
     }
 
     private final static Options prepareQMCOptions() {
+        List<String> qmcPlugins = new ArrayList<>();
+        qmcPlugins.add("epmc/qmc/target/classes/");
+        qmcPlugins.add("epmc/qmc-exporter/target/classes/");
+        qmcPlugins.add("epmc/qmc-tests/target/classes/");
+        
         Options options = UtilOptionsEPMC.newOptions();
         prepareOptions(options, ModelPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.PROPERTY_INPUT_TYPE, PropertyPRISMQMC.IDENTIFIER);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
+        options.set(OptionsPlugin.PLUGIN, qmcPlugins);
         return options;
     }
 

@@ -24,15 +24,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorExtended;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public final class PRISMExporter_ModelExtensionSMGProcessor implements JANI2PRISMProcessorExtended {
+public final class PRISMExporter_ModelExtensionSMGProcessor implements PRISMExporter_ProcessorExtended {
 
     private ModelExtensionSMG smg;
 
     @Override
-    public JANI2PRISMProcessorExtended setElement(Object obj) {
+    public PRISMExporter_ProcessorExtended setElement(Object obj) {
         assert obj instanceof ModelExtensionSMG;
 
         smg = (ModelExtensionSMG) obj;

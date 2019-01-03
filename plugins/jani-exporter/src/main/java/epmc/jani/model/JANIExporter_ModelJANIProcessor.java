@@ -27,11 +27,11 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.modelchecker.Properties;
 
-public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
+public class JANIExporter_ModelJANIProcessor implements JANIExporter_Processor {
     /** Identifier of this model class. */
     public static final String IDENTIFIER = "jani";
     /** Identifies the part of a model where its system components are given. */
@@ -62,7 +62,7 @@ public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
     private ModelJANI jani = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof ModelJANI;
 

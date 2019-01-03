@@ -24,18 +24,18 @@ import static epmc.error.UtilError.ensure;
 
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.prism.exporter.util.Range;
 
-public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_LocationsProcessor implements PRISMExporter_ProcessorStrict {
 
     private Locations locations = null;
     private String prefix = null;
     private Automaton automaton = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+    public PRISMExporter_ProcessorStrict setAutomaton(Automaton automaton) {
         assert automaton != null;
 
         this.automaton = automaton;
@@ -43,7 +43,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Locations; 
 
@@ -52,7 +52,7 @@ public class PRISMExporter_LocationsProcessor implements JANI2PRISMProcessorStri
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }

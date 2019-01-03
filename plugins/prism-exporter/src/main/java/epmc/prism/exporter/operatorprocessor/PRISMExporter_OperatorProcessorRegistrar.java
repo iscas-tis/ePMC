@@ -117,10 +117,10 @@ import epmc.util.Util;
  * @author Andrea Turrini
  *
  */
-public class OperatorProcessorRegistrar {
-    private static Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorStrict>> strictOperatorProcessors = registerStrictOperatorProcessors();
-    private static Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorExtended>> extendedOperatorProcessors = registerExtendedOperatorProcessors();
-    private static Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorNonPRISM>> nonPRISMOperatorProcessors = registerNonPRISMOperatorProcessors();
+public class PRISMExporter_OperatorProcessorRegistrar {
+    private static Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorStrict>> strictOperatorProcessors = registerStrictOperatorProcessors();
+    private static Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorExtended>> extendedOperatorProcessors = registerExtendedOperatorProcessors();
+    private static Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorNonPRISM>> nonPRISMOperatorProcessors = registerNonPRISMOperatorProcessors();
 
     /**
      * Add a new operator processor for a JANI component in the set of known strict operator processors.
@@ -128,8 +128,8 @@ public class OperatorProcessorRegistrar {
      * @param JANIComponent the JANI component to which associate the processor
      * @param operatorProcessor the corresponding processor
      */
-    public static void registerStrictOperatorProcessor(Class<? extends Operator> operator, Class<? extends JANI2PRISMOperatorProcessorStrict> operatorProcessor) {
-        assert !JANI2PRISMOperatorProcessorExtended.class.isAssignableFrom(operatorProcessor);
+    public static void registerStrictOperatorProcessor(Class<? extends Operator> operator, Class<? extends PRISMExporter_OperatorProcessorStrict> operatorProcessor) {
+        assert !PRISMExporter_OperatorProcessorExtended.class.isAssignableFrom(operatorProcessor);
 
         strictOperatorProcessors.put(operator, operatorProcessor);
     }
@@ -140,7 +140,7 @@ public class OperatorProcessorRegistrar {
      * @param operator the JANI component to which associate the processor
      * @param operatorProcessor the corresponding processor
      */
-    public static void registerExtendedOperatorProcessor(Class<? extends Operator> operator, Class<? extends JANI2PRISMOperatorProcessorExtended> operatorProcessor) {
+    public static void registerExtendedOperatorProcessor(Class<? extends Operator> operator, Class<? extends PRISMExporter_OperatorProcessorExtended> operatorProcessor) {
         extendedOperatorProcessors.put(operator, operatorProcessor);
     }
 
@@ -150,7 +150,7 @@ public class OperatorProcessorRegistrar {
      * @param operator the JANI component to which associate the processor
      * @param operatorProcessor the corresponding processor
      */
-    public static void registerNonPRISMOperatorProcessor(Class<? extends Operator> operator, Class<? extends JANI2PRISMOperatorProcessorNonPRISM> operatorProcessor) {
+    public static void registerNonPRISMOperatorProcessor(Class<? extends Operator> operator, Class<? extends PRISMExporter_OperatorProcessorNonPRISM> operatorProcessor) {
         nonPRISMOperatorProcessors.put(operator, operatorProcessor);
     }
 
@@ -160,31 +160,31 @@ public class OperatorProcessorRegistrar {
      * @param expressionOperator the JANI component for which obtain the operator processor
      * @return the corresponding operator processor
      */
-    public static JANI2PRISMOperatorProcessorStrict getOperatorProcessor(ExpressionOperator expressionOperator) {
+    public static PRISMExporter_OperatorProcessorStrict getOperatorProcessor(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
 
-        JANI2PRISMOperatorProcessorStrict processor = null;
-        Class<? extends JANI2PRISMOperatorProcessorStrict> operatorProcessorClass = strictOperatorProcessors.get(expressionOperator.getOperator().getClass());
+        PRISMExporter_OperatorProcessorStrict processor = null;
+        Class<? extends PRISMExporter_OperatorProcessorStrict> operatorProcessorClass = strictOperatorProcessors.get(expressionOperator.getOperator().getClass());
         if (operatorProcessorClass != null) {
             processor = Util.getInstance(operatorProcessorClass)
                     .setExpressionOperator(expressionOperator);
         } else {
-            Class<? extends JANI2PRISMOperatorProcessorExtended> extendedOperatorProcessorClass = extendedOperatorProcessors.get(expressionOperator.getClass());
+            Class<? extends PRISMExporter_OperatorProcessorExtended> extendedOperatorProcessorClass = extendedOperatorProcessors.get(expressionOperator.getClass());
             if (extendedOperatorProcessorClass != null) {
                 processor = Util.getInstance(extendedOperatorProcessorClass)
                         .setExpressionOperator(expressionOperator);
                 ensure(PRISMExporter_ProcessorRegistrar.getUseExtendedPRISMSyntax(), 
                         ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
-                        ((JANI2PRISMOperatorProcessorExtended)processor).getUnsupportedFeature()
+                        ((PRISMExporter_OperatorProcessorExtended)processor).getUnsupportedFeature()
                             .toArray());
             } else {
-                Class<? extends JANI2PRISMOperatorProcessorNonPRISM> nonPRISMOperatorProcessorClass = nonPRISMOperatorProcessors.get(expressionOperator.getClass());
+                Class<? extends PRISMExporter_OperatorProcessorNonPRISM> nonPRISMOperatorProcessorClass = nonPRISMOperatorProcessors.get(expressionOperator.getClass());
                 if (nonPRISMOperatorProcessorClass != null) {
                     processor = Util.getInstance(nonPRISMOperatorProcessorClass)
                             .setExpressionOperator(expressionOperator);
                     ensure(PRISMExporter_ProcessorRegistrar.getUseNonPRISMSyntax(), 
                             ProblemsPRISMExporter.PRISM_EXPORTER_ERROR_EXTENDED_SYNTAX_REQUIRED, 
-                            ((JANI2PRISMOperatorProcessorNonPRISM)processor).getUnsupportedFeature()
+                            ((PRISMExporter_OperatorProcessorNonPRISM)processor).getUnsupportedFeature()
                                 .toArray());
                 } else {
                     ensure(false, 
@@ -197,8 +197,8 @@ public class OperatorProcessorRegistrar {
         return processor;
     }
 
-    private static Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorStrict>> registerStrictOperatorProcessors() {
-        Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorStrict>> operatorProcessors = new HashMap<>();
+    private static Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorStrict>> registerStrictOperatorProcessors() {
+        Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorStrict>> operatorProcessors = new HashMap<>();
         
         operatorProcessors.put(OperatorAddInverse.class, PRISMExporter_OperatorAddInverseProcessor.class);
         operatorProcessors.put(OperatorAdd.class, PRISMExporter_OperatorAddProcessor.class);
@@ -232,14 +232,14 @@ public class OperatorProcessorRegistrar {
         return operatorProcessors;
     }
 
-    private static Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorExtended>> registerExtendedOperatorProcessors() {
-        Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorExtended>> operatorProcessors = new HashMap<>();
+    private static Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorExtended>> registerExtendedOperatorProcessors() {
+        Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorExtended>> operatorProcessors = new HashMap<>();
         
         return operatorProcessors;
     }
 
-    private static Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorNonPRISM>> registerNonPRISMOperatorProcessors() {
-        Map<Class<? extends Operator>, Class<? extends JANI2PRISMOperatorProcessorNonPRISM>> operatorProcessors = new HashMap<>();
+    private static Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorNonPRISM>> registerNonPRISMOperatorProcessors() {
+        Map<Class<? extends Operator>, Class<? extends PRISMExporter_OperatorProcessorNonPRISM>> operatorProcessors = new HashMap<>();
         
         operatorProcessors.put(OperatorAbs.class, PRISMExporter_OperatorAbsProcessor.class);
         operatorProcessors.put(OperatorDistance.class, PRISMExporter_OperatorDistanceProcessor.class);

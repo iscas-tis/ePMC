@@ -22,14 +22,14 @@ package epmc.prism.exporter.processor;
 
 import epmc.jani.model.Automaton;
 
-public interface JANI2PRISMProcessorStrict {	
-    default JANI2PRISMProcessorStrict setPrefix(String prefix) { return this; };
+public interface PRISMExporter_ProcessorStrict {	
+    default PRISMExporter_ProcessorStrict setPrefix(String prefix) { return this; };
 
-    default JANI2PRISMProcessorStrict setForDefinition(boolean forDefinition) { return this; };
+    default PRISMExporter_ProcessorStrict setForDefinition(boolean forDefinition) { return this; };
 
-    default JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) { return this; };
+    default PRISMExporter_ProcessorStrict setAutomaton(Automaton automaton) { return this; };
 
-    JANI2PRISMProcessorStrict setElement(Object obj);
+    PRISMExporter_ProcessorStrict setElement(Object obj);
 
     /**
      * Generate a PRISM representation of the component.

@@ -25,12 +25,12 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.type.JANIType;
 import epmc.jani.valuejson.UtilValueJSON;
 
-public class JANIExporter_VariableProcessor implements JANIProcessor {
+public class JANIExporter_VariableProcessor implements JANIExporter_Processor {
     /** Identifies a variable. */
     private static final String TYPE = "type";
     /** Identifies the name of a variable. */
@@ -45,7 +45,7 @@ public class JANIExporter_VariableProcessor implements JANIProcessor {
     private Variable variable = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Variable; 
 

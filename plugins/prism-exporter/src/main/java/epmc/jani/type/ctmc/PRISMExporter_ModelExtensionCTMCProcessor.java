@@ -20,12 +20,12 @@
 
 package epmc.jani.type.ctmc;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 
-public final class PRISMExporter_ModelExtensionCTMCProcessor implements JANI2PRISMProcessorStrict {
+public final class PRISMExporter_ModelExtensionCTMCProcessor implements PRISMExporter_ProcessorStrict {
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj instanceof ModelExtensionCTMC;
         return this;
     }

@@ -40,7 +40,7 @@ import epmc.jani.model.Location;
 import epmc.jani.model.PRISMExporter_ModelJANIProcessor;
 import epmc.jani.model.Variable;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.prism.exporter.util.Range;
 import epmc.time.TypeClock;
@@ -503,7 +503,7 @@ public class JANIComponentRegistrar {
 
     public static String toPRISMRewards() {
         StringBuilder prism = new StringBuilder();
-        JANI2PRISMProcessorStrict processor; 
+        PRISMExporter_ProcessorStrict processor; 
 
         Expression expression;
         Action action;

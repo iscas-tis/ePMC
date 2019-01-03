@@ -25,10 +25,10 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.expression.Expression;
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public final class JANIExporter_JANITypeBoundedProcessor implements JANIProcessor {
+public final class JANIExporter_JANITypeBoundedProcessor implements JANIExporter_Processor {
     public static final String IDENTIFIER = "bounded";
     /** Identifies the type of variable type specification. */
     private static final String KIND = "kind";
@@ -47,7 +47,7 @@ public final class JANIExporter_JANITypeBoundedProcessor implements JANIProcesso
     private JANITypeBounded bounded = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof JANITypeBounded;
 

@@ -140,7 +140,7 @@ import epmc.util.Util;
  *
  */
 public class JANIExporter_ProcessorRegistrar {
-    private static final Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
+    private static final Map<Class<? extends Object>, Class<? extends JANIExporter_Processor>> processors = registerProcessors();
     private static final Set<ExpressionType> numericTypes = nativeNumericTypes();
     private static final Set<ExpressionType> booleanTypes = nativeBooleanTypes();
     
@@ -207,9 +207,9 @@ public class JANIExporter_ProcessorRegistrar {
      * Add a new processor for a JANI component in the set of known processors.
      * 
      * @param component the JANI component to which associate the processor
-     * @param JANIProcessor the corresponding processor
+     * @param JANIExporter_Processor the corresponding processor
      */
-    public static void registerProcessor(Class<? extends Object> component, Class<? extends JANIProcessor> processor) {
+    public static void registerProcessor(Class<? extends Object> component, Class<? extends JANIExporter_Processor> processor) {
         processors.put(component, processor);
     }
 
@@ -219,12 +219,12 @@ public class JANIExporter_ProcessorRegistrar {
      * @param component the JANI component for which obtain the processor
      * @return the corresponding processor
      */
-    public static JANIProcessor getProcessor(Object component) {
+    public static JANIExporter_Processor getProcessor(Object component) {
         assert model != null;
         assert component != null;
 
-        JANIProcessor processor = null;
-        Class<? extends JANIProcessor> processorClass = processors.get(component.getClass());
+        JANIExporter_Processor processor = null;
+        Class<? extends JANIExporter_Processor> processorClass = processors.get(component.getClass());
         if (processorClass != null) {
             processor = Util.getInstance(processorClass)
                     .setElement(component);
@@ -237,8 +237,8 @@ public class JANIExporter_ProcessorRegistrar {
         return processor;
     }
 
-    private static Map<Class<? extends Object>, Class<? extends JANIProcessor>> registerProcessors() {
-        Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = new HashMap<>();
+    private static Map<Class<? extends Object>, Class<? extends JANIExporter_Processor>> registerProcessors() {
+        Map<Class<? extends Object>, Class<? extends JANIExporter_Processor>> processors = new HashMap<>();
 
         //Semantic types
 //        processors.put(ModelExtensionCTMC.class, ModelExtensionCTMCProcessor.class);

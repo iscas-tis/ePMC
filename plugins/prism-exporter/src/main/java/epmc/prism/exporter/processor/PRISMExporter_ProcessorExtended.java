@@ -18,11 +18,11 @@
 
  *****************************************************************************/
 
-package epmc.prism.exporter.operatorprocessor;
+package epmc.prism.exporter.processor;
 
 import java.util.List;
 
-public interface JANI2PRISMOperatorProcessorExtended extends JANI2PRISMOperatorProcessorStrict {
+public interface PRISMExporter_ProcessorExtended extends PRISMExporter_ProcessorStrict {
 
     List<String> getUnsupportedFeature();
 }

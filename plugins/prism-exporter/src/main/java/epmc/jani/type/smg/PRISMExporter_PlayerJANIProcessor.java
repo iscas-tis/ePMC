@@ -28,15 +28,15 @@ import epmc.jani.model.Automaton;
 import epmc.jani.model.PRISMExporter_ModelJANIProcessor;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorExtended;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_PlayerJANIProcessor implements JANI2PRISMProcessorExtended {
+public class PRISMExporter_PlayerJANIProcessor implements PRISMExporter_ProcessorExtended {
 
     private PlayerJANI player = null;
 
     @Override
-    public JANI2PRISMProcessorExtended setElement(Object obj) {
+    public PRISMExporter_ProcessorExtended setElement(Object obj) {
         assert obj != null;
         assert obj instanceof PlayerJANI; 
 

@@ -18,13 +18,11 @@
 
  *****************************************************************************/
 
-package epmc.jani.exporter.processor;
+package epmc.prism.exporter.processor;
 
-import javax.json.JsonValue;
+import java.util.List;
 
-public interface JANIProcessor {	
-    
-    JANIProcessor setElement(Object component);
+public interface PRISMExporter_ProcessorNonPRISM extends PRISMExporter_ProcessorStrict {
 
-    JsonValue toJSON();
+    List<String> getUnsupportedFeature();
 }
