@@ -32,6 +32,8 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
 
     @Override
     public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+        assert automaton != null;
+        
         this.automaton = automaton;
         return this;
     }
@@ -54,6 +56,7 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
     @Override
     public String toPRISM() {
         assert destination != null;
+        assert automaton != null;
 
         StringBuilder prism = new StringBuilder();
 
@@ -74,14 +77,18 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
                 .append(" : ");
         }
 
+        Assignments assignments = destination.getAssignments();
+
         if (automaton.getLocations().size() > 1) {
             prism.append("(")
                 .append(JANIComponentRegistrar.getLocationName(automaton))
                 .append("'=")
                 .append(JANIComponentRegistrar.getLocationIdentifier(automaton, destination.getLocation()))
-                .append(") & ");
+                .append(")");
+            if (assignments != null) {
+                prism.append(" & ");
+            }
         }
-        Assignments assignments = destination.getAssignments();
         if (assignments != null) {
             prism.append(ProcessorRegistrar.getProcessor(assignments)
                     .toPRISM());

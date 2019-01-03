@@ -74,15 +74,23 @@ public class PRISMExporter_ConstantProcessor implements JANI2PRISMProcessorStric
     public void validateTransientVariables() {
         assert constant != null;
 
-        ProcessorRegistrar.getProcessor(constant.getValue())
-            .validateTransientVariables();
+        Expression value = constant.getValue();
+        if (value != null) {
+            ProcessorRegistrar.getProcessor(value)
+                .validateTransientVariables();
+        }
     }
 
     @Override
     public boolean usesTransientVariables() {
         assert constant != null;
 
-        return ProcessorRegistrar.getProcessor(constant.getValue())
+        Expression value = constant.getValue();
+        if (value != null) {
+            return ProcessorRegistrar.getProcessor(value)
                 .usesTransientVariables();
+        } else {
+            return false;
+        }
     }	
 }

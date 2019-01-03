@@ -42,20 +42,20 @@ public class PRISMExporter_AssignmentsProcessor implements JANI2PRISMProcessorSt
 
         StringBuilder prism = new StringBuilder();
 
-        boolean remaining = false;
+        boolean notFirst = false;
         for (AssignmentSimple assignment : assignments) {
             Variable variable = assignment.getRef();
             if (!variable.isTransient()) {
                 JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(assignment);
-                if (remaining) {
+                if (notFirst) {
                     processor.setPrefix(" & ");
                 } else {
-                    remaining = true;
+                    notFirst = true;
                 }
                 prism.append(processor.toPRISM());
             }
         }
-        if (!remaining) {
+        if (!notFirst) {
             prism.append("true");
         }
 

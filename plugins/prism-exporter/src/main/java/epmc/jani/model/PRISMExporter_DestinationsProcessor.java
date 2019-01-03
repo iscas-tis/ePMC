@@ -49,13 +49,13 @@ public class PRISMExporter_DestinationsProcessor implements JANI2PRISMProcessorS
 
         StringBuilder prism = new StringBuilder();
 
-        boolean remaining = false;
+        boolean notFirst = false;
         for (Destination destination : destinations) {
             JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(destination);
-            if (remaining) {
+            if (notFirst) {
                 processor.setPrefix(" + ");
             } else {
-                remaining = true;
+                notFirst = true;
             }
             prism.append(processor.setAutomaton(automaton)
                     .toPRISM());

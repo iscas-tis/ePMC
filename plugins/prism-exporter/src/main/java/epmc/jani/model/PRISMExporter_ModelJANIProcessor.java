@@ -106,7 +106,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
     public void validateTransientVariables() {
         assert jani != null;
 
-        ProcessorRegistrar.getProcessor(jani)
+        ProcessorRegistrar.getProcessor(jani.getAutomata())
             .validateTransientVariables();
     }
 
@@ -114,7 +114,7 @@ public class PRISMExporter_ModelJANIProcessor implements JANI2PRISMProcessorStri
     public boolean usesTransientVariables() {
         assert jani != null;
 
-        return ProcessorRegistrar.getProcessor(jani)
+        return ProcessorRegistrar.getProcessor(jani.getAutomata())
                 .usesTransientVariables();		
     }
 
