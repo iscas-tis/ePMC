@@ -19,7 +19,7 @@ public final class ConvertTest {
     @Test
     public void keyDistributionTest() {
         ConvertTestStatistics statistics = new ConvertTestConfiguration()
-                .setModelName(KEY_DISTRIBUTION)
+                .setModelName(KEY_DISTRIBUTION_MODEL)
                 .setExploreAll()
                 .run();
         System.out.println(statistics);
@@ -29,7 +29,7 @@ public final class ConvertTest {
     @Test
     public void loopTest() {
         ConvertTestStatistics statistics = new ConvertTestConfiguration()
-                .setModelName(LOOP)
+                .setModelName(LOOP_MODEL)
                 .setExploreAll()
                 .run();
         System.out.println(statistics);
@@ -38,7 +38,7 @@ public final class ConvertTest {
     @Test
     public void superdenseCodingTest() {
         ConvertTestStatistics statistics = new ConvertTestConfiguration()
-                .setModelName(SUPERDENSE_CODING)
+                .setModelName(SUPERDENSE_CODING_MODEL)
                 .setExploreAll()
                 .run();
         System.out.println(statistics);
