@@ -66,7 +66,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import epmc.jani.exporter.options.OptionsJANIExporter;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.ModelJANI;
 import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.options.OptionsModelChecker;
@@ -192,8 +192,8 @@ public final class ExportJANIToJANIModels {
         System.out.println("Generating JSON");
         JsonValue json = null;
         if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER)) {
-            ProcessorRegistrar.setModel(jani);
-            json = ProcessorRegistrar.getProcessor(jani)
+            JANIExporter_ProcessorRegistrar.setModel(jani);
+            json = JANIExporter_ProcessorRegistrar.getProcessor(jani)
                     .toJSON();
         } else {
             json = jani.generate();

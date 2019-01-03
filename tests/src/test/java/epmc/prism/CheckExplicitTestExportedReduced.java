@@ -18,40 +18,74 @@
 
  *****************************************************************************/
 
-package epmc.jani;
+package epmc.prism;
 
 import static epmc.ModelNamesPRISM.BEAUQUIER_MODEL;
+import static epmc.ModelNamesPRISM.BEAUQUIER_PROPERTY;
 import static epmc.ModelNamesPRISM.BRP_MODEL;
+import static epmc.ModelNamesPRISM.BRP_PROPERTY;
 import static epmc.ModelNamesPRISM.CELL_MODEL;
+import static epmc.ModelNamesPRISM.CELL_PROPERTY;
 import static epmc.ModelNamesPRISM.CLUSTER_MODEL;
+import static epmc.ModelNamesPRISM.CLUSTER_PROPERTY;
 import static epmc.ModelNamesPRISM.COIN_MODEL;
+import static epmc.ModelNamesPRISM.COIN_PROPERTY;
 import static epmc.ModelNamesPRISM.CSMA_MODEL;
+import static epmc.ModelNamesPRISM.CSMA_PROPERTY;
 import static epmc.ModelNamesPRISM.DICE_MODEL;
+import static epmc.ModelNamesPRISM.DICE_PROPERTY;
 import static epmc.ModelNamesPRISM.DINING_CRYPT_MODEL;
+import static epmc.ModelNamesPRISM.DINING_CRYPT_PROPERTY;
+import static epmc.ModelNamesPRISM.FIREWIRE_ABST_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_ABST_PROPERTY;
+import static epmc.ModelNamesPRISM.FIREWIRE_IMPL_MODEL;
+import static epmc.ModelNamesPRISM.FIREWIRE_IMPL_PROPERTY;
 import static epmc.ModelNamesPRISM.FMS_MODEL;
+import static epmc.ModelNamesPRISM.FMS_PROPERTY;
 import static epmc.ModelNamesPRISM.HERMAN_MODEL;
+import static epmc.ModelNamesPRISM.HERMAN_PROPERTY;
 import static epmc.ModelNamesPRISM.IJ_MODEL;
+import static epmc.ModelNamesPRISM.IJ_PROPERTY;
 import static epmc.ModelNamesPRISM.KANBAN_MODEL;
+import static epmc.ModelNamesPRISM.KANBAN_PROPERTY;
 import static epmc.ModelNamesPRISM.KNACL_MODEL;
+import static epmc.ModelNamesPRISM.KNACL_PROPERTY;
+import static epmc.ModelNamesPRISM.LEADER_ASYNC_MODEL;
+import static epmc.ModelNamesPRISM.LEADER_ASYNC_PROPERTY;
+import static epmc.ModelNamesPRISM.LEADER_SYNC_MODEL;
+import static epmc.ModelNamesPRISM.LEADER_SYNC_PROPERTY;
 import static epmc.ModelNamesPRISM.MC_MODEL;
+import static epmc.ModelNamesPRISM.MC_PROPERTY;
 import static epmc.ModelNamesPRISM.MUTUAL_MODEL;
+import static epmc.ModelNamesPRISM.MUTUAL_PROPERTY;
 import static epmc.ModelNamesPRISM.NACL_MODEL;
+import static epmc.ModelNamesPRISM.NACL_PROPERTY;
 import static epmc.ModelNamesPRISM.PEER2PEER_MODEL;
+import static epmc.ModelNamesPRISM.PEER2PEER_PROPERTY;
 import static epmc.ModelNamesPRISM.PHIL_LSS_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_LSS_PROPERTY;
 import static epmc.ModelNamesPRISM.PHIL_MODEL;
 import static epmc.ModelNamesPRISM.PHIL_NOFAIR_MODEL;
+import static epmc.ModelNamesPRISM.PHIL_NOFAIR_PROPERTY;
+import static epmc.ModelNamesPRISM.PHIL_PROPERTY;
 import static epmc.ModelNamesPRISM.POLLING_MODEL;
+import static epmc.ModelNamesPRISM.POLLING_PROPERTY;
 import static epmc.ModelNamesPRISM.RABIN_MODEL;
+import static epmc.ModelNamesPRISM.RABIN_PROPERTY;
 import static epmc.ModelNamesPRISM.TANDEM_MODEL;
+import static epmc.ModelNamesPRISM.TANDEM_PROPERTY;
 import static epmc.ModelNamesPRISM.TWO_DICE_MODEL;
+import static epmc.ModelNamesPRISM.TWO_DICE_PROPERTY;
 import static epmc.ModelNamesPRISM.WLAN_COLLIDE_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_COLLIDE_PROPERTY;
 import static epmc.ModelNamesPRISM.WLAN_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_PROPERTY;
 import static epmc.ModelNamesPRISM.WLAN_TIME_BOUNDED_MODEL;
+import static epmc.ModelNamesPRISM.WLAN_TIME_BOUNDED_PROPERTY;
 import static epmc.ModelNamesPRISM.ZEROCONF_MODEL;
+import static epmc.ModelNamesPRISM.ZEROCONF_PROPERTY;
 import static epmc.ModelNamesPRISM.ZEROCONF_TIME_BOUNDED_MODEL;
-import static epmc.jani.ModelNames.JANI_EXPORT_DIR;
-import static epmc.jani.ModelNames.JANI_EXTENSION;
-import static epmc.jani.ModelNames.getJANIFilenameFromPRISMFilename;
+import static epmc.ModelNamesPRISM.ZEROCONF_TIME_BOUNDED_PROPERTY;
 import static epmc.modelchecker.TestHelper.assertEquals;
 import static epmc.modelchecker.TestHelper.computeResults;
 import static epmc.modelchecker.TestHelper.computeResultsMapName;
@@ -71,7 +105,6 @@ import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
-import epmc.jani.model.ModelJANI;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.messages.TimeStampFormatSecondsStarted;
@@ -82,17 +115,19 @@ import epmc.modelchecker.TestHelper;
 import epmc.modelchecker.TestHelper.LogType;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
+import epmc.prism.model.ModelPRISM;
 import epmc.propertysolver.ltllazy.OptionsLTLLazy;
 import epmc.value.OptionsValue;
 import epmc.value.Value;
 
 /**
- * Tests for model checking of JANI models.
+ * Tests for model checking of PRISM models; based on the one for JANI models
  * 
+ * @author Andrea Turrini
  * @author Ernst Moritz Hahn
  */
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public final class CheckExplicitTestReduced {
+public final class CheckExplicitTestExportedReduced {
     /** Location of plugin directory in file system. */
     //    private final static String PLUGIN_DIR = System.getProperty("user.dir") + "/target/classes/";
 
@@ -104,86 +139,134 @@ public final class CheckExplicitTestReduced {
         prepare();
     }
 
+    private final Model loadModelExported(Options options, String modelFile, String propertiesFile) {
+        return loadModel(options, modelFile + "-exported", propertiesFile + "-exported");
+//        return loadModel(options, modelFile, propertiesFile);
+    }
+    
     /**
-     * Prepare options including loading JANI plugin.
+     * Prepare options including loading PRISM plugin.
      * 
-     * @return options usable for JANI model analysis
+     * @return options usable for PRISM model analysis
      */
-    private final static Options prepareJANIOptions() {
+    private final static Options preparePRISMOptions() {
         try {
             System.setErr(new PrintStream(new FileOutputStream("/tmp/log_file.txt", true)));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-        } 
+        }
         Options options = UtilOptionsEPMC.newOptions();
-        prepareOptions(options, LogType.TRANSLATE, ModelJANI.IDENTIFIER);
+        prepareOptions(options, LogType.TRANSLATE, ModelPRISM.IDENTIFIER);
         options.set(OptionsMessages.TIME_STAMPS, TimeStampFormatSecondsStarted.class);
         options.set(OptionsMessages.TRANSLATE_MESSAGES, "false");
-        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelJANI.IDENTIFIER);
+        options.set(OptionsModelChecker.MODEL_INPUT_TYPE, ModelPRISM.IDENTIFIER);
         options.set(OptionsModelChecker.ENGINE, EngineExplicit.class);
         options.set(TestHelper.ITERATION_TOLERANCE, "1.0E-9");
+        options.set(TestHelper.ITERATION_STOP_CRITERION, "absolute");
         options.set(OptionsLTLLazy.LTL_LAZY_INCREMENTAL, "true");
-        options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_FORMAT, "%.16f");
+        options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, "true");
         return options;
     }
 
+    private final static Options preparePRISMOptions(String outputLog) {
+        try {
+            System.setOut(new PrintStream(new FileOutputStream(outputLog + ".log", false)));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+        return preparePRISMOptions();
+    }
 
+    @Ignore
     @Test
-    public void testPRISMExportedRandomWalk() {
+    public void testPRISMTest() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        constants.put("p", "0.5");
-        Options options = prepareJANIOptions();
+//    	constants.put("N", "4");
+        Options options = preparePRISMOptions(System.getProperty("user.home") + "/test.prism");
+        options.set(OptionsModelChecker.CONST, constants);
+//        options.set(OptionsGraphsolver.GRAPHSOLVER_SOLVER, "graph-solver-lp");
+        Model model = null;
+        model = loadModelExported(options, System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop");
+
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+        //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
+        //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
+    }
+
+    @Ignore
+    @Test
+    public void testPRISMRandomWalk() {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+    	constants.put("p", "0.5");
+    	Options options = preparePRISMOptions(System.getProperty("user.home") + "/randomWalkNegative.prism");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, System.getProperty("user.home") + "/randomWalk.jani");
-
+        model = loadModelExported(options, System.getProperty("user.home") + "/randomWalkNegative.prism", System.getProperty("user.home") + "/randomWalk.pctl");
+        
         ModelCheckerResults result = computeResults(model);
         int i = 0;
 //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
 //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
     }
 
+    @Ignore
     @Test
-    public void testPRISMExportedTest() {
-        Map<String, Object> constants = new LinkedHashMap<>();
-//        constants.put("p", "0.5");
-        Options options = prepareJANIOptions();
+    public void testPRISMTest1() {
+    	Map<String, Object> constants = new LinkedHashMap<>();
+    	constants.put("N", "10");
+    	Options options = preparePRISMOptions(System.getProperty("user.home") + "/test1.prism");
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, System.getProperty("user.home") + "/test.jani");
-
+        model = loadModelExported(options, System.getProperty("user.home") + "/test1.prism", System.getProperty("user.home") + "/test1.props");
+        
         ModelCheckerResults result = computeResults(model);
         int i = 0;
 //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
 //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
     }
 
+    @Ignore
     @Test
-    public void testPRISMTest() { System.gc();
-    Map<String, Object> constants = new LinkedHashMap<>();
-    constants.put("COL", "2");
-    constants.put("TRANS_TIME_MAX", "10");
-    constants.put("k", "2");
-    Options options = prepareJANIOptions();
-    options.set(OptionsModelChecker.MODEL_INPUT_TYPE, "prism");
-    Model model = null;
-    model = loadModel(options, System.getProperty("user.home") + "/test.prism", System.getProperty("user.home") + "/test.prop");
+    public void testPRISMClusterDTMC3() {
+        Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions(System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism");
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModelExported(options, System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prism", System.getProperty("user.home") + "/prism-examples/clusterDTMC3.prop");
 
-    ModelCheckerResults result = computeResults(model);
-    int i = 0;
-//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
-//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+        //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
+        //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
+    }
+
+    @Ignore
+    @Test
+    public void testPRISMPeterson() {
+        Map<String, Object> constants = new LinkedHashMap<>();
+        Options options = preparePRISMOptions(System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP-nostorage-rid.prism");
+        options.set(OptionsModelChecker.CONST, constants);
+        options.set(OptionsLTLLazy.LTL_LAZY_USE_BREAKPOINT_SINGLETONS, "true");
+        options.set(OptionsLTLLazy.LTL_LAZY_USE_RABIN, "false");
+        Model model = null;
+        model = loadModelExported(options, System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP-nostorage-rid.prism", System.getProperty("user.home") + "/Documenti/Ricerca/Working/Learning/AG/petersonWP.props");
+
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+        //        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
+        //        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
     }
 
     @Test
-    public void testPRISMExportedBRP() {
+    public void testPRISM_BRP() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("MAX", "4");
         constants.put("N", "64");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(BRP_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(BRP_MODEL));
+        model = loadModelExported(options, BRP_MODEL, BRP_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -203,14 +286,14 @@ public final class CheckExplicitTestReduced {
     //It fails in computing the S properties as they are not supported yet
     @Ignore
     @Test
-    public void testPRISMExportedCell() {
+    public void testPRISM_Cell() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "0.5");
         constants.put("N", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(CELL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(CELL_MODEL));
+        model = loadModelExported(options, CELL_MODEL, CELL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.4345518395101758", result.get("Property_0"), 2.0E-7);
@@ -224,14 +307,14 @@ public final class CheckExplicitTestReduced {
     //It fails in computing the S properties as they are not supported yet
     @Ignore
     @Test
-    public void testPRISMExportedCluster() {
+    public void testPRISM_Cluster() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "10");
         constants.put("N", "20");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(CLUSTER_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(CLUSTER_MODEL));
+        model = loadModelExported(options, CLUSTER_MODEL, CLUSTER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.9995511026598302", result.get("Property_0"), 2.0E-7);
@@ -248,14 +331,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedCoin_2() {
+    public void testPRISM_Coin_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 2)));
+        model = loadModelExported(options, String.format(COIN_MODEL, 2), COIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -270,14 +353,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedCoin_4() {
+    public void testPRISM_Coin_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 4)));
+        model = loadModelExported(options, String.format(COIN_MODEL, 4), COIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -290,17 +373,17 @@ public final class CheckExplicitTestReduced {
         assertEquals("362.99999988911920", result.get("Property_14"), 2.0E-7);
     }
 
-    //takes too long
+    //too slow
     @Ignore
     @Test
-    public void testPRISMExportedCoin_6() {
+    public void testPRISM_Coin_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 6)));
+        model = loadModelExported(options, String.format(COIN_MODEL, 6), COIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -316,14 +399,14 @@ public final class CheckExplicitTestReduced {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCoin_8() {
+    public void testPRISM_Coin_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 8)));
+        model = loadModelExported(options, String.format(COIN_MODEL, 8), COIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -339,14 +422,14 @@ public final class CheckExplicitTestReduced {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCoin_10() {
+    public void testPRISM_Coin_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "2");
         constants.put("k", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(COIN_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(COIN_MODEL, 10)));
+        model = loadModelExported(options, String.format(COIN_MODEL, 10), COIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -360,13 +443,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedCSMA_2_2() {
+    public void testPRISM_CSMA_2_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,2,2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,2,2)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,2,2), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("66.999322859407130", result.get("Property_0"), 2.0E-7);
@@ -383,13 +466,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_2_4() {
+    public void testPRISM_CSMA_2_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,2,4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,2,4)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,2,4), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("75.650783290506550", result.get("Property_0"), 2.0E-7);
@@ -406,13 +489,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_2_6() {
+    public void testPRISM_CSMA_2_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,2,6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,2,6)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,2,6), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("84.590412972822500", result.get("Property_0"), 2.0E-7);
@@ -429,13 +512,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_2() {
+    public void testPRISM_CSMA_3_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,3,2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,3,2)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,3,2), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("93.624118012828090", result.get("Property_0"), 2.0E-7);
@@ -450,16 +533,15 @@ public final class CheckExplicitTestReduced {
         assertEquals("1.0000000000000000", result.get("Property_18"), 2.0E-7);
     }
 
-    //too slow
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_4() {
+    public void testPRISM_CSMA_3_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,3,4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,3,4)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,3,4), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("107.31147849546767", result.get("Property_0"), 2.0E-7);
@@ -477,13 +559,13 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_3_6() {
+    public void testPRISM_CSMA_3_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,3,6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,3,6)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,3,6), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("136.85667366738778", result.get("Property_0"), 2.0E-7);
@@ -500,13 +582,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_2() {
+    public void testPRISM_CSMA_4_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,4,2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,4,2)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,4,2), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("124.46349552291959", result.get("Property_0"), 2.0E-7);
@@ -524,13 +606,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_4() {
+    public void testPRISM_CSMA_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,4,4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,4,4)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,4,4), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("", result.get("Property_0"), 2.0E-7);
@@ -548,13 +630,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedCSMA_4_6() {
+    public void testPRISM_CSMA_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(CSMA_MODEL,4,6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(CSMA_MODEL,4,6)));
+        model = loadModelExported(options, String.format(CSMA_MODEL,4,6), CSMA_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("", result.get("Property_0"), 2.0E-7);
@@ -570,13 +652,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedDice() {
+    public void testPRISM_Dice() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("x", "3");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(DICE_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(DICE_MODEL));
+        model = loadModelExported(options, DICE_MODEL, DICE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -586,13 +668,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedTwoDice() {
+    public void testPRISM_TwoDice() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("x", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(TWO_DICE_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(TWO_DICE_MODEL));
+        model = loadModelExported(options, TWO_DICE_MODEL, TWO_DICE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.1111111110221827", result.get("Property_0"), 2.0E-7);
@@ -602,13 +684,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedDiningCrypt_3() {
+    public void testPRISM_DiningCrypt_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 3)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 3), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -617,13 +699,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_4() {
+    public void testPRISM_DiningCrypt_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 4)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 4), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -632,13 +714,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_5() {
+    public void testPRISM_DiningCrypt_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 5)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 5), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -647,13 +729,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_6() {
+    public void testPRISM_DiningCrypt_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 6)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 6), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -662,13 +744,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_7() {
+    public void testPRISM_DiningCrypt_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 7)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 7), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -677,13 +759,29 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_8() {
+    public void testPRISM_DiningCrypt_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 8)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 8), DINING_CRYPT_PROPERTY);
+
+        Map<String, Value> result = computeResultsMapName(model);
+        assertEquals(true, result.get("Property_0"));
+        assertEquals(true, result.get("Property_1"));
+    }
+
+    //too slow
+    @Ignore
+    @Test
+    public void testPRISM_DiningCrypt_9() {
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("k", "0");
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 9));
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 9), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -693,13 +791,13 @@ public final class CheckExplicitTestReduced {
     //Out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_9() {
+    public void testPRISM_DiningCrypt_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 9)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 10), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -709,29 +807,13 @@ public final class CheckExplicitTestReduced {
     //Out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedDiningCrypt_10() {
+    public void testPRISM_DiningCrypt_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(DINING_CRYPT_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 10)));
-
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals(true, result.get("Property_0"));
-        assertEquals(true, result.get("Property_1"));
-    }
-
-    //Out of memory with 8GB
-    @Ignore
-    @Test
-    public void testPRISMExportedDiningCrypt_15() {
-        Map<String, Object> constants = new LinkedHashMap<>();
-        constants.put("k", "0");
-        Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(DINING_CRYPT_MODEL, 15)));
+        model = loadModelExported(options, String.format(DINING_CRYPT_MODEL, 15), DINING_CRYPT_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -739,14 +821,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedFireweireAbs() {
+    public void testPRISM_FirewireAbs() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("delay", "36");
         constants.put("fast", "0.5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(FIREWIRE_ABST_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "firewire_abs" + JANI_EXTENSION);
+        model = loadModelExported(options, FIREWIRE_ABST_MODEL, FIREWIRE_ABST_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -754,14 +836,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedFireweireImpl() {
+    public void testPRISM_FirewireImpl() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("delay", "36");
         constants.put("fast", "0.5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(FIREWIRE_IMPL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION);
+        model = loadModelExported(options, FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -770,13 +852,13 @@ public final class CheckExplicitTestReduced {
     //No support yet for S
     @Ignore
     @Test
-    public void testPRISMExportedFMS() {
+    public void testPRISM_FMS() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("n", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(FMS_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(FMS_MODEL));
+        model = loadModelExported(options, FMS_MODEL, FMS_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0731715966472075", result.get("Property_0"), 2.0E-7);
@@ -789,13 +871,13 @@ public final class CheckExplicitTestReduced {
     //No support yet for S
     @Ignore
     @Test
-    public void testPRISMExportedKanban() {
+    public void testPRISM_Kanban() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("t", "4");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(KANBAN_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(KANBAN_MODEL));
+        model = loadModelExported(options, KANBAN_MODEL, KANBAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("3.6464073760255790", result.get("Property_0"), 2.0E-7);
@@ -806,13 +888,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedLeaderAsync_3() {
+    public void testPRISM_LeaderAsync_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_3" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 3), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -825,13 +907,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_4() {
+    public void testPRISM_LeaderAsync_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_4" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 4), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -844,13 +926,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_5() {
+    public void testPRISM_LeaderAsync_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_5" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 5), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -863,13 +945,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_6() {
+    public void testPRISM_LeaderAsync_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_6" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 6), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -880,16 +962,15 @@ public final class CheckExplicitTestReduced {
         assertEquals("5.6497695795053600", result.get("Property_8"), 2.0E-7);
     }
 
-    //takes too long
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_7() {
+    public void testPRISM_LeaderAsync_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_7" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 7), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -903,13 +984,13 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_8() {
+    public void testPRISM_LeaderAsync_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_8" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 8), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -923,13 +1004,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_9() {
+    public void testPRISM_LeaderAsync_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_9" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 9), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -943,13 +1024,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails in generating the results
     @Ignore
     @Test
-    public void testPRISMExportedLeaderAsync_10() {
+    public void testPRISM_LeaderAsync_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_ASYNC_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_async_10" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_ASYNC_MODEL, 10), LEADER_ASYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -961,13 +1042,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedLeaderSync_3_2() {
+    public void testPRISM_LeaderSync_3_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_2" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 3, 2), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -977,13 +1058,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_3() {
+    public void testPRISM_LeaderSync_3_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_3" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 3, 3), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -993,13 +1074,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_4() {
+    public void testPRISM_LeaderSync_3_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_4" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 3, 4), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1009,13 +1090,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_5() {
+    public void testPRISM_LeaderSync_3_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_5" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 3, 5), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1025,13 +1106,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_6() {
+    public void testPRISM_LeaderSync_3_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_6" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 3, 6), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1041,13 +1122,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_3_8() {
+    public void testPRISM_LeaderSync_3_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 3, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_3_8" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 3, 8), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1057,13 +1138,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_2() {
+    public void testPRISM_LeaderSync_4_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_2" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 4, 2), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1073,13 +1154,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_3() {
+    public void testPRISM_LeaderSync_4_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_3" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 4, 3), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1089,13 +1170,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_4() {
+    public void testPRISM_LeaderSync_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_4" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 4, 4), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1105,13 +1186,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_5() {
+    public void testPRISM_LeaderSync_4_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_5" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 4, 5), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1121,13 +1202,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_6() {
+    public void testPRISM_LeaderSync_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_6" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 4, 6), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1137,13 +1218,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_4_8() {
+    public void testPRISM_LeaderSync_4_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 4, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_4_8" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 4, 8), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1153,13 +1234,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_2() {
+    public void testPRISM_LeaderSync_5_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_2" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 5, 2), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1169,13 +1250,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_3() {
+    public void testPRISM_LeaderSync_5_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_3" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 5, 3), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1185,13 +1266,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_4() {
+    public void testPRISM_LeaderSync_5_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_4" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 5, 4), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1201,13 +1282,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_5() {
+    public void testPRISM_LeaderSync_5_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_5" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 5, 5), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1217,13 +1298,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_6() {
+    public void testPRISM_LeaderSync_5_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_6" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 5, 6), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1233,13 +1314,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_5_8() {
+    public void testPRISM_LeaderSync_5_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 5, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_5_8" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 5, 8), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1249,13 +1330,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_2() {
+    public void testPRISM_LeaderSync_6_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_2" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 6, 2), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1265,13 +1346,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_3() {
+    public void testPRISM_LeaderSync_6_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_3" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 6, 3), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1281,13 +1362,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_4() {
+    public void testPRISM_LeaderSync_6_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_4" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 6, 4), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1297,13 +1378,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_5() {
+    public void testPRISM_LeaderSync_6_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_5" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 6, 5), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1313,13 +1394,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_6() {
+    public void testPRISM_LeaderSync_6_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_6" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 6, 6), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1330,13 +1411,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails with a SIGSEGV in libdd
     @Ignore
     @Test
-    public void testPRISMExportedLeaderSync_6_8() {
+    public void testPRISM_LeaderSync_6_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(LEADER_SYNC_MODEL, 6, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, JANI_EXPORT_DIR + "leader_sync_6_8" + JANI_EXTENSION);
+        model = loadModelExported(options, String.format(LEADER_SYNC_MODEL, 6, 8), LEADER_SYNC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("1.0000000000000000", result.get("Property_0"), 2.0E-7);
@@ -1347,17 +1428,17 @@ public final class CheckExplicitTestReduced {
     //No support for S yet
     @Ignore
     @Test
-    public void testPRISMExportedKNACL() {
+    public void testPRISM_KNACL() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("N1", "10");
         constants.put("N2", "10");
         constants.put("T", "0.002");
         constants.put("i", "0");
         constants.put("N3", "10");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(KNACL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(KNACL_MODEL));
+        model = loadModelExported(options, KNACL_MODEL, KNACL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0000917430966457", result.get("Property_0"), 2.0E-7);
@@ -1371,16 +1452,16 @@ public final class CheckExplicitTestReduced {
     //No support for S yet
     @Ignore
     @Test
-    public void testPRISMExportedNACL() {
+    public void testPRISM_NACL() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("N1", "10");
         constants.put("N2", "10");
         constants.put("T", "0.002");
         constants.put("i", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(NACL_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(NACL_MODEL));
+        model = loadModelExported(options, NACL_MODEL, NACL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0006596327782790", result.get("Property_0"), 2.0E-7);
@@ -1391,16 +1472,16 @@ public final class CheckExplicitTestReduced {
     //No support for S yet
     @Ignore
     @Test
-    public void testPRISMExportedMC() {
+    public void testPRISM_MC() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("N1", "10");
         constants.put("N2", "10");
         constants.put("T", "0.002");
         constants.put("i", "0");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(MC_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(MC_MODEL));
+        model = loadModelExported(options, MC_MODEL, MC_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0000000000000426", result.get("Property_0"), 2.0E-7);
@@ -1415,12 +1496,12 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedMutual_3() {
+    public void testPRISM_Mutual_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 3)));
+        model = loadModelExported(options, String.format(MUTUAL_MODEL, 3), MUTUAL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1431,12 +1512,12 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedMutual_4() {
+    public void testPRISM_Mutual_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 4)));
+        model = loadModelExported(options, String.format(MUTUAL_MODEL, 4), MUTUAL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1447,12 +1528,12 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedMutual_5() {
+    public void testPRISM_Mutual_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 5)));
+        model = loadModelExported(options, String.format(MUTUAL_MODEL, 5), MUTUAL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1464,12 +1545,12 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedMutual_8() {
+    public void testPRISM_Mutual_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 8)));
+        model = loadModelExported(options, String.format(MUTUAL_MODEL, 8), MUTUAL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1481,12 +1562,12 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedMutual_10() {
+    public void testPRISM_Mutual_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(MUTUAL_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(MUTUAL_MODEL, 10)));
+        model = loadModelExported(options, String.format(MUTUAL_MODEL, 10), MUTUAL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1496,13 +1577,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedP2P_4_4() {
+    public void testPRISM_P2P_4_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 4)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 4, 4), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.968312472221019", result.get("Property_0"), 2.0E-7);
@@ -1511,13 +1592,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_5() {
+    public void testPRISM_P2P_4_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 5)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 4, 5), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.960548741225345", result.get("Property_0"), 2.0E-7);
@@ -1527,13 +1608,13 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_6() {
+    public void testPRISM_P2P_4_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 6)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 4, 6), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.952847258251920", result.get("Property_0"), 2.0E-7);
@@ -1543,13 +1624,13 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_7() {
+    public void testPRISM_P2P_4_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 7)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 4, 7), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.945207524172225", result.get("Property_0"), 2.0E-7);
@@ -1559,13 +1640,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails with SIGSEGV in libprismhybrid
     @Ignore
     @Test
-    public void testPRISMExportedP2P_4_8() {
+    public void testPRISM_P2P_4_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 4, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 4, 8)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 4, 8), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("", result.get("Property_0"), 2.0E-7);
@@ -1574,13 +1655,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_4() {
+    public void testPRISM_P2P_5_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 4)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 5, 4), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.982662490856506", result.get("Property_0"), 2.0E-7);
@@ -1590,13 +1671,13 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_5() {
+    public void testPRISM_P2P_5_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 5)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 5, 5), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.978375285777173", result.get("Property_0"), 2.0E-7);
@@ -1606,13 +1687,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by requiring too much memory
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_6() {
+    public void testPRISM_P2P_5_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 6)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 5, 6), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("", result.get("Property_0"), 2.0E-7);
@@ -1622,13 +1703,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by requiring too much memory
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_7() {
+    public void testPRISM_P2P_5_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 7)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 5, 7), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("", result.get("Property_0"), 2.0E-7);
@@ -1638,13 +1719,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by requiring too much memory
     @Ignore
     @Test
-    public void testPRISMExportedP2P_5_8() {
+    public void testPRISM_P2P_5_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "1.1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PEER2PEER_MODEL, 5, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PEER2PEER_MODEL, 5, 8)));
+        model = loadModelExported(options, String.format(PEER2PEER_MODEL, 5, 8), PEER2PEER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("", result.get("Property_0"), 2.0E-7);
@@ -1652,12 +1733,12 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedPhil_3() {
+    public void testPRISM_Phil_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 3)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 3), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1665,12 +1746,12 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedPhil_4() {
+    public void testPRISM_Phil_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 4)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 4), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1678,12 +1759,12 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedPhil_5() {
+    public void testPRISM_Phil_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 5)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 5), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1691,12 +1772,12 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedPhil_6() {
+    public void testPRISM_Phil_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 6)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 6), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1705,12 +1786,12 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedPhil_7() {
+    public void testPRISM_Phil_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 7)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 7), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1719,12 +1800,12 @@ public final class CheckExplicitTestReduced {
     //Fails with OutOfMemoryError with 8G
     @Ignore
     @Test
-    public void testPRISMExportedPhil_8() {
+    public void testPRISM_Phil_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 8)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 8), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1733,12 +1814,12 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_9() {
+    public void testPRISM_Phil_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 9)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 9), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1747,12 +1828,12 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_10() {
+    public void testPRISM_Phil_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions();
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 10)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 10), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1761,12 +1842,12 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_15() {
+    public void testPRISM_Phil_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 15)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 15), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1775,12 +1856,12 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_20() {
+    public void testPRISM_Phil_20() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 20));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 20)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 20), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1789,12 +1870,12 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_25() {
+    public void testPRISM_Phil_25() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 25));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 25)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 25), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
@@ -1803,25 +1884,25 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhil_30() {
+    public void testPRISM_Phil_30() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_MODEL, 30));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_MODEL, 30)));
+        model = loadModelExported(options, String.format(PHIL_MODEL, 30), PHIL_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(false, result.get("Property_0"));
     }
 
     @Test
-    public void testPRISMExportedPhilNofair_3() {
+    public void testPRISM_PhilNofair_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 3)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 3), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1831,13 +1912,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_4() {
+    public void testPRISM_PhilNofair_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 4)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 4), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1847,13 +1928,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_5() {
+    public void testPRISM_PhilNofair_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 5)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 5), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1864,13 +1945,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_6() {
+    public void testPRISM_PhilNofair_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 6)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 6), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1881,13 +1962,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_7() {
+    public void testPRISM_PhilNofair_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 7)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 7), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1898,13 +1979,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_8() {
+    public void testPRISM_PhilNofair_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 8)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 8), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1915,13 +1996,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_9() {
+    public void testPRISM_PhilNofair_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 9)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 9), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1932,13 +2013,13 @@ public final class CheckExplicitTestReduced {
     //PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedPhilNofair_10() {
+    public void testPRISM_PhilNofair_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_NOFAIR_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_NOFAIR_MODEL, 10)));
+        model = loadModelExported(options, String.format(PHIL_NOFAIR_MODEL, 10), PHIL_NOFAIR_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1947,14 +2028,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedPhilLSS_3() {
+    public void testPRISM_PhilLSS_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "3");
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_LSS_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_LSS_MODEL, 3)));
+        model = loadModelExported(options, String.format(PHIL_LSS_MODEL, 3), String.format(PHIL_LSS_PROPERTY, 3));
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1964,14 +2045,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedPhilLSS_4() {
+    public void testPRISM_PhilLSS_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "3");
         constants.put("L", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(PHIL_LSS_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(PHIL_LSS_MODEL, 4)));
+        model = loadModelExported(options, String.format(PHIL_LSS_MODEL, 4), String.format(PHIL_LSS_PROPERTY, 4));
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -1982,13 +2063,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_2() {
+    public void testPRISM_Polling_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 2)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 2), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.102393124417415", result.get("Property_0"), 2.0E-7);
@@ -2003,13 +2084,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_3() {
+    public void testPRISM_Polling_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 3)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 3), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.130802036614216", result.get("Property_0"), 2.0E-7);
@@ -2024,13 +2105,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_4() {
+    public void testPRISM_Polling_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 4)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 4), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.141190363935943", result.get("Property_0"), 2.0E-7);
@@ -2045,13 +2126,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_5() {
+    public void testPRISM_Polling_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 5)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 5), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.144927093830232", result.get("Property_0"), 2.0E-7);
@@ -2066,13 +2147,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_6() {
+    public void testPRISM_Polling_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 6)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 6), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.145731911533245", result.get("Property_0"), 2.0E-7);
@@ -2087,13 +2168,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_7() {
+    public void testPRISM_Polling_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 7)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 7), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.145116735337698", result.get("Property_0"), 2.0E-7);
@@ -2108,13 +2189,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_8() {
+    public void testPRISM_Polling_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 8)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 8), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.143782770331091", result.get("Property_0"), 2.0E-7);
@@ -2129,13 +2210,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_9() {
+    public void testPRISM_Polling_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 9)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 9), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.142084805118677", result.get("Property_0"), 2.0E-7);
@@ -2150,13 +2231,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_10() {
+    public void testPRISM_Polling_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 10)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 10), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.140213283202427", result.get("Property_0"), 2.0E-7);
@@ -2171,13 +2252,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_11() {
+    public void testPRISM_Polling_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 11)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 11), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.138274521224589", result.get("Property_0"), 2.0E-7);
@@ -2192,13 +2273,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_12() {
+    public void testPRISM_Polling_12() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 12));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 12)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 12), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.136329243693625", result.get("Property_0"), 2.0E-7);
@@ -2213,13 +2294,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_13() {
+    public void testPRISM_Polling_13() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 13));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 13)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 13), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.134412372329520", result.get("Property_0"), 2.0E-7);
@@ -2234,13 +2315,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_14() {
+    public void testPRISM_Polling_14() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 14));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 14)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 14), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.132543738937984", result.get("Property_0"), 2.0E-7);
@@ -2255,13 +2336,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_15() {
+    public void testPRISM_Polling_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 15)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 15), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.130734135591949", result.get("Property_0"), 2.0E-7);
@@ -2276,13 +2357,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_16() {
+    public void testPRISM_Polling_16() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 16));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 16)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 16), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.128988853132277", result.get("Property_0"), 2.0E-7);
@@ -2297,13 +2378,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_17() {
+    public void testPRISM_Polling_17() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 17));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 17)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 17), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.127309796176000", result.get("Property_0"), 2.0E-7);
@@ -2318,13 +2399,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_18() {
+    public void testPRISM_Polling_18() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 18));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 18)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 18), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.127309796176000", result.get("Property_0"), 2.0E-7);
@@ -2339,13 +2420,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_19() {
+    public void testPRISM_Polling_19() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 19));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 19)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 19), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.124148459225022", result.get("Property_0"), 2.0E-7);
@@ -2360,13 +2441,13 @@ public final class CheckExplicitTestReduced {
     //Support for S still missing
     @Ignore
     @Test
-    public void testPRISMExportedPolling_20() {
+    public void testPRISM_Polling_20() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "50");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(POLLING_MODEL, 20));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(POLLING_MODEL, 20)));
+        model = loadModelExported(options, String.format(POLLING_MODEL, 20), POLLING_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.122663285369220", result.get("Property_0"), 2.0E-7);
@@ -2379,13 +2460,13 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedRabin_3() {
+    public void testPRISM_Rabin_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 3)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 3), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2396,13 +2477,13 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedRabin_4() {
+    public void testPRISM_Rabin_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 4)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 4), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2414,13 +2495,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_5() {
+    public void testPRISM_Rabin_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 5)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 5), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2432,13 +2513,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_6() {
+    public void testPRISM_Rabin_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 6)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 6), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2450,13 +2531,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_7() {
+    public void testPRISM_Rabin_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 7)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 7), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2468,13 +2549,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_8() {
+    public void testPRISM_Rabin_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 8)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 8), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2486,13 +2567,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_9() {
+    public void testPRISM_Rabin_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 9)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 9), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2504,13 +2585,13 @@ public final class CheckExplicitTestReduced {
     // PRISM fails by out of memory
     @Ignore
     @Test
-    public void testPRISMExportedRabin_10() {
+    public void testPRISM_Rabin_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("k", "5");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(RABIN_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(RABIN_MODEL, 10)));
+        model = loadModelExported(options, String.format(RABIN_MODEL, 10), RABIN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2520,14 +2601,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedBeauquier_3() {
+    public void testPRISM_Beauquier_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 3)));
+        model = loadModelExported(options, String.format(BEAUQUIER_MODEL, 3), BEAUQUIER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2539,14 +2620,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedBeauquier_5() {
+    public void testPRISM_Beauquier_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 5)));
+        model = loadModelExported(options, String.format(BEAUQUIER_MODEL, 5), BEAUQUIER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2558,14 +2639,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedBeauquier_7() {
+    public void testPRISM_Beauquier_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 7)));
+        model = loadModelExported(options, String.format(BEAUQUIER_MODEL, 7), BEAUQUIER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2577,14 +2658,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedBeauquier_9() {
+    public void testPRISM_Beauquier_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 9)));
+        model = loadModelExported(options, String.format(BEAUQUIER_MODEL, 9), BEAUQUIER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2594,16 +2675,17 @@ public final class CheckExplicitTestReduced {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
-    @Test
+    // Fails by out of memory with 8GB
     @Ignore
-    public void testPRISMExportedBeauquier_11() {
+    @Test
+    public void testPRISM_Beauquier_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(BEAUQUIER_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(BEAUQUIER_MODEL, 11)));
+        model = loadModelExported(options, String.format(BEAUQUIER_MODEL, 11), BEAUQUIER_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2614,14 +2696,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedHerman_3() {
+    public void testPRISM_Herman_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 3)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 3), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2633,14 +2715,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedHerman_5() {
+    public void testPRISM_Herman_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 5)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 5), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2652,14 +2734,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedHerman_7() {
+    public void testPRISM_Herman_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 7)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 7), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2671,14 +2753,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedHerman_9() {
+    public void testPRISM_Herman_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 9)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 9), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2690,14 +2772,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedHerman_11() {
+    public void testPRISM_Herman_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
-        constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        constants.put("k", "2");
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 11)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 11), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2710,14 +2792,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_13() {
+    public void testPRISM_Herman_13() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 13));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 13)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 13), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2730,14 +2812,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_15() {
+    public void testPRISM_Herman_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 15)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 15), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2750,14 +2832,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_17() {
+    public void testPRISM_Herman_17() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 17));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 17)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 17), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2770,14 +2852,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_19() {
+    public void testPRISM_Herman_19() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 19));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 19)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 19), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2790,14 +2872,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedHerman_21() {
+    public void testPRISM_Herman_21() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(HERMAN_MODEL, 21));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(HERMAN_MODEL, 21)));
+        model = loadModelExported(options, String.format(HERMAN_MODEL, 21), HERMAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2808,14 +2890,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedIJ_3() {
+    public void testPRISM_IJ_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 3)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 3), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2827,14 +2909,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_4() {
+    public void testPRISM_IJ_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 4)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 4), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2846,14 +2928,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_5() {
+    public void testPRISM_IJ_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 5)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 5), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2865,14 +2947,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_6() {
+    public void testPRISM_IJ_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 6)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 6), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2884,14 +2966,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_7() {
+    public void testPRISM_IJ_7() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 7));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 7)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 7), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2903,14 +2985,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_8() {
+    public void testPRISM_IJ_8() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 8));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 8)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 8), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2922,14 +3004,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_9() {
+    public void testPRISM_IJ_9() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 9));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 9)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 9), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2941,14 +3023,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_10() {
+    public void testPRISM_IJ_10() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 10));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 10)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 10), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2960,14 +3042,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_11() {
+    public void testPRISM_IJ_11() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 11));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 11)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 11), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2979,14 +3061,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_12() {
+    public void testPRISM_IJ_12() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 12));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 12)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 12), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -2998,14 +3080,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_13() {
+    public void testPRISM_IJ_13() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 13));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 13)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 13), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3017,14 +3099,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_14() {
+    public void testPRISM_IJ_14() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 14));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 14)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 14), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3036,14 +3118,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_15() {
+    public void testPRISM_IJ_15() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 15));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 15)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 15), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3053,17 +3135,16 @@ public final class CheckExplicitTestReduced {
         assertEquals("0.000000000000000", result.get("Property_4"), 2.0E-7);
     }
 
-    //Fails while computing rewards
     @Ignore
     @Test
-    public void testPRISMExportedIJ_16() {
+    public void testPRISM_IJ_16() {
         Map<String, Object> constants = new LinkedHashMap<>();
-        constants.put("K", "0");
-        constants.put("k", "0");
-        Options options = prepareJANIOptions();
+        constants.put("K", "1");
+        constants.put("k", "1");
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 16));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 16)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 16), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3075,14 +3156,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedIJ_17() {
+    public void testPRISM_IJ_17() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 17));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 17)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 17), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3095,14 +3176,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedIJ_18() {
+    public void testPRISM_IJ_18() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 18));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 18)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 18), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3115,14 +3196,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedIJ_19() {
+    public void testPRISM_IJ_19() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 19));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 19)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 19), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3135,14 +3216,14 @@ public final class CheckExplicitTestReduced {
     //Fails by memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedIJ_20() {
+    public void testPRISM_IJ_20() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 20));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 20)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 20), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3155,14 +3236,14 @@ public final class CheckExplicitTestReduced {
     //Fails with GC overhead with 8G of memory
     @Ignore
     @Test
-    public void testPRISMExportedIJ_21() {
+    public void testPRISM_IJ_21() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("K", "1");
         constants.put("k", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(IJ_MODEL, 21));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(IJ_MODEL, 21)));
+        model = loadModelExported(options, String.format(IJ_MODEL, 21), IJ_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3175,14 +3256,14 @@ public final class CheckExplicitTestReduced {
     //S not yet supported
     @Ignore
     @Test
-    public void testPRISMExportedTandem() {
+    public void testPRISM_Tandem() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("c", "10");
         constants.put("T", "1");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(TANDEM_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(TANDEM_MODEL));
+        model = loadModelExported(options, TANDEM_MODEL, TANDEM_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("10.78050546163251", result.get("Property_0"), 2.0E-7);
@@ -3193,14 +3274,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedWLAN_0() {
+    public void testPRISM_WLAN_0() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 0));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 0)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 0), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3216,14 +3297,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLAN_1() {
+    public void testPRISM_WLAN_1() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 1));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 1)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 1), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3239,14 +3320,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLAN_2() {
+    public void testPRISM_WLAN_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 2)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 2), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3262,14 +3343,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLAN_3() {
+    public void testPRISM_WLAN_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 3)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 3), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3285,14 +3366,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLAN_4() {
+    public void testPRISM_WLAN_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 4)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 4), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3306,17 +3387,16 @@ public final class CheckExplicitTestReduced {
         assertEquals("223934.2427029740", result.get("Property_16"), 2.0E-7);
     }
 
-    //too slow
     @Ignore
     @Test
-    public void testPRISMExportedWLAN_5() {
+    public void testPRISM_WLAN_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 5)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 5), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3330,17 +3410,17 @@ public final class CheckExplicitTestReduced {
         assertEquals("223934.2428000538", result.get("Property_16"), 2.0E-7);
     }
 
-    //Fails with 8G of memory
+    //Too slow
     @Ignore
     @Test
-    public void testPRISMExportedWLAN_6() {
+    public void testPRISM_WLAN_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_MODEL, 6)));
+        model = loadModelExported(options, String.format(WLAN_MODEL, 6), WLAN_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals(true, result.get("Property_0"));
@@ -3355,15 +3435,15 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedWLANCollide_0() {
+    public void testPRISM_WLANCollide_0() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 0));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 0)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 0), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3372,15 +3452,15 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANCollide_1() {
+    public void testPRISM_WLANCollide_1() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 1));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 1)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 1), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3389,15 +3469,15 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANCollide_2() {
+    public void testPRISM_WLANCollide_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 2)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 2), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3406,15 +3486,15 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANCollide_3() {
+    public void testPRISM_WLANCollide_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 3)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 3), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3423,15 +3503,15 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANCollide_4() {
+    public void testPRISM_WLANCollide_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 4)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 4), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3440,15 +3520,15 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANCollide_5() {
+    public void testPRISM_WLANCollide_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 5)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 5), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3457,15 +3537,15 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANCollide_6() {
+    public void testPRISM_WLANCollide_6() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("COL", "2");
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("k", "2");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_COLLIDE_MODEL, 6));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_COLLIDE_MODEL, 6)));
+        model = loadModelExported(options, String.format(WLAN_COLLIDE_MODEL, 6), WLAN_COLLIDE_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.183593750000000", result.get("Property_0"), 2.0E-7);
@@ -3473,14 +3553,14 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedWLANTimeBounded_0() {
+    public void testPRISM_WLANTimeBounded_0() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 0));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 0)));
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 0), WLAN_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.9090728759765625", result.get("Property_0"), 2.0E-7);
@@ -3493,14 +3573,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_1() {
+    public void testPRISM_WLANTimeBounded_1() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 1));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 1)));
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 1), WLAN_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.846221923828125", result.get("Property_0"), 2.0E-7);
@@ -3513,14 +3593,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_2() {
+    public void testPRISM_WLANTimeBounded_2() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 2));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 2)));
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 2), WLAN_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.846221923828125", result.get("Property_0"), 2.0E-7);
@@ -3533,14 +3613,14 @@ public final class CheckExplicitTestReduced {
 
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_3() {
+    public void testPRISM_WLANTimeBounded_3() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 3));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 3)));
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 3), WLAN_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.846221923828125", result.get("Property_0"), 2.0E-7);
@@ -3551,38 +3631,16 @@ public final class CheckExplicitTestReduced {
         assertEquals("0.9002140127122402", result.get("Property_5"), 2.0E-7);
     }
 
-    //takes too long
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_4() {
+    public void testPRISM_WLANTimeBounded_4() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 4));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 4)));
-
-        Map<String, Value> result = computeResultsMapName(model);
-        assertEquals("0.8462219238281250", result.get("Property_0"), 2.0E-7);
-        assertEquals("0.8462219238281250", result.get("Property_1"), 2.0E-7);
-        assertEquals("0.9836365208029747", result.get("Property_2"), 2.0E-7);
-        assertEquals("0.9836365208029747", result.get("Property_3"), 2.0E-7);
-        assertEquals("0.9002140127122402", result.get("Property_4"), 2.0E-7);
-        assertEquals("0.9002140127122402", result.get("Property_5"), 2.0E-7);
-    }
-
-    //takes too long
-    @Ignore
-    @Test
-    public void testPRISMExportedWLANTimeBounded_5() {
-        Map<String, Object> constants = new LinkedHashMap<>();
-        constants.put("TRANS_TIME_MAX", "10");
-        constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
-        options.set(OptionsModelChecker.CONST, constants);
-        Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 5)));
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 4), WLAN_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.8462219238281250", result.get("Property_0"), 2.0E-7);
@@ -3596,14 +3654,35 @@ public final class CheckExplicitTestReduced {
     // Fails by out of memory with 8GB
     @Ignore
     @Test
-    public void testPRISMExportedWLANTimeBounded_6() {
+    public void testPRISM_WLANTimeBounded_5() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("TRANS_TIME_MAX", "10");
         constants.put("DEADLINE", "100");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 5));
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(String.format(WLAN_TIME_BOUNDED_MODEL, 6)));
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 5), WLAN_TIME_BOUNDED_PROPERTY);
+
+        Map<String, Value> result = computeResultsMapName(model);
+        assertEquals("0.8462219238281250", result.get("Property_0"), 2.0E-7);
+        assertEquals("0.8462219238281250", result.get("Property_1"), 2.0E-7);
+        assertEquals("0.9836365208029747", result.get("Property_2"), 2.0E-7);
+        assertEquals("0.9836365208029747", result.get("Property_3"), 2.0E-7);
+        assertEquals("0.9002140127122402", result.get("Property_4"), 2.0E-7);
+        assertEquals("0.9002140127122402", result.get("Property_5"), 2.0E-7);
+    }
+
+    // Fails by out of memory with 8GB
+    @Ignore
+    @Test
+    public void testPRISM_WLANTimeBounded_6() {
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("TRANS_TIME_MAX", "10");
+        constants.put("DEADLINE", "100");
+        Options options = preparePRISMOptions(String.format(WLAN_TIME_BOUNDED_MODEL, 6));
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModelExported(options, String.format(WLAN_TIME_BOUNDED_MODEL, 6), WLAN_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.8462219238281250", result.get("Property_0"), 2.0E-7);
@@ -3615,16 +3694,16 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedZeroconf() {
+    public void testPRISM_Zeroconf() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("err", "0");
         constants.put("K", "4");
         constants.put("reset", "true");
         constants.put("N", "1000");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(ZEROCONF_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(ZEROCONF_MODEL));
+        model = loadModelExported(options, ZEROCONF_MODEL, ZEROCONF_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0000038674394349", result.get("Property_0"), 2.0E-7);
@@ -3634,17 +3713,17 @@ public final class CheckExplicitTestReduced {
     }
 
     @Test
-    public void testPRISMExportedZeroconfTimeBounded() {
+    public void testPRISM_ZeroconfTimeBounded() {
         Map<String, Object> constants = new LinkedHashMap<>();
         constants.put("T", "11");
         constants.put("K", "1");
         constants.put("bound", "10");
         constants.put("reset", "true");
         constants.put("N", "1000");
-        Options options = prepareJANIOptions();
+        Options options = preparePRISMOptions(ZEROCONF_TIME_BOUNDED_MODEL);
         options.set(OptionsModelChecker.CONST, constants);
         Model model = null;
-        model = loadModel(options, getJANIFilenameFromPRISMFilename(ZEROCONF_TIME_BOUNDED_MODEL));
+        model = loadModelExported(options, ZEROCONF_TIME_BOUNDED_MODEL, ZEROCONF_TIME_BOUNDED_PROPERTY);
 
         Map<String, Value> result = computeResultsMapName(model);
         assertEquals("0.0000234477600190", result.get("Property_0"), 2.0E-7);
