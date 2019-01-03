@@ -28,7 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.Action;
 import epmc.jani.model.Automaton;
 
@@ -64,7 +64,7 @@ public class JANIExporter_SynchronisationVectorElementProcessor implements JANIP
             
             for (Action action : inputEnable) {
                 assert action != null;
-                assert !ProcessorRegistrar.isSilentAction(action);
+                assert !JANIExporter_ProcessorRegistrar.isSilentAction(action);
                 inputEnableBuilder.add(action.getName());
             }
             builder.add(INPUT_ENABLE, inputEnableBuilder);

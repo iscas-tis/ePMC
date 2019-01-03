@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProcessor {
@@ -55,19 +55,19 @@ public class JANIExporter_ExpressionTemporalUntilProcessor implements JANIProces
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         builder.add(OP, U);
-        builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandLeft())
+        builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandLeft())
                 .toJSON());
-        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandRight())
+        builder.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalUntil.getOperandRight())
                 .toJSON());
         
         TimeBound timeBound = expressionTemporalUntil.getTimeBound();
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
-            if (ProcessorRegistrar.isDiscreteTimeModel()) {
-                builder.add(STEP_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+            if (JANIExporter_ProcessorRegistrar.isDiscreteTimeModel()) {
+                builder.add(STEP_BOUNDS, JANIExporter_ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
-            if (ProcessorRegistrar.isContinuousTimeModel() || ProcessorRegistrar.isTimedModel()){
-                builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+            if (JANIExporter_ProcessorRegistrar.isContinuousTimeModel() || JANIExporter_ProcessorRegistrar.isTimedModel()){
+                builder.add(TIME_BOUNDS, JANIExporter_ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
         }

@@ -8,7 +8,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
@@ -36,13 +36,13 @@ public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         if (timeBound.isLeftBounded()) {
-            builder.add(LOWER, ProcessorRegistrar.getProcessor(timeBound.getLeft())
+            builder.add(LOWER, JANIExporter_ProcessorRegistrar.getProcessor(timeBound.getLeft())
                     .toJSON());
             builder.add(LOWER_EXCLUSIVE, timeBound.isLeftOpen());
         }
         
         if (timeBound.isRightBounded()) {
-            builder.add(UPPER, ProcessorRegistrar.getProcessor(timeBound.getRight())
+            builder.add(UPPER, JANIExporter_ProcessorRegistrar.getProcessor(timeBound.getRight())
                     .toJSON());
             builder.add(UPPER_EXCLUSIVE, timeBound.isRightOpen());
         }

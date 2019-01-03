@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIProcessor {
@@ -56,21 +56,21 @@ public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIProc
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        if (ProcessorRegistrar.useDerivedOperators()) {
+        if (JANIExporter_ProcessorRegistrar.useDerivedOperators()) {
             builder.add(OP, R);
-            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
+            builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
                     .toJSON());
-            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
+            builder.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
                     .toJSON());
         } else {
             //op1 R op2 = op2 W (op2 /\ op1)
-            JsonValue op2 = ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
+            JsonValue op2 = JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandRight())
                    .toJSON();
            
             JsonObjectBuilder builderAnd = Json.createObjectBuilder();
             builderAnd.add(OP, AND);
             builderAnd.add(LEFT, op2);
-            builderAnd.add(RIGHT, ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandLeft())
+            builderAnd.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalRelease.getOperandLeft())
                     .toJSON());
             
             builder.add(OP, U);
@@ -80,12 +80,12 @@ public class JANIExporter_ExpressionTemporalReleaseProcessor implements JANIProc
         
         TimeBound timeBound = expressionTemporalRelease.getTimeBound();
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
-            if (ProcessorRegistrar.isDiscreteTimeModel()) {
-                builder.add(STEP_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+            if (JANIExporter_ProcessorRegistrar.isDiscreteTimeModel()) {
+                builder.add(STEP_BOUNDS, JANIExporter_ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
-            if (ProcessorRegistrar.isContinuousTimeModel() || ProcessorRegistrar.isTimedModel()){
-                builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+            if (JANIExporter_ProcessorRegistrar.isContinuousTimeModel() || JANIExporter_ProcessorRegistrar.isTimedModel()){
+                builder.add(TIME_BOUNDS, JANIExporter_ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
         }

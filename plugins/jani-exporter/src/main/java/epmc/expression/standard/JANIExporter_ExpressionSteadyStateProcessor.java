@@ -3,7 +3,7 @@ package epmc.expression.standard;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_ExpressionSteadyStateProcessor implements JANIProcessor {
 
@@ -22,7 +22,7 @@ public class JANIExporter_ExpressionSteadyStateProcessor implements JANIProcesso
     public JsonValue toJSON() {
         assert expressionSteadyState != null;
         
-        return ProcessorRegistrar.getProcessor(expressionSteadyState.getOperand1())
+        return JANIExporter_ProcessorRegistrar.getProcessor(expressionSteadyState.getOperand1())
                 .toJSON();
     }
 

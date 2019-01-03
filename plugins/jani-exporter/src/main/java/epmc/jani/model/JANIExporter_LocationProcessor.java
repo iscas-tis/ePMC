@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_LocationProcessor implements JANIProcessor {
     /** String identifying the name of the location. */
@@ -58,13 +58,13 @@ public class JANIExporter_LocationProcessor implements JANIProcessor {
         
         TimeProgress timeProgress = location.getTimeProgress();
         if (timeProgress != null) {
-            builder.add(TIME_PROGRESS, ProcessorRegistrar.getProcessor(timeProgress)
+            builder.add(TIME_PROGRESS, JANIExporter_ProcessorRegistrar.getProcessor(timeProgress)
                     .toJSON());
         }
 
         Assignments transientValuesAssignments = location.getTransientValueAssignments();
         if (transientValuesAssignments != null) {
-            builder.add(TRANSIENT_VALUES, ProcessorRegistrar.getProcessor(transientValuesAssignments)
+            builder.add(TRANSIENT_VALUES, JANIExporter_ProcessorRegistrar.getProcessor(transientValuesAssignments)
                     .toJSON());
         }
         

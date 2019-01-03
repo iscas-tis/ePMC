@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_EdgeProcessor implements JANIProcessor {
     /** String identifying the source location. */
@@ -69,17 +69,17 @@ public class JANIExporter_EdgeProcessor implements JANIProcessor {
         
         Rate rate = edge.getRate();
         if (rate != null) {
-            result.add(RATE, ProcessorRegistrar.getProcessor(rate)
+            result.add(RATE, JANIExporter_ProcessorRegistrar.getProcessor(rate)
                     .toJSON());
         }
 
         Guard guard = edge.getGuard();
         if (guard != null) {
-            result.add(GUARD, ProcessorRegistrar.getProcessor(guard)
+            result.add(GUARD, JANIExporter_ProcessorRegistrar.getProcessor(guard)
                     .toJSON());
         }
         
-        result.add(DESTINATIONS, ProcessorRegistrar.getProcessor(edge.getDestinations())
+        result.add(DESTINATIONS, JANIExporter_ProcessorRegistrar.getProcessor(edge.getDestinations())
                 .toJSON());
         
         String comment = edge.getComment();

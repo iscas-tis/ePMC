@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_DestinationProcessor implements JANIProcessor {
     /** String indicating the probability of this destination. */
@@ -60,13 +60,13 @@ public class JANIExporter_DestinationProcessor implements JANIProcessor {
         
         Probability probability = destination.getProbability();
         if (probability != null) {
-            builder.add(PROBABILITY, ProcessorRegistrar.getProcessor(probability)
+            builder.add(PROBABILITY, JANIExporter_ProcessorRegistrar.getProcessor(probability)
                     .toJSON());
         }
         
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            builder.add(ASSIGNMENTS, ProcessorRegistrar.getProcessor(assignments)
+            builder.add(ASSIGNMENTS, JANIExporter_ProcessorRegistrar.getProcessor(assignments)
                     .toJSON());
         }
         

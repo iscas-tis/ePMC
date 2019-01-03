@@ -27,7 +27,7 @@ import javax.json.JsonValue;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
     private static final String NAME = "name";
@@ -74,16 +74,16 @@ public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
     
     private JsonValue addTopLevelFilter(Expression expression) {
         if (expression instanceof ExpressionFilter) {
-            return ProcessorRegistrar.getProcessor(expression)
+            return JANIExporter_ProcessorRegistrar.getProcessor(expression)
                     .toJSON();
         } else {
             JsonObjectBuilder builder = Json.createObjectBuilder();
             
             builder.add(OP, FILTER);
             builder.add(FUN, FUN_VALUES);
-            builder.add(VALUES, ProcessorRegistrar.getProcessor(expression)
+            builder.add(VALUES, JANIExporter_ProcessorRegistrar.getProcessor(expression)
                     .toJSON());
-            builder.add(STATES, ProcessorRegistrar.getProcessor(INITIAL)
+            builder.add(STATES, JANIExporter_ProcessorRegistrar.getProcessor(INITIAL)
                     .toJSON());
 
             return builder.build();

@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_ExpressionTemporalGloballyProcessor implements JANIProcessor {
@@ -56,26 +56,26 @@ public class JANIExporter_ExpressionTemporalGloballyProcessor implements JANIPro
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        if (ProcessorRegistrar.useDerivedOperators()) {
+        if (JANIExporter_ProcessorRegistrar.useDerivedOperators()) {
             builder.add(OP, G);
-            builder.add(EXP, ProcessorRegistrar.getProcessor(expressionTemporalGlobally.getOperand())
+            builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalGlobally.getOperand())
                     .toJSON());
         } else {
             //G op = op W false
             builder.add(OP, W);
-            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionTemporalGlobally.getOperand())
+            builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionTemporalGlobally.getOperand())
                     .toJSON());
             builder.add(RIGHT, false);
         }
         
         TimeBound timeBound = expressionTemporalGlobally.getTimeBound();
         if (timeBound != null && (timeBound.isLeftBounded() || timeBound.isRightBounded())) {
-            if (ProcessorRegistrar.isDiscreteTimeModel()) {
-                builder.add(STEP_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+            if (JANIExporter_ProcessorRegistrar.isDiscreteTimeModel()) {
+                builder.add(STEP_BOUNDS, JANIExporter_ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
-            if (ProcessorRegistrar.isContinuousTimeModel() || ProcessorRegistrar.isTimedModel()){
-                builder.add(TIME_BOUNDS, ProcessorRegistrar.getProcessor(timeBound)
+            if (JANIExporter_ProcessorRegistrar.isContinuousTimeModel() || JANIExporter_ProcessorRegistrar.isTimedModel()){
+                builder.add(TIME_BOUNDS, JANIExporter_ProcessorRegistrar.getProcessor(timeBound)
                         .toJSON());
             }
         }

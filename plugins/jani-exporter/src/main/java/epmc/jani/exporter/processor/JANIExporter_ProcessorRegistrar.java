@@ -139,7 +139,7 @@ import epmc.util.Util;
  * @author Andrea Turrini
  *
  */
-public class ProcessorRegistrar {
+public class JANIExporter_ProcessorRegistrar {
     private static final Map<Class<? extends Object>, Class<? extends JANIProcessor>> processors = registerProcessors();
     private static final Set<ExpressionType> numericTypes = nativeNumericTypes();
     private static final Set<ExpressionType> booleanTypes = nativeBooleanTypes();
@@ -153,7 +153,7 @@ public class ProcessorRegistrar {
     public static void setModel(ModelJANI model) {
         assert model != null;
         
-        ProcessorRegistrar.model = model;
+        JANIExporter_ProcessorRegistrar.model = model;
         useDerivedOperators = Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_DERIVED_OPERATORS);
         isContinuousTimeModel = SemanticsContinuousTime.isContinuousTime(model.getSemantics());
         isDiscreteTimeModel = SemanticsDiscreteTime.isDiscreteTime(model.getSemantics());

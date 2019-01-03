@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_ConstantProcessor implements JANIProcessor {
     /** Identifier for the name of the constant. */
@@ -57,12 +57,12 @@ public class JANIExporter_ConstantProcessor implements JANIProcessor {
         
         builder.add(NAME, constant.getName());
 
-        builder.add(TYPE, ProcessorRegistrar.getProcessor(constant.getType())
+        builder.add(TYPE, JANIExporter_ProcessorRegistrar.getProcessor(constant.getType())
                 .toJSON());
         
         Expression value = constant.getValue();
         if (value != null) {
-            builder.add(VALUE, ProcessorRegistrar.getProcessor(value)
+            builder.add(VALUE, JANIExporter_ProcessorRegistrar.getProcessor(value)
                     .toJSON());
         }
         

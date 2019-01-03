@@ -28,7 +28,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.modelchecker.Properties;
 
 public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
@@ -83,7 +83,7 @@ public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
         
         Metadata metadata = jani.getMetadata();
         if (metadata != null) {
-            builder.add(METADATA, ProcessorRegistrar.getProcessor(metadata)
+            builder.add(METADATA, JANIExporter_ProcessorRegistrar.getProcessor(metadata)
                     .toJSON());
         }
         
@@ -100,38 +100,38 @@ public class JANIExporter_ModelJANIProcessor implements JANIProcessor {
 
         Actions actions = jani.getActions();
         if (actions != null) {
-            builder.add(ACTIONS, ProcessorRegistrar.getProcessor(actions)
+            builder.add(ACTIONS, JANIExporter_ProcessorRegistrar.getProcessor(actions)
                     .toJSON());
         }
         
         Constants constants = jani.getModelConstants();
         if (constants != null) {
-            builder.add(CONSTANTS, ProcessorRegistrar.getProcessor(constants)
+            builder.add(CONSTANTS, JANIExporter_ProcessorRegistrar.getProcessor(constants)
                     .toJSON());
         }
         
         Variables variables = jani.getGlobalVariables();
         if (variables != null) {
-            builder.add(VARIABLES, ProcessorRegistrar.getProcessor(variables)
+            builder.add(VARIABLES, JANIExporter_ProcessorRegistrar.getProcessor(variables)
                     .toJSON());
         }
         
         InitialStates restrictInitial = jani.getRestrictInitial();
         if (restrictInitial != null) {
-            builder.add(RESTRICT_INITIAL, ProcessorRegistrar.getProcessor(restrictInitial)
+            builder.add(RESTRICT_INITIAL, JANIExporter_ProcessorRegistrar.getProcessor(restrictInitial)
                     .toJSON());
         }
         
         Properties properties = jani.getPropertyList();
         if (properties != null) {
-            builder.add(PROPERTIES, ProcessorRegistrar.getProcessor(properties)
+            builder.add(PROPERTIES, JANIExporter_ProcessorRegistrar.getProcessor(properties)
                     .toJSON());
         }
         
-        builder.add(AUTOMATA, ProcessorRegistrar.getProcessor(jani.getAutomata())
+        builder.add(AUTOMATA, JANIExporter_ProcessorRegistrar.getProcessor(jani.getAutomata())
                 .toJSON());
         
-        builder.add(SYSTEM, ProcessorRegistrar.getProcessor(jani.getSystem())
+        builder.add(SYSTEM, JANIExporter_ProcessorRegistrar.getProcessor(jani.getSystem())
                 .toJSON());
         
         return builder.build();      

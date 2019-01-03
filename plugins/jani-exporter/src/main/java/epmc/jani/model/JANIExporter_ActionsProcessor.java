@@ -25,7 +25,7 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_ActionsProcessor implements JANIProcessor {
 
@@ -47,7 +47,7 @@ public class JANIExporter_ActionsProcessor implements JANIProcessor {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         
         for (Action action : actions) {
-            builder.add(ProcessorRegistrar.getProcessor(action)
+            builder.add(JANIExporter_ProcessorRegistrar.getProcessor(action)
                     .toJSON());
         }
 

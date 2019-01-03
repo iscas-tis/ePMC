@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public final class JANIExporter_JANITypeBoundedProcessor implements JANIProcessor {
     public static final String IDENTIFIER = "bounded";
@@ -66,13 +66,13 @@ public final class JANIExporter_JANITypeBoundedProcessor implements JANIProcesso
 
         Expression lowerBound = bounded.getLowerBound(); 
         if (lowerBound != null) {
-            result.add(LOWER_BOUND, ProcessorRegistrar.getProcessor(lowerBound)
+            result.add(LOWER_BOUND, JANIExporter_ProcessorRegistrar.getProcessor(lowerBound)
                     .toJSON());
         }
 
         Expression upperBound = bounded.getUpperBound(); 
         if (upperBound != null) {
-            result.add(UPPER_BOUND, ProcessorRegistrar.getProcessor(upperBound)
+            result.add(UPPER_BOUND, JANIExporter_ProcessorRegistrar.getProcessor(upperBound)
                     .toJSON());
         }
         

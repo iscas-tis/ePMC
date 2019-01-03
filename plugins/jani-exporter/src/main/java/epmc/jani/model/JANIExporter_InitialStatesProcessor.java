@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class JANIExporter_InitialStatesProcessor implements JANIProcessor {
     private static final String EXP = "exp";
@@ -48,7 +48,7 @@ public class JANIExporter_InitialStatesProcessor implements JANIProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
-        builder.add(EXP, ProcessorRegistrar.getProcessor(initialStates.getExp())
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(initialStates.getExp())
                 .toJSON());
 
         String comment = initialStates.getComment();

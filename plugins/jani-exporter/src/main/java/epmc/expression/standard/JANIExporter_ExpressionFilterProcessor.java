@@ -25,7 +25,7 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class JANIExporter_ExpressionFilterProcessor implements JANIProcessor {
@@ -53,11 +53,11 @@ public class JANIExporter_ExpressionFilterProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         builder.add(OP, FILTER);
-        builder.add(FUN, ProcessorRegistrar.getProcessor(expressionFilter.getFilterType())
+        builder.add(FUN, JANIExporter_ProcessorRegistrar.getProcessor(expressionFilter.getFilterType())
                 .toJSON());
-        builder.add(VALUES, ProcessorRegistrar.getProcessor(expressionFilter.getProp())
+        builder.add(VALUES, JANIExporter_ProcessorRegistrar.getProcessor(expressionFilter.getProp())
                 .toJSON());
-        builder.add(STATES, ProcessorRegistrar.getProcessor(expressionFilter.getStates())
+        builder.add(STATES, JANIExporter_ProcessorRegistrar.getProcessor(expressionFilter.getStates())
                 .toJSON());
         UtilModelParser.addPositional(builder, expressionFilter.getPositional());
 

@@ -31,7 +31,7 @@ import epmc.expression.Expression;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 import epmc.operator.OperatorIsPosInf;
 import epmc.value.ContextValue;
@@ -101,7 +101,7 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
                     dirType);
         }
         
-        builder.add(EXP, ProcessorRegistrar.getProcessor(expressionQuantifier.getQuantified())
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionQuantifier.getQuantified())
                 .toJSON());
         UtilModelParser.addPositional(builder, expressionQuantifier.getPositional());
 
@@ -123,7 +123,7 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
         }
 
         ExpressionReward quantified = (ExpressionReward) expressionQuantifier.getQuantified();
-        builder.add(EXP, ProcessorRegistrar.getProcessor(quantified.getReward().getExpression())
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(quantified.getReward().getExpression())
                 .toJSON());
         UtilModelParser.addPositional(builder, expressionQuantifier.getPositional());
 
@@ -144,7 +144,7 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
                     dirType);
         }
         
-        builder.add(EXP, ProcessorRegistrar.getProcessor(expressionQuantifier.getQuantified())
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionQuantifier.getQuantified())
                 .toJSON());
         UtilModelParser.addPositional(builder, expressionQuantifier.getPositional());
         
@@ -166,17 +166,17 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
         }
 
         ExpressionReward quantified = (ExpressionReward) expressionQuantifier.getQuantified();
-        builder.add(EXP, ProcessorRegistrar.getProcessor(quantified.getReward().getExpression())
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(quantified.getReward().getExpression())
                 .toJSON());
         
         if (isRewardReachability(quantified)) {
             JsonArrayBuilder builderAcc = Json.createArrayBuilder();
             boolean addAcc = false;
-            if (ProcessorRegistrar.isContinuousTimeModel()) {
+            if (JANIExporter_ProcessorRegistrar.isContinuousTimeModel()) {
                 builderAcc.add(TIME);
                 addAcc = true;
             }
-            if (ProcessorRegistrar.isDiscreteTimeModel()) {
+            if (JANIExporter_ProcessorRegistrar.isDiscreteTimeModel()) {
                 builderAcc.add(STEPS);
                 addAcc = true;
             }
@@ -185,17 +185,17 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
             }
             Expression reach = quantified.getRewardReachSet();
             if (reach != null) {
-                builder.add(REACH, ProcessorRegistrar.getProcessor(reach)
+                builder.add(REACH, JANIExporter_ProcessorRegistrar.getProcessor(reach)
                         .toJSON());
             }
         } else {
             Expression time = quantified.getTime();
             if (!isPosInf(time)) {
-                JsonValue timeBound = ProcessorRegistrar.getProcessor(time).toJSON();
-                if (ProcessorRegistrar.isDiscreteTimeModel()) {
+                JsonValue timeBound = JANIExporter_ProcessorRegistrar.getProcessor(time).toJSON();
+                if (JANIExporter_ProcessorRegistrar.isDiscreteTimeModel()) {
                     builder.add(STEP_INSTANT, timeBound);
                 }
-                if (ProcessorRegistrar.isContinuousTimeModel()) {
+                if (JANIExporter_ProcessorRegistrar.isContinuousTimeModel()) {
                     builder.add(TIME_INSTANT, timeBound);
                 }
             }
@@ -203,11 +203,11 @@ public class JANIExporter_ExpressionQuantifierProcessor implements JANIProcessor
         if (isRewardCumulative(quantified)) {
             JsonArrayBuilder builderAcc = Json.createArrayBuilder();
             boolean addAcc = false;
-            if (ProcessorRegistrar.isContinuousTimeModel()) {
+            if (JANIExporter_ProcessorRegistrar.isContinuousTimeModel()) {
                 builderAcc.add(TIME);
                 addAcc = true;
             }
-            if (ProcessorRegistrar.isDiscreteTimeModel()) {
+            if (JANIExporter_ProcessorRegistrar.isDiscreteTimeModel()) {
                 builderAcc.add(STEPS);
                 addAcc = true;
             }
