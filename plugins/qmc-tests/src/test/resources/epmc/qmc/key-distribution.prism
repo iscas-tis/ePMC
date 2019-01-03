@@ -1,0 +1,39 @@
+qmc
+
+const vector |p>_2 = (|0>_2 + |1>_2)/sqrt(2); //|+> state
+const vector |m>_2 = (|0>_2 - |1>_2)/sqrt(2); //|-> state
+const superoperator(2) setplus = <<|p>_2 <0|_2,|p>_2 <1|_2>>; // Set the target qubit to |+>
+const superoperator(2) set0 = <<|0>_2 <0|_2,|0>_2 <1|_2>>; // Set the target qubit to |0>
+const superoperator(2) measurep = <<|p>_2 <p|_2>>; //measurement in {|+>, |->} and get result +
+const superoperator(2) measurem = <<|m>_2 <m|_2>>; //measurement in {|+>, |->} and get result -
+
+module BB84
+
+  s : [0..16] init 0;
+//Alice prepares her state equiprobably from |0>, |1>, |+>, |-> 
+  [] (s=0) -> 0.5*set0 : (s'=1)  + 0.5*setplus : (s'=2);                  
+  [] (s=1) -> 0.5 + (setplus-setplus) : (s'=3)           //Alice's state = |0>
+            + 0.5*<< PX >> : (s'=4); //Alice's state = |1>
+  [] (s=2) -> 0.5+ (setplus-setplus) : (s'=5)           //Alice's state = |+>
+            + 0.5*<< PZ >> : (s'=6);  //Alice's sate = |->
+//Bob guesses his measurement basis
+  [] (s>2) & (s<7) -> 0.5 : (s'=2*s+1)  //Bob guesses basis {|0>, |1>} 
+                    + 0.5 : (s'=2*s+2); //Bob guesses basis {|+>, |->}
+//Bob measures his received state  
+  [] (s=7) -> << M0 >> : (s'=16)        //Outcome= 0. Succeeded
+            + << M1 >> : (s'=15);         //Outcome = 1. Failed
+  [] (s=9) -> << M0 >> : (s'=15)          //Outcome = 0. Failed
+            + << M1 >> : (s'=16);      //Outcome = 1. Succeeded 
+  [] (s=12) -> measurep : (s'=16)      //Outcome = +. Succeeded 
+            +  measurem : (s'=15);        //Outcome = -. Failed
+  [] (s=14) -> measurep : (s'=15)         //Outcome = +. Failed
+            +  measurem : (s'=16);     //Outcome = -. Succeeded           
+  [] (s=8)|(s=10)|(s=11)|(s=13) -> (s'=s); //Bob guesses the wrong basis. Aborted.    
+  [] (s=15) -> (s'=15);                       //Protocol failed
+  [] (s=16) -> (s'=16);                    //Protocol succeeded
+
+endmodule
+
+formula succ = (s=16);
+formula fail = (s=15);
+formula abort = (s=8)|(s=10)|(s=11)|(s=13);
