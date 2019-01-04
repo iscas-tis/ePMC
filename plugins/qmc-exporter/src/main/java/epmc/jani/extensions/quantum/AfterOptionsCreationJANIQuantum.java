@@ -22,13 +22,6 @@ package epmc.jani.extensions.quantum;
 
 import java.util.Map;
 
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
-import epmc.expression.standard.OptionsExpressionBasic;
-import epmc.jani.explorer.ExplorerExtension;
-import epmc.jani.explorer.OptionsJANIExplorer;
-import epmc.jani.extensions.functions.EvaluatorExplicitCall;
-import epmc.jani.extensions.functions.ExplorerExtensionFunctions;
-import epmc.jani.extensions.functions.ModelExtensionFunctions;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.options.Options;

@@ -20,12 +20,45 @@
 
 package epmc.qmc.exporter.plugin;
 
+import epmc.jani.exporter.operatorprocessor.JANIExporter_OperatorProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.type.QMCExporter_JANITypeArray2JANIProcessor;
 import epmc.jani.model.type.QMCExporter_JANITypeArray2PRISMProcessor;
 import epmc.plugin.BeforeModelCreation;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.qmc.model.JANITypeArray;
+import epmc.qmc.operator.OperatorArray;
+import epmc.qmc.operator.OperatorBaseBra;
+import epmc.qmc.operator.OperatorBaseKet;
+import epmc.qmc.operator.OperatorBraToVector;
+import epmc.qmc.operator.OperatorComplex;
+import epmc.qmc.operator.OperatorConjugate;
+import epmc.qmc.operator.OperatorIdentityMatrix;
+import epmc.qmc.operator.OperatorKetToVector;
+import epmc.qmc.operator.OperatorKronecker;
+import epmc.qmc.operator.OperatorMatrix;
+import epmc.qmc.operator.OperatorPhaseShift;
+import epmc.qmc.operator.OperatorQeval;
+import epmc.qmc.operator.OperatorQprob;
+import epmc.qmc.operator.OperatorSuperOperatorList;
+import epmc.qmc.operator.OperatorSuperOperatorMatrix;
+import epmc.qmc.operator.OperatorTranspose;
+import epmc.qmc.operator.QMCExporter_OperatorArray2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorBaseBra2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorBaseKet2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorBraToVector2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorComplex2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorConjugate2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorIdentityMatrix2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorKetToVector2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorKronecker2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorMatrix2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorPhaseShift2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorQeval2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorQprob2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorSuperOperatorList2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorSuperOperatorMatrix2JANIProcessor;
+import epmc.qmc.operator.QMCExporter_OperatorTranspose2JANIProcessor;
 
 /**
  * QMC exporter plugin class containing method to execute before model creation.
@@ -43,10 +76,57 @@ public final class BeforeModelCreationQMCExporter implements BeforeModelCreation
 
     @Override
     public void process() {
+        registerJANIProcessors();
+        registerJANIOperatorProcessors();
+        registerPRISMProcessors();
+        registerPRISMOperatorProcessors();
+    }
+     
+    private void registerJANIProcessors() {
         JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeArray.class, 
                 QMCExporter_JANITypeArray2JANIProcessor.class);
+    }
         
+    private void registerJANIOperatorProcessors() {
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorArray.class, 
+                QMCExporter_OperatorArray2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorBaseBra.class, 
+                QMCExporter_OperatorBaseBra2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorBaseKet.class, 
+                QMCExporter_OperatorBaseKet2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorBraToVector.class, 
+                QMCExporter_OperatorBraToVector2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorComplex.class, 
+                QMCExporter_OperatorComplex2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorConjugate.class, 
+                QMCExporter_OperatorConjugate2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorIdentityMatrix.class, 
+                QMCExporter_OperatorIdentityMatrix2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorKetToVector.class, 
+                QMCExporter_OperatorKetToVector2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorKronecker.class, 
+                QMCExporter_OperatorKronecker2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorMatrix.class, 
+                QMCExporter_OperatorMatrix2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorPhaseShift.class, 
+                QMCExporter_OperatorPhaseShift2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorQeval.class, 
+                QMCExporter_OperatorQeval2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorQprob.class, 
+                QMCExporter_OperatorQprob2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorSuperOperatorList.class, 
+                QMCExporter_OperatorSuperOperatorList2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorSuperOperatorMatrix.class, 
+                QMCExporter_OperatorSuperOperatorMatrix2JANIProcessor.class);
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorTranspose.class, 
+                QMCExporter_OperatorTranspose2JANIProcessor.class);
+    }
+    
+    private void registerPRISMProcessors() {
         PRISMExporter_ProcessorRegistrar.registerNonPRISMProcessor(JANITypeArray.class, 
-                QMCExporter_JANITypeArray2PRISMProcessor.class);        
+                QMCExporter_JANITypeArray2PRISMProcessor.class);
+    }
+    
+    private void registerPRISMOperatorProcessors() {        
     }
 }
