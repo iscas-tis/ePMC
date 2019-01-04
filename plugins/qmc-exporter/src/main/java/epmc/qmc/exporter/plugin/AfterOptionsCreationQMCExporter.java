@@ -20,9 +20,15 @@
 
 package epmc.qmc.exporter.plugin;
 
+import java.util.Map;
+
+import epmc.main.options.OptionsEPMC;
+import epmc.modelchecker.CommandTask;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
+import epmc.qmc.exporter.command.CommandTaskQMCExporterQMCExport;
+import epmc.qmc.exporter.options.OptionsQMCExporter;
 
 /**
  * QMC exporter plugin class containing method to execute after options creation.
@@ -42,6 +48,16 @@ public final class AfterOptionsCreationQMCExporter implements AfterOptionsCreati
     public void process(Options options) {
         assert options != null;
         
+        Map<String,Class<? extends CommandTask>> commandTaskClasses = options.get(OptionsEPMC.COMMAND_CLASS);
+        assert commandTaskClasses != null;
+
+        options.addCommand()
+            .setBundleName(OptionsQMCExporter.OPTIONS_QMC_EXPORTER)
+            .setIdentifier(CommandTaskQMCExporterQMCExport.IDENTIFIER)
+            .setCommandLine()
+            .build();
+
+        commandTaskClasses.put(CommandTaskQMCExporterQMCExport.IDENTIFIER, CommandTaskQMCExporterQMCExport.class);
         options.set(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM, true);
         options.disableOption(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM);
     }
