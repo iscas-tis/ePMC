@@ -27,5 +27,6 @@
 	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-exporter"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-exporter"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-qmc-exporter"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
