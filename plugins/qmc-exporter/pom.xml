@@ -62,7 +62,7 @@
       <artifactId>epmc-prism-exporter</artifactId>
       <version>0</version>
       <scope>system</scope>
-      <systemPath>${project.basedir}/../prism-format/target/epmc-prism-exporter-0.jar</systemPath>
+      <systemPath>${project.basedir}/../prism-exporter/target/epmc-prism-exporter-0.jar</systemPath>
     </dependency>
     <dependency>
       <groupId>epmc.qmc</groupId>
