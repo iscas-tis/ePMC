@@ -7,6 +7,8 @@ import static epmc.qmc.ModelNames.KEY_DISTRIBUTION_MODEL;
 import static epmc.qmc.ModelNames.KEY_DISTRIBUTION_PROPERTIES;
 import static epmc.qmc.ModelNames.LOOP_ALTERNATIVE_MODEL;
 import static epmc.qmc.ModelNames.LOOP_ALTERNATIVE_PROPERTIES;
+import static epmc.qmc.ModelNames.LOOP_ALLOPERATORS_MODEL;
+import static epmc.qmc.ModelNames.LOOP_ALLOPERATORS_PROPERTIES;
 import static epmc.qmc.ModelNames.LOOP_MODEL;
 import static epmc.qmc.ModelNames.LOOP_PROPERTIES;
 import static epmc.qmc.ModelNames.SUPERDENSE_CODING_MODEL;
@@ -70,6 +72,11 @@ public final class ExportQMCToJANI {
     @Test
     public void loopTest() {
         export(LOOP_MODEL, LOOP_PROPERTIES);
+    }
+
+    @Test
+    public void loopAlloperatorsTest() {
+        export(LOOP_ALLOPERATORS_MODEL, LOOP_ALLOPERATORS_PROPERTIES);
     }
 
     /**

@@ -7,6 +7,7 @@ import static epmc.modelchecker.TestHelper.prepareOptions;
 import static epmc.qmc.ModelNames.KEY_DISTRIBUTION_MODEL;
 import static epmc.qmc.ModelNames.LOOP_ALTERNATIVE_MODEL;
 import static epmc.qmc.ModelNames.LOOP_MODEL;
+import static epmc.qmc.ModelNames.LOOP_ALLOPERATORS_MODEL;
 import static epmc.qmc.ModelNames.SUPERDENSE_CODING_MODEL;
 
 import java.util.ArrayList;
@@ -82,6 +83,23 @@ public final class QMCTest {
         Value result2 = computeResult(options, LOOP_MODEL, "qeval(Q=?[F (s=3)], |p>_2 <p|_2)");
         assertEquals(compare23, result2, tolerance);
         Value result3 = computeResult(options, LOOP_MODEL, "qeval(Q=?[F (s=3)], ID(2)/2)");
+        assertEquals(compare23, result3, tolerance);
+    }
+
+    @Test
+    public void loopAlloperatorsTest() {
+        Options options = prepareQMCOptions();
+        double tolerance = 1E-10;
+        options.set(TestHelper.ITERATION_TOLERANCE, Double.toString(tolerance));
+        Value result1 = computeResult(options, LOOP_ALLOPERATORS_MODEL, "Q>=1 [ F (s=3) ]");
+        TypeMatrix typeArray = TypeMatrix.get(TypeReal.get());
+        ValueMatrix compare23 = typeArray.newValue();
+        compare23.setDimensions(2, 2);
+        set(compare23, 1, 0, 0);
+        assertEquals(true, result1);
+        Value result2 = computeResult(options, LOOP_ALLOPERATORS_MODEL, "qeval(Q=?[F (s=3)], |p>_2 <p|_2)");
+        assertEquals(compare23, result2, tolerance);
+        Value result3 = computeResult(options, LOOP_ALLOPERATORS_MODEL, "qeval(Q=?[F (s=3)], ID(2)/2)");
         assertEquals(compare23, result3, tolerance);
     }
 
