@@ -28,7 +28,8 @@ import epmc.modelchecker.CommandTask;
 import epmc.options.Options;
 import epmc.plugin.AfterOptionsCreation;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
-import epmc.qmc.exporter.command.CommandTaskQMCExporterQMCExport;
+import epmc.qmc.exporter.command.CommandTaskQMCExporterQMCExport2JANI;
+import epmc.qmc.exporter.command.CommandTaskQMCExporterQMCExport2PRISM;
 import epmc.qmc.exporter.options.OptionsQMCExporter;
 
 /**
@@ -54,15 +55,25 @@ public final class AfterOptionsCreationQMCExporter implements AfterOptionsCreati
 
         options.addCommand()
             .setBundleName(OptionsQMCExporter.OPTIONS_QMC_EXPORTER)
-            .setIdentifier(CommandTaskQMCExporterQMCExport.IDENTIFIER)
+            .setIdentifier(CommandTaskQMCExporterQMCExport2JANI.IDENTIFIER)
             .setCommandLine()
             .build();
 
-        commandTaskClasses.put(CommandTaskQMCExporterQMCExport.IDENTIFIER, CommandTaskQMCExporterQMCExport.class);
+        commandTaskClasses.put(CommandTaskQMCExporterQMCExport2JANI.IDENTIFIER, 
+                CommandTaskQMCExporterQMCExport2JANI.class);
         
         options.set(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER, true);
         options.disableOption(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER);
 
+        options.addCommand()
+            .setBundleName(OptionsQMCExporter.OPTIONS_QMC_EXPORTER)
+            .setIdentifier(CommandTaskQMCExporterQMCExport2PRISM.IDENTIFIER)
+            .setCommandLine()
+            .build();
+
+        commandTaskClasses.put(CommandTaskQMCExporterQMCExport2PRISM.IDENTIFIER, 
+                CommandTaskQMCExporterQMCExport2PRISM.class);
+    
         options.set(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM, true);
         options.disableOption(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM);
     }

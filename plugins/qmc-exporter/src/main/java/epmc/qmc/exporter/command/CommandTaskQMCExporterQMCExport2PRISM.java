@@ -48,13 +48,13 @@ import epmc.util.Util;
 import epmc.value.OptionsValue;
 
 /**
- * Command to start QMC exporter.
+ * Command to start QMC exporter to PRISM.
  * 
  * @author Andrea Turrini
  */
-public final class CommandTaskQMCExporterQMCExport implements CommandTask {
-    /** Unique identifier of JANI converter start command. */
-    public final static String IDENTIFIER = "qmc-export";
+public final class CommandTaskQMCExporterQMCExport2PRISM implements CommandTask {
+    /** Unique identifier of QMC to PRISM converter start command. */
+    public final static String IDENTIFIER = "qmc-export-to-prism";
 
     public final static String PRISM_EXTENSION = ".prism";
     public final static String PROPERTIES_EXTENSION = ".props";
