@@ -52,6 +52,7 @@ import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.messages.MessagesPRISMExporter;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
+import epmc.qmc.exporter.error.ErrorsQMCExporter;
 import epmc.qmc.exporter.messages.MessagesQMCExporter;
 import epmc.qmc.exporter.options.ExportTo;
 import epmc.qmc.exporter.options.OptionsQMCExporter;
@@ -105,6 +106,10 @@ public final class CommandTaskQMCExporterQMCExport implements CommandTask {
     
     private void exportToJANI() {
         Options options = Options.get();
+        ensure(options.getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER),
+                ErrorsQMCExporter.QMC_EXPORTER_NEW_JANI_EXPORTER_REQUIRED
+                );
+        
         Log log = options.get(OptionsMessages.LOG);
         //TODO: probably the reward prefix has to be moved to a more appropriate place independent from the converted model type
 //        PRISM2JANIConverter.setRewardPrefix(options.getString(OptionsJANIExporter.JANI_EXPORTER_REWARD_NAME_PREFIX));
@@ -201,6 +206,9 @@ public final class CommandTaskQMCExporterQMCExport implements CommandTask {
 
     private void exportToPRISM() {
         Options options = Options.get();
+        ensure(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM),
+                ErrorsQMCExporter.QMC_EXPORTER_NON_OFFICIAL_PRISM_REQUIRED
+                );
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, true);
         if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
             PRISMExporter_ProcessorRegistrar.useExtendedPRISMSyntax();
