@@ -1,0 +1,79 @@
+Extension quantum
+
+var Type = schema([
+	[...], // all the definitions of basic jani-model and other active extensions
+	"complex",
+	"array", // for both vectors and matrices
+	"superoperator"
+]); 
+
+var Expression = schema([
+	[...], // all the definitions of basic jani-model and other active extensions
+	{
+		"real" : schema.self, //constant expressions of type "int" or "real"
+		"img" : schema.self //constant expressions of type "int" or "real"
+	},
+	{
+		"kind" : ["row-vector", "column-vector"],
+		"elements" : Array.of(schema.self) //constant expressions of type "int", "real", or "complex"
+	},
+	{ // a matrix, represented by rows
+		"kind" : "matrix",
+		"#rows": Number, //strictly positive integer
+		"#cols": Number, //strictly positive integer
+		"elements" : Array.of(schema.self) // must be of length "#rows"*"#cols"
+	},
+	{ // the identity matrix
+		"kind" : "identity-matrix",
+		"dimension": Number //strictly positive integer
+	},
+	{ // the phase-shift matrix with argument "exp"
+		"kind": "phase-shift",
+		"exp": schema.self 
+	},
+	{
+		"kind" : "kraus-superoperator",
+		"matrices": Array.of(schema.self) //all expressions must be matrices that have the same dimensions
+	},
+	{
+		"kind" : "matrix-superoperator",
+		"matrix": schema.self //a matrix expression
+	},
+	{ // base vector of the Hilbert space of dimension "dimension" as bra (row) or ket (column)
+		"kind": ["base-bra", "base-ket"],
+		"dimension": Number // integer larger than 0
+		"exp": schema.self // if "exp" is a constant integer, it represents the corresponding vector in the canonical basis { |0>, ..., |dimension-1> }
+	},
+	{ // the resulting expression is a bra (row) or ket (column) vector
+		"op": ["bra-vector","ket-vector"],
+		"exp": schema.self
+	},
+	{ // the complex conjugate of "exp"
+		"op": "conjugate",
+		"exp": schema.self
+	},
+	{ // the transpose of "exp"
+		"op": "transpose",
+		"exp": schema.self 
+	},
+	{
+		"op" : "kronecker",
+		"left": schema.self,
+		"right": schema.self
+	},
+	{ // the maximum or minimum superoperator representing the acceptance of "exp"
+		"op": ["Qmax","Qmin"],
+		"exp": schema.self
+	},
+	{ // evaluation of the superoperator "exp" on the state "state"
+		"op": ["Qeval"],
+		"exp": schema.self,
+		"state" : schema.self
+	},
+	{ // computation of the probability trace of the superoperator representing the acceptance of "exp" on the state "state"
+		"op": ["Qprob"],
+		"exp": schema.self,
+		"state" : schema.self
+	}
+]);
+
