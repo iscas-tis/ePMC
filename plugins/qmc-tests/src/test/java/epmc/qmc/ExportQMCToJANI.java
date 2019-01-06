@@ -27,7 +27,7 @@ import org.junit.Test;
 
 import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
-import epmc.jani.extensions.quantum.ModelExtensionQuantum;
+import epmc.jani.extensions.quantum.ModelExtensionQMC;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
@@ -111,7 +111,7 @@ public final class ExportQMCToJANI {
         ModelJANI jani = prism.toJANI(true);
         jani.setName(modelName);
         List<ModelExtension> extensions = jani.getModelExtensions();
-        extensions.add(Util.getInstance(ModelExtensionQuantum.class));
+        extensions.add(Util.getInstance(ModelExtensionQMC.class));
         System.out.println("Generating JSON");
         JsonValue json = null;
         if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER)) {

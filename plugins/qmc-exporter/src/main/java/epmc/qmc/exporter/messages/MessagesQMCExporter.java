@@ -18,18 +18,19 @@
 
  *****************************************************************************/
 
-package epmc.qmc.exporter.options;
+package epmc.qmc.exporter.messages;
 
-/**
- * Class collecting options used for PRISM converter plugin.
- * 
- * @author Andrea Turrini
- */
-public enum OptionsQMCExporter {
-    /** Base name of resource file for options description. */
-    OPTIONS_QMC_EXPORTER,
-    /** Category used for QMC converter options. */
-    QMC_EXPORTER_CATEGORY,
-    QMC_EXPORTER_EXPORT_TO
-    ;
+import epmc.messages.Message;
+
+public final class MessagesQMCExporter {
+    private final static String MESSAGES_QMC_EXPORTER = "MessagesQMCExporter";
+
+    public final static Message QMC_EXPORTER_UNKNOWN_EXPORT_TO_TARGET = newMessage().setIdentifier("qmc-exporter-unknown-export-to-target").build();
+
+    private static Message.Builder newMessage() {
+        return new Message.Builder().setBundle(MESSAGES_QMC_EXPORTER);
+    }
+
+    private MessagesQMCExporter() {
+    }
 }
