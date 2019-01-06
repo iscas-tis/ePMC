@@ -22,6 +22,7 @@ package epmc.qmc.exporter.plugin;
 
 import java.util.Map;
 
+import epmc.jani.exporter.options.OptionsJANIExporter;
 import epmc.main.options.OptionsEPMC;
 import epmc.modelchecker.CommandTask;
 import epmc.options.Options;
@@ -58,6 +59,10 @@ public final class AfterOptionsCreationQMCExporter implements AfterOptionsCreati
             .build();
 
         commandTaskClasses.put(CommandTaskQMCExporterQMCExport.IDENTIFIER, CommandTaskQMCExporterQMCExport.class);
+        
+        options.set(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER, true);
+        options.disableOption(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER);
+
         options.set(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM, true);
         options.disableOption(OptionsPRISMExporter.PRISM_EXPORTER_NON_OFFICIAL_PRISM);
     }
