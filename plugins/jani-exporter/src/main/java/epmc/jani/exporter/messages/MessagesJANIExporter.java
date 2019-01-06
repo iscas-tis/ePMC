@@ -33,7 +33,7 @@ public final class MessagesJANIExporter {
     /** Base name of resource bundle for the messages. */
     public static final String MESSAGES_JANI_EXPORTER = "MessagesJANIExporter";
     public static final Message JANI_EXPORTER_MISSING_JANI_FILENAME = newMessage().setIdentifier("jani-exporter-missing-jani-filename").build();
-    public static final Message JANI_EXPORTER_UNWRITEABLE_JANI_FILE = newMessage().setIdentifier("jani-exporter-unwriteable-jani-file").build();
+    public static final Message JANI_EXPORTER_UNWRITABLE_JANI_FILE = newMessage().setIdentifier("jani-exporter-unwritable-jani-file").build();
     public static final Message JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_ABORT = newMessage().setIdentifier("jani-exporter-already-existing-jani-file-abort").build();
     public static final Message JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_HELP = newMessage().setIdentifier("jani-exporter-already-existing-jani-file-help").build();
     public static final Message JANI_EXPORTER_ALREADY_EXISTING_JANI_FILE_OVERWRITE = newMessage().setIdentifier("jani-exporter-already-existing-jani-file-overwrite").build();

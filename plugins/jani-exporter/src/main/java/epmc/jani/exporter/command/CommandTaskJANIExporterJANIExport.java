@@ -112,7 +112,7 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
             File janiFile = new File(janiFilename); 
             if (janiFile.exists()) { 
                 if (!janiFile.canWrite()) {
-                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITEABLE_JANI_FILE, 
+                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITABLE_JANI_FILE, 
                             janiFilename, 
                             modelFilename);
                     return;
