@@ -20,6 +20,8 @@
 
 package epmc.qmc.exporter.plugin;
 
+import epmc.expression.standard.ExpressionQuantifier;
+import epmc.expression.standard.QMCExporter_ExpressionQuantifier2JANIProcessor;
 import epmc.jani.exporter.operatorprocessor.JANIExporter_OperatorProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.plugin.BeforeModelCreation;
@@ -87,6 +89,8 @@ public final class BeforeModelCreationQMCExporter implements BeforeModelCreation
     }
      
     private void registerJANIProcessors() {
+        JANIExporter_ProcessorRegistrar.registerProcessor(ExpressionQuantifier.class, 
+                QMCExporter_ExpressionQuantifier2JANIProcessor.class);
         JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeArray.class, 
                 QMCExporter_JANITypeArray2JANIProcessor.class);
         JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeSuperoperator.class, 
