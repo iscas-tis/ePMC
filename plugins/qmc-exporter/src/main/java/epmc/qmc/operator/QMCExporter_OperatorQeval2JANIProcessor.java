@@ -26,9 +26,14 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class QMCExporter_OperatorQeval2JANIProcessor implements OperatorProcessor {
+    private final static String OP = "op";
+    private final static String QEVAL = "Qeval";
+    private final static String EXP = "exp";
+    private final static String STATE = "state";
 
     private ExpressionOperator expressionOperator = null;
     
@@ -48,6 +53,11 @@ public class QMCExporter_OperatorQeval2JANIProcessor implements OperatorProcesso
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
+        builder.add(OP, QEVAL);
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
+        builder.add(STATE, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         

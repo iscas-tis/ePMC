@@ -26,9 +26,13 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class QMCExporter_OperatorSuperOperatorList2JANIProcessor implements OperatorProcessor {
+    private final static String OP = "op";
+    private final static String KRAUS_SUPEROPERATOR = "kraus-superoperator";
+    private final static String MATRICES = "matrices";
 
     private ExpressionOperator expressionOperator = null;
     
@@ -47,7 +51,10 @@ public class QMCExporter_OperatorSuperOperatorList2JANIProcessor implements Oper
         assert expressionOperator != null;
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        
+
+        builder.add(OP, KRAUS_SUPEROPERATOR);
+        builder.add(MATRICES, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         

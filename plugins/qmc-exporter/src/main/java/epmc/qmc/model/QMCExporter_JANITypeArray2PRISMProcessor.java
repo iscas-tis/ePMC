@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.jani.model.type;
+package epmc.qmc.model;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -27,7 +27,6 @@ import epmc.prism.exporter.processor.PRISMExporter_ProcessorNonPRISM;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 import epmc.qmc.exporter.messages.NonPRISMFeaturesQMCExporter;
-import epmc.qmc.model.JANITypeArray;
 
 public final class QMCExporter_JANITypeArray2PRISMProcessor implements PRISMExporter_ProcessorNonPRISM {
 

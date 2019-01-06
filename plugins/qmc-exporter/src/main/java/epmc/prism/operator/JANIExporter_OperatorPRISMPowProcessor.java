@@ -18,34 +18,34 @@
 
  *****************************************************************************/
 
-package epmc.qmc.operator;
-
-import java.util.List;
+package epmc.prism.operator;
 
 import javax.json.Json;
-import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
-public class QMCExporter_OperatorMatrix2JANIProcessor implements OperatorProcessor {
-    private final static String KIND = "kind";
-    private final static String MATRIX = "matrix";
-    private final static String NROWS = "#rows";
-    private final static String NCOLS = "#cols";
-    private final static String ELEMENTS = "elements";
-
+/**
+ * @author Andrea Turrini
+ *
+ */
+public class JANIExporter_OperatorPRISMPowProcessor implements OperatorProcessor {
+    //TODO: find a better place where to put this processor..
+    private static final String OP = "op";
+    private static final String POW = "pow";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
+    
     private ExpressionOperator expressionOperator = null;
     
     @Override
     public OperatorProcessor setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
-        assert expressionOperator.getOperator().equals(OperatorMatrix.MATRIX);
+        assert expressionOperator.getOperator().equals(OperatorPRISMPow.PRISM_POW);
     
         this.expressionOperator = expressionOperator;
 
@@ -56,26 +56,16 @@ public class QMCExporter_OperatorMatrix2JANIProcessor implements OperatorProcess
     public JsonValue toJSON() {
         assert expressionOperator != null;
         
-        List<Expression> operands = expressionOperator.getOperands();
-        
-        JsonArrayBuilder array = Json.createArrayBuilder();
-        for (int op = 2; op < operands.size(); op++) {
-            array.add(JANIExporter_ProcessorRegistrar.getProcessor(operands.get(op))
-                    .toJSON());
-        }
-
         JsonObjectBuilder builder = Json.createObjectBuilder();
-        
-        builder.add(KIND, MATRIX);
-        builder.add(NROWS, JANIExporter_ProcessorRegistrar.getProcessor(operands.get(0))
+
+        builder.add(OP, POW);
+        builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
-        builder.add(NCOLS, JANIExporter_ProcessorRegistrar.getProcessor(operands.get(1))
+        builder.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                 .toJSON());
-        builder.add(ELEMENTS, array.build());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         
         return builder.build();
     }
-
-}
+}    

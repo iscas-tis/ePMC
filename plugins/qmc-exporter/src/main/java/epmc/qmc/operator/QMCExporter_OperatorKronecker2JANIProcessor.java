@@ -26,9 +26,14 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class QMCExporter_OperatorKronecker2JANIProcessor implements OperatorProcessor {
+    private static final String OP = "op";
+    private static final String KRONECKER = "kronecker";
+    private static final String LEFT = "left";
+    private static final String RIGHT = "right";
 
     private ExpressionOperator expressionOperator = null;
     
@@ -48,6 +53,11 @@ public class QMCExporter_OperatorKronecker2JANIProcessor implements OperatorProc
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
+        builder.add(OP, KRONECKER);
+        builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
+        builder.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+                .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         

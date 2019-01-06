@@ -18,12 +18,11 @@
 
  *****************************************************************************/
 
-package epmc.jani.model.type;
+package epmc.qmc.model;
 
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.processor.JANIExporter_Processor;
-import epmc.qmc.model.JANITypeArray;
 import epmc.util.UtilJSON;
 
 public final class QMCExporter_JANITypeArray2JANIProcessor implements JANIExporter_Processor {

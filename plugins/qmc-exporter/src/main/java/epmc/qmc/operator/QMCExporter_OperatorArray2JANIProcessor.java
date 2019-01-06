@@ -21,12 +21,13 @@
 package epmc.qmc.operator;
 
 import javax.json.Json;
-import javax.json.JsonObjectBuilder;
+import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
+import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.model.UtilModelParser;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
 public class QMCExporter_OperatorArray2JANIProcessor implements OperatorProcessor {
 
@@ -46,12 +47,20 @@ public class QMCExporter_OperatorArray2JANIProcessor implements OperatorProcesso
     public JsonValue toJSON() {
         assert expressionOperator != null;
         
-        JsonObjectBuilder builder = Json.createObjectBuilder();
+        JsonArrayBuilder array = Json.createArrayBuilder();
         
+        boolean first = true;
+        for(Expression operand : expressionOperator.getOperands()) {
+            //the first operand is a number telling how many other elements are actually in the array
+            if (first) {
+                first = false;
+            } else {
+                array.add(JANIExporter_ProcessorRegistrar.getProcessor(operand)
+                        .toJSON());
+            }
+        }
         
-        UtilModelParser.addPositional(builder, expressionOperator.getPositional());
-        
-        return builder.build();
+        return array.build();
     }
 
 }

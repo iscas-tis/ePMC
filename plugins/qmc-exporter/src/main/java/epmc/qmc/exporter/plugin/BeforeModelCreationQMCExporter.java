@@ -22,11 +22,15 @@ package epmc.qmc.exporter.plugin;
 
 import epmc.jani.exporter.operatorprocessor.JANIExporter_OperatorProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
-import epmc.jani.model.type.QMCExporter_JANITypeArray2JANIProcessor;
-import epmc.jani.model.type.QMCExporter_JANITypeArray2PRISMProcessor;
 import epmc.plugin.BeforeModelCreation;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
+import epmc.prism.operator.JANIExporter_OperatorPRISMPowProcessor;
+import epmc.prism.operator.OperatorPRISMPow;
 import epmc.qmc.model.JANITypeArray;
+import epmc.qmc.model.JANITypeSuperoperator;
+import epmc.qmc.model.QMCExporter_JANITypeArray2JANIProcessor;
+import epmc.qmc.model.QMCExporter_JANITypeArray2PRISMProcessor;
+import epmc.qmc.model.QMCExporter_JANITypeSuperoperator2JANIProcessor;
 import epmc.qmc.operator.OperatorArray;
 import epmc.qmc.operator.OperatorBaseBra;
 import epmc.qmc.operator.OperatorBaseKet;
@@ -85,9 +89,13 @@ public final class BeforeModelCreationQMCExporter implements BeforeModelCreation
     private void registerJANIProcessors() {
         JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeArray.class, 
                 QMCExporter_JANITypeArray2JANIProcessor.class);
+        JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeSuperoperator.class, 
+                QMCExporter_JANITypeSuperoperator2JANIProcessor.class);
     }
         
     private void registerJANIOperatorProcessors() {
+        JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorPRISMPow.class, 
+                JANIExporter_OperatorPRISMPowProcessor.class);
         JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorArray.class, 
                 QMCExporter_OperatorArray2JANIProcessor.class);
         JANIExporter_OperatorProcessorRegistrar.registerOperatorProcessor(OperatorBaseBra.class, 

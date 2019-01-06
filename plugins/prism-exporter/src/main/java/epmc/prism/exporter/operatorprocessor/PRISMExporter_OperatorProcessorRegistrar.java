@@ -95,6 +95,7 @@ import epmc.operator.OperatorOr;
 import epmc.operator.PRISMExporter_OperatorOrProcessor;
 import epmc.operator.OperatorOverflow;
 import epmc.operator.PRISMExporter_OperatorOverflowProcessor;
+import epmc.operator.PRISMExporter_OperatorPRISMPowProcessor;
 import epmc.operator.OperatorPow;
 import epmc.operator.PRISMExporter_OperatorPowProcessor;
 import epmc.operator.OperatorSet;
@@ -109,6 +110,7 @@ import epmc.operator.OperatorWiden;
 import epmc.operator.PRISMExporter_OperatorWidenProcessor;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
+import epmc.prism.operator.OperatorPRISMPow;
 import epmc.util.Util;
 
 /**
@@ -226,6 +228,7 @@ public class PRISMExporter_OperatorProcessorRegistrar {
         operatorProcessors.put(OperatorNot.class, PRISMExporter_OperatorNotProcessor.class);
         operatorProcessors.put(OperatorOr.class, PRISMExporter_OperatorOrProcessor.class);
         operatorProcessors.put(OperatorPow.class, PRISMExporter_OperatorPowProcessor.class);
+        operatorProcessors.put(OperatorPRISMPow.class, PRISMExporter_OperatorPRISMPowProcessor.class);
         operatorProcessors.put(OperatorSqrt.class, PRISMExporter_OperatorSqrtProcessor.class);
         operatorProcessors.put(OperatorSubtract.class, PRISMExporter_OperatorSubtractProcessor.class);
         

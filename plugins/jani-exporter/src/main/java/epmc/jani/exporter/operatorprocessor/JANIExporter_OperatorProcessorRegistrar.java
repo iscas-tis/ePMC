@@ -103,7 +103,7 @@ public class JANIExporter_OperatorProcessorRegistrar {
      * @param JANIComponent the JANI component to which associate the processor
      * @param operatorProcessor the corresponding processor
      */
-    public static void registerStrictOperatorProcessor(Class<? extends Operator> operator, Class<? extends OperatorProcessor> operatorProcessor) {
+    public static void registerOperatorProcessor(Class<? extends Operator> operator, Class<? extends OperatorProcessor> operatorProcessor) {
 
         operatorProcessors.put(operator, operatorProcessor);
     }
