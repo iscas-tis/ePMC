@@ -106,7 +106,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
             }
             File prismModelFile = new File(prismModelFilename); 
             if (prismModelFile.exists() && !prismModelFile.canWrite()) {
-                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITEABLE_PRISM_MODEL_FILE, prismModelFilename, modelFilename);
+                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITABLE_PRISM_MODEL_FILE, prismModelFilename, modelFilename);
             }
 
             String prismPropertiesFilename = options.get(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME);
@@ -121,7 +121,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
             }
             File prismPropertiesFile = new File(prismPropertiesFilename); 
             if (prismPropertiesFile.exists() && !prismPropertiesFile.canWrite()) {
-                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITEABLE_PRISM_MODEL_FILE, prismPropertiesFilename, modelFilename);
+                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITABLE_PRISM_MODEL_FILE, prismPropertiesFilename, modelFilename);
             }
 
             Model model = modelChecker.getModel();

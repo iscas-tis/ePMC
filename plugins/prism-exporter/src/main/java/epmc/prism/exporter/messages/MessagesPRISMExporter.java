@@ -34,8 +34,8 @@ public final class MessagesPRISMExporter {
     public final static String MESSAGES_PRISM_EXPORTER = "MessagesPRISMExporter";
     public final static Message PRISM_EXPORTER_MISSING_PRISM_MODEL_FILENAME = newMessage().setIdentifier("prism-exporter-missing-prism-model-filename").build();
     public final static Message PRISM_EXPORTER_MISSING_PRISM_PROPERTIES_FILENAME = newMessage().setIdentifier("prism-exporter-missing-prism-properties-filename").build();
-    public final static Message PRISM_EXPORTER_UNWRITEABLE_PRISM_MODEL_FILE = newMessage().setIdentifier("prism-exporter-unwriteable-prism-model-file").build();
-    public final static Message PRISM_EXPORTER_UNWRITEABLE_PRISM_PROPERTIES_FILE = newMessage().setIdentifier("prism-exporter-unwriteable-prism-properties-file").build();
+    public final static Message PRISM_EXPORTER_UNWRITABLE_PRISM_MODEL_FILE = newMessage().setIdentifier("prism-exporter-unwritable-prism-model-file").build();
+    public final static Message PRISM_EXPORTER_UNWRITABLE_PRISM_PROPERTIES_FILE = newMessage().setIdentifier("prism-exporter-unwritable-prism-properties-file").build();
     public final static Message PRISM_EXPORTER_PRISM_MODEL_CREATION = newMessage().setIdentifier("prism-exporter-prism-model-creation").build();
     public final static Message PRISM_EXPORTER_PRISM_MODEL_CREATION_DONE = newMessage().setIdentifier("prism-exporter-prism-model-creation-done").build();
     public final static Message PRISM_EXPORTER_PRISM_FILE_CREATION = newMessage().setIdentifier("prism-exporter-prism-file-creation").build();
