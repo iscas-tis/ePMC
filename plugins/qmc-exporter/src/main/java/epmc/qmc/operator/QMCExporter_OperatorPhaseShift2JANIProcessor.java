@@ -26,9 +26,13 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class QMCExporter_OperatorPhaseShift2JANIProcessor implements OperatorProcessor {
+    private final static String KIND = "kind";
+    private final static String PHASE_SHIFT = "phase-shift";
+    private final static String EXP = "exp";
 
     private ExpressionOperator expressionOperator = null;
     
@@ -48,6 +52,9 @@ public class QMCExporter_OperatorPhaseShift2JANIProcessor implements OperatorPro
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
+        builder.add(KIND, PHASE_SHIFT);
+        builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         

@@ -33,6 +33,7 @@ public class QMCExporter_OperatorQprob2JANIProcessor implements OperatorProcesso
     private final static String OP = "op";
     private final static String QPROB = "Qprob";
     private final static String EXP = "exp";
+    private final static String STATE = "state";
 
     private ExpressionOperator expressionOperator = null;
     
@@ -54,6 +55,8 @@ public class QMCExporter_OperatorQprob2JANIProcessor implements OperatorProcesso
         
         builder.add(OP, QPROB);
         builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
+        builder.add(STATE, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                 .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());

@@ -26,9 +26,13 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 public class QMCExporter_OperatorSuperOperatorMatrix2JANIProcessor implements OperatorProcessor {
+    private final static String KIND = "kind";
+    private final static String MATRIX_SUPEROPERATOR = "matrix-superoperator";
+    private final static String MATRIX = "matrix";
 
     private ExpressionOperator expressionOperator = null;
     
@@ -48,6 +52,9 @@ public class QMCExporter_OperatorSuperOperatorMatrix2JANIProcessor implements Op
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
+        builder.add(KIND, MATRIX_SUPEROPERATOR);
+        builder.add(MATRIX, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+                .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());
         

@@ -27,7 +27,7 @@ import epmc.util.UtilJSON;
 
 public final class QMCExporter_JANITypeArray2JANIProcessor implements JANIExporter_Processor {
     /** Identifier for array type. */
-    private static final String VECTOR = "vector";
+    private static final String ARRAY = "array";
 
     private JANITypeArray array = null;
 
@@ -44,6 +44,6 @@ public final class QMCExporter_JANITypeArray2JANIProcessor implements JANIExport
     public JsonValue toJSON() {
         assert array != null;
 
-        return UtilJSON.toStringValue(VECTOR);
+        return UtilJSON.toStringValue(ARRAY);
     }
 }
