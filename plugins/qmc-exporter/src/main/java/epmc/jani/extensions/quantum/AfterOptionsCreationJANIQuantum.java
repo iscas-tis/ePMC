@@ -44,7 +44,7 @@ public class AfterOptionsCreationJANIQuantum implements AfterOptionsCreation {
             modelExtensions = new OrderedMap<>();
             options.set(OptionsJANIModel.JANI_MODEL_EXTENSION_CLASS, modelExtensions);
         }
-        modelExtensions.put(ModelExtensionQuantum.IDENTIFIER,
-                ModelExtensionQuantum.class);
+        modelExtensions.put(ModelExtensionQMC.IDENTIFIER,
+                ModelExtensionQMC.class);
     }
 }

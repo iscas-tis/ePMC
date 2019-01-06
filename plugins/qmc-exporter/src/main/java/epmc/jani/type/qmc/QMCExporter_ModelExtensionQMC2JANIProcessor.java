@@ -20,38 +20,29 @@
 
 package epmc.jani.type.qmc;
 
-import java.util.LinkedList;
-import java.util.List;
+import javax.json.JsonValue;
 
-import epmc.prism.exporter.processor.PRISMExporter_ProcessorNonPRISM;
-import epmc.qmc.exporter.messages.NonPRISMFeaturesQMCExporter;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.util.UtilJSON;
 
-public final class QMCExporter_ModelExtensionQMC2PRISMProcessor implements PRISMExporter_ProcessorNonPRISM {
+public final class QMCExporter_ModelExtensionQMC2JANIProcessor implements JANIExporter_Processor {
+    private final static String QMC = "qmc";
+    
+    private ModelExtensionQMC modelExtensionQMC = null;
 
     @Override
-    public PRISMExporter_ProcessorNonPRISM setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
+        assert obj != null;
         assert obj instanceof ModelExtensionQMC;
+        
+        modelExtensionQMC = (ModelExtensionQMC) obj;
         return this;
     }
 
     @Override
-    public String toPRISM() {
-        return "qmc\n";
-    }
-
-    @Override
-    public void validateTransientVariables() {
-    }
-
-    @Override
-    public boolean usesTransientVariables() {
-        return false;
-    }	
-
-    @Override
-    public List<String> getUnsupportedFeature() {
-        List<String> ll = new LinkedList<>();
-        ll.add(NonPRISMFeaturesQMCExporter.QMC_EXPORTER_NONPRISM_FEATURE_SEMANTIC_TYPE_QMC);
-        return ll;
+    public JsonValue toJSON() {
+        assert modelExtensionQMC != null;
+        
+        return UtilJSON.toStringValue(QMC);
     }
 }

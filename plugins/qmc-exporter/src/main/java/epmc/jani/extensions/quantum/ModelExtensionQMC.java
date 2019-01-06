@@ -22,7 +22,7 @@ package epmc.jani.extensions.quantum;
 
 import epmc.jani.model.ModelExtension;
 
-public final class ModelExtensionQuantum implements ModelExtension {
+public final class ModelExtensionQMC implements ModelExtension {
     public final static String IDENTIFIER = "quantum";
 
     @Override

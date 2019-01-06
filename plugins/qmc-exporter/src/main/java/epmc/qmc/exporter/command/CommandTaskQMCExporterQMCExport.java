@@ -28,7 +28,7 @@ import java.io.PrintWriter;
 import java.util.List;
 
 import epmc.error.EPMCException;
-import epmc.jani.extensions.quantum.ModelExtensionQuantum;
+import epmc.jani.extensions.quantum.ModelExtensionQMC;
 import epmc.jani.model.ModelExtension;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
@@ -138,7 +138,7 @@ public final class CommandTaskQMCExporterQMCExport implements CommandTask {
                 ensure(false, ProblemsPRISMExporter.PRISM_EXPORTER_UNSUPPORTED_FEATURE_UNSUPPORTED_MODEL, model.getClass().getSimpleName());
             }
             List<ModelExtension> extensions = jani.getModelExtensions();
-            extensions.add(Util.getInstance(ModelExtensionQuantum.class));
+            extensions.add(Util.getInstance(ModelExtensionQMC.class));
             log.send(MessagesPRISMExporter.PRISM_EXPORTER_PRISM_MODEL_CREATION, modelName);
             JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);
             String modelString = converter.convertModel();

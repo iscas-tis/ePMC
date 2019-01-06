@@ -24,6 +24,9 @@ import epmc.expression.standard.ExpressionQuantifier;
 import epmc.expression.standard.QMCExporter_ExpressionQuantifier2JANIProcessor;
 import epmc.jani.exporter.operatorprocessor.JANIExporter_OperatorProcessorRegistrar;
 import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
+import epmc.jani.extensions.quantum.ModelExtensionQMC;
+import epmc.jani.type.qmc.QMCExporter_ModelExtensionQMC2JANIProcessor;
+import epmc.jani.type.qmc.QMCExporter_ModelExtensionQMC2PRISMProcessor;
 import epmc.plugin.BeforeModelCreation;
 import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.prism.operator.JANIExporter_OperatorPRISMPowProcessor;
@@ -89,6 +92,8 @@ public final class BeforeModelCreationQMCExporter implements BeforeModelCreation
     }
      
     private void registerJANIProcessors() {
+        JANIExporter_ProcessorRegistrar.registerProcessor(ModelExtensionQMC.class, 
+                QMCExporter_ModelExtensionQMC2JANIProcessor.class);
         JANIExporter_ProcessorRegistrar.registerProcessor(ExpressionQuantifier.class, 
                 QMCExporter_ExpressionQuantifier2JANIProcessor.class);
         JANIExporter_ProcessorRegistrar.registerProcessor(JANITypeArray.class, 
@@ -135,10 +140,12 @@ public final class BeforeModelCreationQMCExporter implements BeforeModelCreation
     }
     
     private void registerPRISMProcessors() {
+        PRISMExporter_ProcessorRegistrar.registerNonPRISMProcessor(ModelExtensionQMC.class, 
+                QMCExporter_ModelExtensionQMC2PRISMProcessor.class);
         PRISMExporter_ProcessorRegistrar.registerNonPRISMProcessor(JANITypeArray.class, 
                 QMCExporter_JANITypeArray2PRISMProcessor.class);
     }
     
-    private void registerPRISMOperatorProcessors() {        
+    private void registerPRISMOperatorProcessors() {
     }
 }
