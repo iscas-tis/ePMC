@@ -24,12 +24,12 @@ import java.util.LinkedList;
 import java.util.List;
 
 import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorNonPRISM;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorNonPRISM;
 
-public final class PRISMExporter_ModelExtensionCTMDPProcessor implements JANI2PRISMProcessorNonPRISM {
+public final class PRISMExporter_ModelExtensionCTMDPProcessor implements PRISMExporter_ProcessorNonPRISM {
 
     @Override
-    public JANI2PRISMProcessorNonPRISM setElement(Object obj) {
+    public PRISMExporter_ProcessorNonPRISM setElement(Object obj) {
         assert obj instanceof ModelExtensionCTMDP;
         return this;
     }

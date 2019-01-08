@@ -24,10 +24,10 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_DestinationProcessor implements JANIProcessor {
+public class JANIExporter_DestinationProcessor implements JANIExporter_Processor {
     /** String indicating the probability of this destination. */
     private static final String PROBABILITY = "probability";
     /** String indicating the source location of this edge. */
@@ -40,7 +40,7 @@ public class JANIExporter_DestinationProcessor implements JANIProcessor {
     private Destination destination = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Destination; 
 
@@ -60,13 +60,13 @@ public class JANIExporter_DestinationProcessor implements JANIProcessor {
         
         Probability probability = destination.getProbability();
         if (probability != null) {
-            builder.add(PROBABILITY, ProcessorRegistrar.getProcessor(probability)
+            builder.add(PROBABILITY, JANIExporter_ProcessorRegistrar.getProcessor(probability)
                     .toJSON());
         }
         
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            builder.add(ASSIGNMENTS, ProcessorRegistrar.getProcessor(assignments)
+            builder.add(ASSIGNMENTS, JANIExporter_ProcessorRegistrar.getProcessor(assignments)
                     .toJSON());
         }
         

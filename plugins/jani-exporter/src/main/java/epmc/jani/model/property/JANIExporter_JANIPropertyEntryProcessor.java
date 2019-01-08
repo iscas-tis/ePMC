@@ -26,10 +26,10 @@ import javax.json.JsonValue;
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionFilter;
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
+public class JANIExporter_JANIPropertyEntryProcessor implements JANIExporter_Processor {
     private static final String NAME = "name";
     private static final String EXPRESSION = "expression";
     private static final String COMMENT = "comment";
@@ -45,7 +45,7 @@ public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
     private JANIPropertyEntry propertyEntry = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof JANIPropertyEntry; 
 
@@ -74,16 +74,16 @@ public class JANIExporter_JANIPropertyEntryProcessor implements JANIProcessor {
     
     private JsonValue addTopLevelFilter(Expression expression) {
         if (expression instanceof ExpressionFilter) {
-            return ProcessorRegistrar.getProcessor(expression)
+            return JANIExporter_ProcessorRegistrar.getProcessor(expression)
                     .toJSON();
         } else {
             JsonObjectBuilder builder = Json.createObjectBuilder();
             
             builder.add(OP, FILTER);
             builder.add(FUN, FUN_VALUES);
-            builder.add(VALUES, ProcessorRegistrar.getProcessor(expression)
+            builder.add(VALUES, JANIExporter_ProcessorRegistrar.getProcessor(expression)
                     .toJSON());
-            builder.add(STATES, ProcessorRegistrar.getProcessor(INITIAL)
+            builder.add(STATES, JANIExporter_ProcessorRegistrar.getProcessor(INITIAL)
                     .toJSON());
 
             return builder.build();

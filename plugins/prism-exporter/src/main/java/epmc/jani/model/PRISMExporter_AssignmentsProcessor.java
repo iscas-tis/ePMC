@@ -20,15 +20,15 @@
 
 package epmc.jani.model;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_AssignmentsProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_AssignmentsProcessor implements PRISMExporter_ProcessorStrict {
 
     private Assignments assignments = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Assignments; 
 
@@ -42,20 +42,20 @@ public class PRISMExporter_AssignmentsProcessor implements JANI2PRISMProcessorSt
 
         StringBuilder prism = new StringBuilder();
 
-        boolean remaining = false;
+        boolean notFirst = false;
         for (AssignmentSimple assignment : assignments) {
             Variable variable = assignment.getRef();
             if (!variable.isTransient()) {
-                JANI2PRISMProcessorStrict processor = ProcessorRegistrar.getProcessor(assignment);
-                if (remaining) {
+                PRISMExporter_ProcessorStrict processor = PRISMExporter_ProcessorRegistrar.getProcessor(assignment);
+                if (notFirst) {
                     processor.setPrefix(" & ");
                 } else {
-                    remaining = true;
+                    notFirst = true;
                 }
                 prism.append(processor.toPRISM());
             }
         }
-        if (!remaining) {
+        if (!notFirst) {
             prism.append("true");
         }
 
@@ -67,7 +67,7 @@ public class PRISMExporter_AssignmentsProcessor implements JANI2PRISMProcessorSt
         assert assignments != null;
 
         for (Assignment assignment : assignments) {
-            ProcessorRegistrar.getProcessor(assignment)
+            PRISMExporter_ProcessorRegistrar.getProcessor(assignment)
                 .validateTransientVariables();
         }
     }
@@ -78,7 +78,7 @@ public class PRISMExporter_AssignmentsProcessor implements JANI2PRISMProcessorSt
 
         boolean usesTransient = false;
         for (Assignment assignment : assignments) {
-            usesTransient |= ProcessorRegistrar.getProcessor(assignment)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(assignment)
                     .usesTransientVariables();
         }
 

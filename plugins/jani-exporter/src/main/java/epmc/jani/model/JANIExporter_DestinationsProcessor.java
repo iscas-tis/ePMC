@@ -24,15 +24,15 @@ import javax.json.Json;
 import javax.json.JsonArrayBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_DestinationsProcessor implements JANIProcessor {
+public class JANIExporter_DestinationsProcessor implements JANIExporter_Processor {
 
     private Destinations destinations = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Destinations; 
 
@@ -47,7 +47,7 @@ public class JANIExporter_DestinationsProcessor implements JANIProcessor {
         JsonArrayBuilder builder = Json.createArrayBuilder();
         
         for (Destination destination : destinations) {
-            builder.add(ProcessorRegistrar.getProcessor(destination)
+            builder.add(JANIExporter_ProcessorRegistrar.getProcessor(destination)
                     .toJSON());
         }
         

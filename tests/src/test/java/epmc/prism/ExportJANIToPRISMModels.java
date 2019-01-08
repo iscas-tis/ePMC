@@ -147,8 +147,16 @@ public final class ExportJANIToPRISMModels {
     }
 
     @Test
+    public void convertRandomWalk() {
+        export(System.getProperty("user.home") + "/randomWalk.jani", System.getProperty("user.home") + "/randomWalkExported.prism", System.getProperty("user.home") + "/randomWalkExported.props");
+    }
+
+    @Test
     public void convertSingle() {
-        export(JANI_EXPORT_DIR + "firewire_impl" + JANI_EXTENSION, FIREWIRE_IMPL_MODEL, FIREWIRE_IMPL_PROPERTY);
+//        export(String.format(COIN_MODEL, 2), COIN_PROPERTY);
+        export(ZEROCONF_MODEL, ZEROCONF_PROPERTY);
+        export(ZEROCONF_TIME_BOUNDED_MODEL, ZEROCONF_TIME_BOUNDED_PROPERTY);
+//        export(BRP_MODEL, BRP_PROPERTY);
     }
 
     @Test
@@ -156,17 +164,17 @@ public final class ExportJANIToPRISMModels {
         export(BRP_MODEL, BRP_PROPERTY);
         export(CELL_MODEL, CELL_PROPERTY);
         export(CLUSTER_MODEL, CLUSTER_PROPERTY);
-        for (int i : new int[]{2,4,6,8,10}) {
+        for (int i : new int[]{10,8,6,4,2}) {
             export(String.format(COIN_MODEL, i), COIN_PROPERTY);
         }
-        for (int i : new int[]{2,3,4}) {
-            for (int j : new int[]{2,4,6}) {
+        for (int i : new int[]{4,3,2}) {
+            for (int j : new int[]{6,4,2}) {
                 export(String.format(CSMA_MODEL, i, j), CSMA_PROPERTY);
             }
         }
         export(DICE_MODEL, DICE_PROPERTY);
         export(TWO_DICE_MODEL, TWO_DICE_PROPERTY);
-        for (int i : new int[]{3,4,5,6,7,8,9,10,15}) {
+        for (int i : new int[]{15,10,9,8,7,6,5,4,3}) {
             export(String.format(DINING_CRYPT_MODEL, i), DINING_CRYPT_PROPERTY);
         }
         //    	export(EMBEDDED_MODEL, EMBEDDED_PROPERTY);
@@ -177,57 +185,59 @@ public final class ExportJANIToPRISMModels {
         //Before enabling this test, fix the LEADER_ASYNC_PROPERTY file since it contains
         //the wrong property   fiter(forall, leaders<=1)  instead of the correct one
         //  filter(forall, leaders<=1)  
-        for (int i : new int[]{3,4,5,6,7,8,9,10}) {
-            export(String.format(JANI_EXPORT_DIR + "leader_async_%d" + JANI_EXTENSION, i), String.format(LEADER_ASYNC_MODEL, i), LEADER_ASYNC_PROPERTY);
+        for (int i : new int[]{10,9,8,7,6,5,4,3}) {
+            export(String.format(JANI_EXPORT_DIR + "leader_async_%d" + JANI_EXTENSION, i), 
+                    String.format(LEADER_ASYNC_MODEL, i), LEADER_ASYNC_PROPERTY);
         }
-        for (int i : new int[]{3,4,5,6}) {
-            for (int j : new int[]{2,3,4,5,6,8}) {
-                export(String.format(JANI_EXPORT_DIR + "leader_sync_%d_%d" + JANI_EXTENSION, i, j), String.format(LEADER_SYNC_MODEL, i, j), LEADER_SYNC_PROPERTY);
+        for (int i : new int[]{6,5,4,3}) {
+            for (int j : new int[]{8,6,5,4,3,2}) {
+                export(String.format(JANI_EXPORT_DIR + "leader_sync_%d_%d" + JANI_EXTENSION, i, j), 
+                        String.format(LEADER_SYNC_MODEL, i, j), LEADER_SYNC_PROPERTY);
             }
         }
         export(KNACL_MODEL, KNACL_PROPERTY);
         export(NACL_MODEL, NACL_PROPERTY);
         export(MC_MODEL, MC_PROPERTY);
-        for (int i : new int[]{3,4,5,8,10}) {
+        for (int i : new int[]{10,8,5,4,3}) {
             export(String.format(MUTUAL_MODEL, i), MUTUAL_PROPERTY);
         }
-        for (int i : new int[]{4,5}) {
-            for (int j : new int[]{4,5,6,7,8}) {
+        for (int i : new int[]{5,4}) {
+            for (int j : new int[]{8,7,6,5,4}) {
                 export(String.format(PEER2PEER_MODEL, i, j), PEER2PEER_PROPERTY);
             }
         }
-        for (int i : new int[]{3,4,5,6,7,8,9,10,15,20,25,30}) {
+        for (int i : new int[]{30,25,20,15,10,9,8,7,6,5,4,3}) {
             export(String.format(PHIL_MODEL, i), PHIL_PROPERTY);
         }
-        for (int i : new int[]{3,4,5,6,7,8,9,10}) {
+        for (int i : new int[]{10,9,8,7,6,5,4,3}) {
             export(String.format(PHIL_NOFAIR_MODEL, i), String.format(PHIL_NOFAIR_PROPERTY, i));
         }
-        for (int i : new int[]{3,4}) {
+        for (int i : new int[]{4,3}) {
             export(String.format(PHIL_LSS_MODEL, i), String.format(PHIL_LSS_PROPERTY, i));
         }
-        for (int i : new int[]{2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20}) {
+        for (int i : new int[]{20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3,2}) {
             export(String.format(POLLING_MODEL, i), POLLING_PROPERTY);
         }
-        for (int i : new int[]{3,4,5,6,7,8,9,10}) {
+        for (int i : new int[]{10,9,8,7,6,5,4,3}) {
             export(String.format(RABIN_MODEL, i), RABIN_PROPERTY);
         }
-        for (int i : new int[]{3,5,7,9,11}) {
+        for (int i : new int[]{11,9,7,5,3}) {
             export(String.format(BEAUQUIER_MODEL, i), BEAUQUIER_PROPERTY);
         }
-        for (int i : new int[]{3,5,7,9,11,13,15,17,19,21}) {
+        for (int i : new int[]{21,19,17,15,13,11,9,7,5,3}) {
             export(String.format(HERMAN_MODEL, i), HERMAN_PROPERTY);
         }
-        for (int i : new int[]{3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21}) {
+        for (int i : new int[]{21,20,19,18,17,16,15,14,13,12,11,10,9,8,7,6,5,4,3}) {
             export(String.format(IJ_MODEL, i), IJ_PROPERTY);
         }
         export(TANDEM_MODEL, TANDEM_PROPERTY);
-        for (int i : new int[]{0,1,2,3,4,5,6}) {
+        for (int i : new int[]{6,5,4,3,2,1,0}) {
             export(String.format(WLAN_MODEL, i), WLAN_PROPERTY);
         }
-        for (int i : new int[]{0,1,2,3,4,5,6}) {
+        for (int i : new int[]{6,5,4,3,2,1,0}) {
             export(String.format(WLAN_COLLIDE_MODEL, i), WLAN_COLLIDE_PROPERTY);
         }
-        for (int i : new int[]{0,1,2,3,4,5,6}) {
+        for (int i : new int[]{6,5,4,3,2,1,0}) {
             export(String.format(WLAN_TIME_BOUNDED_MODEL, i), WLAN_TIME_BOUNDED_PROPERTY);
         }
         export(ZEROCONF_MODEL, ZEROCONF_PROPERTY);
@@ -311,7 +321,8 @@ public final class ExportJANIToPRISMModels {
         JANI2PRISMConverter converter = new JANI2PRISMConverter(jani);
         System.out.println("Converting");       
         try (PrintWriter out = new PrintWriter(prismFilename + "-exported")) {
-            out.println(converter.convertModel().toString());
+            out.println(converter.convertModel()
+                    .toString());
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         }

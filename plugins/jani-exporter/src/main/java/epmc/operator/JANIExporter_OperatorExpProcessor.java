@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 /**
@@ -63,7 +63,7 @@ public class JANIExporter_OperatorExpProcessor implements OperatorProcessor {
         // exp(x) = pow(e, x)
         builder.add(OP, EXP);
         builder.add(LEFT, builderE.build());
-        builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+        builder.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         
         UtilModelParser.addPositional(builder, expressionOperator.getPositional());

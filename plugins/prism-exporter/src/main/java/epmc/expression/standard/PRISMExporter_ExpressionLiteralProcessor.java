@@ -20,21 +20,21 @@
 
 package epmc.expression.standard;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 
-public class PRISMExporter_ExpressionLiteralProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionLiteralProcessor implements PRISMExporter_ProcessorStrict {
 
     private ExpressionLiteral literal = null;
     private String prefix = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionLiteral; 
 

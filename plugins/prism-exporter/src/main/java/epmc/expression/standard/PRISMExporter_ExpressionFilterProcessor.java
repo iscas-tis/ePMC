@@ -21,15 +21,15 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionFilterProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionFilterProcessor implements PRISMExporter_ProcessorStrict {
 
     private ExpressionFilter filter = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionFilter; 
 
@@ -46,13 +46,13 @@ public class PRISMExporter_ExpressionFilterProcessor implements JANI2PRISMProces
         prism.append("filter(")
             .append(filter.getFilterType().toString())
             .append(", ")
-            .append(ProcessorRegistrar.getProcessor(filter.getProp())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(filter.getProp())
                     .toPRISM());
 
         Expression states = filter.getStates();
         if (states != null) {
             prism.append(", ")
-                .append(ProcessorRegistrar.getProcessor(states)
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(states)
                         .toPRISM());
         }
         prism.append(")");
@@ -64,7 +64,7 @@ public class PRISMExporter_ExpressionFilterProcessor implements JANI2PRISMProces
         assert filter != null;
 
         for (Expression child : filter.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -75,7 +75,7 @@ public class PRISMExporter_ExpressionFilterProcessor implements JANI2PRISMProces
 
         boolean usesTransient = false;
         for (Expression child : filter.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

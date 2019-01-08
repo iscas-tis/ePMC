@@ -129,6 +129,21 @@ public final class CheckExplicitTestReduced {
 
 
     @Test
+    public void testPRISMExportedRandomWalk() {
+        Map<String, Object> constants = new LinkedHashMap<>();
+        constants.put("p", "0.5");
+        Options options = prepareJANIOptions();
+        options.set(OptionsModelChecker.CONST, constants);
+        Model model = null;
+        model = loadModel(options, System.getProperty("user.home") + "/randomWalk.jani");
+
+        ModelCheckerResults result = computeResults(model);
+        int i = 0;
+//        assertEquals("1/6", result.get("ProbThrowSix"), 2.0E-7);
+//        assertEquals("11/3", result.get("StepsUntilReach"), 2.0E-7);
+    }
+
+    @Test
     public void testPRISMExportedTest() {
         Map<String, Object> constants = new LinkedHashMap<>();
 //        constants.put("p", "0.5");

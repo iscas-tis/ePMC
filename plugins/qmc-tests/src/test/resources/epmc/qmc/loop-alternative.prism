@@ -1,0 +1,16 @@
+// alternative version of loop program with values from 
+// https://arxiv.org/pdf/1205.2187.pdf
+qmc // model type
+
+const vector |p>_2 = (|0>_2 + |1>_2)/sqrt(2);
+const matrix E0 = |p>_2 <0|_2;
+const matrix E1 = |p>_2 <1|_2;
+const superoperator(2) ampdamp = << E0, E1 >>;
+
+module loop
+  s : [0..3] init 0;
+  [] (s=0) -> ampdamp: (s'=1);
+  [] (s=1) -> << M1 >> : (s'=2) + << M0 >> : (s'=3);
+  [] (s=2) -> << PX >> : (s'=1);
+  [] (s=3) -> (s'=3);
+endmodule

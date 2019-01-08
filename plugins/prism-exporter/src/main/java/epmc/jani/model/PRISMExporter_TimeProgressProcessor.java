@@ -1,15 +1,15 @@
 package epmc.jani.model;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_TimeProgressProcessor implements PRISMExporter_ProcessorStrict {
 
     private TimeProgress timeProgress = null;
     private String prefix = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof TimeProgress; 
 
@@ -18,7 +18,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -28,7 +28,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
         assert timeProgress != null;
 
         StringBuilder prism = new StringBuilder();
-        JANI2PRISMProcessorStrict processor; 
+        PRISMExporter_ProcessorStrict processor; 
 
         String comment = timeProgress.getComment();
         if (comment != null) {
@@ -44,7 +44,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
             prism.append(prefix);
         }
         prism.append("invariant\n");
-        processor = ProcessorRegistrar.getProcessor(timeProgress.getExp());
+        processor = PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress.getExp());
         if (prefix != null)	{
             processor.setPrefix(PRISMExporter_ModelJANIProcessor.INDENT + prefix);
         } else {
@@ -64,7 +64,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
     public void validateTransientVariables() {
         assert timeProgress != null;
 
-        ProcessorRegistrar.getProcessor(timeProgress.getExp())
+        PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress.getExp())
             .validateTransientVariables();
     }
 
@@ -72,7 +72,7 @@ public class PRISMExporter_TimeProgressProcessor implements JANI2PRISMProcessorS
     public boolean usesTransientVariables() {
         assert timeProgress != null;
 
-        return ProcessorRegistrar.getProcessor(timeProgress.getExp())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(timeProgress.getExp())
                 .usesTransientVariables();
     }	
 }

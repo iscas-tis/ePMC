@@ -1,0 +1,55 @@
+qmc
+
+const vector |b00>_2 = (|0>_2|0>_2 + |1>_2|1>_2)/sqrt(2); 
+const vector |b01>_2 = (|0>_2|1>_2 + |1>_2|0>_2)/sqrt(2);
+const vector |b10>_2 = (|0>_2|0>_2 - |1>_2|1>_2)/sqrt(2);
+const vector |b11>_2 = (|0>_2|1>_2 - |1>_2|0>_2)/sqrt(2);
+
+const matrix B00 = |b00>_2 <b00|_2; 
+const matrix B01 = |b01>_2 <b01|_2; 
+const matrix B10 = |b10>_2 <b10|_2; 
+const matrix B11 = |b11>_2 <b11|_2;
+
+module sdc
+
+s : [0..11] init 0;
+
+//Preparation of Bell state (|00> + |11>)/sqrt(2)
+
+  [] (s=0) -> << |b00>_2 <b00|_2, |b00>_2 <b01|_2, |b00>_2 <b10|_2, 
+						|b00>_2 <b11|_2 >> : (s'=1); 
+  
+//Alice chooses her message from 0,1,2,3 randomly
+  [] (s=1) -> 0.25 : (s'=2) + 0.25 : (s'=3)  
+            + 0.25 : (s'=4) + 0.25 : (s'=5);                  
+
+//Alice applies the corresponding super-operator on her qubit depending on the message she chose
+  [] (s=2) ->  (s'=6);                          //Message = 0
+
+  [] (s=3) -> <<kron(PX, ID(2))>> : (s'=7);     //Message = 1
+
+  [] (s=4) -> <<kron(PZ, ID(2))>> : (s'=8);     //Message = 2
+
+  [] (s=5) -> <<kron(PY, ID(2))>> : (s'=9);     //Message = 3
+
+//Bob performs the measurement in the basis of Bell states
+  [] (s=6) -> <<B00>> : (s'=11)          //Outcome = 0. Succeeded
+            + <<B01, B10, B11>> : (s'=10); //Outcome <> 0. Failed
+
+  [] (s=7) -> <<B01>> : (s'=11)          //Outcome = 1. Succeeded
+            + <<B00, B10, B11>> : (s'=10); //Outcome <> 1. Failed
+
+  [] (s=8) -> <<B10>> : (s'=11)          //Outcome = 2. Succeeded
+            + <<B00, B01, B11>> : (s'=10); //Outcome <> 2. Failed
+
+  [] (s=9) -> <<B11>> : (s'=11)          //Outcome = 3. Succeeded
+            + <<B00, B01, B10>> : (s'=10); //Outcome <> 3. Failed
+            
+  [] (s=10) -> (s'=10);                         //Protocol failed
+  
+  [] (s=11) -> (s'=11);                      //Protocol succeeded
+  
+endmodule
+
+formula succ = (s=11);
+formula fail = (s=10);

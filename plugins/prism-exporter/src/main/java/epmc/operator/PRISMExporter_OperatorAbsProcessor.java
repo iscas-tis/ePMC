@@ -28,13 +28,13 @@ import java.util.List;
 import epmc.expression.standard.ExpressionOperator;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.messages.NonPRISMFeaturesPRISMExporter;
-import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorNonPRISM;
+import epmc.prism.exporter.operatorprocessor.PRISMExporter_OperatorProcessorNonPRISM;
 
 /**
  * @author Andrea Turrini
  *
  */
-public class PRISMExporter_OperatorAbsProcessor implements JANI2PRISMOperatorProcessorNonPRISM {
+public class PRISMExporter_OperatorAbsProcessor implements PRISMExporter_OperatorProcessorNonPRISM {
 
     private ExpressionOperator expressionOperator = null;
     
@@ -42,7 +42,7 @@ public class PRISMExporter_OperatorAbsProcessor implements JANI2PRISMOperatorPro
      * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorNonPRISM#setExpressionOperator(epmc.expression.standard.ExpressionOperator)
      */
     @Override
-    public JANI2PRISMOperatorProcessorNonPRISM setExpressionOperator(ExpressionOperator expressionOperator) {
+    public PRISMExporter_OperatorProcessorNonPRISM setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
         
         assert expressionOperator.getOperator().equals(OperatorAbs.ABS);

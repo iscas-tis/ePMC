@@ -21,17 +21,17 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.prism.exporter.operatorprocessor.OperatorProcessorRegistrar;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.operatorprocessor.PRISMExporter_OperatorProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionOperatorProcessor implements PRISMExporter_ProcessorStrict {
 
     private ExpressionOperator expressionOperator = null;
     private String prefix = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionOperator; 
 
@@ -40,7 +40,7 @@ public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProc
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -55,7 +55,7 @@ public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProc
             prism.append(prefix);
         }
         
-        prism.append(OperatorProcessorRegistrar.getOperatorProcessor(expressionOperator)
+        prism.append(PRISMExporter_OperatorProcessorRegistrar.getOperatorProcessor(expressionOperator)
                 .toPRISM());
 
         return prism.toString();
@@ -66,7 +66,7 @@ public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProc
         assert expressionOperator != null;
 
         for (Expression child : expressionOperator.getChildren()) {
-            ProcessorRegistrar.getProcessor(child).validateTransientVariables();
+            PRISMExporter_ProcessorRegistrar.getProcessor(child).validateTransientVariables();
         }
     }
 
@@ -76,7 +76,7 @@ public class PRISMExporter_ExpressionOperatorProcessor implements JANI2PRISMProc
 
         boolean usesTransient = false;
         for (Expression child : expressionOperator.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child).usesTransientVariables();
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child).usesTransientVariables();
         }
 
         return usesTransient;

@@ -41,7 +41,7 @@ import epmc.prism.exporter.JANI2PRISMConverter;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
 import epmc.prism.exporter.messages.MessagesPRISMExporter;
 import epmc.prism.exporter.options.OptionsPRISMExporter;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 import epmc.value.OptionsValue;
 
 /**
@@ -73,9 +73,9 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
         Options options = Options.get();
         options.set(OptionsValue.VALUE_FLOATING_POINT_OUTPUT_NATIVE, true);
         if (options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_EXTENDED_PRISM)) {
-            ProcessorRegistrar.useExtendedPRISMSyntax();
+            PRISMExporter_ProcessorRegistrar.useExtendedPRISMSyntax();
         }
-        ProcessorRegistrar.setAllowMultipleLocations(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS));
+        PRISMExporter_ProcessorRegistrar.setAllowMultipleLocations(options.getBoolean(OptionsPRISMExporter.PRISM_EXPORTER_ALLOW_MULTIPLE_LOCATIONS));
 
         Log log = options.get(OptionsMessages.LOG);
         try {
@@ -106,7 +106,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
             }
             File prismModelFile = new File(prismModelFilename); 
             if (prismModelFile.exists() && !prismModelFile.canWrite()) {
-                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITEABLE_PRISM_MODEL_FILE, prismModelFilename, modelFilename);
+                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITABLE_PRISM_MODEL_FILE, prismModelFilename, modelFilename);
             }
 
             String prismPropertiesFilename = options.get(OptionsPRISMExporter.PRISM_EXPORTER_PRISM_PROPERTIES_FILE_NAME);
@@ -121,7 +121,7 @@ public final class CommandTaskPRISMExporterPRISMExport implements CommandTask {
             }
             File prismPropertiesFile = new File(prismPropertiesFilename); 
             if (prismPropertiesFile.exists() && !prismPropertiesFile.canWrite()) {
-                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITEABLE_PRISM_MODEL_FILE, prismPropertiesFilename, modelFilename);
+                log.send(MessagesPRISMExporter.PRISM_EXPORTER_UNWRITABLE_PRISM_MODEL_FILE, prismPropertiesFilename, modelFilename);
             }
 
             Model model = modelChecker.getModel();

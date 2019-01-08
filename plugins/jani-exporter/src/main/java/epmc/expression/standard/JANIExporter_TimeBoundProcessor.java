@@ -7,11 +7,11 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
-public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
+public class JANIExporter_TimeBoundProcessor implements JANIExporter_Processor {
     private static final String LOWER = "lower";
     private static final String LOWER_EXCLUSIVE = "lower-exclusive";
     private static final String UPPER = "upper";
@@ -20,7 +20,7 @@ public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
     private TimeBound timeBound = null;
     
     @Override
-    public JANIProcessor setElement(Object obj) {
+    public JANIExporter_Processor setElement(Object obj) {
         assert obj != null;
         assert obj instanceof TimeBound;
    
@@ -36,13 +36,13 @@ public class JANIExporter_TimeBoundProcessor implements JANIProcessor {
         JsonObjectBuilder builder = Json.createObjectBuilder();
         
         if (timeBound.isLeftBounded()) {
-            builder.add(LOWER, ProcessorRegistrar.getProcessor(timeBound.getLeft())
+            builder.add(LOWER, JANIExporter_ProcessorRegistrar.getProcessor(timeBound.getLeft())
                     .toJSON());
             builder.add(LOWER_EXCLUSIVE, timeBound.isLeftOpen());
         }
         
         if (timeBound.isRightBounded()) {
-            builder.add(UPPER, ProcessorRegistrar.getProcessor(timeBound.getRight())
+            builder.add(UPPER, JANIExporter_ProcessorRegistrar.getProcessor(timeBound.getRight())
                     .toJSON());
             builder.add(UPPER_EXCLUSIVE, timeBound.isRightOpen());
         }

@@ -20,15 +20,15 @@
 
 package epmc.jani.model;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_InitialStatesProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_InitialStatesProcessor implements PRISMExporter_ProcessorStrict {
 
     private InitialStates initialStates = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof InitialStates; 
 
@@ -45,7 +45,7 @@ public class PRISMExporter_InitialStatesProcessor implements JANI2PRISMProcessor
     public void validateTransientVariables() {
         assert initialStates != null;
 
-        ProcessorRegistrar.getProcessor(initialStates.getExp())
+        PRISMExporter_ProcessorRegistrar.getProcessor(initialStates.getExp())
             .validateTransientVariables();
     }
 
@@ -53,7 +53,7 @@ public class PRISMExporter_InitialStatesProcessor implements JANI2PRISMProcessor
     public boolean usesTransientVariables() {
         assert initialStates != null;
 
-        return ProcessorRegistrar.getProcessor(initialStates.getExp())
+        return PRISMExporter_ProcessorRegistrar.getProcessor(initialStates.getExp())
                 .usesTransientVariables();
     }	
 }

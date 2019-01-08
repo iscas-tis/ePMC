@@ -24,10 +24,10 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_EdgeProcessor implements JANIProcessor {
+public class JANIExporter_EdgeProcessor implements JANIExporter_Processor {
     /** String identifying the source location. */
     private static final String LOCATION = "location";
     /** String identifying the action, if given. */
@@ -44,7 +44,7 @@ public class JANIExporter_EdgeProcessor implements JANIProcessor {
     private Edge edge = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Edge; 
 
@@ -69,17 +69,17 @@ public class JANIExporter_EdgeProcessor implements JANIProcessor {
         
         Rate rate = edge.getRate();
         if (rate != null) {
-            result.add(RATE, ProcessorRegistrar.getProcessor(rate)
+            result.add(RATE, JANIExporter_ProcessorRegistrar.getProcessor(rate)
                     .toJSON());
         }
 
         Guard guard = edge.getGuard();
         if (guard != null) {
-            result.add(GUARD, ProcessorRegistrar.getProcessor(guard)
+            result.add(GUARD, JANIExporter_ProcessorRegistrar.getProcessor(guard)
                     .toJSON());
         }
         
-        result.add(DESTINATIONS, ProcessorRegistrar.getProcessor(edge.getDestinations())
+        result.add(DESTINATIONS, JANIExporter_ProcessorRegistrar.getProcessor(edge.getDestinations())
                 .toJSON());
         
         String comment = edge.getComment();

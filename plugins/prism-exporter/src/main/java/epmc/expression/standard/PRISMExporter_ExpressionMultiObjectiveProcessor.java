@@ -21,15 +21,15 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionMultiObjectiveProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionMultiObjectiveProcessor implements PRISMExporter_ProcessorStrict {
 
     private ExpressionMultiObjective multiObjective = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionMultiObjective; 
 
@@ -52,7 +52,7 @@ public class PRISMExporter_ExpressionMultiObjectiveProcessor implements JANI2PRI
             } else {
                 notFirst = true;
             }
-            prism.append(ProcessorRegistrar.getProcessor(operand)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(operand)
                     .toPRISM());
         }
         prism.append(")");
@@ -64,7 +64,7 @@ public class PRISMExporter_ExpressionMultiObjectiveProcessor implements JANI2PRI
         assert multiObjective != null;
 
         for (Expression child : multiObjective.getOperands()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -75,7 +75,7 @@ public class PRISMExporter_ExpressionMultiObjectiveProcessor implements JANI2PRI
 
         boolean usesTransient = false;
         for (Expression child : multiObjective.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

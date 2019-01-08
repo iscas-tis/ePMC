@@ -25,11 +25,11 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.Action;
 
-public class JANIExporter_SynchronisationVectorSyncProcessor implements JANIProcessor {
+public class JANIExporter_SynchronisationVectorSyncProcessor implements JANIExporter_Processor {
     private static final String SYNCHRONISE = "synchronise";
     private static final String RESULT = "result";
     private static final String COMMENT = "comment";
@@ -37,7 +37,7 @@ public class JANIExporter_SynchronisationVectorSyncProcessor implements JANIProc
     private SynchronisationVectorSync syncVectorSync = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof SynchronisationVectorSync; 
 
@@ -62,7 +62,7 @@ public class JANIExporter_SynchronisationVectorSyncProcessor implements JANIProc
         builder.add(SYNCHRONISE, synchronise);
         
         Action result = syncVectorSync.getResult();
-        if (result != null && !ProcessorRegistrar.isSilentAction(result)) {
+        if (result != null && !JANIExporter_ProcessorRegistrar.isSilentAction(result)) {
             builder.add(RESULT, result.getName());
         }
         

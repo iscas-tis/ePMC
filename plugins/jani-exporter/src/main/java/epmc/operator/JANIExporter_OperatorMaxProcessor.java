@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 /**
@@ -62,25 +62,25 @@ public class JANIExporter_OperatorMaxProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        if (ProcessorRegistrar.useDerivedOperators()) {
+        if (JANIExporter_ProcessorRegistrar.useDerivedOperators()) {
             builder.add(OP, MAX);
-            builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
-            builder.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builder.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
         } else {
             JsonObjectBuilder builderLt = Json.createObjectBuilder();
             builderLt.add(OP, LT);
-            builderLt.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderLt.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
-            builderLt.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builderLt.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
             
             builder.add(OP, ITE);
             builder.add(IF, builderLt.build());
-            builder.add(THEN, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builder.add(THEN, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
-            builder.add(ELSE, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builder.add(ELSE, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
         }        
 

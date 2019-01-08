@@ -21,14 +21,14 @@
 package epmc.expression.standard;
 
 import epmc.expression.Expression;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionTemporalUntilProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionTemporalUntilProcessor implements PRISMExporter_ProcessorStrict {
     private ExpressionTemporalUntil temporal = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionTemporalUntil; 
 
@@ -43,18 +43,18 @@ public class PRISMExporter_ExpressionTemporalUntilProcessor implements JANI2PRIS
         StringBuilder prism = new StringBuilder();
         if (isTrue(temporal.getOperandLeft())) {
             prism.append("F(")
-                .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(temporal.getOperandRight())
                         .toPRISM())
                 .append(")");
         } else {
             prism.append("(")
-                .append(ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(temporal.getOperandLeft())
                         .toPRISM()) 
                 .append(") U")
-                .append(ProcessorRegistrar.getProcessor(temporal.getTimeBound())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(temporal.getTimeBound())
                         .toPRISM())
                 .append(" (")
-                .append(ProcessorRegistrar.getProcessor(temporal.getOperandRight())
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(temporal.getOperandRight())
                         .toPRISM())
                 .append(")");
         }
@@ -67,7 +67,7 @@ public class PRISMExporter_ExpressionTemporalUntilProcessor implements JANI2PRIS
         assert temporal != null;
 
         for (Expression child : temporal.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -78,7 +78,7 @@ public class PRISMExporter_ExpressionTemporalUntilProcessor implements JANI2PRIS
 
         boolean usesTransient = false;
         for (Expression child : temporal.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

@@ -24,17 +24,17 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.jani.model.UtilModelParser;
 
-public class JANIExporter_ExpressionInitialProcessor implements JANIProcessor {
+public class JANIExporter_ExpressionInitialProcessor implements JANIExporter_Processor {
     private static final String OP = "op";
     private static final String INITIAL = "initial";
 
     private ExpressionInitial expressionInitial = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof ExpressionInitial; 
 

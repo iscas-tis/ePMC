@@ -22,14 +22,14 @@ package epmc.jani.model;
 
 import java.util.Map.Entry;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 
-public class PRISMExporter_MetadataProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_MetadataProcessor implements PRISMExporter_ProcessorStrict {
 
     private Metadata metadata = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Metadata; 
 

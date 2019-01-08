@@ -24,10 +24,10 @@ import javax.json.Json;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_LocationProcessor implements JANIProcessor {
+public class JANIExporter_LocationProcessor implements JANIExporter_Processor {
     /** String identifying the name of the location. */
     private static final String NAME = "name";
     /** String identifying time progress condition of this location. */
@@ -40,7 +40,7 @@ public class JANIExporter_LocationProcessor implements JANIProcessor {
     private Location location = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Location; 
 
@@ -58,13 +58,13 @@ public class JANIExporter_LocationProcessor implements JANIProcessor {
         
         TimeProgress timeProgress = location.getTimeProgress();
         if (timeProgress != null) {
-            builder.add(TIME_PROGRESS, ProcessorRegistrar.getProcessor(timeProgress)
+            builder.add(TIME_PROGRESS, JANIExporter_ProcessorRegistrar.getProcessor(timeProgress)
                     .toJSON());
         }
 
         Assignments transientValuesAssignments = location.getTransientValueAssignments();
         if (transientValuesAssignments != null) {
-            builder.add(TRANSIENT_VALUES, ProcessorRegistrar.getProcessor(transientValuesAssignments)
+            builder.add(TRANSIENT_VALUES, JANIExporter_ProcessorRegistrar.getProcessor(transientValuesAssignments)
                     .toJSON());
         }
         

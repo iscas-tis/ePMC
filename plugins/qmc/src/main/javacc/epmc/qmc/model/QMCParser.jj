@@ -1,0 +1,1459 @@
+options
+{
+  JDK_VERSION = "1.8";
+  LOOKAHEAD = 1;
+  STATIC = false;
+  UNICODE_INPUT = true;
+}
+
+PARSER_BEGIN(QMCParser)
+package epmc.qmc.model;
+import epmc.qmc.error.ProblemsQMC;
+import epmc.error.Positional;
+import static epmc.error.UtilError.ensure;
+import epmc.error.EPMCException;
+import epmc.graph.Semantics;
+import epmc.graph.SemanticsDTMCStandard;
+import epmc.graph.SemanticsCTMC;
+import epmc.graph.SemanticsMDP;
+import epmc.graph.SemanticsQMC;
+import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expression.standard.ExpressionLiteral;
+import epmc.qmc.expression.QMCExpressionParser;
+import epmc.options.Options;
+import epmc.qmc.expression.ContextExpressionQMC;
+import epmc.qmc.options.OptionsQMC;
+import epmc.prism.model.Alternative;
+import epmc.prism.model.Command;
+import epmc.prism.model.Formulas;
+import epmc.prism.model.ModelPRISM;
+import epmc.prism.model.Module;
+import epmc.prism.model.ModuleCommands;
+import epmc.prism.model.ModuleRename;
+import epmc.prism.model.PlayerDefinition;
+import epmc.prism.model.Reward;
+import epmc.prism.model.RewardStructure;
+import epmc.prism.model.StateReward;
+import epmc.prism.model.SystemAlphaParallel;
+import epmc.prism.model.SystemAsyncParallel;
+import epmc.prism.model.SystemDefinition;
+import epmc.prism.model.SystemHide;
+import epmc.prism.model.SystemModule;
+import epmc.prism.model.SystemRename;
+import epmc.prism.model.SystemRestrictedParallel;
+import epmc.prism.model.TransitionReward;
+import epmc.jani.model.type.JANIType;
+import epmc.jani.model.type.JANITypeInt;
+import epmc.jani.model.type.JANITypeReal;
+import epmc.jani.model.type.JANITypeBool;
+import epmc.jani.model.type.JANITypeBounded;
+import epmc.time.JANITypeClock;
+import epmc.expression.standard.ExpressionTypeInteger;
+
+import java.io.StringReader;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Collections;
+
+final class QMCParser {
+	private ContextExpressionQMC contextExpQMC;
+	private int sdcount = 0;
+	private int modelcount = 0;
+	private int initcount = 0;
+	private final Set<String> moduleNames = new HashSet<String>();
+	private final Set<String> otherNames = new HashSet<String>();
+	private final Set<String> rewardsNames = new HashSet<String>();
+	private Token expressionToken;
+	private ModelPRISM model;
+
+	public void setModel(ModelPRISM model) {
+		this.model = model;
+		this.contextExpQMC = new ContextExpressionQMC();
+		Options.get().set(OptionsQMC.CONTEXT_EXPRESSION_QMC,
+		  this.contextExpQMC);
+	}
+
+	public ModelPRISM parseModel()  {
+		this.contextExpQMC = new ContextExpressionQMC();
+		Options.get().set(OptionsQMC.CONTEXT_EXPRESSION_QMC,
+		  this.contextExpQMC);
+		try {
+			return privParseModel(Options.get());
+		} catch (ParseException pe) {
+			Token errorToken = getToken(1);
+			ensure(errorToken.kind != UNEXPECTED_CHAR, ProblemsQMC.PRISM_PARSER_UNEXPECTED_CHARACTER, newPositional(errorToken.endLine, errorToken.endColumn), errorToken.image);
+			ensure(false, ProblemsQMC.PRISM_PARSER_SYNTAX_ERROR, newPositional(errorToken.beginLine, errorToken.beginColumn), errorToken.toString());
+			return null;
+		} catch (EPMCException e) {
+		   throw e;
+		}
+		 catch (Throwable t) {
+		   ensure(false, ProblemsQMC.PRISM_PARSER_GENERAL_ERROR, t, t);
+		   return null;
+		}
+	}
+
+	private ModelPRISM privParseModel(Options options) throws ParseException {
+		SystemDefinition[] sd = new SystemDefinition[1]; 
+		sd[0] = null;
+		Semantics model[] = new Semantics[1];
+		model[0] = SemanticsMDP.MDP;
+		Expression[] init = new Expression[1];
+		init[0] = null;
+		Formulas formulae = new Formulas();
+		List<Module> modules = new ArrayList<Module>();
+		Map<Expression, JANIType> globalVariables = new HashMap<Expression,JANIType>();
+		Map<Expression, Expression> globalInitValues = new HashMap<Expression,Expression>();
+		List<RewardStructure> rewards = new ArrayList<RewardStructure>();
+
+		Token t = actualParser(sd, model, init, formulae, modules, globalVariables, globalInitValues, rewards);
+		ensure(!modules.isEmpty(), ProblemsQMC.PRISM_PARSER_NO_MODULE, newPositional(t.beginLine, t.beginColumn));
+		try {
+		    List<PlayerDefinition> players = Collections.emptyList();
+		    ModelPRISM result;
+		    if (this.model == null) {
+			    result = new ModelPRISM();
+			} else {
+		      result = this.model;
+			}
+			result.build(new ModelPRISM.Builder()
+			  .setSemantics(model[0])
+			  .setModules(modules)
+			  .setInitialStates(init[0])
+			  .setGlobalVariables(globalVariables)
+			  .setGlobalInitValues(globalInitValues)
+			  .setSystem(sd[0])
+			  .setFormulas(formulae)
+			  .setRewards(rewards)
+			  .setPlayers(players));
+			
+//			result.build(contextExpQMC, model[0], null, modules, init[0], globalVariables, globalInitValues, sd[0], formulae, rewards, null, null, players);
+			return result;
+		} catch (EPMCException ime) {
+			throw ime;
+		}
+		 catch (Throwable thr) {
+		   ensure(false, ProblemsQMC.PRISM_PARSER_INTERNAL_ERROR, thr);
+		   return null;
+		}
+	}
+
+    private static Positional newPositional(long line, long column) {
+        assert line >= 0;
+        assert column >= 0;
+        return new Positional.Builder()
+                .setLine(line)
+                .setColumn(column)
+                .build();
+    }
+}
+
+PARSER_END(QMCParser)
+
+TOKEN_MGR_DECLS : {
+	int nestingLevel;
+}
+
+<*> SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : // RESERVED KEYWORDS
+{
+	< A : "A" >
+|	< BOOL : "bool" >
+|	< CEIL : "ceil" >
+|	< CLOCK : "clock" >
+|	< CONJ : "conj">
+|	< CONSTANT : "const" >
+|	< CTMC : "ctmc" >
+|	< CTRAN : "ctran" >
+|	< C : "C" >
+|	< DOUBLE : "double" >
+|	< DTMC : "dtmc" >
+|	< E : "E" >
+|	< FALSE : "false" >
+|	< FORMULA : "formula" >
+|	< FILTER : "filter" >
+|	< FLOOR : "floor" >
+|	< FUNCTION : "func" >
+|	< F : "F" >
+|	< GLOBAL : "global" >
+|	< G : "G" >
+|	< INIT : "init" >
+//|	< INITEND : "endinit" >
+|	< INVARIANT_OPEN : "invariant" > : INVARIANT_ENV
+//|	< INVARIANT_CLOSE : "endinvariant" >
+|	< I : "I" >
+|	< INT : "int" >
+|	< KRON : "kron" >
+|	< LABEL : "label" >
+|	< LOG : "log" >
+|	< MATRIX : "matrix" >
+|	< MAX : "max" >
+|	< MDP : "mdp" >
+|	< MIN : "min" >
+|	< MOD : "mod" >
+|	< MODULEBEGIN : "module" >
+|	< MODULEEND : "endmodule" >
+|	< NONDETERMINISTIC:	"nondeterministic" >
+|	< P : "P" >
+|	< PMAX : "Pmax" >
+|	< PMIN : "Pmin" >
+|	< POW : "pow" >
+|	< PROBABILISTIC : "probabilistic" >
+|	< PROB : "prob" >
+|	< PTA : "pta" >
+|	< Q : "Q" >
+|	< QEVAL : "qeval" >
+|	< QMAX : "Qmax" >
+|	< QMC : "qmc" >
+|	< QMIN : "Qmin" >
+|	< QPROB : "qprob" >
+|	< R : "R" >
+|	< RATE : "rate" >
+|	< REWARDSBEGIN : "rewards" >
+|	< REWARDSEND : "endrewards" >
+|	< RMAX : "Rmax" >
+|	< RMIN : "Rmin" >
+|	< S : "S" >
+|	< SMAX : "Smax" >
+|	< SMIN : "Smin" >
+|	< SQRT : "sqrt" >
+|	< STOCHASTIC : "stochastic" >
+|	< SYSTEMBEGIN : "system" >
+|	< SYSTEMEND : "endsystem" >
+|	< TRAN : "tran" >
+|	< TRUE : "true" >
+|	< U : "U" >
+|	< VECTOR : "vector" >
+|	< W : "W" >
+|	< X : "X" >
+|	< COND : "given" >
+|	< PLUS : "+" >
+|	< MINUS : "-" >
+|	< TIMES : "*" >
+|	< DIVIDE : "/" >
+//|	< ARROW : "->" >
+|	< LBRACKET : "[" >
+|	< RBRACKET : "]" >
+|	< LPAR : "(" >
+|	< RPAR : ")" >
+|	< LCURL : "{" >
+|	< RCURL : "}" >
+|	< RENAME : "<-" >
+|	< SEMICOLON : ";" >
+|	< COLON : ":" >
+|	< COMMA : "," >
+|	< AND : "&" >
+|	< OR : "|" >
+|	< NOT : "!" >
+|	< IMPLIES : "=>" >
+|	< IFF : "<=>" >
+|	< QUESTION : "?" >
+|	< PRIME : "'" >
+|	< EQ : "=" >
+|	< NEQ : "!=" >
+|	< LEQ : "<=" >
+|	< LT : "<" >
+|	< GT : ">" >
+|	< GEQ : ">=" >
+|	< UNDERSCORE : "_" >
+|	< QUOTE : "\"" >
+//|	< SEPINTERVAL : ".." >
+|	< SOMF : "mf2so" >
+|	< SUPEROPERATOR : "superoperator" >
+|	< SUPEROPERATOR_OPEN : "<<" >
+|	< SUPEROPERATOR_CLOSE : ">>" >
+|	< IMAG : ["i", "j"] >
+|	< IDENTITY : "Identity" >
+|	< ID : "ID" >
+|	< PAULIX : "PauliX" >
+|	< PX : "PX" >
+|	< PAULIY : "PauliY" >
+|	< PY : "PY" >
+|	< PAULIZ : "PauliZ" >
+|	< PZ : "PZ" >
+|	< HADAMARD : "Hadamard" >
+|	< HD : "HD" >
+|	< CNOT : "CNOT" >
+|	< CN : "CN" >
+|	< M01 : "M01" >
+|	< M0 : "M0" >
+|	< M1 : "M1" >
+|	< FREDKIN : "Fredkin" >
+|	< FK : "FK" >
+|	< SWAP : "Swap" >
+|	< SW : "SW" >
+|	< PHASESHIFT : "PhaseShift" >
+|	< PS : "PS" >
+|	< TOFFOLI : "Toffoli" >
+|	< TF : "TF" >
+|	< IDENTIFIER : [ "A"-"Z","a"-"z" ] ( [ "A"-"Z","a"-"z","_","0"-"9" ] )* >
+|	< NUM_INT : (["1"-"9"](["0"-"9"])*)|("0") >
+}
+
+< ARROW_ENV > TOKEN : {
+	< ARROW_ARROW : "->" > : UPDATE_ENV
+|	< ARROW_ARG : (~["-"] | "-" ~[">"] )+ >
+}
+
+< SEPINTERVAL_ENV > TOKEN : {
+	< SEPINTERVAL_SEPINTERVAL : ".." > : DEFAULT
+|	< SEPINTERVAL_ARG : (~["."] | "." ~["."] )+ >
+}
+
+< INVARIANT_ENV > TOKEN : {
+	< INVARIANT_CLOSE : "endinvariant" > : DEFAULT
+|	< INVARIANT_IDENTIFIER: [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","_","0"-"9" ] )* >
+|	< INVARIANT_OTHER: ( ~[ "A"-"Z","a"-"z","_" ] )+ >
+//|	< INVARIANT_OTHER : ([ "0"-"9", "+", "-", "*", "/", "<", ">", "=", ";", ",", ":", ".", "?", "'", "\"", "!", "&", "|", "(", ")", "{", "}", "[", "]", " ", "\r", "\n", "\t" ])+ >
+}
+
+< INIT_ENV > TOKEN : {
+	< INIT_CLOSE : "endinit" > : DEFAULT
+|	< INIT_IDENTIFIER: [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","_","0"-"9" ] )* >
+|	< INIT_OTHER: ( ~[ "A"-"Z","a"-"z","_" ] )+ >
+//|	< INIT_OTHER : ([ "0"-"9", "+", "-", "*", "/", "<", ">", "=", ";", ",", ":", ".", "?", "'", "\"", "!", "&", "|", "(", ")", "{", "}", "[", "]", " ", "\r", "\n", "\t" ])+ >
+}
+
+< NESTING_SEMICOLON > TOKEN : {
+	< NESTING_SEMICOLON_SEMICOLON : ";" > : DEFAULT
+|	< NESTING_SEMICOLON_OTHER : (~[";","["])+ >
+|	< NESTING_SEMICOLON_BRACKET_OPEN : "[" > { nestingLevel++; } : NESTING_SEMICOLON_INNER
+}
+
+< NESTING_SEMICOLON_INNER > TOKEN : {
+	< NESTING_SEMICOLON_INNER_OTHER : (~["[","]"])+ >
+|	< NESTING_SEMICOLON_INNER_BRACKET_OPEN : "[" > { nestingLevel++; }
+|	< NESTING_SEMICOLON_INNER_BRACKET_CLOSE : "]" > { nestingLevel--; if (nestingLevel <= 0) SwitchTo(NESTING_SEMICOLON); }
+}
+
+< NESTING_BRACKET > TOKEN : {
+	< NESTING_BRACKET_RBRACKET : "]" > : DEFAULT
+|	< NESTING_BRACKET_OTHER : (~["]","["])+ >
+|	< NESTING_BRACKET_BRACKET_OPEN : "[" > { nestingLevel++; } : NESTING_BRACKET_INNER
+}
+
+< NESTING_BRACKET_INNER > TOKEN : {
+	< NESTING_BRACKET_INNER_OTHER : (~["[","]"])+ >
+|	< NESTING_BRACKET_INNER_BRACKET_OPEN : "[" > { nestingLevel++; }
+|	< NESTING_BRACKET_INNER_BRACKET_CLOSE : "]" > { nestingLevel--; if (nestingLevel <= 0) SwitchTo(NESTING_BRACKET); }
+}
+
+< NESTING_PAR > TOKEN : {
+	< NESTING_PAR_RPAR : ")" > : DEFAULT
+|	< NESTING_PAR_OTHER : (~["(",")"])+ >
+|	< NESTING_PAR_PAR_OPEN : "(" > { nestingLevel++; } : NESTING_PAR_INNER
+}
+
+<UPDATE_ENV > TOKEN : {
+	< UPDATE_TRUE : "true" >
+|	< UPDATE_LPAR : "(" >
+|	< UPDATE_SEMICOLON : ";" > : DEFAULT
+|	< UPDATE_PRIME : "'" >
+|	< UPDATE_EQ : "=" > : NESTING_PAR
+|	< UPDATE_PLUS : "+" > : NESTING_COLON
+|	< UPDATE_AND : "&" >
+|	< UPDATE_IDENTIFIER : [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","_","0"-"9" ] )* >
+|	< UPDATE_OTHER : ~[] > : NESTING_COLON
+}
+
+< NESTING_PAR_INNER > TOKEN : {
+	< NESTING_PAR_INNER_OTHER : (~["(",")"])+ >
+|	< NESTING_PAR_INNER_PAR_OPEN : "(" > { nestingLevel++; }
+|	< NESTING_PAR_INNER_PAR_CLOSE : ")" > { nestingLevel--; if (nestingLevel <= 0) SwitchTo(NESTING_PAR); }
+}
+
+< NESTING_COLON > TOKEN : {
+	< NESTING_COLON_COLON : ":" > : DEFAULT
+|	< NESTING_COLON_OTHER : (~[":","?"])+ >
+|	< NESTING_COLON_QUESTION : "?" > { nestingLevel++; } : NESTING_COLON_INNER
+}
+
+< NESTING_COLON_INNER > TOKEN : {
+	< NESTING_COLON_INNER_OTHER : (~["?",":"])+ >
+|	< NESTING_COLON_INNER_QUESTION : "?" > { nestingLevel++; }
+|	< NESTING_COLON_INNER_COLON : ":" > { nestingLevel--; if (nestingLevel <= 0) SwitchTo(NESTING_COLON); }
+}
+
+
+<*> SPECIAL_TOKEN :
+{
+//	< COMMENT : "//"(~["\n","\r"])*("\n"|"\r"|"\r\n") >
+	< COMMENT : "//"(~["\n","\r"])* >
+}
+
+TOKEN :
+{
+	< UNEXPECTED_CHAR : ~[] >
+}
+
+
+private Token actualParser(SystemDefinition[] sd, Semantics[] model, Expression[] init, Formulas formulae, List<Module> modules, Map<Expression, JANIType> globalVariables, Map<Expression, Expression> globalInitValues, List<RewardStructure> rewards)  :
+{
+	Token t;
+}
+{
+	(
+		model[0] = parseModelType() 
+	|
+		parseConstant(formulae)
+	|
+		parseLabel(formulae)
+	|
+		parseGlobal(globalVariables, globalInitValues)
+	|
+		parseFormula(formulae)
+	|
+		parseModule(modules)
+	|
+		parseRewards(rewards)
+	|
+		init[0] = parseInit()
+	|
+		sd[0] = parseSystem()
+	)*
+	t = <EOF>
+	{ return t; }
+}
+
+private Semantics parseModelType()  :
+{
+	Semantics type = null;
+	Token t;
+}
+{
+	(
+		( 
+			t = <MDP> 
+		| 
+			t = <NONDETERMINISTIC>
+		) 
+		{ type = SemanticsMDP.MDP; }
+	|
+		( 
+			t = <DTMC> 
+		| 
+			t = <PROBABILISTIC>
+		) 
+		{ type = SemanticsDTMCStandard.DTMC; }
+	|
+		t = <QMC> 
+		{ type = SemanticsQMC.QMC; }
+	|
+		( 
+			t = <CTMC> 
+		| 
+			t = <STOCHASTIC>
+		) 
+		{ type = SemanticsCTMC.CTMC; }
+	|
+		t = <PTA> 
+		{
+		   ensure(false, ProblemsQMC.PRISM_PARSER_UNSUPPORTED_MODEL_TYPE, newPositional(t.beginLine, t.beginColumn), t.image);
+	    }
+	)
+	{ 
+		if (type != null) {
+			modelcount++;
+			ensure(modelcount <= 1, ProblemsQMC.PRISM_PARSER_MULTIPLE_TYPE, newPositional(t.beginLine, t.beginColumn));
+		}
+		return type;
+	}
+}
+
+private void parseConstant(Formulas formulae)  :
+{
+	Expression id, value = null;
+	JANIType type;
+	Token idt;
+}
+{	
+	(
+		LOOKAHEAD(<CONSTANT> (<VECTOR> | <MATRIX> | <SUPEROPERATOR>)) 
+		parseConstantQmc(formulae)
+	|
+		(
+			<CONSTANT>
+			{ type = new JANITypeInt(); }
+			(
+				<INT>
+				{ type = new JANITypeInt(); }
+			|
+				<DOUBLE>
+				{ type = new JANITypeReal(); }
+			|
+				<BOOL>
+				{ type = new JANITypeBool(); }
+			)? //if missing, it corresponds to CONST INT, so covered by the initial assignment...
+		| // equivalent to CONSTANT DOUBLE
+			(
+				<RATE> 
+			| 
+				<PROB> 
+			)
+			{ type = new JANITypeReal(); }
+		)
+		{ idt = getToken(1); }
+		id = parseIdentifier()
+		(
+			<EQ>
+			value = parseExpSemicolon()
+			<NESTING_SEMICOLON_SEMICOLON>
+		|
+			<SEMICOLON>
+		)
+		{ 
+			String ids = id.toString();
+			ensure(!otherNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_CONSTANT, newPositional(idt.beginLine, idt.beginColumn), ids);
+			otherNames.add(ids);
+			formulae.addConstant(ids, value, type); 
+		}
+	)
+}
+
+private void parseConstantQmc(Formulas formulae)  :
+{
+	Expression id = null;
+	Expression value = null;
+	Expression hilbert = null;
+	Token size = null;
+	boolean isVector = false;
+	boolean isMatrix = false;
+	boolean isSuperOperator = false;
+	boolean isBra = false;
+	Token idt;
+}
+{
+	<CONSTANT>
+	(
+		<VECTOR>
+		{ isVector = true; }
+		(
+			{ isBra = true; }
+			<LT>
+			{ idt = getToken(1); }
+			id = parseIdentifier()
+			<OR>
+		|
+			<OR>
+			{ idt = getToken(1); }
+			id = parseIdentifier()
+			<GT>
+		)
+		<UNDERSCORE>
+		hilbert = getIdOrInt()
+	|
+		<MATRIX>
+		{ isMatrix = true; }
+		{ idt = getToken(1); }
+		id = parseIdentifier()
+	|
+		<SUPEROPERATOR>
+		{ isSuperOperator = true; }
+		<LPAR>
+		size = <NUM_INT>
+		<RPAR>
+		{ idt = getToken(1); }
+		id = parseIdentifier()
+	)
+	<EQ>
+	value = parseExpSemicolon()
+	<NESTING_SEMICOLON_SEMICOLON>
+	{
+	  	JANIType typeComplex = new JANITypeComplex(contextExpQMC, null);
+	  	JANIType typeComplexArray = new JANITypeArray(typeComplex, null);
+	  	int sizeInt = size == null ? 0 : Integer.parseInt(size.toString());
+	  	JANIType typeSuperOperator = new JANITypeSuperoperator(contextExpQMC, sizeInt, null);
+		String ids = id.toString();
+		ensure(!otherNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_CONSTANT, newPositional(idt.beginLine, idt.beginColumn), ids);
+		otherNames.add(ids);
+		if (isVector) {
+			if (isBra) {
+				formulae.addConstant(ids, contextExpQMC.newBraToVector(value), typeComplexArray); 
+			} else {
+				formulae.addConstant(ids, contextExpQMC.newKetToVector(value), typeComplexArray); 
+			}
+		} else if (isMatrix) {
+			formulae.addConstant(ids, value, typeComplexArray); 
+		} else if (isSuperOperator) {
+			formulae.addConstant(ids, value, typeSuperOperator); 
+		}
+	}
+}
+
+private Expression getIdOrInt()  :
+{
+	Expression e;
+}
+{
+	(
+		e = parseInt()
+	|
+		e = parseIdentifier()
+	)
+	{ return e; }
+}
+	
+private Expression parseIdentifier()  :
+{
+	Token literal;
+}
+{
+	literal = <IDENTIFIER>
+	{ return new ExpressionIdentifierStandard.Builder()
+		.setName(literal.toString())
+		.build(); }
+}
+
+private Expression parseInt()  :
+{
+	Token intg;
+}
+{
+	intg = <NUM_INT>
+	{ return new ExpressionLiteral.Builder()
+		.setValue(intg.toString())
+		.setType(ExpressionTypeInteger.TYPE_INTEGER)
+		.build(); 
+        }
+}
+
+private void parseLabel(Formulas formulae)  :
+{
+	Expression id, value;
+	Token t, tid;
+	String ids;
+}
+{	
+	<LABEL>
+	t = <QUOTE> 
+	tid = <IDENTIFIER> 
+	<QUOTE>
+	{ 
+		ids = "\"" + tid.toString() + "\"";
+		id = new ExpressionIdentifierStandard.Builder()
+			.setName(ids)
+			.build();
+	}
+	<EQ>
+	value = parseExpSemicolon()
+	<NESTING_SEMICOLON_SEMICOLON>
+	{
+	    ensure(!otherNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_LABEL, newPositional(t.beginLine, t.beginColumn), ids);
+		otherNames.add(ids);
+		formulae.addLabel(ids, value); 
+	}
+}
+
+private void parseGlobal(Map<Expression, JANIType> globalVariables, Map<Expression, Expression> globalInitValues)  :
+{
+}
+{
+	<GLOBAL>
+	parseVariableDeclaration(globalVariables, globalInitValues)
+}
+
+private void parseFormula(Formulas formulae)  :
+{
+	Expression id, value;
+	Token t;
+}
+{	
+	<FORMULA>
+	t = <IDENTIFIER>
+	{ id = new ExpressionIdentifierStandard.Builder()
+		.setName(t.toString())
+		.build(); } 
+	<EQ>
+	value = parseExpSemicolon() 
+	<NESTING_SEMICOLON_SEMICOLON>
+	{ 
+		String ids = id.toString();
+		ensure(!otherNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_FORMULA, newPositional(t.beginLine, t.beginColumn), ids);
+		otherNames.add(ids);
+		formulae.addFormula(id.toString(), value); 
+	}
+}
+
+private void parseModule(List<Module> modules)  :
+{
+	Module m;
+	Expression id;
+	Map<Expression, JANIType> variables = new HashMap<Expression,JANIType>();
+	Map<Expression, Expression> initValues = new HashMap<Expression,Expression>();
+	Expression[] invariants = new Expression[1];
+	List<Command> commands = new ArrayList<Command>();
+	Token t;
+	String ids;
+}
+{
+	<MODULEBEGIN>
+	t = <IDENTIFIER>
+	{ 
+		ids = t.toString();
+		id = new ExpressionIdentifierStandard.Builder()
+			.setName(ids)
+			.build();
+	}
+	(
+		<EQ>
+		m = parseModuleRename(id)
+	|
+		parseModuleContent(variables, initValues, invariants, commands)
+		{ m = new ModuleCommands(id.toString(), variables, initValues, commands, null, null); }
+	)
+	<MODULEEND>
+	{
+	    ensure(!moduleNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_MODULE, newPositional(t.beginLine, t.beginColumn), ids);
+		moduleNames.add(ids);
+		modules.add(m); 
+	}
+}
+
+private Module parseModuleRename(Expression newId)  :
+{
+	Expression oldId;
+	Map<Expression, Expression> map = new HashMap<Expression,Expression>();
+}
+{
+	oldId = ExpressionIdentifier()
+	<LBRACKET>
+	parseRenaming(map) 
+	(
+		<COMMA>
+		parseRenaming(map)
+	)*
+	<RBRACKET>
+	{ return new ModuleRename(newId, oldId, map, null); }
+}
+
+private void parseRenaming(Map<Expression, Expression> map)  :
+{
+	Expression oldId;
+	Expression newId;
+}
+{
+	oldId = ExpressionIdentifier()
+	<EQ>
+	newId = ExpressionIdentifier()
+	{ map.put(oldId, newId); }
+}
+
+private void parseModuleContent(Map<Expression,JANIType> variables, Map<Expression,Expression> initValues, Expression[] invariants, List<Command> commands)  :
+{
+	Command c;
+}
+{
+	(
+		parseVariableDeclaration(variables, initValues)
+	)*
+	(
+		invariants[0] = parseInvariantDeclaration()
+	)?
+	(
+		c = parseGuardedCommandDeclaration()
+		{ commands.add(c); }
+	)*	
+}
+
+private void parseVariableDeclaration(Map<Expression, JANIType> variables, Map<Expression, Expression> initValues)  :
+{
+	Expression id;
+	JANIType type;
+	Expression initValue = null;
+	Token t;
+	String ids;
+}
+{
+	t = <IDENTIFIER>
+	{ 
+		ids = t.toString();
+		id = new ExpressionIdentifierStandard.Builder()
+			.setName(ids)
+			.build();
+	}
+	<COLON>
+	type = parseVariable()
+	(
+		<INIT>
+		initValue = parseExpSemicolon()
+		<NESTING_SEMICOLON_SEMICOLON>
+	|
+		<SEMICOLON>
+	)
+	{
+	    ensure(!otherNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_VARIABLE, newPositional(t.beginLine, t.beginColumn), ids);
+		otherNames.add(ids);
+		variables.put(id, type);
+		if (initValue != null) {
+			initValues.put(id, initValue);
+		}
+	}
+}
+
+private JANIType parseVariable()  :
+{
+	JANIType type;
+	Expression low, high;
+}
+{
+	(
+		<BOOL> 
+		{ type = new JANITypeBool(); }
+//	|
+//		<INT> 
+//		{ type = VariableType.getInteger(); }
+	|
+		<LBRACKET>
+		low = parseExpSepinterval()
+		<SEPINTERVAL_SEPINTERVAL>
+		high = parseExpBrack()
+		<NESTING_BRACKET_RBRACKET>
+		{ JANITypeBounded typeBounded = new JANITypeBounded();
+		typeBounded.setLowerBound(low);
+		typeBounded.setUpperBound(high);
+		type = typeBounded; }
+	|
+		<CLOCK> 
+		{ type = new JANITypeClock(); }
+	)
+	{ return type; }
+}
+
+private Expression parseInvariantDeclaration()  :
+{
+	Expression invar;
+}
+{
+	<INVARIANT_OPEN>
+	invar = parseExpInvariant()
+	<INVARIANT_CLOSE>
+	{ token_source.SwitchTo(DEFAULT); }
+	{ return invar; }
+}
+
+private void parseRewards(List<RewardStructure> rewards)  :
+{
+	Expression id = null;
+	Expression label;
+	Expression guard;
+	Expression value;
+	List<Reward> locRew = new ArrayList<Reward>();
+	Token t;
+	String ids;
+}
+{
+	<REWARDSBEGIN>
+	( 
+		LOOKAHEAD(<QUOTE>) 
+		<QUOTE>
+		t = <IDENTIFIER>
+		<QUOTE>
+		{
+			ids = "\"" + t.toString() + "\"";
+			id = new ExpressionIdentifierStandard.Builder()
+				.setName(ids)
+				.build();
+			ensure(!rewardsNames.contains(ids), ProblemsQMC.PRISM_PARSER_REPEATED_REWARD, newPositional(t.beginLine, t.beginColumn), ids);
+		}
+	)?
+	{
+		if (id == null) {
+			id = new ExpressionIdentifierStandard.Builder()
+				.setName("")
+				.build();
+		}
+	}
+	(
+		{ label = null; }
+		(
+			<LBRACKET>
+			{ label = new ExpressionIdentifierStandard.Builder()
+					.setName("")
+					.build(); }
+			( 
+				t = <IDENTIFIER>
+				{ label = new ExpressionIdentifierStandard.Builder()
+					.setName(t.toString())
+					.build(); }
+			)?
+			<RBRACKET>
+		)?
+		{ token_source.SwitchTo(NESTING_COLON); }
+		{ expressionToken = getToken(1); } 
+		{ t = null; }
+		(
+			t = <TRUE>
+		|
+			t = <FALSE>
+		|
+			t = <IDENTIFIER>
+		|
+			t = <LPAR>
+		|
+			t = <MINUS>
+		|
+			t = <NOT>
+		)?
+		guard = parseExpColon(t)
+		{ token_source.SwitchTo(NESTING_SEMICOLON); }
+		<NESTING_COLON_COLON>
+		value = parseExpSemicolon()
+		<NESTING_SEMICOLON_SEMICOLON>
+		{ 
+			if (label == null) {
+				locRew.add(new StateReward(guard, value, null));
+			} else {
+				locRew.add(new TransitionReward(label.toString(), guard, value, null));
+			}
+		}
+	)+
+	<REWARDSEND>
+	{
+		ids = id.toString();
+		rewardsNames.add(ids);
+		rewards.add(new RewardStructure(ids, locRew, null)); 
+	}
+}
+
+private Expression parseInit()  :
+{
+	Expression init;
+	Token t;
+}
+{
+	t = <INIT>
+	init = parseExpInit()
+	<INIT_CLOSE>
+	{ 
+		initcount++;
+		ensure(initcount <= 1, ProblemsQMC.PRISM_PARSER_MULTIPLE_INIT, newPositional(t.beginLine, t.beginColumn));
+		return init;
+	}
+}
+
+private SystemDefinition parseSystem()  :
+{
+	SystemDefinition sd;
+	Token t;
+}
+{
+	t = <SYSTEMBEGIN>
+	sd = parseSystemContent()
+	<SYSTEMEND>
+	{ 
+		sdcount++;
+		ensure(sdcount <= 1, ProblemsQMC.PRISM_PARSER_MULTIPLE_SYSTEM, newPositional(t.beginLine, t.beginColumn));
+		return sd;
+	}
+}
+
+private SystemDefinition parseSystemContent()  :
+{
+	SystemDefinition sd;
+}
+{
+	sd = parseSystemParallelCommonActions()
+	{ return sd; }
+}
+
+private SystemDefinition parseSystemParallelCommonActions()  :
+{
+	SystemDefinition sd;
+	SystemDefinition other;
+}
+{
+	sd = parseSystemParallelAsynchronous()
+	( 
+		LOOKAHEAD(<OR> <OR>) 
+		<OR> 
+		<OR> 
+		other = parseSystemParallelSetActions()
+		{ sd = new SystemAlphaParallel(sd, other, null); }
+	)* 
+	{ return sd; }
+}
+
+private SystemDefinition parseSystemParallelAsynchronous()  :
+{
+	SystemDefinition sd;
+	SystemDefinition other;
+}
+{
+	sd = parseSystemParallelSetActions()
+	( 
+		LOOKAHEAD(<OR> <OR> <OR>) 
+		<OR>
+		<OR> 
+		<OR>  
+		other = parseSystemParallelCommonActions()
+		{ sd = new SystemAsyncParallel(sd, other, null); }
+	)* 
+	{ return sd; }
+}
+
+private SystemDefinition parseSystemParallelSetActions()  :
+{
+	SystemDefinition sd;
+	SystemDefinition other;
+	Set<Expression> idSet;
+}
+{
+	sd = parseSystemRenHid()
+	( 
+		LOOKAHEAD(<OR> <LBRACKET>)
+		<OR> 
+		<LBRACKET> 
+		idSet = parseIdSet()
+		<RBRACKET>
+		<OR> 
+		other = parseSystemRenHid()
+		{ sd = new SystemRestrictedParallel(sd, other, idSet, null); }
+	)?
+	{ return sd; }
+}
+
+private SystemDefinition parseSystemRenHid()  :
+{
+	SystemDefinition sd;
+	Set<Expression> idSet;
+	Map<Expression, Expression> renMap;
+}
+{
+	sd = parseSystemBase()
+	(
+		<DIVIDE> 
+		<LCURL> 
+		idSet = parseIdSet() 
+		<RCURL>
+		{ sd = new SystemHide(sd, idSet, null); }
+	|
+		<LCURL>
+		renMap = parseRenameMap()
+		<RCURL>
+		{ sd = new SystemRename(sd, renMap, null); }
+	)*
+	{ return sd; }
+}
+
+private Map<Expression, Expression> parseRenameMap()  :
+{
+	Map<Expression, Expression> map = new HashMap<Expression,Expression>();
+	Expression oldId, newId;
+}
+{
+	oldId = ExpressionIdentifier()
+	<RENAME>
+	newId = ExpressionIdentifier()
+	{ map.put(oldId, newId); }
+	(
+		<COMMA>
+		oldId = ExpressionIdentifier()
+		<RENAME>
+		newId = ExpressionIdentifier()
+		{ map.put(oldId, newId); }
+	)*
+	{ return map; }
+}
+
+private Set<Expression> parseIdSet()  :
+{
+	Set<Expression> le = new HashSet<Expression>();
+	Expression e;
+}
+{
+	e = ExpressionIdentifier()
+	{ le.add(e); }
+	(
+		<COMMA>
+		e = ExpressionIdentifier()
+		{ le.add(e);}
+	)*
+	{ return le; }
+}
+
+private SystemDefinition parseSystemBase()  :
+{
+	Expression e;
+	SystemDefinition sd;
+}
+{
+	(
+		e = ExpressionIdentifier()
+		{ sd = new SystemModule(e.toString(), null); }
+	|
+		<LPAR>
+		sd = parseSystemParallelCommonActions()
+		<RPAR>
+	)
+	{ return sd; }
+}
+
+private Command parseGuardedCommandDeclaration() :
+{
+	Expression identifier = null;
+	Expression guard;
+	List<Alternative> updates;
+}
+{
+	<LBRACKET>
+	( 
+		identifier = ExpressionIdentifier() 
+	)?
+	{ 
+		if (identifier == null) {
+			identifier = new ExpressionIdentifierStandard.Builder()
+				.setName("")
+				.build();
+		}
+	}
+	<RBRACKET>
+	guard = parseCondition()
+	<ARROW_ARROW>
+	updates = parseUpdate()
+	{ token_source.SwitchTo(DEFAULT); }
+	(
+		<UPDATE_SEMICOLON>
+	|
+		<SEMICOLON>
+	)
+	{ return new Command(identifier, guard, updates, null); }
+}
+
+private List<Alternative> parseUpdate() : 
+{
+	List<Alternative> updates = new ArrayList<Alternative>();
+	Expression one = ExpressionLiteral.getOne();
+}
+{
+	(
+		LOOKAHEAD(<UPDATE_TRUE>)
+		parseDetUpdate(one, updates) 
+	|
+		LOOKAHEAD(<UPDATE_LPAR> <UPDATE_IDENTIFIER> <UPDATE_PRIME>) 
+		parseDetUpdate(one, updates) 
+	|	
+		parseProbUpdate(updates)
+	)
+	{ return updates; }
+}
+
+private void parseProbUpdate(List<Alternative> updates) : 
+{
+	Expression weight;
+	Token t;
+}
+{
+	{ token_source.SwitchTo(NESTING_COLON); }
+	{ expressionToken = getToken(1); } 
+	(
+		t = <UPDATE_OTHER>
+	|	
+		t = <UPDATE_LPAR>
+	|	
+		t = <UPDATE_IDENTIFIER>
+	|	
+		t = <UPDATE_TRUE>
+	)
+	weight = parseExpColon(t) 
+	{ token_source.SwitchTo(UPDATE_ENV); }
+	<NESTING_COLON_COLON>
+	parseDetUpdate(weight, updates) 
+	(
+		<UPDATE_PLUS>
+		{ expressionToken = getToken(1); } 
+		weight = parseExpColon(null) 
+		{ token_source.SwitchTo(UPDATE_ENV); }
+		<NESTING_COLON_COLON>
+		parseDetUpdate(weight, updates)
+	)*
+}
+
+private void parseDetUpdate(Expression weight, List<Alternative> updates) :
+{
+	Expression id, value;
+	Map<Expression, Expression> effect = new HashMap<Expression,Expression>();
+	Token t;
+}
+{
+	(
+		<UPDATE_TRUE>
+	|
+		<UPDATE_LPAR>
+		t = <UPDATE_IDENTIFIER>
+		{ id = new ExpressionIdentifierStandard.Builder()
+			.setName(t.toString())
+			.build(); } 
+		<UPDATE_PRIME>
+		<UPDATE_EQ>
+		value = parseExpParenth() 
+		{ token_source.SwitchTo(UPDATE_ENV); }
+		<NESTING_PAR_RPAR>
+		{
+		    ensure(!effect.containsKey(id), ProblemsQMC.PRISM_PARSER_REPEATED_UPDATE, newPositional(t.beginLine, t.beginColumn), t);
+			effect.put(id, value); 
+		}
+		(
+			<UPDATE_AND>
+			<UPDATE_LPAR>
+			t = <UPDATE_IDENTIFIER>
+			{ id = new ExpressionIdentifierStandard.Builder()
+				.setName(t.toString())
+				.build(); } 
+			<UPDATE_PRIME>
+			<UPDATE_EQ>
+			value = parseExpParenth() 
+			{ token_source.SwitchTo(UPDATE_ENV); }
+			<NESTING_PAR_RPAR>
+			{
+			    ensure(!effect.containsKey(id), ProblemsQMC.PRISM_PARSER_REPEATED_UPDATE, newPositional(t.beginLine, t.beginColumn), t.toString());
+				effect.put(id, value); 
+			}
+		)*
+	)
+	{ token_source.SwitchTo(UPDATE_ENV); }
+	{ updates.add(new Alternative(weight, effect, null)); }
+}
+
+private Expression parseCondition() : 
+{
+	Expression e;
+	token_source.SwitchTo(ARROW_ENV);
+}
+{
+	e = parseExpArrow()
+	{ return e; }
+}
+
+private Expression parseExpSemicolon()  : 
+{
+	Token t;
+	StringBuilder exp = new StringBuilder();
+	Expression expression = null;
+	token_source.nestingLevel = 0; 
+	token_source.SwitchTo(NESTING_SEMICOLON);
+}
+{
+	{ expressionToken = getToken(1); } 
+	(
+		t = <NESTING_SEMICOLON_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_BRACKET_OPEN>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_INNER_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_INNER_BRACKET_OPEN>
+		{exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_INNER_BRACKET_CLOSE>
+		{ exp.append(t.toString()); }
+	)*
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(exp.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString()); 
+	}
+}
+
+private Expression parseExpParenth()  : 
+{
+	Token t;
+	StringBuilder exp = new StringBuilder();
+	Expression expression = null;
+	token_source.nestingLevel = 0; 
+	token_source.SwitchTo(NESTING_PAR);
+}
+{
+	{ expressionToken = getToken(1); } 
+	(
+		t = <NESTING_PAR_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_PAR_PAR_OPEN>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_PAR_INNER_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_PAR_INNER_PAR_OPEN>
+		{exp.append(t.toString()); }
+	|
+		t = <NESTING_PAR_INNER_PAR_CLOSE>
+		{ exp.append(t.toString()); }
+	)+
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(exp.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString()); 
+	}
+}
+
+private Expression parseExpBrack()  : 
+{
+	Token t;
+	StringBuilder exp = new StringBuilder();
+	Expression expression = null;
+	token_source.nestingLevel = 0; 
+	token_source.SwitchTo(NESTING_BRACKET);
+}
+{
+	{ expressionToken = getToken(1); } 
+	(
+		t = <NESTING_BRACKET_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_BRACKET_BRACKET_OPEN>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_BRACKET_INNER_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_BRACKET_INNER_BRACKET_OPEN>
+		{exp.append(t.toString()); }
+	|
+		t = <NESTING_BRACKET_INNER_BRACKET_CLOSE>
+		{ exp.append(t.toString()); }
+	)+
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(exp.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString()); 
+	}
+}
+
+private Expression parseExpColon(Token old)  : 
+{
+	Token t;
+	StringBuilder exp = new StringBuilder();
+	if (old != null) {
+		exp.append(old.toString());
+	}
+	Expression expression = null;
+	token_source.nestingLevel = 0; 
+	token_source.SwitchTo(NESTING_COLON);
+}
+{
+	(
+		t = <UPDATE_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <UPDATE_LPAR>
+		{ exp.append(t.toString()); }
+	|
+		t = <UPDATE_IDENTIFIER>
+		{ exp.append(t.toString()); }
+	|
+		t = <UPDATE_TRUE>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_COLON_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_COLON_QUESTION>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_COLON_INNER_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_COLON_INNER_QUESTION>
+		{exp.append(t.toString()); }
+	|
+		t = <NESTING_COLON_INNER_COLON>
+		{ exp.append(t.toString()); }
+	)*
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(exp.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString()); 
+	}
+}
+
+private Expression parseExpInvariant()  :
+{
+	StringBuilder content = new StringBuilder();
+	Token t;
+}
+{
+	{ expressionToken = getToken(1); }
+	(
+	    t = <INVARIANT_IDENTIFIER>
+	    { content.append(t.toString()); }
+	|
+	    t = <INVARIANT_OTHER>
+	    { content.append(t.toString()); }
+	)*
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(content.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString()); 
+	}
+}
+
+private Expression parseExpInit()  :
+{
+	StringBuilder content = new StringBuilder();
+	Token t;
+	token_source.SwitchTo(INIT_ENV);
+}
+{
+	{ expressionToken = getToken(1); } 
+	(
+	    t = <INIT_IDENTIFIER>
+	    { content.append(t.toString()); }
+	|
+	    t = <INIT_OTHER>
+	    { content.append(t.toString()); }
+	)*
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(content.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString()); 
+	}
+}
+
+private Expression parseExpSepinterval()  :
+{
+	Token content;
+	token_source.SwitchTo(SEPINTERVAL_ENV);
+}
+{
+	{ expressionToken = getToken(1); } 
+	content = <SEPINTERVAL_ARG>
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(content.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString()); 
+	}
+}
+
+private Expression parseExpArrow()  :
+{
+	Token content;
+	token_source.SwitchTo(ARROW_ENV);
+}
+{
+	{ expressionToken = getToken(1); } 
+	content = <ARROW_ARG>
+	{
+		QMCExpressionParser ep = new QMCExpressionParser(new StringReader(content.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, content.toString()); 
+	}
+}
+
+private Expression ExpressionIdentifier()  :
+{
+	Token literal;
+}
+{
+	literal = <IDENTIFIER>
+	{ return new ExpressionIdentifierStandard.Builder()
+		.setName(literal.toString())
+		.build(); }
+}

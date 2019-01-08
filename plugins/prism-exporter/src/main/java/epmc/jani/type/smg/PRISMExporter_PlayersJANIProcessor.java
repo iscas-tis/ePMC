@@ -24,15 +24,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import epmc.prism.exporter.messages.ExtendedFeaturesPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorExtended;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorExtended;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_PlayersJANIProcessor implements JANI2PRISMProcessorExtended {
+public class PRISMExporter_PlayersJANIProcessor implements PRISMExporter_ProcessorExtended {
 
     private PlayersJANI players = null;
 
     @Override
-    public JANI2PRISMProcessorExtended setElement(Object obj) {
+    public PRISMExporter_ProcessorExtended setElement(Object obj) {
         assert obj != null;
         assert obj instanceof PlayersJANI; 
 
@@ -48,7 +48,7 @@ public class PRISMExporter_PlayersJANIProcessor implements JANI2PRISMProcessorEx
 
         for (PlayerJANI player : players) {
             prism.append("\n")
-                .append(ProcessorRegistrar.getProcessor(player).toPRISM());			
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(player).toPRISM());			
         }
 
         return prism.toString();
@@ -69,7 +69,7 @@ public class PRISMExporter_PlayersJANIProcessor implements JANI2PRISMProcessorEx
         assert players != null;
 
         for (PlayerJANI player : players) {
-            ProcessorRegistrar.getProcessor(player)
+            PRISMExporter_ProcessorRegistrar.getProcessor(player)
                 .validateTransientVariables();
         }
     }
@@ -81,7 +81,7 @@ public class PRISMExporter_PlayersJANIProcessor implements JANI2PRISMProcessorEx
         boolean usesTransient = false;
 
         for (PlayerJANI player : players) {
-            usesTransient |= ProcessorRegistrar.getProcessor(player)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(player)
                     .usesTransientVariables();
         }
 

@@ -1,0 +1,3 @@
+Q=0 [F (fail)];
+Q>=1 [F(succ | abort)];
+Q=0.5 [F (succ)] & Q=0.5 [F (abort)];

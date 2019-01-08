@@ -22,15 +22,15 @@ package epmc.expression.standard;
 
 import epmc.expression.Expression;
 import epmc.prism.exporter.JANIComponentRegistrar;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_ExpressionQuantifierProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionQuantifierProcessor implements PRISMExporter_ProcessorStrict {
 
     private ExpressionQuantifier quantifier = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionQuantifier; 
 
@@ -50,7 +50,7 @@ public class PRISMExporter_ExpressionQuantifierProcessor implements JANI2PRISMPr
         } else if (quantified instanceof ExpressionReward) {
             prism.append("R")
                 .append("{")
-                .append(ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
+                .append(PRISMExporter_ProcessorRegistrar.getProcessor(((ExpressionReward) quantified).getReward()
                         .getExpression())
                         .toPRISM())
                 .append("}");
@@ -65,12 +65,12 @@ public class PRISMExporter_ExpressionQuantifierProcessor implements JANI2PRISMPr
         CmpType cmpType = quantifier.getCompareType();
         prism.append(cmpType.toString());
         if (cmpType != CmpType.IS) {
-            prism.append(ProcessorRegistrar.getProcessor(quantifier.getCompare())
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(quantifier.getCompare())
                     .toPRISM());
         }
 
         prism.append("[")
-            .append(ProcessorRegistrar.getProcessor(quantified)
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(quantified)
                     .toPRISM())
             .append("]");
 
@@ -82,7 +82,7 @@ public class PRISMExporter_ExpressionQuantifierProcessor implements JANI2PRISMPr
         assert quantifier != null;
 
         for (Expression child : quantifier.getChildren()) {
-            ProcessorRegistrar.getProcessor(child)
+            PRISMExporter_ProcessorRegistrar.getProcessor(child)
                 .validateTransientVariables();
         }
     }
@@ -93,7 +93,7 @@ public class PRISMExporter_ExpressionQuantifierProcessor implements JANI2PRISMPr
 
         boolean usesTransient = false;
         for (Expression child : quantifier.getChildren()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(child)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(child)
                     .usesTransientVariables();
         }
 

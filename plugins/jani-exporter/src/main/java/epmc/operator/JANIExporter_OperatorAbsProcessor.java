@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 /**
@@ -64,27 +64,27 @@ public class JANIExporter_OperatorAbsProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        if (ProcessorRegistrar.useDerivedOperators()) {
+        if (JANIExporter_ProcessorRegistrar.useDerivedOperators()) {
             builder.add(OP, ABS);
-            builder.add(EXP, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builder.add(EXP, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
         } else {
             JsonObjectBuilder builderLt = Json.createObjectBuilder();
             builderLt.add(OP, LT);
-            builderLt.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderLt.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
             builderLt.add(RIGHT, 0);
             
             JsonObjectBuilder builderNegative = Json.createObjectBuilder();
             builderNegative.add(OP, SUBTRACT);
             builderNegative.add(LEFT, 0);
-            builderNegative.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderNegative.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
 
             builder.add(OP, ITE);
             builder.add(IF, builderLt.build());
             builder.add(THEN, builderNegative.build());
-            builder.add(ELSE, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builder.add(ELSE, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
         }
         

@@ -20,14 +20,14 @@
 
 package epmc.jani.model.type;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 
-public final class PRISMExporter_JANITypeBoolProcessor implements JANI2PRISMProcessorStrict {
+public final class PRISMExporter_JANITypeBoolProcessor implements PRISMExporter_ProcessorStrict {
 
     private JANITypeBool bool = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj instanceof JANITypeBool;
 
         bool = (JANITypeBool) obj;

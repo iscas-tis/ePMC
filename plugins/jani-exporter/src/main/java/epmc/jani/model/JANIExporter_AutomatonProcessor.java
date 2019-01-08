@@ -25,10 +25,10 @@ import javax.json.JsonArrayBuilder;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 
-public class JANIExporter_AutomatonProcessor implements JANIProcessor {
+public class JANIExporter_AutomatonProcessor implements JANIExporter_Processor {
     /** String identifying the name of an automaton. */
     private static final String NAME = "name";
     /** String identifying the variables of an automaton. */
@@ -47,7 +47,7 @@ public class JANIExporter_AutomatonProcessor implements JANIProcessor {
     private Automaton automaton = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof Automaton;
 
@@ -65,17 +65,17 @@ public class JANIExporter_AutomatonProcessor implements JANIProcessor {
         
         Variables variables = automaton.getVariables();
         if (variables != null) {
-            builder.add(VARIABLES, ProcessorRegistrar.getProcessor(variables)
+            builder.add(VARIABLES, JANIExporter_ProcessorRegistrar.getProcessor(variables)
                     .toJSON());
         }
 
         InitialStates initialStates = automaton.getInitialStates();
         if (initialStates != null) {
-            builder.add(RESTRICT_INITIAL, ProcessorRegistrar.getProcessor(initialStates)
+            builder.add(RESTRICT_INITIAL, JANIExporter_ProcessorRegistrar.getProcessor(initialStates)
                     .toJSON());
         }
         
-        builder.add(LOCATIONS, ProcessorRegistrar.getProcessor(automaton.getLocations())
+        builder.add(LOCATIONS, JANIExporter_ProcessorRegistrar.getProcessor(automaton.getLocations())
                 .toJSON());
         
         JsonArrayBuilder initialLocations = Json.createArrayBuilder();
@@ -84,7 +84,7 @@ public class JANIExporter_AutomatonProcessor implements JANIProcessor {
         }
         builder.add(INITIAL_LOCATIONS, initialLocations);
         
-        builder.add(EDGES, ProcessorRegistrar.getProcessor(automaton.getEdges())
+        builder.add(EDGES, JANIExporter_ProcessorRegistrar.getProcessor(automaton.getEdges())
                 .toJSON());
         
         String comment = automaton.getComment();

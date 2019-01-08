@@ -20,15 +20,15 @@
 
 package epmc.jani.model.type;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public final class PRISMExporter_JANITypeBoundedProcessor implements JANI2PRISMProcessorStrict {
+public final class PRISMExporter_JANITypeBoundedProcessor implements PRISMExporter_ProcessorStrict {
 
     private JANITypeBounded bounded = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj instanceof JANITypeBounded;
 
         bounded = (JANITypeBounded) obj;
@@ -41,10 +41,10 @@ public final class PRISMExporter_JANITypeBoundedProcessor implements JANI2PRISMP
         
         StringBuilder prism = new StringBuilder();
         prism.append("[")
-            .append(ProcessorRegistrar.getProcessor(bounded.getLowerBound())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(bounded.getLowerBound())
                     .toPRISM())
             .append("..")
-            .append(ProcessorRegistrar.getProcessor(bounded.getUpperBound())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(bounded.getUpperBound())
                     .toPRISM())
             .append("]");
         

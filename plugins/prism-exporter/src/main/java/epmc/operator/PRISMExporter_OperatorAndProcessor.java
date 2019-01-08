@@ -24,13 +24,13 @@ import static epmc.prism.exporter.util.UtilPRISMExporter.appendWithParenthesesIf
 
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionOperator;
-import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
+import epmc.prism.exporter.operatorprocessor.PRISMExporter_OperatorProcessorStrict;
 
 /**
  * @author Andrea Turrini
  *
  */
-public class PRISMExporter_OperatorAndProcessor implements JANI2PRISMOperatorProcessorStrict {
+public class PRISMExporter_OperatorAndProcessor implements PRISMExporter_OperatorProcessorStrict {
 
     private ExpressionOperator expressionOperator = null;
     
@@ -38,7 +38,7 @@ public class PRISMExporter_OperatorAndProcessor implements JANI2PRISMOperatorPro
      * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#setExpressionOperator(epmc.expression.standard.ExpressionOperator)
      */
     @Override
-    public JANI2PRISMOperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator) {
+    public PRISMExporter_OperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
         
         assert expressionOperator.getOperator().equals(OperatorAnd.AND);
@@ -73,6 +73,6 @@ public class PRISMExporter_OperatorAndProcessor implements JANI2PRISMOperatorPro
             if (operator.equals(OperatorAnd.AND))
                 return false;
         }
-        return JANI2PRISMOperatorProcessorStrict.super.needsParentheses(childOperand);
+        return PRISMExporter_OperatorProcessorStrict.super.needsParentheses(childOperand);
     }
 }

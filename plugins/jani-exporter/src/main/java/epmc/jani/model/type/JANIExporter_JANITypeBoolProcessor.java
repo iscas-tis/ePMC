@@ -22,10 +22,10 @@ package epmc.jani.model.type;
 
 import javax.json.JsonValue;
 
-import epmc.jani.exporter.processor.JANIProcessor;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
 import epmc.util.UtilJSON;
 
-public final class JANIExporter_JANITypeBoolProcessor implements JANIProcessor {
+public final class JANIExporter_JANITypeBoolProcessor implements JANIExporter_Processor {
 
     /** Identifier for boolean type. */
     private static final String BOOL = "bool";
@@ -33,7 +33,7 @@ public final class JANIExporter_JANITypeBoolProcessor implements JANIProcessor {
     private JANITypeBool bool = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof JANITypeBool;
 

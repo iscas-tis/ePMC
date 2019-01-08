@@ -35,10 +35,10 @@ import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorMultiply;
 import epmc.prism.exporter.JANIComponentRegistrar;
 import epmc.prism.exporter.error.ProblemsPRISMExporter;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_EdgeProcessor implements PRISMExporter_ProcessorStrict {
 
 	private static ExpressionOperator newOperator(Operator operator, Expression operand1, Expression operand2) {
         return new ExpressionOperator.Builder()
@@ -53,7 +53,7 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
     private Automaton automaton = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Edge; 
 
@@ -84,13 +84,13 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+    public PRISMExporter_ProcessorStrict setAutomaton(Automaton automaton) {
         this.automaton = automaton;
         return this;
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -123,7 +123,7 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
         if (prefix != null)	{
             prism.append(prefix);
         }
-        prism.append(ProcessorRegistrar.getProcessor(edge.getActionOrSilent())
+        prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(edge.getActionOrSilent())
                 .toPRISM())
             .append(" ");
 
@@ -134,10 +134,15 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
                 .append(JANIComponentRegistrar.getLocationIdentifier(automaton, edge.getLocation()))
                 .append(") & ");
         }
-        prism.append(ProcessorRegistrar.getProcessor(edge.getGuard())
-                .toPRISM())
-            .append(" -> ")
-            .append(ProcessorRegistrar.getProcessor(edge.getDestinations())
+        Guard guard = edge.getGuard();
+        if (guard == null) {
+            prism.append("true");
+        } else {
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(edge.getGuard())
+                    .toPRISM());
+        }
+        prism.append(" -> ")
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(edge.getDestinations())
                 .setAutomaton(automaton)
                 .toPRISM())
             .append(";\n");
@@ -149,9 +154,12 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
     public void validateTransientVariables() {
         assert edge != null;
 
-        ProcessorRegistrar.getProcessor(edge.getGuard())
-            .validateTransientVariables();
-        ProcessorRegistrar.getProcessor(edge.getDestinations())
+        Guard guard = edge.getGuard();
+        if (guard != null) {
+            PRISMExporter_ProcessorRegistrar.getProcessor(guard)
+                .validateTransientVariables();
+        }
+        PRISMExporter_ProcessorRegistrar.getProcessor(edge.getDestinations())
             .validateTransientVariables();
     }
 
@@ -160,9 +168,12 @@ public class PRISMExporter_EdgeProcessor implements JANI2PRISMProcessorStrict {
         assert edge != null;
 
         boolean usesTransient = false;
-        usesTransient |= ProcessorRegistrar.getProcessor(edge.getGuard())
-                .usesTransientVariables();
-        usesTransient |= ProcessorRegistrar.getProcessor(edge.getDestinations())
+        Guard guard = edge.getGuard();
+        if (guard != null) {
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(guard)
+                    .usesTransientVariables();
+        }
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(edge.getDestinations())
                 .usesTransientVariables();
 
         return usesTransient;

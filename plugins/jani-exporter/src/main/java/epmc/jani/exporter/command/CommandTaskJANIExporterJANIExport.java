@@ -35,7 +35,7 @@ import epmc.error.EPMCException;
 import epmc.jani.exporter.error.ProblemsJANIExporter;
 import epmc.jani.exporter.messages.MessagesJANIExporter;
 import epmc.jani.exporter.options.OptionsJANIExporter;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.ModelJANI;
 import epmc.jani.model.ModelJANIConverter;
 import epmc.main.options.OptionsEPMC;
@@ -112,7 +112,7 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
             File janiFile = new File(janiFilename); 
             if (janiFile.exists()) { 
                 if (!janiFile.canWrite()) {
-                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITEABLE_JANI_FILE, 
+                    log.send(MessagesJANIExporter.JANI_EXPORTER_UNWRITABLE_JANI_FILE, 
                             janiFilename, 
                             modelFilename);
                     return;
@@ -147,8 +147,8 @@ public final class CommandTaskJANIExporterJANIExport implements CommandTask {
                         janiFilename);
                 JsonValue jsonContent = null;
                 if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_USE_NEW_EXPORTER)) {
-                    ProcessorRegistrar.setModel(jani);
-                    jsonContent = ProcessorRegistrar.getProcessor(jani)
+                    JANIExporter_ProcessorRegistrar.setModel(jani);
+                    jsonContent = JANIExporter_ProcessorRegistrar.getProcessor(jani)
                             .toJSON();
                 } else {
                     jsonContent = jani.generate();

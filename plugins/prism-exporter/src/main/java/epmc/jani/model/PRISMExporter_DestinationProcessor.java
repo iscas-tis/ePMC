@@ -21,23 +21,25 @@
 package epmc.jani.model;
 
 import epmc.prism.exporter.JANIComponentRegistrar;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_DestinationProcessor implements PRISMExporter_ProcessorStrict {
 
     private Destination destination = null;
     private String prefix = null;
     private Automaton automaton = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setAutomaton(Automaton automaton) {
+    public PRISMExporter_ProcessorStrict setAutomaton(Automaton automaton) {
+        assert automaton != null;
+        
         this.automaton = automaton;
         return this;
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof Destination; 
 
@@ -46,7 +48,7 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
     }
 
     @Override
-    public JANI2PRISMProcessorStrict setPrefix(String prefix) {
+    public PRISMExporter_ProcessorStrict setPrefix(String prefix) {
         this.prefix = prefix;
         return this;
     }
@@ -54,6 +56,7 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
     @Override
     public String toPRISM() {
         assert destination != null;
+        assert automaton != null;
 
         StringBuilder prism = new StringBuilder();
 
@@ -63,27 +66,31 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
 
         Probability probability = destination.getProbability();
         if (probability == null) {
-            if (!ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
-                prism.append(ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+            if (!PRISMExporter_ProcessorRegistrar.getUseExtendedPRISMSyntax()) {
+                prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
                         .toPRISM())
                     .append(" : ");
             }
         } else {
-            prism.append(ProcessorRegistrar.getProcessor(probability)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(probability)
                     .toPRISM())
                 .append(" : ");
         }
+
+        Assignments assignments = destination.getAssignments();
 
         if (automaton.getLocations().size() > 1) {
             prism.append("(")
                 .append(JANIComponentRegistrar.getLocationName(automaton))
                 .append("'=")
                 .append(JANIComponentRegistrar.getLocationIdentifier(automaton, destination.getLocation()))
-                .append(") & ");
+                .append(")");
+            if (assignments != null) {
+                prism.append(" & ");
+            }
         }
-        Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            prism.append(ProcessorRegistrar.getProcessor(assignments)
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(assignments)
                     .toPRISM());
         }
 
@@ -94,12 +101,12 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
     public void validateTransientVariables() {
         assert destination != null;
 
-        ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+        PRISMExporter_ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
             .validateTransientVariables();
 
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            ProcessorRegistrar.getProcessor(assignments)
+            PRISMExporter_ProcessorRegistrar.getProcessor(assignments)
                 .validateTransientVariables();
         }
     }
@@ -110,12 +117,12 @@ public class PRISMExporter_DestinationProcessor implements JANI2PRISMProcessorSt
 
         boolean usesTransient = false;
 
-        usesTransient |= ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
+        usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(destination.getProbabilityExpressionOrOne())
                 .usesTransientVariables();
 
         Assignments assignments = destination.getAssignments();
         if (assignments != null) {
-            usesTransient |= ProcessorRegistrar.getProcessor(assignments)
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(assignments)
                     .usesTransientVariables();
         }
 

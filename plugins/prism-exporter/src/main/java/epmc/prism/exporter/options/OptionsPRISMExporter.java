@@ -28,7 +28,7 @@ package epmc.prism.exporter.options;
 public enum OptionsPRISMExporter {
     /** Base name of resource file for options description. */
     OPTIONS_PRISM_EXPORTER,
-    /** Category used for JANI converter options. */
+    /** Category used for PRISM converter options. */
     PRISM_EXPORTER_CATEGORY,
     /** Name of the generated PRISM model file. */
     PRISM_EXPORTER_PRISM_MODEL_NAME,

@@ -21,15 +21,15 @@
 package epmc.jani.model.property;
 
 import epmc.modelchecker.RawProperty;
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
-public class PRISMExporter_JANIPropertiesProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_JANIPropertiesProcessor implements PRISMExporter_ProcessorStrict {
 
     private JANIProperties properties = null;
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof JANIProperties; 
 
@@ -50,7 +50,7 @@ public class PRISMExporter_JANIPropertiesProcessor implements JANI2PRISMProcesso
                     .append(name)
                     .append("\" : ");
             }
-            prism.append(ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
+            prism.append(PRISMExporter_ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
                     .toPRISM())
                 .append("\n");
         }
@@ -63,7 +63,7 @@ public class PRISMExporter_JANIPropertiesProcessor implements JANI2PRISMProcesso
         assert properties != null;
 
         for (RawProperty raw : properties.getRawProperties()) {
-            ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
+            PRISMExporter_ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
                 .validateTransientVariables();
         }
     }
@@ -74,7 +74,7 @@ public class PRISMExporter_JANIPropertiesProcessor implements JANI2PRISMProcesso
 
         boolean usesTransient = false;
         for (RawProperty raw : properties.getRawProperties()) {
-            usesTransient |= ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
+            usesTransient |= PRISMExporter_ProcessorRegistrar.getProcessor(properties.getParsedProperty(raw))
                     .usesTransientVariables();
         }
 

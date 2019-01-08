@@ -21,14 +21,14 @@
 package epmc.operator;
 
 import epmc.expression.standard.ExpressionOperator;
-import epmc.prism.exporter.operatorprocessor.JANI2PRISMOperatorProcessorStrict;
-import epmc.prism.exporter.processor.ProcessorRegistrar;
+import epmc.prism.exporter.operatorprocessor.PRISMExporter_OperatorProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorRegistrar;
 
 /**
  * @author Andrea Turrini
  *
  */
-public class PRISMExporter_OperatorCeilProcessor implements JANI2PRISMOperatorProcessorStrict {
+public class PRISMExporter_OperatorCeilProcessor implements PRISMExporter_OperatorProcessorStrict {
 
     private ExpressionOperator expressionOperator = null;
     
@@ -36,7 +36,7 @@ public class PRISMExporter_OperatorCeilProcessor implements JANI2PRISMOperatorPr
      * @see epmc.prism.exporter.processor.JANI2PRISMOperatorProcessorStrict#setExpressionOperator(epmc.expression.standard.ExpressionOperator)
      */
     @Override
-    public JANI2PRISMOperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator) {
+    public PRISMExporter_OperatorProcessorStrict setExpressionOperator(ExpressionOperator expressionOperator) {
         assert expressionOperator != null;
         
         assert expressionOperator.getOperator().equals(OperatorCeil.CEIL);
@@ -55,7 +55,7 @@ public class PRISMExporter_OperatorCeilProcessor implements JANI2PRISMOperatorPr
         StringBuilder prism = new StringBuilder();
 
         prism.append("ceil(")
-            .append(ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            .append(PRISMExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toPRISM())
             .append(")");
         return prism.toString();

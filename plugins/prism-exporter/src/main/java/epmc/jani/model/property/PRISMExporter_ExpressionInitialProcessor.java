@@ -20,12 +20,12 @@
 
 package epmc.jani.model.property;
 
-import epmc.prism.exporter.processor.JANI2PRISMProcessorStrict;
+import epmc.prism.exporter.processor.PRISMExporter_ProcessorStrict;
 
-public class PRISMExporter_ExpressionInitialProcessor implements JANI2PRISMProcessorStrict {
+public class PRISMExporter_ExpressionInitialProcessor implements PRISMExporter_ProcessorStrict {
 
     @Override
-    public JANI2PRISMProcessorStrict setElement(Object obj) {
+    public PRISMExporter_ProcessorStrict setElement(Object obj) {
         assert obj != null;
         assert obj instanceof ExpressionInitial; 
         return this;

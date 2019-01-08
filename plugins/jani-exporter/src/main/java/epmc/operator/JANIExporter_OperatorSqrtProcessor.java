@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 /**
@@ -59,7 +59,7 @@ public class JANIExporter_OperatorSqrtProcessor implements OperatorProcessor {
 
         // sqrt(x) ==> pow(x,0.5)
         builder.add(OP, SQRT);
-        builder.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+        builder.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                 .toJSON());
         builder.add(RIGHT, 0.5);
         

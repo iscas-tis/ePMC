@@ -26,12 +26,12 @@ import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
 import epmc.jani.exporter.options.OptionsJANIExporter;
-import epmc.jani.exporter.processor.JANIProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_Processor;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.Action;
 import epmc.options.Options;
 
-public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JANIProcessor {
+public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JANIExporter_Processor {
     public static final String IDENTIFIER = "synchronisation-vectors";
     private static final String ELEMENTS = "elements";
     private static final String SYNCS = "syncs";
@@ -40,7 +40,7 @@ public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JA
     private ComponentSynchronisationVectors syncVectors = null;
 
     @Override
-    public JANIProcessor setElement(Object component) {
+    public JANIExporter_Processor setElement(Object component) {
         assert component != null;
         assert component instanceof ComponentSynchronisationVectors; 
 
@@ -56,7 +56,7 @@ public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JA
         
         JsonArrayBuilder elements = Json.createArrayBuilder();
         for (SynchronisationVectorElement element : syncVectors.getElements()) {
-            elements.add(ProcessorRegistrar.getProcessor(element)
+            elements.add(JANIExporter_ProcessorRegistrar.getProcessor(element)
                     .toJSON());
         }
         builder.add(ELEMENTS, elements);
@@ -65,7 +65,7 @@ public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JA
         JsonArrayBuilder syncs = Json.createArrayBuilder();
         for (SynchronisationVectorSync sync : syncVectors.getSyncs()) {
             if (hasToBeAdded(sync)) {
-                syncs.add(ProcessorRegistrar.getProcessor(sync)
+                syncs.add(JANIExporter_ProcessorRegistrar.getProcessor(sync)
                         .toJSON());
                 nsyncs++;
             }
@@ -86,13 +86,13 @@ public class JANIExporter_ComponentSynchronisationVectorsProcessor implements JA
         if (Options.get().getBoolean(OptionsJANIExporter.JANI_EXPORTER_SYNCHRONISE_SILENT)) {
             return true;
         } else {
-            if (ProcessorRegistrar.isSilentAction(sync.getResult())) {
+            if (JANIExporter_ProcessorRegistrar.isSilentAction(sync.getResult())) {
                 int nactions = 0;
                 boolean onlySilent = true;
                 for (Action action : sync.getSynchronise()) {
                     if (action != null) {
                         nactions++;
-                        onlySilent &= ProcessorRegistrar.isSilentAction(action);
+                        onlySilent &= JANIExporter_ProcessorRegistrar.isSilentAction(action);
                     }
                 }
                 assert nactions > 0;

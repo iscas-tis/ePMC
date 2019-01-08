@@ -26,7 +26,7 @@ import javax.json.JsonValue;
 
 import epmc.expression.standard.ExpressionOperator;
 import epmc.jani.exporter.operatorprocessor.OperatorProcessor;
-import epmc.jani.exporter.processor.ProcessorRegistrar;
+import epmc.jani.exporter.processor.JANIExporter_ProcessorRegistrar;
 import epmc.jani.model.UtilModelParser;
 
 /**
@@ -61,32 +61,32 @@ public class JANIExporter_OperatorIffProcessor implements OperatorProcessor {
         
         JsonObjectBuilder builder = Json.createObjectBuilder();
 
-        if (ProcessorRegistrar.useDerivedOperators()) {
+        if (JANIExporter_ProcessorRegistrar.useDerivedOperators()) {
             builder.add(OP, AND);
 
             JsonObjectBuilder builderImplies = Json.createObjectBuilder();
             builderImplies.add(OP, IMPLIES);
-            builderImplies.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderImplies.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
-            builderImplies.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builderImplies.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
             
             builder.add(LEFT, builderImplies.build());
 
             builderImplies = Json.createObjectBuilder();
             builderImplies.add(OP, IMPLIES);
-            builderImplies.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builderImplies.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
-            builderImplies.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderImplies.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
             
             builder.add(RIGHT, builderImplies.build());
         } else {
             JsonObjectBuilder builderOr = Json.createObjectBuilder();
             builderOr.add(OP, OR);
-            builderOr.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderOr.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
-            builderOr.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builderOr.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
             
             JsonObjectBuilder builderNot = Json.createObjectBuilder();
@@ -95,9 +95,9 @@ public class JANIExporter_OperatorIffProcessor implements OperatorProcessor {
             
             JsonObjectBuilder builderAnd = Json.createObjectBuilder();
             builderAnd.add(OP, AND);
-            builderAnd.add(LEFT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
+            builderAnd.add(LEFT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand1())
                     .toJSON());
-            builderAnd.add(RIGHT, ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
+            builderAnd.add(RIGHT, JANIExporter_ProcessorRegistrar.getProcessor(expressionOperator.getOperand2())
                     .toJSON());
 
             builder.add(OP, OR);
