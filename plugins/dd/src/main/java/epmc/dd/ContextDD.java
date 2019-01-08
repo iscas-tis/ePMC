@@ -306,6 +306,16 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
+    public DD applyBooleanWith(Operator operator, DD... operands) {
+        assert operator != null;
+        assert assertValidDDArray(operands);
+        DD result = applyBoolean(operator, operands);
+        for (DD op : operands) {
+            op.dispose();
+        }
+        return result;
+    }
+
     public DD apply(Operator identifier, DD... ops) {
         assert checkDD();
         assert alive();
@@ -371,6 +381,27 @@ public final class ContextDD implements Closeable {
             assert checkDD();
             return resultDD;
         }
+    }
+
+    public DD applyBoolean(Operator identifier, DD... ops) {
+        assert checkDD();
+        assert alive();
+        assert invalidateWalkersIfReorder();
+        assert identifier != null;
+        assert assertValidDDArray(ops);
+        assert ops.length > 0;
+        assert assertOperatorCompatible(identifier, ops);
+        totalTime.start();
+        long result;
+        long[] opsLong = new long[ops.length];
+        for (int opNr = 0; opNr < ops.length; opNr++) {
+            opsLong[opNr] = ops[opNr].uniqueId();
+        }
+        result = lowLevelBinary.apply(identifier, TypeBoolean.get(), opsLong);
+        DD resultDD = toDD(result, lowLevelBinary);
+        totalTime.stop();
+        assert checkDD();
+        return resultDD;
     }
 
     private boolean checkDD() {

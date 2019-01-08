@@ -112,16 +112,18 @@ public final class DD implements Cloneable {
             return false;
         }
         DD other = (DD) obj;
-        return libraryDD.equals(uniqueId, other.uniqueId());
+        return uniqueId == other.uniqueId;
+//        return libraryDD.equals(uniqueId, other.uniqueId());
     }
 
     @Override
     public final int hashCode() {
         assert alive() : alreadyDeadMessage();
-        return libraryDD.hashCode(uniqueId);
+        return Long.hashCode(uniqueId);
+//        return libraryDD.hashCode(uniqueId);
     }
 
-    long uniqueId() {
+    public long uniqueId() {
         return uniqueId;
     }
 
