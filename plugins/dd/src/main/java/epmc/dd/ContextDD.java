@@ -179,6 +179,7 @@ public final class ContextDD implements Closeable {
     private final RecursiveStopWatch totalTime = new RecursiveStopWatch();
     private final RecursiveStopWatch convertTime = new RecursiveStopWatch();
     private final Log log;
+    private final TypeBoolean typeBoolean = TypeBoolean.get();
 
     public ContextDD() {
         totalTime.start();
@@ -267,12 +268,11 @@ public final class ContextDD implements Closeable {
         return variable;
     }
 
-    public VariableDD newBoolean(String name, int copies)
-    {
+    public VariableDD newBoolean(String name, int copies) {
         assert name != null;
         assert copies > 0;
         totalTime.start();
-        VariableDD result = newVariable(name, TypeBoolean.get(), copies);
+        VariableDD result = newVariable(name, typeBoolean, copies);
         totalTime.stop();
         return result;
     }
@@ -402,7 +402,7 @@ public final class ContextDD implements Closeable {
         for (int opNr = 0; opNr < ops.length; opNr++) {
             opsLong[opNr] = ops[opNr].uniqueId();
         }
-        result = lowLevelBinary.apply(identifier, TypeBoolean.get(), opsLong);
+        result = lowLevelBinary.apply(identifier, typeBoolean, opsLong);
         DD resultDD = toDD(result, lowLevelBinary);
         totalTime.stop();
         assert checkDD();
@@ -551,7 +551,7 @@ public final class ContextDD implements Closeable {
     public final DD newConstant(boolean value) {
         assert alive();
         totalTime.start();
-        DD result = newConstant(TypeBoolean.get().newValue(value));
+        DD result = newConstant(typeBoolean.newValue(value));
         totalTime.stop();
         return result;
     }
@@ -1620,7 +1620,7 @@ public final class ContextDD implements Closeable {
         assert assertCube(cube);
         totalTime.start();
         TIntSet result = new TIntHashSet();
-        ValueBoolean cmp = TypeBoolean.get().newValue();
+        ValueBoolean cmp = typeBoolean.newValue();
         OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, dd.getType());
         if (dd.isLeaf()) {
             if (isZero != null) {
