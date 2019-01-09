@@ -199,12 +199,17 @@ public final class ContextDD implements Closeable {
         this.lowLevels.add(lowLevelBinary);
         this.llVariables.put(lowLevelBinary, new ArrayList<DD>());
         this.llVariables.put(lowLevelMulti, new ArrayList<DD>());
-        this.nodes.put(lowLevelMulti, new TCustomHashSet<DD>(new IdentityHashingStrategy<>()));
-        this.nodes.put(lowLevelBinary, new TCustomHashSet<DD>(new IdentityHashingStrategy<>()));
+        assert assertPutNodes();
         this.useAndExist = options.getBoolean(OptionsDD.DD_AND_EXIST);
         this.debugDD = options.getBoolean(OptionsDD.DD_DEBUG);
         this.genericApply = new GenericOperations(this);
         totalTime.stop();
+    }
+
+    private boolean assertPutNodes() {
+        this.nodes.put(lowLevelMulti, new TCustomHashSet<DD>(new IdentityHashingStrategy<>()));
+        this.nodes.put(lowLevelBinary, new TCustomHashSet<DD>(new IdentityHashingStrategy<>()));
+        return true;
     }
 
     public void setAllowReorder(boolean allowReorder) {
@@ -609,23 +614,10 @@ public final class ContextDD implements Closeable {
             var.dispose();
         }
         if (Options.get().getBoolean(OptionsDD.DD_LEAK_CHECK)) {
-            if (debugDD) {
-                for (Set<DD> set : nodes.values()) {
-                    for (DD dd : set) {
-                        assert !dd.internalAlive() : "DD not freed. Created at\n"
-                                + dd.buildCreateTraceString();
-                    }
-                }
-            } else {
-                for (Set<DD> set : nodes.values()) {
-                    assert set.isEmpty() : WRONG_USAGE_NO_DEBUG;
-                }
-            }
+            assert assertNodesLeakCheck();
         }
         List<DD> remaining = new ArrayList<>();
-        for (Set<DD> set : nodes.values()) {
-            remaining.addAll(set);
-        }
+        assert assertCleanupNodes(remaining);
         for (DD dd : remaining) {
             if (dd.internalAlive()) {
                 dd.dispose();
@@ -642,6 +634,29 @@ public final class ContextDD implements Closeable {
         log.send(MessagesDD.DD_TOTAL_TIME, totalTime.getTimeSeconds());
     }
 
+
+    private boolean assertCleanupNodes(List<DD> remaining) {
+        for (Set<DD> set : nodes.values()) {
+            remaining.addAll(set);
+        }
+        return true;
+    }
+
+    private boolean assertNodesLeakCheck() {
+        if (debugDD) {
+            for (Set<DD> set : nodes.values()) {
+                for (DD dd : set) {
+                    assert !dd.internalAlive() : "DD not freed. Created at\n"
+                            + dd.buildCreateTraceString();
+                }
+            }
+        } else {
+            for (Set<DD> set : nodes.values()) {
+                assert set.isEmpty() : WRONG_USAGE_NO_DEBUG;
+            }
+        }
+        return true;
+    }
 
     public boolean isLeaf(DD dd) {
         assert alive();
@@ -1143,10 +1158,15 @@ public final class ContextDD implements Closeable {
 
     private DD toDD(long uniqueId, LibraryDD lowLevel) {
         DD result = new DD(lowLevel, uniqueId);
-        nodes.get(lowLevel).add(result);
+        assert assertAddDDToNodes(lowLevel, result);
         return result;
     }
 
+    private boolean assertAddDDToNodes(LibraryDD lowLevel, DD result) {
+        nodes.get(lowLevel).add(result);
+        return true;
+    }
+    
     public DD findSat(DD dd, DD cube) {
         assert alive();
         assert assertValidDD(dd);
@@ -2048,9 +2068,14 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         LibraryDD lowLevel = dd.getLowLevel();
         lowLevel.free(dd.uniqueId());
-        nodes.get(lowLevel).remove(dd);
+        assert assertRemoveDDFromNodes(lowLevel, dd);
         assert checkDD();
         totalTime.stop();
+    }
+    
+    boolean assertRemoveDDFromNodes(LibraryDD lowLevel, DD dd) {
+        nodes.get(lowLevel).remove(dd);
+        return true;
     }
 
     public boolean isDebugDD() {
