@@ -75,8 +75,10 @@ import epmc.operator.OperatorOr;
 import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
+import epmc.util.BitSet;
 import epmc.util.RecursiveStopWatch;
 import epmc.util.Util;
+import epmc.util.UtilBitSet;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
@@ -1644,6 +1646,47 @@ public final class ContextDD implements Closeable {
                 if (map.containsKey(variableNr)) {
                     if (map.get(variableNr) != 0) {
                         result.add(variableNr);
+                    }
+                }
+                cubeWalker.high();
+            }
+            totalTime.stop();
+            return result;
+        }
+    }
+
+    public BitSet findSatBitSet(DD dd, DD cube) {
+        assert alive();
+        assert assertValidDD(dd);
+        assert assertValidDD(cube);
+        assert TypeBoolean.is(dd.getType());
+        assert assertCube(cube);
+        totalTime.start();
+        Walker cubeWalker = cube.walker();
+        BitSet result = UtilBitSet.newBitSetBounded(cubeSize(cubeWalker));
+        ValueBoolean cmp = typeBoolean.newValue();
+        OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, dd.getType());
+        if (dd.isLeaf()) {
+            if (isZero != null) {
+                isZero.apply(cmp, dd.value());
+            }
+            if (ValueAlgebra.is(dd.value()) && cmp.getBoolean()) {
+                totalTime.stop();
+                assert false;
+                return null;
+            } else {
+                totalTime.stop();
+                return result;
+            }
+        } else {
+            Walker ddWalker = dd.walker();
+            TLongByteMap map = new TLongByteHashMap();
+            findSat(ddWalker, map);
+            while (!cubeWalker.isLeaf()) {
+                int variableNr = cubeWalker.variable();
+                if (map.containsKey(variableNr)) {
+                    if (map.get(variableNr) != 0) {
+                        result.set(variableNr);
                     }
                 }
                 cubeWalker.high();
