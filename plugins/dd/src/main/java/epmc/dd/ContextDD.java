@@ -2176,7 +2176,15 @@ public final class ContextDD implements Closeable {
         assert invalidateWalkersIfReorder();
         totalTime.start();
         LibraryDD lowLevel = dd.getLowLevel();
-        DD result = toDD(lowLevel.clone(dd.uniqueId()), lowLevel);
+        boolean assertionsEnabled = false;
+        assert assertionsEnabled = true;
+        DD result;
+        if (assertionsEnabled) {
+            result = toDD(lowLevel.clone(dd.uniqueId()), lowLevel);            
+        } else {
+            lowLevel.clone(dd.uniqueId());
+            result = dd;
+        }
         totalTime.stop();
         assert checkDD();
         return result;

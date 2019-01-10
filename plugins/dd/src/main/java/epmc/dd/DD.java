@@ -145,7 +145,7 @@ public final class DD implements Cloneable {
     @Override
     public DD clone() {
         assert alive() : alreadyDeadMessage();
-        return libraryDD.getContextDD().cloneDD(this);
+        return context.cloneDD(this);
     }
 
     /**
