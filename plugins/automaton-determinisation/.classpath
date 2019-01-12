@@ -9,5 +9,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-expression-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
+	<classpathentry kind="lib" path="/epmc/lib/fastutil-8.2.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

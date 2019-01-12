@@ -1,15 +1,13 @@
 package epmc.param.value;
 
-import gnu.trove.map.hash.TCustomHashMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 import epmc.param.value.polynomial.TypePolynomial;
 import epmc.param.value.polynomial.ValuePolynomial;
 import epmc.util.HashingStrategyArrayInt;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
 
 import java.math.BigInteger;
 
@@ -116,7 +114,7 @@ public final class Term implements Comparable<Term>, Cloneable {
 			List<Term> terms) {
 		assert result != null;
 		assert terms != null;
-		Map<int[],Term> termsMap = new TCustomHashMap<>(HashingStrategyArrayInt.getInstance());
+		Object2ObjectOpenCustomHashMap<int[],Term> termsMap = new Object2ObjectOpenCustomHashMap<>(HashingStrategyArrayInt.getInstance());
 		for (Term term : terms) {
 			int[] exponents = term.getExponents();
 			if (termsMap.containsKey(exponents)) {

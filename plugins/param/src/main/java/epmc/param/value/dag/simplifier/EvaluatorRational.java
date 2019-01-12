@@ -9,7 +9,7 @@ import epmc.options.Options;
 import epmc.param.options.OptionsParam;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public final class EvaluatorRational implements Evaluator {
     public final static String IDENTIFIER = "rational";
@@ -76,7 +76,7 @@ public final class EvaluatorRational implements Evaluator {
     
     private final List<Rational> randomNumbersRational = new ArrayList<>();
     private final List<Rational> evalResultsListRational = new ArrayList<>();
-    private final TObjectIntHashMap<Rational> evalResultsMapRational = new TObjectIntHashMap<>(100, 0.5f, INVALID);
+    private final Object2IntOpenHashMap<Rational> evalResultsMapRational = new Object2IntOpenHashMap<>();
     private Rational lastValueRational;
 
     private final Random random = new Random();
@@ -88,13 +88,14 @@ public final class EvaluatorRational implements Evaluator {
         assert builder != null;
         assert builder.dag != null;
         this.dag = builder.dag;
+        evalResultsMapRational.defaultReturnValue(INVALID);
     }
     
     @Override
     public int evaluate(OperatorType type, int operandLeft, int operandRight) {
         Rational value = evaluateRational(type, operandLeft, operandRight);
         lastValueRational = value;
-        return evalResultsMapRational.get(value);
+        return evalResultsMapRational.getInt(value);
     }
 
     private Rational evaluateRational(OperatorType type, int operandLeft, int operandRight) {

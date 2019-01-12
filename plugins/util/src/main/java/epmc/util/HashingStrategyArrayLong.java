@@ -21,11 +21,12 @@
 package epmc.util;
 
 import java.util.Arrays;
-import gnu.trove.strategy.HashingStrategy;
+
+import it.unimi.dsi.fastutil.Hash;
 
 /**
- * Trove hashing strategy for long arrays.
- * This strategy is used to allow hashing arrays in Trove hash maps without
+ * Hashing strategy for long arrays.
+ * This strategy is used to allow hashing arrays in trove hash maps without
  * having to use a wrapper object for the arrays. The {@link Object#hashCode()}
  * and {@link Object#equals(Object)} methods of arrays the ones of
  * {@link Object}, which are based on object identity, not object content. This
@@ -34,23 +35,19 @@ import gnu.trove.strategy.HashingStrategy;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class HashingStrategyArrayLong implements HashingStrategy<long[]> {
-    /** 1L, as I don't know any better. */
-    private static final long serialVersionUID = 1L;
+public final class HashingStrategyArrayLong implements Hash.Strategy<long[]> {
     /** We only need a single instance of the hash strategy. */
     private static final HashingStrategyArrayLong INSTANCE
     = new HashingStrategyArrayLong();
 
     @Override
-    public int computeHashCode(long[] arg0) {
+    public int hashCode(long[] arg0) {
         assert arg0 != null;
         return Arrays.hashCode(arg0);
     }
 
     @Override
     public boolean equals(long[] arg0, long[] arg1) {
-        assert arg0 != null;
-        assert arg1 != null;
         return Arrays.equals(arg0, arg1);
     }
 

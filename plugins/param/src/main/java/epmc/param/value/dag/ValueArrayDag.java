@@ -4,7 +4,7 @@ import java.math.BigInteger;
 
 import epmc.value.Value;
 import epmc.value.ValueArrayAlgebra;
-import gnu.trove.set.hash.TIntHashSet;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 public final class ValueArrayDag implements ValueArrayAlgebra {
     public static boolean is(Value value) {
@@ -64,7 +64,7 @@ public final class ValueArrayDag implements ValueArrayAlgebra {
 
     @Override
     public String toString() {
-        int[] unique = new TIntHashSet(entries).toArray();
+        int[] unique = new IntOpenHashSet(entries).toIntArray();
         return type.getEntryType().getDag().toString(unique);
         /*
         StringBuffer builder = new StringBuffer();

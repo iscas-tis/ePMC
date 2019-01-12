@@ -109,8 +109,4 @@ public final class EnumeratePaths {
     private void terminalCase() {
         callback.call(callbackValues);
     }
-
-    private ContextDD getContextDD() {
-        return dd.getContext();
-    }
 }

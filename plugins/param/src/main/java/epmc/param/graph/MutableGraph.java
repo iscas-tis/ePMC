@@ -9,16 +9,15 @@ import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedIntArray;
 import epmc.util.BitSetUnboundedLongArray;
 import epmc.value.Type;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.stack.array.TIntArrayStack;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class MutableGraph implements GraphExplicit {
     private final static int UNDEFINED = -1;
     private BitSet initialNodes = new BitSetUnboundedLongArray();
     private int numNodes;
-    private final ArrayList<TIntArrayList> successors = new ArrayList<>();
-    private final ArrayList<TIntArrayList> predecessors = new ArrayList<>();
-    private final TIntArrayStack unusedNodes = new TIntArrayStack();
+    private final ArrayList<IntArrayList> successors = new ArrayList<>();
+    private final ArrayList<IntArrayList> predecessors = new ArrayList<>();
+    private final IntArrayList unusedNodes = new IntArrayList();
     private final BitSet usedNodes = new BitSetUnboundedIntArray();
     private final GraphExplicitProperties properties = new GraphExplicitProperties(this);
     private int totalNumTransitions;
@@ -33,10 +32,10 @@ public final class MutableGraph implements GraphExplicit {
         int node;
         if (unusedNodes.size() == 0) {
             node = successors.size();
-            successors.add(new TIntArrayList());
-            predecessors.add(new TIntArrayList());
+            successors.add(new IntArrayList());
+            predecessors.add(new IntArrayList());
         } else {
-            node = unusedNodes.pop();
+            node = unusedNodes.popInt();
         }
         usedNodes.set(node);
         numNodes++;
@@ -44,22 +43,22 @@ public final class MutableGraph implements GraphExplicit {
     }
     
     public void clearPredecessorList(int node) {
-        TIntArrayList nodePredecessors = predecessors.get(node);
-        nodePredecessors.resetQuick();
+        IntArrayList nodePredecessors = predecessors.get(node);
+        nodePredecessors.clear();
     }
 
     public void removeSuccessorNumber(int node, int succNr) {
-        TIntArrayList nodeSuccessors = successors.get(node);
-        int lastEntry = nodeSuccessors.get(nodeSuccessors.size() - 1);
+        IntArrayList nodeSuccessors = successors.get(node);
+        int lastEntry = nodeSuccessors.getInt(nodeSuccessors.size() - 1);
         if (removeShift) {
-            nodeSuccessors.removeAt(succNr);
+            nodeSuccessors.removeInt(succNr);
 //            System.out.println("> " + succNr + " " + nodeSuccessors);
 //            for (int i = succNr; i < nodeSuccessors.size() - 1; i++) {
   //              nodeSuccessors.setQuick(i, nodeSuccessors.getQuick(i+1));
     //        }
         } else {
-            nodeSuccessors.setQuick(succNr, lastEntry);
-            nodeSuccessors.removeAt(nodeSuccessors.size() - 1);
+            nodeSuccessors.set(succNr, lastEntry);
+            nodeSuccessors.removeInt(nodeSuccessors.size() - 1);
 //        System.out.println("< " + succNr + " " + nodeSuccessors);
         }
         totalNumTransitions--;
@@ -100,7 +99,7 @@ public final class MutableGraph implements GraphExplicit {
     
     @Override
     public int getSuccessorNode(int node, int successor) {
-        int result = successors.get(node).getQuick(successor);
+        int result = successors.get(node).getInt(successor);
         if (result == UNDEFINED) {
             result = node;
         }
@@ -108,7 +107,7 @@ public final class MutableGraph implements GraphExplicit {
     }
 
     public int getPredecessorNode(int node, int predNr) {
-        int result = predecessors.get(node).getQuick(predNr);
+        int result = predecessors.get(node).getInt(predNr);
         if (result == UNDEFINED) {
             result = node;
         }
@@ -117,7 +116,7 @@ public final class MutableGraph implements GraphExplicit {
 
     @Override
     public void setSuccessorNode(int node, int succNr, int succNode) {
-        successors.get(node).setQuick(succNr, succNode);
+        successors.get(node).set(succNr, succNode);
         predecessors.get(succNode).add(node);
     }
     
@@ -136,9 +135,9 @@ public final class MutableGraph implements GraphExplicit {
     }
 
     public void addSuccessor(int node, int successor) {
-        TIntArrayList nodeSuccessors = successors.get(node);
+        IntArrayList nodeSuccessors = successors.get(node);
         nodeSuccessors.add(successor);
-        TIntArrayList nodePredecessors = predecessors.get(successor);
+        IntArrayList nodePredecessors = predecessors.get(successor);
         nodePredecessors.add(node);
         totalNumTransitions++;
     }
@@ -166,21 +165,21 @@ public final class MutableGraph implements GraphExplicit {
     }
 
     public void clearSuccessors(int node) {
-        TIntArrayList nodeSuccessors = successors.get(node);
+        IntArrayList nodeSuccessors = successors.get(node);
         for (int succNr = 0; succNr < nodeSuccessors.size(); succNr++) {
-            int succ = nodeSuccessors.get(succNr);
-            TIntArrayList succPredecessors = predecessors.get(succ);
+            int succ = nodeSuccessors.getInt(succNr);
+            IntArrayList succPredecessors = predecessors.get(succ);
             for (int succPredNr = 0; succPredNr < succPredecessors.size(); succPredNr++) {
-                int succPred = succPredecessors.get(succPredNr);
+                int succPred = succPredecessors.getInt(succPredNr);
                 if (succPred == node) {
-                    succPredecessors.setQuick(succPredNr, succPredecessors.get(succPredecessors.size() - 1));
-                    succPredecessors.removeAt(succPredecessors.size() - 1);
+                    succPredecessors.set(succPredNr, succPredecessors.getInt(succPredecessors.size() - 1));
+                    succPredecessors.removeInt(succPredecessors.size() - 1);
                     break;
                 }
             }
         }
         totalNumTransitions -= nodeSuccessors.size();
-        nodeSuccessors.reset();
+        nodeSuccessors.clear();
     }
     
     boolean isRemoveShift() {

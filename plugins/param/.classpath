@@ -9,8 +9,11 @@
 	<classpathentry excluding="*" kind="src" path="src/main/c/cancellator-ginac"/>
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="lib/log4j.jar"/>
 	<classpathentry kind="lib" path="/epmc/lib/jna-4.2.2.jar"/>
@@ -30,5 +33,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-algorithm"/>
 	<classpathentry kind="lib" path="/epmc/lib/javax.json-1.0.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-interaction"/>
+	<classpathentry kind="lib" path="/epmc/lib/fastutil-8.2.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

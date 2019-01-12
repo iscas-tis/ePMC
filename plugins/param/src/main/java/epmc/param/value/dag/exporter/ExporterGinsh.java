@@ -6,7 +6,7 @@ import java.math.BigInteger;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
 import epmc.param.value.dag.microcode.Microcode;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ExporterGinsh implements DagExporter {
     /* Note: Do not use String.format() or Formatter, because performance is
@@ -17,7 +17,7 @@ public final class ExporterGinsh implements DagExporter {
     
     public final static class Builder implements DagExporter.Builder {
         private Dag dag;
-        private TIntArrayList nodes = new TIntArrayList();
+        private IntArrayList nodes = new IntArrayList();
 
         @Override
         public Builder setDag(Dag dag) {
@@ -43,7 +43,7 @@ public final class ExporterGinsh implements DagExporter {
     private ExporterGinsh(Builder builder) {
         assert builder != null;
         assert builder.dag != null;
-        microcode = new Microcode(builder.dag, builder.nodes.toArray());
+        microcode = new Microcode(builder.dag, builder.nodes.toIntArray());
     }
 
     @Override

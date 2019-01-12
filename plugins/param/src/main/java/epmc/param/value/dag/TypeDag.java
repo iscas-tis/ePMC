@@ -9,7 +9,7 @@ import epmc.param.value.TypeFunction;
 import epmc.param.value.TypeStatistics;
 import epmc.value.ContextValue;
 import epmc.value.Type;
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 public final class TypeDag implements TypeFunction, TypeStatistics {
     public final static String IDENTIFIER = "dag";
@@ -32,7 +32,7 @@ public final class TypeDag implements TypeFunction, TypeStatistics {
 
     private final ParameterSet parametersSet;
     private final boolean useReferenceCounting = false;
-    private final THashSet<PhantomReference<ValueDag>> references;
+    private final ObjectOpenHashSet<PhantomReference<ValueDag>> references;
     private final ReferenceQueue<ValueDag> queue;
     private final Dag dag;
 
@@ -51,7 +51,7 @@ public final class TypeDag implements TypeFunction, TypeStatistics {
         assert parameterSet != null;
         this.parametersSet = parameterSet;
         if (useReferenceCounting) {
-            references = new THashSet<>();
+            references = new ObjectOpenHashSet<>();
             queue = new ReferenceQueue<>();
         } else {
             references = null;

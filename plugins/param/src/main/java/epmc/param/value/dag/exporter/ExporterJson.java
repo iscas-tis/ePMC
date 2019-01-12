@@ -16,14 +16,14 @@ import com.google.common.io.CharStreams;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
 import epmc.param.value.dag.UtilDag;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ExporterJson implements DagExporter {
     public final static String IDENTIFIER = "json";
 
     public final static class Builder implements DagExporter.Builder {
         private Dag dag;
-        private final TIntArrayList nodes = new TIntArrayList();
+        private final IntArrayList nodes = new IntArrayList();
 
         @Override
         public Builder setDag(Dag dag) {
@@ -79,7 +79,7 @@ public final class ExporterJson implements DagExporter {
         assert builder != null;
         assert builder.dag != null;
         dag = builder.dag;
-        start = builder.nodes.toArray();
+        start = builder.nodes.toIntArray();
     }
 
     @Override
@@ -93,7 +93,7 @@ public final class ExporterJson implements DagExporter {
         writeType(generator);
         writeParameters(generator);
         int[] depending = UtilDag.findDepending(dag, start);
-        TIntArrayList remappedIndex = remapIndex(depending);
+        IntArrayList remappedIndex = remapIndex(depending);
         generator.write(NUM_NODES, depending.length);
         appendNodes(generator, depending, remappedIndex);
         appendFunctions(generator, start, remappedIndex);
@@ -115,18 +115,18 @@ public final class ExporterJson implements DagExporter {
         generator.write(TYPE, DAG);
     }
 
-    private void appendFunctions(JsonGenerator generator, int[] start, TIntArrayList remappedIndex) {
+    private void appendFunctions(JsonGenerator generator, int[] start, IntArrayList remappedIndex) {
         assert generator != null;
         assert start != null;
         generator.writeStartArray(FUNCTIONS);
         for (int function : start) {
-            generator.write(remappedIndex.get(function));
+            generator.write(remappedIndex.getInt(function));
         }
         generator.writeEnd();
     }
 
-    private TIntArrayList remapIndex(int[] depending) {
-        TIntArrayList result = new TIntArrayList();
+    private IntArrayList remapIndex(int[] depending) {
+        IntArrayList result = new IntArrayList();
         for (int index = 0; index < depending.length; index++) {
             while (result.size() <= depending[index]) {
                 result.add(-1);
@@ -136,7 +136,7 @@ public final class ExporterJson implements DagExporter {
         return result;
     }
 
-    private void appendNodes(JsonGenerator generator, int[] depending, TIntArrayList remappedIndex) throws IOException {
+    private void appendNodes(JsonGenerator generator, int[] depending, IntArrayList remappedIndex) throws IOException {
         assert generator != null;
         generator.writeStartArray(DAG);
         for (int index = 0; index < depending.length; index++) {
@@ -155,17 +155,17 @@ public final class ExporterJson implements DagExporter {
             case ADD_INVERSE:
             case MULTIPLY_INVERSE: {
                 int operandNode = dag.getOperand(number);
-                int operand = remappedIndex.get(operandNode);
+                int operand = remappedIndex.getInt(operandNode);
                 generator.write(OPERAND, operand);
                 break;
             }
             case ADD:
             case MULTIPLY: {
                 int operandLeftNode = dag.getOperandLeft(number);
-                int operandLeft = remappedIndex.get(operandLeftNode);
+                int operandLeft = remappedIndex.getInt(operandLeftNode);
                 generator.write(OPERAND_LEFT, operandLeft);
                 int operandRightNode = dag.getOperandRight(number);
-                int operandRight = remappedIndex.get(operandRightNode);
+                int operandRight = remappedIndex.getInt(operandRightNode);
                 generator.write(OPERAND_RIGHT, operandRight);
                 break;
             }

@@ -22,11 +22,11 @@ package epmc.util;
 
 import java.util.Arrays;
 
-import gnu.trove.strategy.HashingStrategy;
+import it.unimi.dsi.fastutil.Hash;
 
 /**
- * Trove hashing strategy for integer arrays.
- * This strategy is used to allow hashing arrays in Trove hash maps without
+ * Hashing strategy for integer arrays.
+ * This strategy is used to allow hashing arrays in fastutil hash maps without
  * having to use a wrapper object for the arrays. The {@link Object#hashCode()}
  * and {@link Object#equals(Object)} methods of arrays the ones of
  * {@link Object}, which are based on object identity, not object content. This
@@ -35,23 +35,19 @@ import gnu.trove.strategy.HashingStrategy;
  * 
  * @author Ernst Moritz Hahn
  */
-public final class HashingStrategyArrayInt implements HashingStrategy<int[]> {
-    /** 1L, as I don't know any better. */
-    private static final long serialVersionUID = 1L;
+public final class HashingStrategyArrayInt implements Hash.Strategy<int[]> {
     /** We only need a single instance of the hash strategy. */
     private static final HashingStrategyArrayInt INSTANCE
     = new HashingStrategyArrayInt();
 
     @Override
-    public int computeHashCode(int[] arg0) {
+    public int hashCode(int[] arg0) {
         assert arg0 != null;
         return Arrays.hashCode(arg0);
     }
 
     @Override
     public boolean equals(int[] arg0, int[] arg1) {
-        assert arg0 != null;
-        assert arg1 != null;
         return Arrays.equals(arg0, arg1);
     }
 

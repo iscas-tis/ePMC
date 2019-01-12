@@ -3,20 +3,24 @@ package epmc.param.value.dag;
 import java.math.BigInteger;
 import java.util.ArrayList;
 
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 final class NumberStore {
     private final static int INVALID = -1;
     
     private final ArrayList<BigInteger> numbersList = new ArrayList<>();
-    private final TObjectIntHashMap<BigInteger> numbersMap = new TObjectIntHashMap<>(100, 0.5f, INVALID);
+    private final Object2IntOpenHashMap<BigInteger> numbersMap = new Object2IntOpenHashMap<>();
 
+    NumberStore() {
+        numbersMap.defaultReturnValue(INVALID);
+    }
+    
     BigInteger getNumber(int number) {
         return numbersList.get(number);
     }
 
     public int getIndex(BigInteger value) {
-        int result = numbersMap.get(value);
+        int result = numbersMap.getInt(value);
         if (result != INVALID) {
             return result;
         }

@@ -5,9 +5,8 @@ import epmc.graph.explicit.EdgeProperty;
 import epmc.param.graph.MutableGraph;
 import epmc.util.BitSet;
 import epmc.util.BitSetBoundedLongArray;
-import gnu.trove.iterator.TLongObjectIterator;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.hash.TLongObjectHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 public final class EliminationOrderSameStructure implements EliminationOrder {
     public final static class Builder implements EliminationOrder.Builder {
@@ -35,7 +34,7 @@ public final class EliminationOrderSameStructure implements EliminationOrder {
     private final MutableGraph graph;
     private final int numNodes;
     private int nextNode;
-    private final TIntArrayList stateList = new TIntArrayList();
+    private final IntArrayList stateList = new IntArrayList();
     private int stateEntry;
     private int[] todo;
     
@@ -63,7 +62,7 @@ public final class EliminationOrderSameStructure implements EliminationOrder {
             stateEntry = 0;
         }
         nextNode++;
-        int result = stateList.get(stateEntry);
+        int result = stateList.getInt(stateEntry);
         stateEntry++;
         return result;
     }
@@ -71,7 +70,7 @@ public final class EliminationOrderSameStructure implements EliminationOrder {
     private void createOrder() {
         // TODO currently only approximate
         stateList.clear();
-        TLongObjectHashMap<TIntArrayList> map = new TLongObjectHashMap<>();
+        Long2ObjectOpenHashMap<IntArrayList> map = new Long2ObjectOpenHashMap<>();
         EdgeProperty weights = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int nodeNr = 0; nodeNr < todo.length; nodeNr++) {
             int node = todo[nodeNr];
@@ -89,29 +88,29 @@ public final class EliminationOrderSameStructure implements EliminationOrder {
                 hash = hash(hash, weights.get(predNode, predSuccNr).hashCode());
             }
             // TODO take reward into account
-            TIntArrayList array = map.get(hash);
+            IntArrayList array = map.get(hash);
             if (array == null) {
-                array = new TIntArrayList();
+                array = new IntArrayList();
                 map.put(hash, array);
             }
             array.add(node);
         }
-        TIntArrayList maxArg = null;
-        int max = -1;
-        TLongObjectIterator<TIntArrayList> it = map.iterator();
-        while (it.hasNext()) {
-            it.advance();
-            TIntArrayList array = it.value();
-            if (array.size() >= max) {
-                maxArg = array;
-                max = array.size();
-            }
-        }
+        IntArrayList[] maxArg = new IntArrayList[1];
+        
+        int[] max = new int[1];
+        max[0] = -1;
+        
+        map.forEach((a, array) -> {
+            if (array.size() >= max[0]) {
+                maxArg[0] = array;
+                max[0] = array.size();
+            } 
+        });
 //        System.out.println("MM  " + max);
         BitSet chosenOrMarked = new BitSetBoundedLongArray(numNodes);
         BitSet chosen = new BitSetBoundedLongArray(numNodes);
-        for (int entryNr = 0; entryNr < maxArg.size(); entryNr++) {
-            int node = maxArg.get(entryNr);
+        for (int entryNr = 0; entryNr < maxArg[0].size(); entryNr++) {
+            int node = maxArg[0].getInt(entryNr);
             if (chosenOrMarked.get(node)) {
                 continue;
             }

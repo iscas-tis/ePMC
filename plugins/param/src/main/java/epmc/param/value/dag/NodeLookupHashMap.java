@@ -3,7 +3,7 @@ package epmc.param.value.dag;
 import com.google.common.hash.BloomFilter;
 import com.google.common.hash.Funnels;
 
-import gnu.trove.map.hash.TLongIntHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
 public final class NodeLookupHashMap implements NodeLookup {
     public final static String IDENTIFIER = "hash";
@@ -29,15 +29,14 @@ public final class NodeLookupHashMap implements NodeLookup {
     // TODO try out BDDs for filtering, though unlikely it works nicely
     // TODO add program options for following stuff
     private final static int INVALID = -1;
-    private final static long INVALID_LONG = -1L;
     private final boolean unify = true;
     private final boolean useHashMap = true;
     private final boolean useBloomFilter = false;
     private final int bloomExpectedInsertions = 1000000;
     private final double bloomError = 0.001;
 
-    private final TLongIntHashMap entriesMap;
-    private final TLongIntHashMap specialMap;
+    private final Long2IntOpenHashMap entriesMap;
+    private final Long2IntOpenHashMap specialMap;
     private final BloomFilter<Long> bloomFilter;
     private final NodeStore nodeStore;
 
@@ -48,11 +47,13 @@ public final class NodeLookupHashMap implements NodeLookup {
         assert nodeStore != null;
         this.nodeStore = nodeStore;
         if (useHashMap) {
-            entriesMap = new TLongIntHashMap(100, 0.5f, INVALID_LONG, INVALID);
+            entriesMap = new Long2IntOpenHashMap();
+            entriesMap.defaultReturnValue(INVALID);
             specialMap = null;
         } else {
             entriesMap = null;
-            specialMap = new TLongIntHashMap(100, 0.5f, INVALID_LONG, INVALID);
+            specialMap = new Long2IntOpenHashMap();
+            specialMap.defaultReturnValue(INVALID);
         }
         if (useBloomFilter) {
             bloomFilter = BloomFilter.create(Funnels.longFunnel(), bloomExpectedInsertions, bloomError);

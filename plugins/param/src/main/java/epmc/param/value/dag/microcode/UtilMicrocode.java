@@ -16,10 +16,8 @@ import epmc.param.value.rational.ValueRational;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedIntArray;
 import epmc.value.UtilValue;
-import gnu.trove.list.array.TDoubleArrayList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class UtilMicrocode {
     public final static int OP_PARAMETER = 0;
@@ -43,7 +41,7 @@ public final class UtilMicrocode {
     public static int[] microcodeToInteger(Microcode microcode) {
         assert microcode != null;
         int[] program = new int[microcode.getNumStatements() * 4];
-        TDoubleArrayList numbersList = new TDoubleArrayList();
+        DoubleArrayList numbersList = new DoubleArrayList();
         for (int index = 0; index < microcode.getNumStatements(); index++) {
             program[index * 4] = OPERATOR_TYPE_TO_NUMBER.get(microcode.getOperator(index));
             program[index * 4 + 1] = microcode.getAssignedTo(index);
@@ -76,7 +74,7 @@ public final class UtilMicrocode {
 
     public static double[] microcodeToNumbersListDouble(Microcode microcode) {
         assert microcode != null;
-        TDoubleArrayList numbersList = new TDoubleArrayList();
+        DoubleArrayList numbersList = new DoubleArrayList();
         for (int index = 0; index < microcode.getNumStatements(); index++) {
             switch (microcode.getOperator(index)) {
             case NUMBER:
@@ -88,12 +86,12 @@ public final class UtilMicrocode {
                 break;            
             }
         }
-        return numbersList.toArray();
+        return numbersList.toDoubleArray();
     }
 
     public static double[] microcodeToNumbersListDoubleInterval(Microcode microcode) {
         assert microcode != null;
-        TDoubleArrayList numbersList = new TDoubleArrayList();
+        DoubleArrayList numbersList = new DoubleArrayList();
         for (int index = 0; index < microcode.getNumStatements(); index++) {
             switch (microcode.getOperator(index)) {
             case NUMBER:
@@ -106,7 +104,7 @@ public final class UtilMicrocode {
                 break;            
             }
         }
-        return numbersList.toArray();
+        return numbersList.toDoubleArray();
     }
 
     public static ValueArrayRational microcodeToNumbersListRational(Microcode microcode) {
@@ -162,19 +160,19 @@ public final class UtilMicrocode {
         for (int node : start) {
             lastRead[nodeToIndex[node]] = lastRead.length;
         }
-        TIntArrayList[] readingDone = UtilMicrocode.prepareReadingDone(lastRead);
+        IntArrayList[] readingDone = UtilMicrocode.prepareReadingDone(lastRead);
         int numVariables = UtilMicrocode.countRequiredVariables(readingDone);
         int[] assignment = new int[relevant.length];
         Arrays.fill(assignment, -1);
-        TIntStack available = new TIntArrayStack();
+        IntArrayList available = new IntArrayList();
         for (int variable = 0; variable < numVariables; variable++) {
             available.push(numVariables - variable - 1);
         }
         BitSet variablesAssigned = new BitSetUnboundedIntArray();
         for (int index = 0; index < readingDone.length; index++) {
-            TIntArrayList nowDoneList = readingDone[index];
+            IntArrayList nowDoneList = readingDone[index];
             for (int j = 0; j < nowDoneList.size(); j++) {
-                int nowDone = nowDoneList.get(j);
+                int nowDone = nowDoneList.getInt(j);
                 int variableDone = assignment[nowDone];
                 assert variableDone >= 0 : variableDone;
                 assert variablesAssigned.get(variableDone) : index;
@@ -182,7 +180,7 @@ public final class UtilMicrocode {
                 variablesAssigned.clear(variableDone);
                 available.push(variableDone);
             }
-            int assignedVariable = available.pop();
+            int assignedVariable = available.popInt();
             assert !variablesAssigned.get(assignedVariable) : index;
             variablesAssigned.set(assignedVariable);
             assignment[index] = assignedVariable;
@@ -190,7 +188,7 @@ public final class UtilMicrocode {
         return new VariableAssignment(numVariables, assignment, nodeToIndex);
     }
 
-    private static int countRequiredVariables(TIntArrayList[] readingDone) {
+    private static int countRequiredVariables(IntArrayList[] readingDone) {
         int numActive = 0;
         int maxActive = 0;
         for (int index = 0; index < readingDone.length; index++) {
@@ -246,23 +244,23 @@ public final class UtilMicrocode {
         return lastRead;
     }
 
-    private static TIntArrayList[] prepareReadingDone(int[] lastRead) {
-        TIntArrayList[] whenDone = new TIntArrayList[lastRead.length];
+    private static IntArrayList[] prepareReadingDone(int[] lastRead) {
+        IntArrayList[] whenDone = new IntArrayList[lastRead.length];
         for (int index = 0; index < lastRead.length; index++) {
             int whenLastRead = lastRead[index];
             if (whenLastRead >= whenDone.length) {
                 continue;
             }
-            TIntArrayList list = whenDone[whenLastRead];
+            IntArrayList list = whenDone[whenLastRead];
             if (list == null) {
-                list = new TIntArrayList();
+                list = new IntArrayList();
                 whenDone[whenLastRead] = list;
             }
             list.add(index);
         }
         for (int index = 0; index < whenDone.length; index++) {
             if (whenDone[index] == null) {
-                whenDone[index] = new TIntArrayList();
+                whenDone[index] = new IntArrayList();
             }
         }
         return whenDone;

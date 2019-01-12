@@ -7,7 +7,7 @@ import epmc.param.value.ParameterSet;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
 import epmc.param.value.dag.microcode.Microcode;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Exports DAG into a C program.
@@ -30,7 +30,7 @@ public final class ExporterC implements DagExporter {
     
     public final static class Builder implements DagExporter.Builder {
         private Dag dag;
-        private TIntArrayList nodes = new TIntArrayList();
+        private IntArrayList nodes = new IntArrayList();
 
         @Override
         public Builder setDag(Dag dag) {
@@ -55,7 +55,7 @@ public final class ExporterC implements DagExporter {
     private ExporterC(Builder builder) {
         assert builder != null;
         assert builder.dag != null;
-        microcode = new Microcode(builder.dag, builder.nodes.toArray());
+        microcode = new Microcode(builder.dag, builder.nodes.toIntArray());
     }
 
     @Override

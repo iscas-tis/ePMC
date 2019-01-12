@@ -4,22 +4,20 @@ import java.math.BigInteger;
 
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class UtilDag {
     // http://sergebg.blogspot.co.uk/2014/11/non-recursive-dfs-topological-sort.html
     public static int[] findDepending(Dag dag, int number) {
         assert dag != null;
         assert number >= 0;
-        TIntArrayList result = new TIntArrayList();
+        IntArrayList result = new IntArrayList();
         BitSet visited = new BitSetUnboundedLongArray();
-        TIntStack todo = new TIntArrayStack();
+        IntArrayList todo = new IntArrayList();
         todo.push(number);
         visited.set(number);
         while (todo.size() > 0) {
-            int next = todo.pop();
+            int next = todo.popInt();
             if (next >= 0) {
                 todo.push(-next - 1);
                 OperatorType type = dag.getOperatorType(next);
@@ -73,15 +71,15 @@ public final class UtilDag {
                 result.add(-next - 1);
             }
         }
-        return result.toArray();
+        return result.toIntArray();
     }
 
     public static int[] findDepending(Dag dag, int[] numbers) {
         assert dag != null;
         assert numbers != null;
-        TIntArrayList result = new TIntArrayList();
+        IntArrayList result = new IntArrayList();
         BitSet visited = new BitSetUnboundedLongArray();
-        TIntStack todo = new TIntArrayStack();
+        IntArrayList todo = new IntArrayList();
         for (int number : numbers) {
             if (visited.get(number)) {
                 continue;
@@ -89,7 +87,7 @@ public final class UtilDag {
             todo.push(number);
             visited.set(number);
             while (todo.size() > 0) {
-                int next = todo.pop();
+                int next = todo.popInt();
                 if (next >= 0) {
                     todo.push(-next - 1);
                     OperatorType type = dag.getOperatorType(next);
@@ -144,7 +142,7 @@ public final class UtilDag {
                 }
             }
         }
-        return result.toArray();
+        return result.toIntArray();
     }
 
     public static ValueDag derive(ValueDag dag, String parameter) {

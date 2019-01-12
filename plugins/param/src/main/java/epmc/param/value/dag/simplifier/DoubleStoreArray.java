@@ -1,6 +1,6 @@
 package epmc.param.value.dag.simplifier;
 
-import gnu.trove.list.array.TDoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 public final class DoubleStoreArray implements DoubleStore {
     public final static String IDENTIFIER = "array";
@@ -14,7 +14,7 @@ public final class DoubleStoreArray implements DoubleStore {
         
     }
 
-    private final TDoubleArrayList evalResultsListDouble = new TDoubleArrayList();
+    private final DoubleArrayList evalResultsListDouble = new DoubleArrayList();
     
     private DoubleStoreArray(Builder builder) {
         assert builder != null;
@@ -32,6 +32,6 @@ public final class DoubleStoreArray implements DoubleStore {
 
     @Override
     public double get(int index) {
-        return evalResultsListDouble.get(index);
+        return evalResultsListDouble.getDouble(index);
     }
 }

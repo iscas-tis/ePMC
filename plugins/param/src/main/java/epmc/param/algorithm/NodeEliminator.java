@@ -18,8 +18,8 @@ import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.hash.TIntIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class NodeEliminator {
     public enum WeighterMethod {
@@ -53,10 +53,10 @@ public final class NodeEliminator {
     }
     
     private final MutableGraph graph;
-    private final TIntArrayList predecessors = new TIntArrayList();
+    private final IntArrayList predecessors = new IntArrayList();
     private final ValueArrayAlgebra predToNodeProbs;
     private final ValueAlgebra predToNodeProb;
-    private final TIntIntHashMap predSuccToNumber = new TIntIntHashMap();
+    private final Int2IntOpenHashMap predSuccToNumber = new Int2IntOpenHashMap();
     private final MutableEdgeProperty probabilities;
     private final ValueAlgebra one;
     private final ValueAlgebra divideBy;
@@ -169,7 +169,7 @@ public final class NodeEliminator {
     }
 
     private void collectPredecessorData(int node) {
-        predecessors.resetQuick();
+        predecessors.clear();
         predToNodeProbs.setSize(graph.getNumPredecessors(node));
         int usedPredNr = 0;
         for (int predNr = 0; predNr < graph.getNumPredecessors(node); predNr++) {
@@ -187,7 +187,7 @@ public final class NodeEliminator {
 
     private void modifyPredecessors(int node) {
         for (int predNr = 0; predNr < predecessors.size(); predNr++) {
-            int pred = predecessors.get(predNr);
+            int pred = predecessors.getInt(predNr);
             int predToNodeSuccNr = graph.getSuccessorNumber(pred, node);
             predToNodeProbs.get(predToNodeProb, predNr);
             prepareSuccToNumber(node, pred);
@@ -195,7 +195,7 @@ public final class NodeEliminator {
                 int succ = graph.getSuccessorNode(node, nodeSuccNr);
                 Value nodeToSuccProb = probabilities.get(node, nodeSuccNr);
                 multiplyWeight.apply(predToSuccProb, nodeToSuccProb, predToNodeProb);
-                if (predSuccToNumber.contains(succ)) {
+                if (predSuccToNumber.containsKey(succ)) {
                     int succNr = predSuccToNumber.get(succ);
                     setWeight.apply(oldProb, probabilities.get(pred, succNr));
                     addWeight.apply(newProb, predToSuccProb, oldProb);

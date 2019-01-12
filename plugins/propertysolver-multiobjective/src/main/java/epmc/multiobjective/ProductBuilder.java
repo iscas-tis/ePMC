@@ -22,6 +22,7 @@ package epmc.multiobjective;
 
 import java.util.ArrayList;
 import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -70,7 +71,6 @@ import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import gnu.trove.map.hash.THashMap;
 
 final class ProductBuilder {
     private AutomatonProduct automatonProduct;
@@ -270,8 +270,8 @@ final class ProductBuilder {
 
     private Map<BitSet,BitSet> computeCombinations(GraphBuilderExplicit builder) {
         computeStableAccepting(builder.getInputGraph());
-        Map<BitSet,BitSet> todoMap = new THashMap<>();
-        Map<BitSet,BitSet> resultMap = new THashMap<>();
+        Map<BitSet,BitSet> todoMap = new HashMap<>();
+        Map<BitSet,BitSet> resultMap = new HashMap<>();
 
         Deque<BitSet> todo = new LinkedList<>();
         BitSet initBitSet = UtilBitSet.newBitSetUnbounded();

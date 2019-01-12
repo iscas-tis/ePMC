@@ -2,7 +2,7 @@ package epmc.param.value.dag;
 
 import java.util.Arrays;
 
-import gnu.trove.map.hash.TLongIntHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
 public final class NodeLookupBoundedHashMap implements NodeLookup {
     public final static String IDENTIFIER = "bounded-hashmap";
@@ -22,17 +22,17 @@ public final class NodeLookupBoundedHashMap implements NodeLookup {
     }
 
     private final static int INVALID = -1;
-    private final static long INVALID_LONG = -1L;
     private final int lookback = 4096 * 2;
     private final long[] ring;
     private int ringIndex = 0;
-    private final TLongIntHashMap evalResultsMapLongHash;
+    private final Long2IntOpenHashMap evalResultsMapLongHash;
 
     private NodeLookupBoundedHashMap(Builder builder) {
         assert builder != null;
         ring = new long[lookback];
         Arrays.fill(ring, -1L);
-        evalResultsMapLongHash = new TLongIntHashMap(100, 0.5f, INVALID_LONG, INVALID);
+        evalResultsMapLongHash = new Long2IntOpenHashMap();
+        evalResultsMapLongHash.defaultReturnValue(INVALID);
     }
 
     @Override

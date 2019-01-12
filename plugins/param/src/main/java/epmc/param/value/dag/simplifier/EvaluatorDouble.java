@@ -8,7 +8,7 @@ import epmc.options.UtilOptions;
 import epmc.param.options.OptionsParam;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
-import gnu.trove.list.array.TDoubleArrayList;
+import it.unimi.dsi.fastutil.doubles.DoubleArrayList;
 
 public final class EvaluatorDouble implements Evaluator {
     public final static String IDENTIFIER = "double";
@@ -30,7 +30,7 @@ public final class EvaluatorDouble implements Evaluator {
         
     }
     
-    private final TDoubleArrayList randomNumbersDouble = new TDoubleArrayList();
+    private final DoubleArrayList randomNumbersDouble = new DoubleArrayList();
     private final DoubleStore store;
     private final DoubleLookup lookup;
     private double lastValueDouble;
@@ -100,7 +100,7 @@ public final class EvaluatorDouble implements Evaluator {
     }
 
     private double evaluateDoubleParameter(int operandLeft, int operandRight) {
-        return randomNumbersDouble.get(operandLeft);
+        return randomNumbersDouble.getDouble(operandLeft);
     }
 
     private double evaluateDoubleAddInverse(int operandLeft, int operandRight) {

@@ -11,13 +11,13 @@ import epmc.param.value.ValueFunction;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.TypeDag;
 import epmc.param.value.dag.ValueDag;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ExporterPoints implements DagExporter {
     public final static String IDENTIFIER = "points";
     
     public final static class Builder implements DagExporter.Builder {
-        private final TIntArrayList nodes = new TIntArrayList();
+        private final IntArrayList nodes = new IntArrayList();
         
         @Override
         public Builder setDag(Dag dag) {
@@ -41,7 +41,7 @@ public final class ExporterPoints implements DagExporter {
     private ExporterPoints(Builder builder) {
         assert builder != null;
         List<ValueFunction> functions = new ArrayList<>();
-        for (int node : builder.nodes.toArray()) {
+        for (int node : builder.nodes.toIntArray()) {
             ValueDag valueDag = TypeDag.as(TypeFunction.get()).newValue();
             valueDag.setNumber(node);
             functions.add(valueDag);
