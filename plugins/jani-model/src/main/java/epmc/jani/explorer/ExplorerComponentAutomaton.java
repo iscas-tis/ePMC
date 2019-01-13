@@ -65,9 +65,7 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
-import gnu.trove.iterator.TObjectIntIterator;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 /**
  * Explorer for an automaton component.
@@ -305,17 +303,16 @@ public final class ExplorerComponentAutomaton implements ExplorerComponent {
      * Build the type storing the edge number of an automaton.
      */
     private void buildTypeEdge() {
-        TObjectIntMap<Location> locationNumEdges = new TObjectIntHashMap<>();
+        Object2IntOpenHashMap<Location> locationNumEdges = new Object2IntOpenHashMap<>();
         for (Edge edge : automaton.getEdges()) {
             Location location = edge.getLocation();
-            locationNumEdges.put(location, locationNumEdges.get(location) + 1);
+            locationNumEdges.put(location, locationNumEdges.getInt(location) + 1);
         }
-        int maxNumEdges = 0;
-        for (TObjectIntIterator<Location> it = locationNumEdges.iterator(); it.hasNext();) {
-            it.advance();
-            maxNumEdges = Math.max(maxNumEdges, it.value());
-        }
-        typeEdge = TypeInteger.get(-1, maxNumEdges - 1);
+        int[] maxNumEdges = new int[1];
+        locationNumEdges.forEach((a,b) -> {
+            maxNumEdges[0] = Math.max(maxNumEdges[0], b);
+        });
+        typeEdge = TypeInteger.get(-1, maxNumEdges[0] - 1);
     }
 
     /**
