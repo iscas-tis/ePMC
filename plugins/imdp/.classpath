@@ -7,7 +7,6 @@
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
-	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="lib" path="/epmc/lib/guava-18.0.jar">
 		<attributes>
@@ -27,5 +26,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-format"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-tests"/>
+	<classpathentry kind="lib" path="/epmc/lib/fastutil-8.2.2.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

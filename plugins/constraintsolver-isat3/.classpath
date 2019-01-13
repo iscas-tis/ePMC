@@ -7,7 +7,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-constraintsolver"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
-	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-expression-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-tests"/>

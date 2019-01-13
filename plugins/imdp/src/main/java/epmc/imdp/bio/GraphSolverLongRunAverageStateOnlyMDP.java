@@ -1,7 +1,5 @@
 package epmc.imdp.bio;
 
-import java.util.Arrays;
-
 import epmc.graph.CommonProperties;
 import epmc.graph.SemanticsMDP;
 import epmc.graph.explicit.GraphExplicitSparseAlternate;

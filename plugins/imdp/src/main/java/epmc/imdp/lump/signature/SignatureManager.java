@@ -30,8 +30,7 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueInterval;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class SignatureManager {
     private final static ActionSignatureIdentityComparator ACTION_SIGNATURE_IDENTITY_COMPARATOR = new ActionSignatureIdentityComparator();
@@ -56,8 +55,8 @@ public final class SignatureManager {
     private final ActionSignature prepareActionSignature;
     private final ValueInterval blockValue;
 
-    private final Map<StateSignature,TIntList> signatureToStates = new HashMap<>();
-    private final List<TIntList> signatureBlocks = new ArrayList<>();
+    private final Map<StateSignature,IntArrayList> signatureToStates = new HashMap<>();
+    private final List<IntArrayList> signatureBlocks = new ArrayList<>();
     private int numSignatureBlocks;
 
     private final ValueInterval entry;
@@ -212,12 +211,12 @@ public final class SignatureManager {
 
     public void addState(int state) {
         StateSignature signature = computeStateSignature(state);
-        TIntList stateList = signatureToStates.get(signature);
+        IntArrayList stateList = signatureToStates.get(signature);
         if (stateList == null) {
             if (numSignatureBlocks < signatureBlocks.size()) {
                 stateList = signatureBlocks.get(numSignatureBlocks);
             } else {
-                stateList = new TIntArrayList();
+                stateList = new IntArrayList();
                 signatureBlocks.add(stateList);
             }
             numSignatureBlocks++;
@@ -235,7 +234,7 @@ public final class SignatureManager {
     }
 
     public int getState(int signature, int number) {
-        return signatureBlocks.get(signature).get(number);
+        return signatureBlocks.get(signature).getInt(number);
     }
 
     private TypeAlgebra getTypeWeightTransition() {
