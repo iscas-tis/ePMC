@@ -5,14 +5,14 @@ import java.io.IOException;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
 import epmc.param.value.dag.UtilDag;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ExporterGraphviz implements DagExporter {
     public final static String IDENTIFIER = "graphviz";
 
     public final static class Builder implements DagExporter.Builder {
         private Dag dag;
-        private final TIntArrayList nodes = new TIntArrayList();
+        private final IntArrayList nodes = new IntArrayList();
 
         @Override
         public Builder setDag(Dag dag) {
@@ -48,7 +48,7 @@ public final class ExporterGraphviz implements DagExporter {
         assert builder != null;
         assert builder.dag != null;
         dag = builder.dag;
-        start = builder.nodes.toArray();
+        start = builder.nodes.toIntArray();
     }
 
     @Override

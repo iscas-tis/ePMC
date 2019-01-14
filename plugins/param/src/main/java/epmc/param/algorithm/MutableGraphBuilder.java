@@ -24,7 +24,7 @@ import epmc.value.TypeWeightTransition;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayAlgebra;
-import gnu.trove.map.hash.TIntIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 public final class MutableGraphBuilder {
     public enum PropertyNames {
@@ -168,7 +168,7 @@ public final class MutableGraphBuilder {
         EdgeProperty origProbabilities = original.getEdgeProperty(CommonProperties.WEIGHT);
         MutableEdgeProperty mutableProbabilities = graph.addMutableEdgeProperty(CommonProperties.WEIGHT,
                 TypeWeightTransition.get());
-        TIntIntHashMap succToSuccNr = new TIntIntHashMap();
+        Int2IntOpenHashMap succToSuccNr = new Int2IntOpenHashMap();
         ValueAlgebra newProb = TypeWeightTransition.get().newValue();
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD,
                 TypeWeightTransition.get(), TypeWeightTransition.get());
@@ -212,7 +212,7 @@ public final class MutableGraphBuilder {
                 } else {
                     set.apply(newProb, origProb);
                 }
-                if (succToSuccNr.contains(succ)) {
+                if (succToSuccNr.containsKey(succ)) {
                     Value oldProb = mutableProbabilities.get(node, succToSuccNr.get(succ));
                     add.apply(newProb, oldProb, newProb);
                     int oldSucc = succToSuccNr.get(succ);

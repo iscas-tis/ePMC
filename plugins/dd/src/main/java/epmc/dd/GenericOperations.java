@@ -20,11 +20,7 @@
 
 package epmc.dd;
 
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.map.TObjectLongMap;
-import gnu.trove.map.custom_hash.TObjectLongCustomHashMap;
-import gnu.trove.map.hash.THashMap;
-
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -36,6 +32,7 @@ import epmc.util.UtilBitSet;
 import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.Value;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenCustomHashMap;
 
 /**
  * Class to allow to execute operations not supported by a certain DD library.
@@ -61,12 +58,13 @@ final class GenericOperations {
      */
     private final static class Cache {
         /** Maps from operands to results of operation. */
-        private final TObjectLongMap<long[]> content;
+        private final Object2LongOpenCustomHashMap<long[]> content;
         /** Low-level DD library this cache belongs to. */
         private final LibraryDD lowLevel;
 
         Cache(LibraryDD lowLevel) {
-            content = new TObjectLongCustomHashMap<>(HashingStrategyArrayLong.getInstance());
+            content = new Object2LongOpenCustomHashMap<>(HashingStrategyArrayLong.getInstance());
+            content.defaultReturnValue(-1L);
             this.lowLevel = lowLevel;
         }
 
@@ -77,7 +75,7 @@ final class GenericOperations {
 
         long get(long... entry) {
             assert entry != null;
-            return content.get(entry);
+            return content.getLong(entry);
         }
 
         /**
@@ -94,10 +92,7 @@ final class GenericOperations {
         }
 
         public void clear() {
-            TLongIterator iter = content.valueCollection().iterator();
-            while (iter.hasNext()) {
-                lowLevel.free(iter.next());
-            }
+            content.forEach((key,value) -> lowLevel.free(value));
             content.clear();
         }
     }
@@ -116,7 +111,7 @@ final class GenericOperations {
         private final Map<LibraryDD, Map<OperatorEvaluator,Cache>> caches;
 
         Caches() {
-            caches = new THashMap<>();
+            caches = new HashMap<>();
         }
 
         Cache get(LibraryDD lowLevel, OperatorEvaluator operation) {
@@ -124,7 +119,7 @@ final class GenericOperations {
             assert operation != null;
             Map<OperatorEvaluator,Cache> lowLevelCaches = caches.get(lowLevel);
             if (lowLevelCaches == null) {
-                lowLevelCaches = new THashMap<>();
+                lowLevelCaches = new HashMap<>();
                 caches.put(lowLevel, lowLevelCaches);
             }
             Cache result = lowLevelCaches.get(operation);

@@ -45,7 +45,7 @@ import epmc.modelchecker.UtilModelChecker;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;
 import epmc.options.UtilOptions;
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 public final class TestHelperGraph {
     public static GraphDD buildGraphDD(Options options, String modelFile) {
@@ -53,9 +53,9 @@ public final class TestHelperGraph {
             Set<Object> graphProperties = Collections.singleton(CommonProperties.SEMANTICS);
             options.set(OptionsModelChecker.ENGINE, EngineDD.class);
             Model model = TestHelper.loadModel(options, modelFile);
-            Set<Object> nodeProperties = new THashSet<>();
+            Set<Object> nodeProperties = new ObjectOpenHashSet<>();
             nodeProperties.add(CommonProperties.STATE);
-            Set<Object> edgeProperties = new THashSet<>();
+            Set<Object> edgeProperties = new ObjectOpenHashSet<>();
             edgeProperties.add(CommonProperties.WEIGHT);
             return (GraphDD) UtilModelChecker.buildLowLevel(model, EngineDD.getInstance(), graphProperties, nodeProperties, edgeProperties);
         } catch (Exception e) {

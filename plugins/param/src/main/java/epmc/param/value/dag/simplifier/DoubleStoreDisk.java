@@ -5,7 +5,7 @@ import java.io.IOException;
 import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class DoubleStoreDisk implements DoubleStore {
     public final static String IDENTIFIER = "disk";
@@ -32,7 +32,7 @@ public final class DoubleStoreDisk implements DoubleStore {
     private int[] backArraysAt;
     private final byte[][] backsArray;
     private final ByteBuffer backByteBuffers[];
-    private final TIntArrayList recentlyUsed = new TIntArrayList();
+    private final IntArrayList recentlyUsed = new IntArrayList();
 
     // TODO implement additional back buffer
     
@@ -95,12 +95,12 @@ public final class DoubleStoreDisk implements DoubleStore {
                 }
             }
             if (usedBackBuffer >= 0) {
-                recentlyUsed.remove(usedBackBuffer);
+                recentlyUsed.rem(usedBackBuffer);
                 recentlyUsed.add(usedBackBuffer);
             }
             if (usedBackBuffer == -1) {
-                usedBackBuffer = recentlyUsed.get(0);
-                recentlyUsed.remove(usedBackBuffer);
+                usedBackBuffer = recentlyUsed.getInt(0);
+                recentlyUsed.rem(usedBackBuffer);
                 recentlyUsed.add(usedBackBuffer);
                 backArraysAt[usedBackBuffer] = index / indexDivideBy;
                 try {

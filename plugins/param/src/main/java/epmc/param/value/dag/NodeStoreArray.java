@@ -1,6 +1,6 @@
 package epmc.param.value.dag;
 
-import gnu.trove.list.array.TLongArrayList;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 public final class NodeStoreArray implements NodeStore {
     public final static class Builder implements NodeStore.Builder {
@@ -14,7 +14,7 @@ public final class NodeStoreArray implements NodeStore {
     
     public final static String IDENTIFIER = "array";
     
-    private final TLongArrayList entriesList = new TLongArrayList();
+    private final LongArrayList entriesList = new LongArrayList();
     
     private NodeStoreArray(Builder builder) {
         assert builder != null;
@@ -56,7 +56,7 @@ public final class NodeStoreArray implements NodeStore {
     }
     
     private long loadEntry(int number) {
-        return entriesList.get(number);
+        return entriesList.getLong(number);
     }
     
     private void addEntry(long entry, int result) {

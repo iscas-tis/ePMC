@@ -20,7 +20,7 @@
 
 package epmc.coalition.dd;
 
-import gnu.trove.map.TObjectIntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -270,7 +270,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
     }
 
     private List<DD> computePriorities(AutomatonParity automaton,
-            TObjectIntMap<DD> labelsMap) {
+            Object2IntOpenHashMap<DD> labelsMap) {
         assert labelsMap != null;
 
         List<DD> priorities = new ArrayList<>();
@@ -282,7 +282,7 @@ public class PropertySolverDDCoalition implements PropertySolver {
         }
 
         for (DD labelDD : labelsMap.keySet()) {
-            int labelNr = labelsMap.get(labelDD);
+            int labelNr = labelsMap.getInt(labelDD);
             AutomatonParityLabel label = (AutomatonParityLabel) automaton.numberToLabel(labelNr);
             int priority = label.getPriority();
             if (priority != Integer.MAX_VALUE) {

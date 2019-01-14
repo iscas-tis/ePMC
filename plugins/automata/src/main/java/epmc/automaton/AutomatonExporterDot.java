@@ -20,12 +20,6 @@
 
 package epmc.automaton;
 
-import gnu.trove.iterator.TIntObjectIterator;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
-
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -33,6 +27,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
 
 import epmc.dd.ContextDD;
@@ -48,6 +43,8 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeEnumerable;
 import epmc.value.Value;
 import epmc.value.ValueEnumerable;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class AutomatonExporterDot implements AutomatonExporter {
     public static final String IDENTIFIER = "dot-general";
@@ -82,19 +79,14 @@ public final class AutomatonExporterDot implements AutomatonExporter {
         this.validInputs = computeValidInputs(automaton);
         PrintStream out = new PrintStream(outStream);
         out.println("digraph {");
-        TIntObjectMap<Object> states = exploreStates();
-        TIntObjectIterator<Object> iter = states.iterator();
-        while (iter.hasNext()) {
-            iter.advance();
-            int key = iter.key();
-            Object value = iter.value();
+        Int2ObjectOpenHashMap<Object> states = exploreStates();
+        for (Entry<Integer, Object> entry : states.entrySet()) {
+            int key = entry.getKey();
+            Object value = entry.getValue();
             out.println("  s" + key + " [label=\"" + value + "\"];");
         }
         out.println();
-        iter = states.iterator();
-        while (iter.hasNext()) {
-            iter.advance();
-            int node = iter.key();
+        states.forEach((node,b) -> {
             for (Value[] input : validInputs) {
                 automaton.queryState(input, node);
                 int succ = automaton.getSuccessorState();
@@ -104,8 +96,7 @@ public final class AutomatonExporterDot implements AutomatonExporter {
                 out.print(" : ");
                 out.println(label + "\"];");
             }
-        }        
-
+        });
         out.println("}");
     }
 
@@ -175,15 +166,15 @@ public final class AutomatonExporterDot implements AutomatonExporter {
         return result;
     }
 
-    private TIntObjectMap<Object> exploreStates() {
-        TIntStack todo = new TIntArrayStack();
+    private Int2ObjectOpenHashMap<Object> exploreStates() {
+        IntArrayList todo = new IntArrayList();
         assert automaton.getInitState() == 0;
         todo.push(0);
         BitSet exploredNodes = UtilBitSet.newBitSetUnbounded();
         exploredNodes.set(0);
-        TIntObjectMap<Object> result = new TIntObjectHashMap<>();
+        Int2ObjectOpenHashMap<Object> result = new Int2ObjectOpenHashMap<>();
         while (todo.size() > 0) {
-            int node = todo.pop();
+            int node = todo.popInt();
             result.put(node, automaton.numberToState(node));
             for (Value[] input : validInputs) {
                 automaton.queryState(input, node);

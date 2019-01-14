@@ -20,9 +20,8 @@
 
 package epmc.util;
 
-import gnu.trove.list.array.TLongArrayList;
-import gnu.trove.map.TLongIntMap;
-import gnu.trove.map.hash.TLongIntHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongArrayList;
 
 final class BitStreamToNumberLong implements BitStoreableToNumber {
     private final class ReadWriteHelper implements BitStream {
@@ -97,11 +96,15 @@ final class BitStreamToNumberLong implements BitStoreableToNumber {
         return bitSet;
     }
 
-    private final TLongIntMap nodeToNumber = new TLongIntHashMap(10, 0.5f, -1L, -1);
-    private final TLongArrayList numberToNode = new TLongArrayList();
+    private final Long2IntOpenHashMap nodeToNumber = new Long2IntOpenHashMap();
+    private final LongArrayList numberToNode = new LongArrayList();
 
+    BitStreamToNumberLong() {
+        nodeToNumber.defaultReturnValue(-1);
+    }
+    
     private void setNumber(int number) {
-        set(numberToNode.get(number));
+        set(numberToNode.getLong(number));
     }
 
     private int toNumber() {

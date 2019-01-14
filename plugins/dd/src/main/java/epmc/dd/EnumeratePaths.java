@@ -24,7 +24,7 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class EnumeratePaths {
     @FunctionalInterface
@@ -54,7 +54,7 @@ public final class EnumeratePaths {
             assert variable != null;
             assert TypeBoolean.is(variable.getType());
         }
-        TIntArrayList variableMap = new TIntArrayList();
+        IntArrayList variableMap = new IntArrayList();
         for (int varNr = 0; varNr < variables.length; varNr++) {
             int ddVariable = variables[varNr].getDDVariables().get(0).variable();
             while (variableMap.size() <= ddVariable) {
@@ -62,7 +62,7 @@ public final class EnumeratePaths {
             }
             variableMap.set(ddVariable, varNr);
         }
-        this.variableMap = variableMap.toArray();
+        this.variableMap = variableMap.toIntArray();
         this.variables = variables;
     }
 
@@ -108,9 +108,5 @@ public final class EnumeratePaths {
 
     private void terminalCase() {
         callback.call(callbackValues);
-    }
-
-    private ContextDD getContextDD() {
-        return dd.getContext();
     }
 }

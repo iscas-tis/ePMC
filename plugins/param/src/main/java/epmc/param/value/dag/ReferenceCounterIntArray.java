@@ -1,9 +1,9 @@
 package epmc.param.value.dag;
 
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ReferenceCounterIntArray implements ReferenceCounter {
-    private TIntArrayList counters = new TIntArrayList();
+    private IntArrayList counters = new IntArrayList();
     
     @Override
     public void addNode() {
@@ -14,27 +14,27 @@ public final class ReferenceCounterIntArray implements ReferenceCounter {
     public boolean isAlive(int node) {
         assert node >= 0 : node;
         assert node < counters.size();
-        return counters.get(node) > 0;
+        return counters.getInt(node) > 0;
     }
 
     @Override
     public void incRef(int node) {
         assert node >= 0 : node;
         assert node < counters.size();
-        if (counters.get(node) == Integer.MAX_VALUE) {
+        if (counters.getInt(node) == Integer.MAX_VALUE) {
             return;
         }
-        counters.set(node, counters.get(node) + 1);
+        counters.set(node, counters.getInt(node) + 1);
     }
 
     @Override
     public void decRef(int node) {
         assert node >= 0 : node;
         assert node < counters.size();
-        assert counters.get(node) > 0;
-        if (counters.get(node) == Integer.MAX_VALUE) {
+        assert counters.getInt(node) > 0;
+        if (counters.getInt(node) == Integer.MAX_VALUE) {
             return;
         }
-        counters.set(node, counters.get(node) - 1);
+        counters.set(node, counters.getInt(node) - 1);
     }
 }

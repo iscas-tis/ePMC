@@ -5,8 +5,8 @@ import java.util.TreeMap;
 
 import epmc.param.graph.MutableGraph;
 import epmc.util.BitSet;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.hash.TIntHashSet;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 public final class EliminationOrderNumNew implements EliminationOrder {
     public final static class Builder implements EliminationOrder.Builder {
@@ -32,9 +32,9 @@ public final class EliminationOrderNumNew implements EliminationOrder {
 
     public final static String IDENTIFIER = "num-new";
     private final MutableGraph graph;
-    private final TreeMap<Integer,TIntHashSet> valueToNode = new TreeMap<>();
+    private final TreeMap<Integer,IntOpenHashSet> valueToNode = new TreeMap<>();
     private final int[] nodeToValue;
-    private final TIntArrayList mustUpdate = new TIntArrayList();
+    private final IntArrayList mustUpdate = new IntArrayList();
     private final boolean[] mustUpdateSeen;
     private final boolean[] removed;
     
@@ -45,9 +45,9 @@ public final class EliminationOrderNumNew implements EliminationOrder {
         for (int node = 0; node < numNodes; node++) {
             int value = value(node);
             nodeToValue[node] = value;
-            TIntHashSet list = valueToNode.get(value);
+            IntOpenHashSet list = valueToNode.get(value);
             if (list == null) {
-                list = new TIntHashSet();
+                list = new IntOpenHashSet();
                 valueToNode.put(value, list);
             }
             list.add(node);
@@ -64,10 +64,10 @@ public final class EliminationOrderNumNew implements EliminationOrder {
     @Override
     public int nextNode() {
         updateNodes();
-        Entry<Integer, TIntHashSet> entry = valueToNode.firstEntry();
+        Entry<Integer, IntOpenHashSet> entry = valueToNode.firstEntry();
         int value = entry.getKey();
-        TIntHashSet list = entry.getValue();
-        int chosen = list.iterator().next();
+        IntOpenHashSet list = entry.getValue();
+        int chosen = list.iterator().nextInt();
         list.remove(chosen);
         if (list.isEmpty()) {
             valueToNode.remove(value);
@@ -80,7 +80,7 @@ public final class EliminationOrderNumNew implements EliminationOrder {
     private void updateNodes() {
         int mustUpdateSize = mustUpdate.size();
         for (int index = 0; index < mustUpdateSize; index++) {
-            int node = mustUpdate.getQuick(index);
+            int node = mustUpdate.getInt(index);
             assert !removed[node] : node;
             mustUpdateSeen[node] = false;
             int oldValue = nodeToValue[node];
@@ -88,7 +88,7 @@ public final class EliminationOrderNumNew implements EliminationOrder {
             if (oldValue == newValue) {
                 continue;
             }
-            TIntHashSet list = valueToNode.get(oldValue);
+            IntOpenHashSet list = valueToNode.get(oldValue);
             assert list != null : oldValue;
             list.remove(node);
             if (list.isEmpty()) {
@@ -96,7 +96,7 @@ public final class EliminationOrderNumNew implements EliminationOrder {
             }
             list = valueToNode.get(newValue);
             if (list == null) {
-                list = new TIntHashSet();
+                list = new IntOpenHashSet();
                 valueToNode.put(newValue, list);                
             }
             list.add(node);
@@ -107,7 +107,7 @@ public final class EliminationOrderNumNew implements EliminationOrder {
     private void collectNeighbors(int node) {
         int numPred = graph.getNumPredecessors(node);
         int numSucc = graph.getNumSuccessors(node);
-        mustUpdate.resetQuick();
+        mustUpdate.clear();
         for (int predNr = 0; predNr < numPred; predNr++) {
             int pred = graph.getPredecessorNode(node, predNr);
             if (pred == node) {

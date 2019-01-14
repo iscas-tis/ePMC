@@ -20,9 +20,8 @@
 
 package epmc.util;
 
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 final class BitStreamToNumberInt implements BitStoreableToNumber {
     private final class ReadWriteHelper implements BitStream {
@@ -96,11 +95,15 @@ final class BitStreamToNumberInt implements BitStoreableToNumber {
         return bitSet;
     }
 
-    private final TIntIntMap nodeToNumber = new TIntIntHashMap(10, 0.5f, -1, -1);
-    private final TIntArrayList numberToNode = new TIntArrayList();
+    private final Int2IntOpenHashMap nodeToNumber = new Int2IntOpenHashMap();
+    private final IntArrayList numberToNode = new IntArrayList();
 
+    BitStreamToNumberInt() {
+        nodeToNumber.defaultReturnValue(-1);
+    }
+    
     private void setNumber(int number) {
-        set(numberToNode.get(number));
+        set(numberToNode.getInt(number));
     }
 
     private int toNumber() {        

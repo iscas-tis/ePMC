@@ -20,19 +20,17 @@
 
 package epmc.value;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.strategy.IdentityHashingStrategy;
-
 import java.util.Arrays;
 
 import epmc.value.Value;
 import epmc.value.ValueArray;
+import it.unimi.dsi.fastutil.objects.Object2IntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 final class ValueArrayObjectNumerated implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
-    private final TObjectIntMap<Object> objectToNumber;
+    private final Object2IntMap<Object> objectToNumber;
     private Object[] numberToObject = new Object[1];
     private int numBits;
 
@@ -44,10 +42,10 @@ final class ValueArrayObjectNumerated implements ValueArray {
         this.type = type;
         this.content = new long[0];
         if (objectIdentity) {
-            objectToNumber = new TObjectIntCustomHashMap<>(
-                    new IdentityHashingStrategy<>(), 10, 0.5f, -1);
+            objectToNumber = new Object2IntOpenCustomHashMap<>(StrategyIdentity.get());
+            objectToNumber.defaultReturnValue(-1);
         } else {
-            objectToNumber = new TObjectIntHashMap<>();
+            objectToNumber = new Object2IntOpenHashMap<>();
         }
 
     }
@@ -97,7 +95,7 @@ final class ValueArrayObjectNumerated implements ValueArray {
     }
 
     private int objectToNumber(Object object) {
-        int number = objectToNumber.get(object);
+        int number = objectToNumber.getInt(object);
         if (number == -1) {
             number = objectToNumber.size();
             objectToNumber.put(object, number);

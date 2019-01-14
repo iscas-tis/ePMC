@@ -20,11 +20,10 @@
 
 package epmc.automaton;
 
-import gnu.trove.map.hash.THashMap;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -217,7 +216,7 @@ public final class AutomatonProduct implements Automaton {
     private AutomatonProductLabelImpl succLabel;
     private final int[] succStateArray;
     private final int[] succLabelingsArray;
-    private final Map<CacheKey,CacheValue> cache = new THashMap<>();
+    private final Map<CacheKey,CacheValue> cache = new HashMap<>();
     private final CacheKey testEntry = new CacheKey();
 
     public AutomatonProduct(Automaton[] automata) {

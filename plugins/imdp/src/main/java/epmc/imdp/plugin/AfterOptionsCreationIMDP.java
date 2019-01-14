@@ -16,7 +16,6 @@ import epmc.imdp.graphsolver.GraphSolverIterativeIMDPMultiObjectiveWeightedJavaD
 import epmc.imdp.lump.CacheTypeProvider;
 import epmc.imdp.lump.CacheTypeProviderJavaUtilHash;
 import epmc.imdp.lump.CacheTypeProviderJavaUtilTree;
-import epmc.imdp.lump.CacheTypeProviderTroveHash;
 import epmc.imdp.lump.LumperExplicitIMDP;
 import epmc.imdp.model.LowLevelIMDPBuilder;
 import epmc.imdp.model.ModelIMDP;
@@ -166,7 +165,6 @@ public final class AfterOptionsCreationIMDP implements AfterOptionsCreation {
         .setCategory(category).build();
 
         Map<String,Class<? extends CacheTypeProvider>> cacheTypeMap = new OrderedMap<>(true);
-        cacheTypeMap.put(CacheTypeProviderTroveHash.IDENTIFIER, CacheTypeProviderTroveHash.class);
         cacheTypeMap.put(CacheTypeProviderJavaUtilTree.IDENTIFIER, CacheTypeProviderJavaUtilTree.class);
         cacheTypeMap.put(CacheTypeProviderJavaUtilHash.IDENTIFIER, CacheTypeProviderJavaUtilHash.class);
         OptionTypeMap<Class<? extends CacheTypeProvider>> optionTypeCacheType = new OptionTypeMap<>(cacheTypeMap);

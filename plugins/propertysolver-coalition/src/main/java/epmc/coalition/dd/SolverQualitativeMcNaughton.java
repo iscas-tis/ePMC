@@ -32,7 +32,7 @@ import epmc.dd.DD;
 import epmc.graph.CommonProperties;
 import epmc.graph.Player;
 import epmc.graph.dd.GraphDD;
-import gnu.trove.map.TObjectIntMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public final class SolverQualitativeMcNaughton implements SolverQualitative {
     public final static String IDENTIFIER = "schewe";
@@ -85,7 +85,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
     }
 
     private List<DD> computePriorities(AutomatonParity automaton,
-            TObjectIntMap<DD> labelsMap) {
+            Object2IntOpenHashMap<DD> labelsMap) {
         assert automaton != null;
         assert labelsMap != null;
 
@@ -98,7 +98,7 @@ public final class SolverQualitativeMcNaughton implements SolverQualitative {
         }
 
         for (DD labelDD : labelsMap.keySet()) {
-            int labelNr = labelsMap.get(labelDD);
+            int labelNr = labelsMap.getInt(labelDD);
             AutomatonParityLabel label = (AutomatonParityLabel) automaton.numberToLabel(labelNr);
             int priority = label.getPriority();
             if (priority != Integer.MAX_VALUE) {

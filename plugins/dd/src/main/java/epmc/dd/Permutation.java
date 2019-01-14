@@ -20,13 +20,11 @@
 
 package epmc.dd;
 
-import gnu.trove.map.hash.TCustomHashMap;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.hash.TIntHashSet;
-import gnu.trove.strategy.IdentityHashingStrategy;
-
 import java.util.Arrays;
+import java.util.IdentityHashMap;
 import java.util.Map;
+
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 /**
  * Represents a permutation of DD variables.
@@ -39,7 +37,7 @@ public final class Permutation  {
     /** Context the permutation belongs to. */
     private final ContextDD contextDD;
     /** Maps DD libraries to according library permutation. */
-    private final Map<LibraryDD,PermutationLibraryDD> libraryPermutations = new TCustomHashMap<>(new IdentityHashingStrategy<>());
+    private final Map<LibraryDD,PermutationLibraryDD> libraryPermutations = new IdentityHashMap<>();
     /** Maps each index to the new variable to which it is permuted. */
     private int[] array;
 
@@ -75,7 +73,7 @@ public final class Permutation  {
      */
     private static boolean assertPermutation(int[] array) {
         assert array != null;
-        TIntSet seen = new TIntHashSet();
+        IntOpenHashSet seen = new IntOpenHashSet();
         for (int entry : array) {
             assert entry >= 0;
             assert entry < array.length;

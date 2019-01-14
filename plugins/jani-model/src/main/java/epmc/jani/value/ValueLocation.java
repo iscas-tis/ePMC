@@ -22,7 +22,6 @@ package epmc.jani.value;
 
 import epmc.jani.model.Location;
 import epmc.util.BitStream;
-import epmc.value.TypeAlgebra;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBitStoreable;

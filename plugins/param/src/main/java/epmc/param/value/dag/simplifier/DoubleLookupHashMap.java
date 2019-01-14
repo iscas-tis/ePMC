@@ -2,7 +2,7 @@ package epmc.param.value.dag.simplifier;
 
 import epmc.options.Options;
 import epmc.param.options.OptionsParam;
-import gnu.trove.map.hash.TDoubleIntHashMap;
+import it.unimi.dsi.fastutil.doubles.Double2IntOpenHashMap;
 
 public final class DoubleLookupHashMap implements DoubleLookup {
     public final static String IDENTIFIER = "hashmap";
@@ -23,12 +23,13 @@ public final class DoubleLookupHashMap implements DoubleLookup {
 
     private final static int INVALID = -1;
     private final int numDigitsRoundOffHash;
-    private final TDoubleIntHashMap evalResultsMapDoubleHash;
+    private final Double2IntOpenHashMap evalResultsMapDoubleHash;
 
     private DoubleLookupHashMap(Builder builder) {
         assert builder != null;
         numDigitsRoundOffHash = Options.get().getInteger(OptionsParam.PARAM_DAG_PROB_SIMPLIFIER_DOUBLE_CUTOFF_BIN_DIGITS);
-        evalResultsMapDoubleHash = new TDoubleIntHashMap(100, 0.5f, Double.NaN, INVALID);
+        evalResultsMapDoubleHash = new Double2IntOpenHashMap();
+        evalResultsMapDoubleHash.defaultReturnValue(INVALID);
     }
 
     @Override

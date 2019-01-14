@@ -20,10 +20,8 @@
 
 package epmc.automata.determinisation;
 
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 
 import java.util.Arrays;
 
@@ -97,7 +95,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     private final int numLabels;
     private final GraphExplicit buechiGraph;
     private final AutomatonScheweState initState;
-    private final TObjectIntMap<int[]> nodeNumbers = new TObjectIntCustomHashMap<>(HashingStrategyArrayInt.getInstance(), 1000, 0.5f, -1);
+    private final Object2IntOpenCustomHashMap<int[]> nodeNumbers = new Object2IntOpenCustomHashMap<>(HashingStrategyArrayInt.getInstance());
     private final Buechi buechi;
     private final Expression[] expressions;
     private boolean parity;
@@ -107,6 +105,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     private AutomatonSchewe(Builder builder) {
         assert builder != null;
         assert builder.getBuechi() != null;
+        nodeNumbers.defaultReturnValue(-1);
         this.parity = builder.isParity();
         buechi = builder.getBuechi();
         this.numLabels = buechi.getNumLabels();
@@ -228,8 +227,8 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
 
     private static void adjustIndices(AutomatonScheweState state) {
         BitSet oldIndices = UtilBitSet.newBitSetUnbounded();
-        TIntObjectMap<AutomatonScheweState> stateToOldIndex =
-                new TIntObjectHashMap<>();
+        Int2ObjectOpenHashMap<AutomatonScheweState> stateToOldIndex =
+                new Int2ObjectOpenHashMap<>();
         collectIndices(state, oldIndices, stateToOldIndex);
         int newIndex = 0;
         for (int oldIndex = oldIndices.nextSetBit(0); oldIndex >= 0;
@@ -240,7 +239,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
     }
 
     private static void collectIndices(AutomatonScheweState state, BitSet indices,
-            TIntObjectMap<AutomatonScheweState> stateToOldIndex) {
+            Int2ObjectOpenHashMap<AutomatonScheweState> stateToOldIndex) {
         int index = state.getIndex();
         indices.set(index);
         stateToOldIndex.put(index, state);
@@ -424,7 +423,7 @@ final class AutomatonSchewe implements AutomatonRabin, AutomatonParity, Automato
 
     private int nodeToNumber(int[] node, int size) {
         int[] entry = Arrays.copyOf(node, size);
-        int number = nodeNumbers.get(entry);
+        int number = nodeNumbers.getInt(entry);
         if (number == -1) {
             number = nodeNumbers.size();
             nodeNumbers.put(entry, number);

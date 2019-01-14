@@ -36,8 +36,6 @@ import epmc.value.ValueInteger;
 
 import static epmc.util.RunningInfo.startWithInfo;
 
-import java.util.Arrays;
-
 public final class GraphSolverExplicitIMDPRewardsCumulativeJavaDouble implements GraphSolverExplicit{
     private final static class IterateProblem {
         private GraphBuilderExplicit builder;

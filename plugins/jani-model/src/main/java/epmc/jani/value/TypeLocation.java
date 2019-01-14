@@ -30,13 +30,10 @@ import epmc.jani.model.Locations;
 import epmc.value.ContextValue;
 import epmc.value.Type;
 import epmc.value.TypeAlgebra;
-import epmc.value.TypeArray;
 import epmc.value.TypeArrayAlgebra;
-import epmc.value.TypeArrayGeneric;
 import epmc.value.TypeEnumerable;
 import epmc.value.TypeNumBitsKnown;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 /**
  * Type to generate values storing a location from a set of locations.
@@ -72,7 +69,7 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown, Typ
     /** Set of locations which this type represents. */
     //	private Locations locations;
     /** Map to enumerate locations. */
-    private final TObjectIntMap<String> locationToNumber = new TObjectIntHashMap<>();
+    private final Object2IntOpenHashMap<String> locationToNumber = new Object2IntOpenHashMap<>();
     /** Maps a number to corresponding location. */
     private final String[] numberToLocation;
     private final List<String> locations;
@@ -173,7 +170,7 @@ public final class TypeLocation implements TypeEnumerable, TypeNumBitsKnown, Typ
     public int getNumber(Location location) {
         assert location != null;
         assert locationToNumber.containsKey(location.getName());
-        return locationToNumber.get(location.getName());
+        return locationToNumber.getInt(location.getName());
     }
 
     /**

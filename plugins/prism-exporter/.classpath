@@ -11,7 +11,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/epmc/lib/javax.json-1.0.jar"/>
-	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-expression-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>

@@ -21,9 +21,7 @@ import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
-import gnu.trove.iterator.TIntObjectIterator;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 
 final class QuotientBuilder {
     private GraphSolverObjectiveExplicit original;
@@ -52,7 +50,7 @@ final class QuotientBuilder {
         int numNonDet = 0;
         int numProb = 0;
         int partitionSize = partition.getNumBlocks();
-        Set<TIntObjectMap<ValueAlgebra>> quotSuccessors = new HashSet<>();
+        Set<Int2ObjectOpenHashMap<ValueAlgebra>> quotSuccessors = new HashSet<>();
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
         for (int blockNr = 0; blockNr < partitionSize; blockNr++) {
             int from = partition.getBlockFrom(blockNr);
@@ -61,7 +59,7 @@ final class QuotientBuilder {
             int numRepSucc = originalGraph.getNumSuccessors(representatant);
             quotSuccessors.clear();
             for (int repSuccNr = 0; repSuccNr < numRepSucc; repSuccNr++) {
-                TIntObjectMap<ValueAlgebra> quotSuccessor = new TIntObjectHashMap<>(100, 0.5f, -1);
+                Int2ObjectOpenHashMap<ValueAlgebra> quotSuccessor = new Int2ObjectOpenHashMap<>();
                 int succDistr = originalGraph.getSuccessorNode(representatant, repSuccNr);
                 int numDistrSucc = originalGraph.getNumSuccessors(succDistr);
                 for (int distrSuccNr = 0; distrSuccNr < numDistrSucc; distrSuccNr++) {
@@ -142,14 +140,15 @@ final class QuotientBuilder {
         NodeProperty quotientState = quotientGraph.addSettableNodeProperty(CommonProperties.STATE,  origState.getType());
         quotientGraph.addSettableGraphProperty(CommonProperties.SEMANTICS, originalGraph.getGraphPropertyType(CommonProperties.SEMANTICS));
         quotientGraph.setGraphProperty(CommonProperties.SEMANTICS, originalGraph.getGraphProperty(CommonProperties.SEMANTICS));
-        int quotDistr = partition.getNumBlocks();
+        int[] quotDistr = new int[1];
+        quotDistr[0] = partition.getNumBlocks();
         Value[] toBlockValues = new Value[partition.getNumBlocks()];
         for (int blockNr = 0; blockNr < partition.getNumBlocks(); blockNr++) {
             toBlockValues[blockNr] = UtilValue.newValue(getTypeWeightTransition(), 0);
         }
 
         int partitionSize = partition.getNumBlocks();
-        Set<TIntObjectMap<ValueAlgebra>> quotSuccessors = new HashSet<>();
+        Set<Int2ObjectOpenHashMap<ValueAlgebra>> quotSuccessors = new HashSet<>();
         OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
         for (int blockNr = 0; blockNr < partitionSize; blockNr++) {
             quotSuccessors.clear();
@@ -161,7 +160,7 @@ final class QuotientBuilder {
             for (int repSuccNr = 0; repSuccNr < numRepSucc; repSuccNr++) {
                 int origDistr = originalGraph.getSuccessorNode(representatant, repSuccNr);
                 int numDistrSucc = originalGraph.getNumSuccessors(origDistr);
-                TIntObjectMap<ValueAlgebra> quotSuccessor = new TIntObjectHashMap<>(100, 0.5f, -1);
+                Int2ObjectOpenHashMap<ValueAlgebra> quotSuccessor = new Int2ObjectOpenHashMap<>();
                 for (int distrSuccNr = 0; distrSuccNr < numDistrSucc; distrSuccNr++) {
                     int succState = originalGraph.getSuccessorNode(origDistr, distrSuccNr);
                     int succBlock = partition.getBlockNumberFromState(succState);
@@ -176,19 +175,15 @@ final class QuotientBuilder {
             }
             quotientGraph.prepareNode(blockNr, quotSuccessors.size());
             quotientState.set(blockNr, origState.get(representatant));
-            for (TIntObjectMap<ValueAlgebra> quotAction : quotSuccessors) {
-                quotientGraph.prepareNode(quotDistr, quotAction.size());
-                TIntObjectIterator<ValueAlgebra> iterator = quotAction.iterator();
-                int succNr = 0;
-                while (iterator.hasNext()) {
-                    iterator.advance();
-                    int toBlock = iterator.key();
-                    Value value = iterator.value();
-                    quotientGraph.setSuccessorNode(quotDistr, succNr, toBlock);
-                    quotientWeight.set(quotDistr, succNr, value);
-                    succNr++;
-                }
-                quotDistr++;
+            for (Int2ObjectOpenHashMap<ValueAlgebra> quotAction : quotSuccessors) {
+                quotientGraph.prepareNode(quotDistr[0], quotAction.size());
+                int[] succNr = new int[1];
+                quotAction.forEach((toBlock,value) -> {
+                    quotientGraph.setSuccessorNode(quotDistr[0], succNr[0], toBlock);
+                    quotientWeight.set(quotDistr[0], succNr[0], value);
+                    succNr[0]++;
+                });
+                quotDistr[0]++;
             }
         }
         return quotientGraph;

@@ -7,7 +7,7 @@ import epmc.param.value.ParameterSet;
 import epmc.param.value.dag.Dag;
 import epmc.param.value.dag.OperatorType;
 import epmc.param.value.dag.microcode.Microcode;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ExporterCInterval implements DagExporter {
     // TODO get rid of format instructions because they are too slow
@@ -15,7 +15,7 @@ public final class ExporterCInterval implements DagExporter {
 
     public final static class Builder implements DagExporter.Builder {
         private Dag dag;
-        private final TIntArrayList nodes = new TIntArrayList();
+        private final IntArrayList nodes = new IntArrayList();
 
         @Override
         public Builder setDag(Dag dag) {
@@ -79,7 +79,7 @@ public final class ExporterCInterval implements DagExporter {
     private ExporterCInterval(Builder builder) {
         assert builder != null;
         assert builder.dag != null;
-        microcode = new Microcode(builder.dag, builder.nodes.toArray());
+        microcode = new Microcode(builder.dag, builder.nodes.toIntArray());
     }
 
     @Override

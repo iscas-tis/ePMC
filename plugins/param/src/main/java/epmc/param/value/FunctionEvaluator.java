@@ -1,7 +1,6 @@
 package epmc.param.value;
 
 import epmc.value.TypeAlgebra;
-import epmc.value.Value;
 import epmc.value.ValueArrayAlgebra;
 
 public interface FunctionEvaluator {

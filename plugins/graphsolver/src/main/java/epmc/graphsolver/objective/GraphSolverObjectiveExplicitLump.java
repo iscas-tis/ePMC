@@ -29,14 +29,13 @@ import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;
 import epmc.graph.explicit.NodePropertyExpression;
 import epmc.value.ValueArray;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 public final class GraphSolverObjectiveExplicitLump implements GraphSolverObjectiveExplicit {
     private GraphExplicit graph;
     private List<Expression> atomics;
     private NodeProperty[] nodeProperties;
-    private TIntIntMap blockToNumberInt;
+    private Int2IntOpenHashMap blockToNumberInt;
     private int numStates;
 
     @Override
@@ -68,7 +67,8 @@ public final class GraphSolverObjectiveExplicitLump implements GraphSolverObject
 
     public void prepare() {
         this.nodeProperties = computeAtomNodeProperties(graph, atomics);
-        this.blockToNumberInt = new TIntIntHashMap(100, 0.5f, -1, -1);
+        this.blockToNumberInt = new Int2IntOpenHashMap();
+        this.blockToNumberInt.defaultReturnValue(-1);
         int numStates = graph.computeNumStates();
         for (int state = 0; state < numStates; state++) {
             int block = 0;

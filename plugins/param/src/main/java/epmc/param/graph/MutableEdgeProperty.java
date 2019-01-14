@@ -7,14 +7,14 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.Value;
 import epmc.value.ValueArray;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class MutableEdgeProperty implements EdgeProperty {
     private final MutableGraph graph;
     private final Type type;
     private final TypeArray typeArray;
     private final ArrayList<ValueArray> values = new ArrayList<>();
-    private final TIntArrayList sizes = new TIntArrayList();
+    private final IntArrayList sizes = new IntArrayList();
     private final Value value;
     private final Value tmp;
 
@@ -37,7 +37,7 @@ public final class MutableEdgeProperty implements EdgeProperty {
         assert node >= 0 : node;
         assert node < sizes.size() : node;
         assert successor >= 0 : successor;
-        assert successor < sizes.get(node) : successor;
+        assert successor < sizes.getInt(node) : successor;
         values.get(node).get(value, successor);
         return value;
     }
@@ -53,7 +53,7 @@ public final class MutableEdgeProperty implements EdgeProperty {
     }
 
     public void addSuccessor(int node, Value value) {
-        int size = sizes.get(node);
+        int size = sizes.getInt(node);
         ValueArray array = values.get(node);
         if (size >= array.size()) {
             int newSize = array.size();
@@ -84,15 +84,15 @@ public final class MutableEdgeProperty implements EdgeProperty {
     public void removeSuccessorNumber(int node, int succNr) {
         ValueArray nodeValues = values.get(node);
         if (graph.isRemoveShift()) {
-            for (int i = succNr; i < sizes.get(node) - 1; i++) {
+            for (int i = succNr; i < sizes.getInt(node) - 1; i++) {
                 nodeValues.get(value, i + 1);
                 nodeValues.set(value, i);
             }
         } else {
-            nodeValues.get(value, sizes.get(node) - 1);
+            nodeValues.get(value, sizes.getInt(node) - 1);
             nodeValues.set(value, succNr);            
         }
-        sizes.set(node, sizes.get(node) - 1);
+        sizes.set(node, sizes.getInt(node) - 1);
     }
 
     public void clearSuccessors(int node) {

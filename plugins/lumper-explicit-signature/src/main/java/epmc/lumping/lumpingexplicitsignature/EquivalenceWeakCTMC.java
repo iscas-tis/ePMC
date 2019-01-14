@@ -45,10 +45,8 @@ import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class EquivalenceWeakCTMC implements Equivalence {
     private GraphExplicit original;
@@ -57,8 +55,8 @@ public final class EquivalenceWeakCTMC implements Equivalence {
     private ValueArray successorWeights;
     private int[] predecessorsFromTo;
     private int[] predecessorStates;
-    private Map<Signature,TIntList> signatureToStates = new TreeMap<>();
-    private TIntIntMap blockToNumber = new TIntIntHashMap(10, 0.5f, -1, -1);
+    private Map<Signature,IntArrayList> signatureToStates = new TreeMap<>();
+    private Int2IntOpenHashMap blockToNumber = new Int2IntOpenHashMap();
     private boolean[] blocksSeen;
     private int[] blocksArr;
     private Value weight;
@@ -68,6 +66,10 @@ public final class EquivalenceWeakCTMC implements Equivalence {
     private GraphSolverObjectiveExplicit objective;
     private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, TypeWeightTransition.get(), TypeWeightTransition.get());
 
+    public EquivalenceWeakCTMC() {
+        blockToNumber.defaultReturnValue(-1);
+    }
+    
     @Override
     public void setSuccessorsFromTo(int[] successorsFromTo) {
         assert successorsFromTo != null;
@@ -126,8 +128,8 @@ public final class EquivalenceWeakCTMC implements Equivalence {
             computeSignature(block[i], partition);
         }
         newBlocks.clear();
-        for (TIntList intList : signatureToStates.values()) {
-            newBlocks.add(intList.toArray());
+        for (IntArrayList intList : signatureToStates.values()) {
+            newBlocks.add(intList.toIntArray());
         }
         return newBlocks;
     }
@@ -172,9 +174,9 @@ public final class EquivalenceWeakCTMC implements Equivalence {
                 add.apply(cmpSignature.values[blockNumber], cmpSignature.values[blockNumber], weight);
             }
         }
-        TIntList states = signatureToStates.get(cmpSignature);
+        IntArrayList states = signatureToStates.get(cmpSignature);
         if (states == null) {
-            states = new TIntArrayList();
+            states = new IntArrayList();
             signatureToStates.put(cloneSignature(cmpSignature), states);
         }
         states.add(node);

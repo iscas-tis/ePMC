@@ -1,14 +1,13 @@
 package epmc.param.value;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+
 public final class ParameterSet {
-    private final TObjectIntMap<Object> parameterToNumber = new TObjectIntHashMap<>();
+    private final Object2IntOpenHashMap<Object> parameterToNumber = new Object2IntOpenHashMap<>();
 	private final List<String> parameters = new ArrayList<>();
 	private final List<String> parametersExternal = Collections.unmodifiableList(parameters);
 	
@@ -30,7 +29,7 @@ public final class ParameterSet {
 	public int getParameterNumber(String parameter) {
 		assert parameter != null;
 		assert parameterToNumber.containsKey(parameter) : parameter;
-		return parameterToNumber.get(parameter);
+		return parameterToNumber.getInt(parameter);
 	}
 
 	public String getParameter(int parameterNumber) {

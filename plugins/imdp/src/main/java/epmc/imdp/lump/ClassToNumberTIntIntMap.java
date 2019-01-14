@@ -1,6 +1,6 @@
 package epmc.imdp.lump;
 
-import gnu.trove.map.hash.TIntIntHashMap;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
 
 public final class ClassToNumberTIntIntMap implements ClassToNumber {
     public final static class Builder implements ClassToNumber.Builder {
@@ -16,9 +16,10 @@ public final class ClassToNumberTIntIntMap implements ClassToNumber {
 
     }
 
-    private final TIntIntHashMap hash = new TIntIntHashMap(100, 0.5f, -1, -1);
+    private final Int2IntOpenHashMap hash = new Int2IntOpenHashMap();
 
     private ClassToNumberTIntIntMap(Builder builder) {
+        hash.defaultReturnValue(-1);
         assert builder != null;
     }
 

@@ -20,8 +20,6 @@
 
 package epmc.expression.standard.evaluatordd;
 
-import gnu.trove.map.hash.THashMap;
-
 import java.io.Closeable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -327,7 +325,7 @@ public final class ExpressionToDD implements Closeable {
         this.constants.putAll(constants);
         if (options.getBoolean(OptionsExpressionBasic.DD_EXPRESSION_CACHE)) {
             this.translationCache = new HashMap<>();
-            this.assignCache = new THashMap<>();
+            this.assignCache = new HashMap<>();
         } else {
             this.translationCache = null;
             this.assignCache = null;

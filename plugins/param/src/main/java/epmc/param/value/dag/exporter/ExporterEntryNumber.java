@@ -3,14 +3,14 @@ package epmc.param.value.dag.exporter;
 import java.io.IOException;
 
 import epmc.param.value.dag.Dag;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 public final class ExporterEntryNumber implements DagExporter {
     public final static String IDENTIFIER = "entry-number";
     
     public final static class Builder implements DagExporter.Builder {
         private Dag dag;
-        private final TIntArrayList nodes = new TIntArrayList();
+        private final IntArrayList nodes = new IntArrayList();
 
         @Override
         public Builder setDag(Dag dag) {
@@ -30,7 +30,7 @@ public final class ExporterEntryNumber implements DagExporter {
         }
     }
 
-    private final TIntArrayList nodes;
+    private final IntArrayList nodes;
 
     private ExporterEntryNumber(Builder builder) {
         assert builder != null;
@@ -41,7 +41,7 @@ public final class ExporterEntryNumber implements DagExporter {
     @Override
     public void export(Appendable result) throws IOException {
         if (nodes.size() == 1) {
-            result.append(Integer.toString(nodes.get(0)));
+            result.append(Integer.toString(nodes.getInt(0)));
         } else {
             result.append(nodes.toString());
         }
