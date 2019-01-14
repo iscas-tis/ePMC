@@ -30,10 +30,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.map.hash.TObjectLongHashMap;
-
 import com.sun.jna.Callback;
 import com.sun.jna.Pointer;
 
@@ -68,6 +64,9 @@ import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 public class LibraryDDSylvanMTBDD implements LibraryDD {
     private final ValueInteger integerZero = UtilValue.newValue(TypeInteger.get(), 0);
@@ -246,7 +245,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         valueToNumberCalled++;
         if (valueToNumber.containsKey(value)) {
             valueToNumberTime += System.nanoTime();
-            return valueToNumber.get(value);
+            return valueToNumber.getLong(value);
         }
         /*
         for (TLongObjectIterator<Value> it = numberToValue.iterator(); it.hasNext();) {
@@ -341,11 +340,11 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     /** number to use for next new Value object in table */
     private long nextNumber = 0;
     /** maps long to Value object it represents */
-    private TLongObjectHashMap<Value> numberToValue;
+    private Long2ObjectOpenHashMap<Value> numberToValue;
     /** maps Value object to its number */
-    private TObjectLongHashMap<Value> valueToNumber;
+    private Object2LongOpenHashMap<Value> valueToNumber;
     private final List<Operator> operators = new ArrayList<>();
-    private TObjectIntHashMap<Operator> operatorToNumber = new TObjectIntHashMap<>();
+    private Object2IntOpenHashMap<Operator> operatorToNumber = new Object2IntOpenHashMap<>();
 
     private long valueToNumberTime;
     private long valueToNumberCalled;
@@ -360,7 +359,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
 
     private int operatorToNumber(Operator operator) {
         assert operator != null;
-        int result = operatorToNumber.get(operator);
+        int result = operatorToNumber.getInt(operator);
         if (result > -1) {
             return result;
         }
@@ -383,8 +382,8 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
         ensure(Sylvan.loaded, ProblemsDD.SYLVAN_NATIVE_LOAD_FAILED);
 
         this.contextDD = contextDD;
-        this.numberToValue = new TLongObjectHashMap<>();
-        this.valueToNumber = new TObjectLongHashMap<>();
+        this.numberToValue = new Long2ObjectOpenHashMap<>();
+        this.valueToNumber = new Object2LongOpenHashMap<>();
 
         vop1 = new DD_VOP1Impl();
         vop2 = new DD_VOP2Impl();
@@ -430,9 +429,9 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
                 idOp3 = operands[2];
             } else {
                 // Call the identity operator to convert all the terminals to the same type.
-                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.get(OperatorId.ID));
+                idOp2 = Sylvan.MTBDD_uapply(operands[1], operatorToNumber.getInt(OperatorId.ID));
                 Sylvan.mtbdd_ref(idOp2);
-                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.get(OperatorId.ID));
+                idOp3 = Sylvan.MTBDD_uapply(operands[2], operatorToNumber.getInt(OperatorId.ID));
                 Sylvan.mtbdd_ref(idOp3);
                 doFree = true;
             }
@@ -558,7 +557,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractSum(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorAdd.ADD));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.getInt(OperatorAdd.ADD));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -568,7 +567,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractProduct(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMultiply.MULTIPLY));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.getInt(OperatorMultiply.MULTIPLY));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -578,7 +577,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMax(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMax.MAX));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.getInt(OperatorMax.MAX));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;
@@ -588,7 +587,7 @@ public class LibraryDDSylvanMTBDD implements LibraryDD {
     public long abstractMin(Type type, long dd, long cube) {
         assert type != null;
         this.resultType = type;
-        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.get(OperatorMin.MIN));
+        long result = Sylvan.MTBDD_abstract(dd, cube, operatorToNumber.getInt(OperatorMin.MIN));
         checkValueProblem();
         Sylvan.mtbdd_ref(result);
         return result;

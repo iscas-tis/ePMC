@@ -46,12 +46,9 @@ import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TLongIntMap;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TLongIntHashMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 
 public final class LibraryDDBeeDeeDee implements LibraryDD {
     public final static String IDENTIFIER = "beedeedee";
@@ -76,11 +73,11 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
     private BDD zeroNode;
     private BDD oneNode;
     private boolean alive;
-    private final TIntList variables = new TIntArrayList();
+    private final IntArrayList variables = new IntArrayList();
     private int nextVariable;
-    private TLongObjectMap<BDD> uniqueIdTable = new TLongObjectHashMap<>();
+    private Long2ObjectOpenHashMap<BDD> uniqueIdTable = new Long2ObjectOpenHashMap<>();
 
-    private TLongIntMap refs = new TLongIntHashMap();
+    private Long2IntOpenHashMap refs = new Long2IntOpenHashMap();
 
     @Override
     public void setContextDD(ContextDD contextDD) {
@@ -209,7 +206,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
 
     private void ref(BDD dd) {
         uniqueIdTable.put(dd.hashCodeAux(), dd);
-        refs.adjustOrPutValue(dd.hashCodeAux(), 1, 1);
+        refs.addTo(dd.hashCodeAux(), 1);
     }
 
     @Override
@@ -217,7 +214,7 @@ public final class LibraryDDBeeDeeDee implements LibraryDD {
         assert alive;
         assert dd >= 0;
         assert refs.containsKey(dd);
-        int refsRemaining = refs.adjustOrPutValue(dd, -1, 0);
+        int refsRemaining = refs.addTo(dd, -1);
         if(refsRemaining <= 0) {
             uniqueIdTable.get(dd).free();
             uniqueIdTable.remove(dd);

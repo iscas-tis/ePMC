@@ -39,8 +39,7 @@ import epmc.value.TypeBoolean;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 import jdd.bdd.BDD;
 import jdd.bdd.Permutation;
 
@@ -67,7 +66,7 @@ public final class LibraryDDJDD implements LibraryDD {
     private int zeroNode;
     private int oneNode;
     private boolean alive;
-    private final TIntList variables = new TIntArrayList();
+    private final IntArrayList variables = new IntArrayList();
 
     @Override
     public long apply(Operator operator, Type type, long... operands)
@@ -282,8 +281,8 @@ public final class LibraryDDJDD implements LibraryDD {
         int[] from = new int[permutation.length];
         int[] to = new int[permutation.length];
         for (int index = 0; index < permutation.length; index++) {
-            from[index] = variables.get(index);
-            to[index] = variables.get(permutation[index]);
+            from[index] = variables.getInt(index);
+            to[index] = variables.getInt(permutation[index]);
         }
 
         Permutation jddPerm = bdd.createPermutation(from, to);

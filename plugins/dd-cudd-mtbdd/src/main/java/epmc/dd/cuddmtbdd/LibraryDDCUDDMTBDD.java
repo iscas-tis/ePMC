@@ -68,12 +68,27 @@ import epmc.value.TypeReal;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
-import gnu.trove.map.custom_hash.TObjectIntCustomHashMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.map.hash.TObjectLongHashMap;
-import gnu.trove.strategy.IdentityHashingStrategy;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 public final class LibraryDDCUDDMTBDD implements LibraryDD {
+    private final static class IdentityHash implements Hash.Strategy<Object> {
+        
+        @Override
+        public boolean equals(Object arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public int hashCode(Object arg0) {
+            return System.identityHashCode(arg0);
+        }
+        
+    }
+    
+    private final static IdentityHash IDENTITY_HASH = new IdentityHash();
     public final static String IDENTIFIER = "cudd-mtbdd";
     private final ValueInteger integerZero = UtilValue.newValue(TypeInteger.get(), 0);
 
@@ -388,9 +403,9 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     /** number to use for next new Value object in table */
     private long nextNumber = 0;
     /** maps long to Value object it represents */
-    private TLongObjectHashMap<Value> numberToValue;
+    private Long2ObjectOpenHashMap<Value> numberToValue;
     /** maps Value object to its number */
-    private TObjectLongHashMap<Value> valueToNumber;    
+    private Object2LongOpenHashMap<Value> valueToNumber;    
     /** special values (e.g. 0, 1, true, false) to initialise CUDD manager */
     private DdValueTable valueTable;
     /** current number of variables */
@@ -413,7 +428,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         valueToNumberCalled++;
         if (valueToNumber.containsKey(value)) {
             valueToNumberTime += System.nanoTime();
-            return valueToNumber.get(value);
+            return valueToNumber.getLong(value);
         }
         /*
         for (TLongObjectIterator<Value> it = numberToValue.iterator(); it.hasNext();) {
@@ -452,13 +467,17 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     private GetOperatorNumberImpl getOperatorNumber;
     private Type resultType;
     private List<Operator> operators = new ArrayList<>();
-    private TObjectIntCustomHashMap<Operator> operatorToNumber = new TObjectIntCustomHashMap<>(new IdentityHashingStrategy<>(), 1000, 0.5f, -1);
+    private Object2IntOpenCustomHashMap<Operator> operatorToNumber = new Object2IntOpenCustomHashMap<>(IDENTITY_HASH);
     private Operator opId;
     private int opIdNr;
 
+    public LibraryDDCUDDMTBDD() {
+        operatorToNumber.defaultReturnValue(-1);
+    }
+    
     private int operatorToNumber(Operator operator) {
         assert operator != null;
-        int result = operatorToNumber.get(operator);
+        int result = operatorToNumber.getInt(operator);
         if (result > -1) {
             return result;
         }
@@ -482,8 +501,8 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
         opId = OperatorId.ID;
         opIdNr = operatorToNumber(opId);
 
-        this.numberToValue = new TLongObjectHashMap<>();
-        this.valueToNumber = new TObjectLongHashMap<>();
+        this.numberToValue = new Long2ObjectOpenHashMap<>();
+        this.valueToNumber = new Object2LongOpenHashMap<>();
         this.valueTable = new DdValueTable();
         this.vop1 = new DD_VOP1Impl();
         this.vop2 = new DD_VOP2Impl();
