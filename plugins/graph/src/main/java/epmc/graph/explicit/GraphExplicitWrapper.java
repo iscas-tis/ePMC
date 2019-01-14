@@ -36,14 +36,13 @@ import epmc.value.Type;
 import epmc.value.TypeArray;
 import epmc.value.TypeObject;
 import epmc.value.TypeObject.StorageType;
+import it.unimi.dsi.fastutil.bytes.ByteArrayList;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.shorts.ShortArrayList;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;
 import epmc.value.ValueSetString;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TByteArrayList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.list.array.TShortArrayList;
 
 // class which takes an existing graph and can be used to speed up computation
 // of successors and state attributes by caching
@@ -239,13 +238,13 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     private int maxNumSuccessors = Integer.MAX_VALUE;
 
     private int otfNextSuccessorPlace;
-    private final TIntList otfSuccessorsStart = new TIntArrayList();
+    private final IntArrayList otfSuccessorsStart = new IntArrayList();
     private OptionsTypesGraph.WrapperGraphSuccessorsSize sizeType;
-    private final TIntArrayList otfSuccorsSizeInt = new TIntArrayList();
-    private final TShortArrayList otfSuccorsSizeShort = new TShortArrayList();
-    private final TByteArrayList otfSuccorsSizeByte = new TByteArrayList();
+    private final IntArrayList otfSuccorsSizeInt = new IntArrayList();
+    private final ShortArrayList otfSuccorsSizeShort = new ShortArrayList();
+    private final ByteArrayList otfSuccorsSizeByte = new ByteArrayList();
 
-    private TIntArrayList cachedSuccessorNodes = new TIntArrayList();
+    private IntArrayList cachedSuccessorNodes = new IntArrayList();
 
     private final BitSet initNodes;
 
@@ -444,7 +443,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             }
             for (int succNr = 0; succNr < numSuccessors; succNr++) {
                 int entryNr = getCachedSuccessorEntry(node, succNr);
-                int chachedSuccNode = cachedSuccessorNodes.get(entryNr);
+                int chachedSuccNode = cachedSuccessorNodes.getInt(entryNr);
                 currentSuccessorNodes[succNr] = chachedSuccNode;
             }
         }
@@ -474,7 +473,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     }
 
     private void storeNode() {
-        int fromNode = otfSuccessorsStart.get(currentNode);
+        int fromNode = otfSuccessorsStart.getInt(currentNode);
         while (cachedSuccessorNodes.size() <= fromNode + numSuccessors) {
             cachedSuccessorNodes.add(-1);
         }
@@ -500,7 +499,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
     private int getCachedSuccessorEntry(int node, int succNr) {
         assert node >= 0;
         assert node < otfSuccessorsStart.size() : node + " " + otfSuccessorsStart.size();
-        return otfSuccessorsStart.get(node) + succNr;
+        return otfSuccessorsStart.getInt(node) + succNr;
     }
 
     private int getCachedNumSuccessors(int node) {
@@ -511,21 +510,21 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             if (node >= otfSuccorsSizeInt.size()) {
                 return -1;
             }
-            result = otfSuccorsSizeInt.get(node);
+            result = otfSuccorsSizeInt.getInt(node);
             assert result >= 0 : node;
             break;
         case SHORT:
             if (node >= otfSuccorsSizeShort.size()) {
                 return -1;
             }
-            result = otfSuccorsSizeShort.get(node);
+            result = otfSuccorsSizeShort.getShort(node);
             assert result >= 0 : node;
             break;
         case BYTE:
             if (node >= otfSuccorsSizeByte.size()) {
                 return -1;
             }
-            result = otfSuccorsSizeByte.get(node);
+            result = otfSuccorsSizeByte.getByte(node);
             assert result >= 0;
             break;
         default:
@@ -557,7 +556,7 @@ public final class GraphExplicitWrapper implements GraphExplicit {
             }
         }
 
-        int fromNode = otfSuccessorsStart.get(node);
+        int fromNode = otfSuccessorsStart.getInt(node);
         if (fromNode == -1) {
             otfSuccessorsStart.set(node, otfNextSuccessorPlace);            
             otfNextSuccessorPlace += numSuccessors;

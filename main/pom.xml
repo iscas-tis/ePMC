@@ -224,13 +224,6 @@
       <version>8.2.2</version>
     </dependency>
     <dependency>
-      <groupId>net.sf.trove4j</groupId>
-      <scope>system</scope>
-      <artifactId>trove4j</artifactId>
-      <systemPath>${project.basedir}/../lib/trove-141006211716.jar</systemPath>
-      <version>3.1a1</version>
-    </dependency>
-    <dependency>
       <groupId>jna</groupId>
       <artifactId>jna</artifactId>
       <version>4.2.2</version>

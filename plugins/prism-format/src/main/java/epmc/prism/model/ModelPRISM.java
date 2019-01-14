@@ -83,8 +83,7 @@ import epmc.time.JANITypeClock;
 import epmc.value.Type;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 // TODO probably better to do multiplicity checking just here, not in parser
 // TODO can already include some checks on probabilities, though not in all case
@@ -387,8 +386,8 @@ public final class ModelPRISM implements ModelJANIConverter {
             List<PlayerDefinition> players) {
         // TODO consistency checks
 
-        TObjectIntMap<String> moduleToPlayer = new TObjectIntHashMap<>();
-        TObjectIntMap<String> labelToPlayer = new TObjectIntHashMap<>();
+        Object2IntOpenHashMap<String> moduleToPlayer = new Object2IntOpenHashMap<>();
+        Object2IntOpenHashMap<String> labelToPlayer = new Object2IntOpenHashMap<>();
         int playerNumber = 0;
         for (PlayerDefinition player : players) {
             for (String module : player.getModules()) {
@@ -404,7 +403,7 @@ public final class ModelPRISM implements ModelJANIConverter {
             assert module.isCommands();
             ModuleCommands moduleCommands = module.asCommands();
             String moduleName = moduleCommands.getName();
-            int modulePlayer = moduleToPlayer.get(moduleName);
+            int modulePlayer = moduleToPlayer.getInt(moduleName);
             for (Command command : moduleCommands.getCommands()) {
                 ExpressionIdentifierStandard labelE = (ExpressionIdentifierStandard) command.getLabel();
                 String label = labelE.getName();
@@ -417,7 +416,7 @@ public final class ModelPRISM implements ModelJANIConverter {
                 } else {
                     assert labelToPlayer.containsKey(label) :
                         label + SPACE + labelToPlayer;
-                    int labelPlayer = labelToPlayer.get(label);
+                    int labelPlayer = labelToPlayer.getInt(label);
                     command.setPlayer(labelPlayer);
                 }
             }

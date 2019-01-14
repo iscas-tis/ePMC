@@ -63,19 +63,15 @@ import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueEnum;
 import epmc.value.ValueInteger;
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntIntMap;
-import gnu.trove.map.hash.TIntIntHashMap;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
+import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntListIterator;
 
 // TODO integrate transitions with presNodes for further speedup
 
 public final class GraphBuilderDD implements Closeable {
     private boolean closed;
-    private final TIntIntMap varToNumber = new TIntIntHashMap();
+    private final Int2IntOpenHashMap varToNumber = new Int2IntOpenHashMap();
     private final SupportWalkerNodeMapInt lowMapPres;
     private final SupportWalkerNodeMapInt lowMapNext;
     private final int numNonsinkNodes;
@@ -92,13 +88,13 @@ public final class GraphBuilderDD implements Closeable {
     private final BitSet nextVars;
     private int currentAction = 0;
     private int actionDepth = 0;
-    private final TIntStack presNumbers = new TIntArrayStack();
-    private final TIntStack nextNumbers = new TIntArrayStack();
+    private final IntArrayList presNumbers = new IntArrayList();
+    private final IntArrayList nextNumbers = new IntArrayList();
     private final GraphDD graphDD;
     private boolean uniformise;
     private ValueAlgebra unifRate;
     private int[] nodeOrderMap;
-    private TIntIntMap[] actionsEnabled;
+    private Int2IntOpenHashMap[] actionsEnabled;
     private int[] nondetOffset;
     private final DD cubeDD;
     private final DD[] sinks;
@@ -199,7 +195,7 @@ public final class GraphBuilderDD implements Closeable {
         presNodes.dispose();
 
         if(nondet && stateEncoding) {
-            actionsEnabled = new TIntIntMap[numNonsinkNodes];
+            actionsEnabled = new Int2IntOpenHashMap[numNonsinkNodes];
             nondetOffset = new int[numNonsinkNodes];
             countIntermediateStates(actionsEnabled);
             int offset = 0;
@@ -216,7 +212,7 @@ public final class GraphBuilderDD implements Closeable {
         this(graphDD, sinks, nondet, true);
     }
 
-    private void countIntermediateStates(TIntIntMap[] actionsEnabled) {
+    private void countIntermediateStates(Int2IntOpenHashMap[] actionsEnabled) {
         if (transitions.isZero()) {
             return;
         }
@@ -224,7 +220,7 @@ public final class GraphBuilderDD implements Closeable {
             int presNode = presNodeNumber();
             int actionNumber = actionNumber();
             if(actionsEnabled[presNode] == null) {
-                actionsEnabled[presNode] = new TIntIntHashMap();
+                actionsEnabled[presNode] = new Int2IntOpenHashMap();
             }
             actionsEnabled[presNode].putIfAbsent(actionNumber, actionsEnabled[presNode].size());
         } else {
@@ -348,7 +344,7 @@ public final class GraphBuilderDD implements Closeable {
         assert presNodes.isLeaf();
         int leafValue = ValueInteger.as(presNodes.value()).getInt();
         if (leafValue == 1) {
-            int number = presNumbers.peek();
+            int number = presNumbers.topInt();
             assert number < nodeOrderMap.length : number + " " + nodeOrderMap.length;
             return nodeOrderMap[number];
         } else {
@@ -362,7 +358,7 @@ public final class GraphBuilderDD implements Closeable {
 
     private int presNodeNumber() {
         assert presNodes.isLeaf();
-        int number = presNumbers.peek();
+        int number = presNumbers.topInt();
         assert number < nodeOrderMap.length : number + " " + nodeOrderMap.length;
         return nodeOrderMap[number];
     }
@@ -371,7 +367,7 @@ public final class GraphBuilderDD implements Closeable {
         assert transitions.isLeaf();
         int leafValue = ValueInteger.as(nextNodes.value()).getInt();
         if (leafValue == 1) {
-            int number = nextNumbers.peek();
+            int number = nextNumbers.topInt();
             assert number < nodeOrderMap.length : number + " " + nodeOrderMap.length;
             return nodeOrderMap[number];
         } else {
@@ -389,10 +385,10 @@ public final class GraphBuilderDD implements Closeable {
         int nextNodesVar = nextNodes.variable();
         if (cubeVar == presNodesVar) {
             presNodes.low();
-            presNumbers.push(presNumbers.peek());
+            presNumbers.push(presNumbers.topInt());
         } else if (cubeVar == nextNodesVar) {
             nextNodes.low();
-            nextNumbers.push(nextNumbers.peek());
+            nextNumbers.push(nextNumbers.topInt());
         } else {
             currentAction = currentAction >>> 1;
         actionDepth++;
@@ -405,13 +401,13 @@ public final class GraphBuilderDD implements Closeable {
         int presNodesVar = presNodes.variable();
         int nextNodesVar = nextNodes.variable();
         if (cubeVar == presNodesVar) {
-            int number = presNumbers.peek();
+            int number = presNumbers.topInt();
             assert lowMapPres.isSet();
             number += lowMapPres.getInt();
             presNumbers.push(number);
             presNodes.high();
         } else if (cubeVar == nextNodesVar) {
-            int number = nextNumbers.peek();
+            int number = nextNumbers.topInt();
             assert lowMapNext.isSet();
             number += lowMapNext.getInt();
             nextNumbers.push(number);
@@ -432,9 +428,9 @@ public final class GraphBuilderDD implements Closeable {
             nextNodes.back();
         }
         if (presVars.get(cubeVar)) {
-            presNumbers.pop();
+            presNumbers.popInt();
         } else if (nextVars.get(cubeVar)) {
-            nextNumbers.pop();
+            nextNumbers.popInt();
         } else {
             currentAction = (currentAction & 0x3FFFFFFF) << 1;
             actionDepth--;
@@ -469,12 +465,12 @@ public final class GraphBuilderDD implements Closeable {
         OperatorEvaluator divide = ContextValue.get().getEvaluator(OperatorDivide.DIVIDE, TypeWeight.get(), TypeWeight.get());
         ValueBoolean state = typeBoolean.newValue();
         ValueEnum player = typePlayer.newValue();
-        ArrayList<TIntList> targets = new ArrayList<>(numNodesInclNondet);
+        ArrayList<IntArrayList> targets = new ArrayList<>(numNodesInclNondet);
         List<List<Value>> probs = new ArrayList<>(numNodesInclNondet);
         BitSet states = UtilBitSet.newBitSetUnbounded();
         OperatorEvaluator max = ContextValue.get().getEvaluator(OperatorMax.MAX, unifRate.getType(), sum.getType());
         for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
-            targets.add(new TIntArrayList());
+            targets.add(new IntArrayList());
             probs.add(new ArrayList<Value>());
         }
         buildGraphInternal(targets, probs, states);
@@ -501,7 +497,7 @@ public final class GraphBuilderDD implements Closeable {
         NodeProperty nodePropertyPlayer = graph.getNodeProperty(CommonProperties.PLAYER);
         EdgeProperty edgePropertyWeight = graph.getEdgeProperty(CommonProperties.WEIGHT);
         for (int nodeNr = 0; nodeNr < numNodesInclNondet; nodeNr++) {
-            TIntList thisTargets = targets.get(nodeNr);
+            IntArrayList thisTargets = targets.get(nodeNr);
             List<Value> thisProbs = probs.get(nodeNr);
             set.apply(sum, zero);
             for (Value value : thisProbs) {
@@ -515,7 +511,7 @@ public final class GraphBuilderDD implements Closeable {
             }
             graph.prepareNode(nodeNr, numSuccessors);
             for (int succNr = 0; succNr < thisTargets.size(); succNr++) {
-                int succNode = thisTargets.get(succNr);
+                int succNode = thisTargets.getInt(succNr);
                 set.apply(weight, zero);
                 eq.apply(cmp, sum, zero);
                 if (cmp.getBoolean()) {
@@ -576,7 +572,7 @@ public final class GraphBuilderDD implements Closeable {
         return nodeOrderMap;
     }
 
-    private void buildGraphInternal(List<TIntList> targets,
+    private void buildGraphInternal(List<IntArrayList> targets,
             List<List<Value>> probs, BitSet states) {
         if (transitions.isZero()) {
             return;
@@ -591,9 +587,9 @@ public final class GraphBuilderDD implements Closeable {
                     int actionNumber = actionNumber();
                     int nondetNodeNum = numNodes + nondetOffset[presNode] + actionsEnabled[presNode].get(actionNumber);
                     boolean addNondetState = true;
-                    TIntIterator it = targets.get(presNode).iterator();
+                    IntListIterator it = targets.get(presNode).iterator();
                     while(it.hasNext()) {
-                        if(it.next() == nondetNodeNum) {
+                        if (it.nextInt() == nondetNodeNum) {
                             addNondetState = false;
                             break;
                         }
@@ -691,12 +687,12 @@ public final class GraphBuilderDD implements Closeable {
         assert !presNodes.isLeaf();
         presNodes.low();
         target.low();
-        presNumbers.push(presNumbers.peek());
+        presNumbers.push(presNumbers.topInt());
     }
 
     private void highDDToBitSet(SupportWalker target) {
         assert !presNodes.isLeaf();
-        int number = presNumbers.peek();
+        int number = presNumbers.topInt();
         number += lowMapPres.getInt();
         presNumbers.push(number);
 
@@ -707,7 +703,7 @@ public final class GraphBuilderDD implements Closeable {
     private void backDDToBitSet(SupportWalker target) {
         presNodes.back();
         target.back();
-        presNumbers.pop();
+        presNumbers.popInt();
     }
 
     public DD valuesToDD(ValueArray explResult) {
@@ -767,12 +763,12 @@ public final class GraphBuilderDD implements Closeable {
     private void lowValuesToDD() {
         assert !presNodes.isLeaf();
         presNodes.low();
-        presNumbers.push(presNumbers.peek());
+        presNumbers.push(presNumbers.topInt());
     }
 
     private void highValuesToDD() {
         assert !presNodes.isLeaf();
-        int number = presNumbers.peek();
+        int number = presNumbers.topInt();
         number += lowMapPres.getInt();
         presNumbers.push(number);
 
@@ -781,7 +777,7 @@ public final class GraphBuilderDD implements Closeable {
 
     private void backValuesToDD() {
         presNodes.back();
-        presNumbers.pop();
+        presNumbers.popInt();
     }
 
     public void setUniformise(boolean uniformise) {

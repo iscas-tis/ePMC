@@ -20,9 +20,6 @@
 
 package epmc.prism.model;
 
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-
 import static epmc.error.UtilError.ensure;
 
 import java.util.ArrayList;
@@ -71,6 +68,7 @@ import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 final class GraphDDPRISM implements GraphDD {
     public enum TransitionEncoding {
@@ -81,7 +79,7 @@ final class GraphDDPRISM implements GraphDD {
     private final GraphDDProperties properties;
     private final ModelPRISM model;
     private final ExpressionToDD expressionToDD;
-    private final TObjectIntMap<Expression> actions;
+    private final Object2IntOpenHashMap<Expression> actions;
     private final Map<Expression,Type> variables;
     private final DD initial;
     private final DD transitionsBoolean;
@@ -109,7 +107,7 @@ final class GraphDDPRISM implements GraphDD {
     private DD states;
     private int rateIndex = 0;          // rate index for MA
     private final String RATE = "rate"; // rate action for MA
-    private TObjectIntMap<String> playerNameToNumber;
+    private Object2IntOpenHashMap<String> playerNameToNumber;
 
     /* constructors */
 
@@ -350,8 +348,7 @@ final class GraphDDPRISM implements GraphDD {
     }
 
     private static DD computeDeadlock(ModelPRISM model,
-            ExpressionToDD expressionToDD, DD states)
-    {
+            ExpressionToDD expressionToDD, DD states) {
         Map<String,Module> modules = new LinkedHashMap<>();
         for (Module module : model.getModules()) {
             modules.put(module.getName(), module);
@@ -584,8 +581,8 @@ final class GraphDDPRISM implements GraphDD {
         return init;
     }
 
-    private TObjectIntMap<Expression> collectActions() {
-        TObjectIntMap<Expression> actions = new TObjectIntHashMap<>();
+    private Object2IntOpenHashMap<Expression> collectActions() {
+        Object2IntOpenHashMap<Expression> actions = new Object2IntOpenHashMap<>();
         actions.put(new ExpressionIdentifierStandard.Builder()
                 .setName("")
                 .build(), 0);
@@ -760,7 +757,7 @@ final class GraphDDPRISM implements GraphDD {
         }
         DD commandDD = guard;
 
-        int action = actions.get(command.getLabel());
+        int action = actions.getInt(command.getLabel());
         DD actionDD = actionVariable.newIntValue(0, action);
         if (withWeights) {
             actionDD = actionDD.toMTWith();
@@ -769,7 +766,7 @@ final class GraphDDPRISM implements GraphDD {
             commandDD = commandDD.andWith(actionDD);
         }
 
-        boolean isMARateLine = (actions.get(
+        boolean isMARateLine = (actions.getInt(
                 new ExpressionIdentifierStandard.Builder()
                 .setName(RATE)
                 .build()) == action)
@@ -948,7 +945,7 @@ final class GraphDDPRISM implements GraphDD {
                 .setName(labelString)
                 .build();
         assert actions.containsKey(label);
-        int action = actions.get(label);
+        int action = actions.getInt(label);
         return actionVariable.newIntValue(0, action);
     }
 
@@ -995,17 +992,17 @@ final class GraphDDPRISM implements GraphDD {
             ExpressionIdentifierStandard expressionIdentifier = (ExpressionIdentifierStandard) expression;
             String name = expressionIdentifier.getName();
             assert playerNameToNumber.containsKey(name);
-            return playerNameToNumber.get(name);
+            return playerNameToNumber.getInt(name);
         }
     }
     
-    private static TObjectIntMap<String> computeNameToNumber(
+    private static Object2IntOpenHashMap<String> computeNameToNumber(
             List<PlayerDefinition> players) {
         if (players == null) {
             return null;
         }
 
-        TObjectIntMap<String> result = new TObjectIntHashMap<>();
+        Object2IntOpenHashMap<String> result = new Object2IntOpenHashMap<>();
         int playerNumber = 0;
         for (PlayerDefinition player : players) {
             result.put(player.getName(), playerNumber);

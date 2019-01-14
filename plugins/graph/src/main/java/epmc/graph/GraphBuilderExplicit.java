@@ -38,9 +38,8 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueArrayInteger;
 import epmc.value.ValueObject;
-import gnu.trove.list.TIntList;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.set.hash.THashSet;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 // TODO class would profit from some code review
 
@@ -128,7 +127,7 @@ public final class GraphBuilderExplicit {
         if (parts == null) {
             parts = prepareParts(inputGraph, reorder);
         }
-        TIntList partsBegin = new TIntArrayList();
+        IntArrayList partsBegin = new IntArrayList();
         this.inputToOutputNodes = TypeInteger.get().getTypeArray().newValue();
         this.outputToInputNodes = TypeInteger.get().getTypeArray().newValue();
         prepareInputToOutputNodes(inputGraph, parts, sinks, inputToOutputNodes, outputToInputNodes, partsBegin);
@@ -252,7 +251,7 @@ public final class GraphBuilderExplicit {
         for (Object property : graphProperties) {
             assert property != null;
         }
-        assert new THashSet<>(graphProperties).size()
+        assert new ObjectOpenHashSet<>(graphProperties).size()
         == graphProperties.size();
         return true;
     }
@@ -264,8 +263,8 @@ public final class GraphBuilderExplicit {
         for (Object property : nodeProperties) {
             assert property != null;
         }
-        assert new THashSet<>(nodeProperties).size()
-        == nodeProperties.size() : new THashSet<>(nodeProperties) + " " + nodeProperties;
+        assert new ObjectOpenHashSet<>(nodeProperties).size()
+        == nodeProperties.size() : new ObjectOpenHashSet<>(nodeProperties) + " " + nodeProperties;
         return true;
     }
 
@@ -276,7 +275,7 @@ public final class GraphBuilderExplicit {
         for (Object property : edgeProperties) {
             assert property != null;
         }
-        assert new THashSet<>(edgeProperties).size()
+        assert new ObjectOpenHashSet<>(edgeProperties).size()
         == edgeProperties.size();
         return true;
     }
@@ -304,7 +303,7 @@ public final class GraphBuilderExplicit {
             ValueArrayInteger outputToInputNodes,
             List<BitSet> sinksList,
             List<BitSet> parts,
-            TIntList partsBegin,
+            IntArrayList partsBegin,
             List<Object> edgeProperties,
             boolean uniformise) {
         EdgeProperty[] inputProperties = new EdgeProperty[edgeProperties.size()];
@@ -378,7 +377,7 @@ public final class GraphBuilderExplicit {
             ValueArrayInteger outputToInputNodes,
             List<BitSet> sinksList,
             List<BitSet> parts,
-            TIntList partsBegin,
+            IntArrayList partsBegin,
             List<Object> edgeProperties,
             boolean uniformise) {
         EdgeProperty[] inputProperties = new EdgeProperty[edgeProperties.size()];
@@ -402,7 +401,7 @@ public final class GraphBuilderExplicit {
                 int sinkNr = getListNr(inputNode, sinksList);
                 int partNr = getListNr(inputNode, parts);
                 int nextPart = (partNr + 1) % parts.size();
-                int nextPartBegin = partsBegin.get(nextPart);
+                int nextPartBegin = partsBegin.getInt(nextPart);
                 outputGraph.prepareNode(outputNode, 1);
                 outputGraph.setSuccessorNode(outputNode, 0, nextPartBegin + sinkNr);
                 weight.set(outputNode, 0, one);
@@ -431,7 +430,7 @@ public final class GraphBuilderExplicit {
             GraphExplicit outputGraph, GraphExplicit inputGraph,
             ValueArrayInteger inputToOutputNodes, ValueArrayInteger outputToInputNodes,
             List<BitSet> sinksList,
-            List<BitSet> parts, TIntList partsBegin,
+            List<BitSet> parts, IntArrayList partsBegin,
             List<Object> edgeProperties) {
         BitSet sinks = computeSinks(sinksList);
         int numOutputNodes = outputToInputNodes.size();
@@ -442,7 +441,7 @@ public final class GraphBuilderExplicit {
             if (sinks.get(inputNode)) {
                 int partNr = getListNr(inputNode, parts);
                 int nextPart = (partNr + 1) % parts.size();
-                int nextPartBegin = partsBegin.get(nextPart);
+                int nextPartBegin = partsBegin.getInt(nextPart);
                 numInEdges.set(numInEdges.getInt(nextPartBegin) + 1, nextPartBegin);
             } else {
                 int numSuccessors = inputGraph.getNumSuccessors(inputNode);
@@ -470,7 +469,7 @@ public final class GraphBuilderExplicit {
             if (sinks.get(inputNode)) {
                 int partNr = getListNr(inputNode, parts);
                 int nextPart = (partNr + 1) % parts.size();
-                int nextPartBegin = partsBegin.get(nextPart);
+                int nextPartBegin = partsBegin.getInt(nextPart);
                 weight.set(nextPartBegin, numInEdges.getInt(nextPartBegin), one);
                 numInEdges.set(numInEdges.getInt(nextPartBegin) + 1, nextPartBegin);
             } else {
@@ -527,7 +526,7 @@ public final class GraphBuilderExplicit {
     }
 
     private static void prepareInputToOutputNodes(GraphExplicit inputGraph, List<BitSet> parts, List<BitSet> sinkList,
-            ValueArrayInteger inputToOutputNodes, Value outputToInputNodes, TIntList partsBegin)
+            ValueArrayInteger inputToOutputNodes, Value outputToInputNodes, IntArrayList partsBegin)
     {
         BitSet inputNodes = UtilBitSet.newBitSetUnbounded();
         inputNodes.set(0, inputGraph.getNumNodes(), true);
@@ -555,7 +554,7 @@ public final class GraphBuilderExplicit {
     private static void prepareOutputToInputNodes(GraphExplicit inputGraph,
             List<BitSet> parts, List<BitSet> sinkList,
             ValueArrayInteger inputToOutputNodes,
-            ValueArrayInteger outputToInputNodes, TIntList partsBegin)
+            ValueArrayInteger outputToInputNodes, IntArrayList partsBegin)
     {
         int numOutputNodes = 0;
         int numInputNodes = inputGraph.getNumNodes();

@@ -20,14 +20,11 @@
 
 package epmc.graph.explicit;
 
-import epmc.graph.CommonProperties;
 import epmc.util.BitSet;
 import epmc.util.UtilBitSet;
 import epmc.value.Type;
 import epmc.value.TypeArray;
-import epmc.value.TypeBoolean;
 import epmc.value.TypeInteger;
-import epmc.value.TypeWeight;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueArray;

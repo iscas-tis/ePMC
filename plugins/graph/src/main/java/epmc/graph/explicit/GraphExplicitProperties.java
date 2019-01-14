@@ -37,8 +37,7 @@ import epmc.value.OperatorEvaluator;
 import epmc.value.Type;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Stores the graph, node, and edge properties of an explicit-state graph.
@@ -162,7 +161,7 @@ public final class GraphExplicitProperties implements Serializable {
     }
 
     public void explore(BitSet start) {
-        TIntStack todo = new TIntArrayStack();
+        IntArrayList todo = new IntArrayList();
         for (int node = start.nextSetBit(0); node >= 0; node = start.nextSetBit(node+1)) {
             if (!exploredNodes.get(node)) {
                 exploredNodes.set(node);
@@ -171,7 +170,7 @@ public final class GraphExplicitProperties implements Serializable {
         }
 
         while (todo.size() > 0) {
-            int node = todo.pop();
+            int node = todo.popInt();
             for (int succNr = 0; succNr < graph.getNumSuccessors(node); succNr++) {
                 int succ = graph.getSuccessorNode(node, succNr);
                 assert succ >= 0;
