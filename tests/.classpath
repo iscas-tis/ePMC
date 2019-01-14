@@ -3,8 +3,8 @@
 	<classpathentry kind="src" path="src/test/java"/>
 	<classpathentry kind="src" path="src/test/resources"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graph"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-dd"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
@@ -18,6 +18,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-graphsolver-iterative"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-propertysolver-ltl-lazy"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-exporter"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-exporter"/>
 	<classpathentry kind="lib" path="/epmc/lib/guava-18.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/epmc/lib/guava-18.0-javadoc.jar!/com"/>
