@@ -20,32 +20,13 @@
 
 package epmc.dd;
 
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.iterator.TLongIterator;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.TLongByteMap;
-import gnu.trove.map.TLongLongMap;
-import gnu.trove.map.TLongObjectMap;
-import gnu.trove.map.hash.TCustomHashMap;
-import gnu.trove.map.hash.THashMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.map.hash.TLongByteHashMap;
-import gnu.trove.map.hash.TLongLongHashMap;
-import gnu.trove.map.hash.TLongObjectHashMap;
-import gnu.trove.set.TIntSet;
-import gnu.trove.set.TLongSet;
-import gnu.trove.set.hash.TCustomHashSet;
-import gnu.trove.set.hash.THashSet;
-import gnu.trove.set.hash.TIntHashSet;
-import gnu.trove.set.hash.TLongHashSet;
-import gnu.trove.strategy.IdentityHashingStrategy;
-
 import java.io.Closeable;
 import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -90,12 +71,39 @@ import epmc.value.Value;
 import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 import epmc.value.ValueInteger;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntIterator;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2LongOpenHashMap;
+import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenCustomHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectOpenCustomHashSet;
+import it.unimi.dsi.fastutil.objects.ObjectOpenHashSet;
 
 // TODO add support for JINC as soon as/if ever notified by mail
 // TODO documentation
 // TODO remove entries from Value table if no longer used
 
 public final class ContextDD implements Closeable {
+    private final IdentityHash IDENTITY_HASH = new IdentityHash();
+
+    private final static class IdentityHash implements Hash.Strategy<Object> {
+        @Override
+        public boolean equals(Object arg0, Object arg1) {
+            return arg0 == arg1;
+        }
+
+        @Override
+        public int hashCode(Object arg0) {
+            return System.identityHashCode(arg0);
+        }
+        
+    }
+    
     private static ContextDD contextDD;
 
     public static ContextDD get() {
@@ -159,9 +167,9 @@ public final class ContextDD implements Closeable {
     private final static BigInteger BIG_INTEGER_TWO = new BigInteger("2");
     private final ArrayList<String> variableNames = new ArrayList<>();
     private final Map<LibraryDD,Set<DD>> nodes
-    = new TCustomHashMap<>(new IdentityHashingStrategy<>());
+    = new Object2ObjectOpenCustomHashMap<LibraryDD,Set<DD>>(IDENTITY_HASH);
     private final Set<LibraryDD> lowLevels
-    = new TCustomHashSet<>(new IdentityHashingStrategy<>());
+    = new ObjectOpenCustomHashSet<LibraryDD>(IDENTITY_HASH);
     private final Set<LibraryDD> lowLevelsExt = Collections.unmodifiableSet(lowLevels);
 
     /** whether this context has not yet been shut down */
@@ -171,7 +179,7 @@ public final class ContextDD implements Closeable {
     private final LibraryDD lowLevelMulti;
 
     private final Map<LibraryDD,List<DD>> llVariables =
-            new TCustomHashMap<>(new IdentityHashingStrategy<>());
+            new Object2ObjectOpenCustomHashMap<>(IDENTITY_HASH);
     private final boolean debugDD;
     private final static boolean PRINT_INVERTER_ARCS = false;
     private final boolean useAndExist;
@@ -210,8 +218,8 @@ public final class ContextDD implements Closeable {
     }
 
     private boolean assertPutNodes() {
-        this.nodes.put(lowLevelMulti, new TCustomHashSet<DD>(new IdentityHashingStrategy<>()));
-        this.nodes.put(lowLevelBinary, new TCustomHashSet<DD>(new IdentityHashingStrategy<>()));
+        this.nodes.put(lowLevelMulti, new ObjectOpenCustomHashSet<DD>(IDENTITY_HASH));
+        this.nodes.put(lowLevelBinary, new ObjectOpenCustomHashSet<DD>(IDENTITY_HASH));
         return true;
     }
 
@@ -691,12 +699,12 @@ public final class ContextDD implements Closeable {
     }
 
 
-    public TIntSet support(DD dd) {
+    public IntOpenHashSet support(DD dd) {
         assert alive();
         assert assertValidDD(dd);
         totalTime.start();
-        TIntSet set = new TIntHashSet();
-        TLongSet seen = new TLongHashSet();
+        IntOpenHashSet set = new IntOpenHashSet();
+        LongOpenHashSet seen = new LongOpenHashSet();
         Walker walker = dd.walker();
         support(walker, set, seen);
         totalTime.stop();
@@ -707,9 +715,9 @@ public final class ContextDD implements Closeable {
     public Set<VariableDD> highLevelSupport(DD dd) {
         assert alive();
         assert assertValidDD(dd);
-        Set<VariableDD> result = new THashSet<>();
+        Set<VariableDD> result = new ObjectOpenHashSet<>();
         totalTime.start();
-        TIntSet llSupport = support(dd);
+        IntOpenHashSet llSupport = support(dd);
         for (VariableDD variableDD : variables) {
             for (DD ddVar : variableDD.getDDVariables()) {
                 if (llSupport.contains(ddVar.variable())) {
@@ -722,7 +730,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    private void support(Walker walker, TIntSet set, TLongSet seen) {
+    private void support(Walker walker, IntOpenHashSet set, LongOpenHashSet seen) {
         assert walker != null;
         assert set != null;
         assert seen != null;
@@ -739,7 +747,7 @@ public final class ContextDD implements Closeable {
         walker.back();
     }
 
-    private void toStringEnumNodes(Walker walker, TLongLongMap numeration) {
+    private void toStringEnumNodes(Walker walker, Long2LongOpenHashMap numeration) {
         if (PRINT_INVERTER_ARCS) {
             walker.regular();
         }
@@ -759,7 +767,7 @@ public final class ContextDD implements Closeable {
         }
     }
 
-    private void toStringNodesRecurse(Walker walker, TLongSet seen, StringBuilder builder, TLongLongMap nodeMap) {
+    private void toStringNodesRecurse(Walker walker, LongOpenHashSet seen, StringBuilder builder, Long2LongOpenHashMap nodeMap) {
         if (PRINT_INVERTER_ARCS) {
             walker.regular();
         }
@@ -794,13 +802,13 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         StringBuilder builder = new StringBuilder();
         builder.append("digraph {\n");
-        TLongSet seen = new TLongHashSet();
+        LongOpenHashSet seen = new LongOpenHashSet();
         boolean complement = dd.walker(!PRINT_INVERTER_ARCS).isComplement();
         Walker walker = dd.walker(false);
         if (complement) {
             builder.append("  nodeinit [style=invisible]\n");
         }
-        TLongLongMap nodeMap = new TLongLongHashMap();
+        Long2LongOpenHashMap nodeMap = new Long2LongOpenHashMap();
         toStringEnumNodes(walker, nodeMap);
         toStringNodesRecurse(walker, seen, builder, nodeMap);
         builder.append("\n");
@@ -817,12 +825,12 @@ public final class ContextDD implements Closeable {
 
         walker = dd.walker();
         walker.regular();
-        TIntObjectMap<TLongSet> map = new TIntObjectHashMap<>(0, 0.5F, -2);
+        Int2ObjectOpenHashMap<LongOpenHashSet> map = new Int2ObjectOpenHashMap<>();
         seen.clear();
         toStringRanks(walker, seen, map, builder);
-        TIntIterator mapIter = map.keySet().iterator();
+        IntIterator mapIter = map.keySet().iterator();
         while (mapIter.hasNext()) {
-            int number = mapIter.next();
+            int number = mapIter.nextInt();
             if (number >= 0) {
                 builder.append("  var" + number + " [label=\"" );
                 builder.append(variableNames.get(number) + "\"");
@@ -831,17 +839,17 @@ public final class ContextDD implements Closeable {
             }
         }
         builder.append("\n");
-        int[] sameRank = map.keySet().toArray();
+        int[] sameRank = map.keySet().toIntArray();
         Arrays.sort(sameRank);
         for (int number : sameRank) {
-            TLongSet varNodesSet = map.get(number);
+            LongOpenHashSet varNodesSet = map.get(number);
             builder.append("  {rank=same; ");
-            TLongIterator varIter = varNodesSet.iterator();
+            LongIterator varIter = varNodesSet.iterator();
             long[] nodes = new long[varNodesSet.size()];
 
             int index = 0;
             while (varIter.hasNext()) {
-                nodes[index] = nodeMap.get(varIter.next());
+                nodes[index] = nodeMap.get(varIter.nextLong());
                 index++;
             }
             Arrays.sort(nodes);
@@ -861,8 +869,8 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    private void toStringRanks(Walker walker, TLongSet seen,
-            TIntObjectMap<TLongSet> map,
+    private void toStringRanks(Walker walker, LongOpenHashSet seen,
+            Int2ObjectOpenHashMap<LongOpenHashSet> map,
             StringBuilder builder) {
         if (PRINT_INVERTER_ARCS) {
             walker.regular();
@@ -873,15 +881,15 @@ public final class ContextDD implements Closeable {
         seen.add(walker.uniqueId());
         if (walker.isLeaf()) {
             if (!map.containsKey(-1)) {
-                map.put(-1, new TLongHashSet(1, 0.5F, -1L));
+                map.put(-1, new LongOpenHashSet());
             }
-            TLongSet set = map.get(-1);
+            LongOpenHashSet set = map.get(-1);
             set.add(walker.uniqueId());
         } else {
             if (!map.containsKey(walker.variable())) {
-                map.put(walker.variable(), new TLongHashSet(1, 0.5F, -1));
+                map.put(walker.variable(), new LongOpenHashSet());
             }
-            TLongSet set = map.get(walker.variable());
+            LongOpenHashSet set = map.get(walker.variable());
             set.add(walker.uniqueId());            
             walker.low();
             toStringRanks(walker, seen, map, builder);
@@ -892,7 +900,7 @@ public final class ContextDD implements Closeable {
         }
     }
 
-    private void toStringEdgesRecurse(Walker dd, TLongSet seen, StringBuilder builder, TLongLongMap nodeMap) {
+    private void toStringEdgesRecurse(Walker dd, LongOpenHashSet seen, StringBuilder builder, Long2LongOpenHashMap nodeMap) {
         if (seen.contains(dd.uniqueId())) {
             return;
         }
@@ -949,7 +957,7 @@ public final class ContextDD implements Closeable {
         return alive;
     }
 
-    public TLongObjectMap<BigInteger> countSatMap(DD dd, DD cube) {
+    public Long2ObjectOpenHashMap<BigInteger> countSatMap(DD dd, DD cube) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
@@ -957,7 +965,7 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         Walker ddWalker = dd.walker();
         Walker cubeWalker = cube.walker();
-        TLongObjectHashMap<BigInteger> cache = new TLongObjectHashMap<>();
+        Long2ObjectOpenHashMap<BigInteger> cache = new Long2ObjectOpenHashMap<>();
         BigInteger varValue = computeInitialVarValue(cube);
         countSat(ddWalker, cubeWalker, cache, varValue);
         totalTime.stop();
@@ -973,7 +981,7 @@ public final class ContextDD implements Closeable {
         totalTime.start();
         Walker ddWalker = dd.walker();
         Walker cubeWalker = variablesCube.walker();
-        TLongObjectHashMap<BigInteger> cache = new TLongObjectHashMap<>();
+        Long2ObjectOpenHashMap<BigInteger> cache = new Long2ObjectOpenHashMap<>();
         BigInteger varValue = computeInitialVarValue(variablesCube);
         BigInteger result = countSat(ddWalker, cubeWalker, cache, varValue);
         totalTime.stop();
@@ -984,11 +992,11 @@ public final class ContextDD implements Closeable {
         assert assertValidDD(dd);
         assert assertValidDD(support);
         assert assertCube(support);
-        TIntSet ddSupport = dd.support();
-        TIntSet supportSupport = support.support();
-        TIntIterator iter = ddSupport.iterator();
+        IntOpenHashSet ddSupport = dd.support();
+        IntOpenHashSet supportSupport = support.support();
+        IntIterator iter = ddSupport.iterator();
         while (iter.hasNext()) {
-            int var = iter.next();
+            int var = iter.nextInt();
             assert var >= 0;
             assert var < variableNames.size();
             assert supportSupport.contains(var) : variableNames.get(var);
@@ -1041,7 +1049,7 @@ public final class ContextDD implements Closeable {
     }
 
     private BigInteger countSat(Walker dd, Walker cube,
-            TLongObjectMap<BigInteger> cache, BigInteger varValue) {
+            Long2ObjectOpenHashMap<BigInteger> cache, BigInteger varValue) {
         BigInteger result;
         if (cube.isLeaf()) {
             assert dd.isLeaf();
@@ -1077,9 +1085,9 @@ public final class ContextDD implements Closeable {
         assert alive();
         assert assertValidDD(dd);
         Walker walker = dd.walker();
-        TLongObjectMap<DD> nodeMap = new TLongObjectHashMap<>();
+        Long2ObjectOpenHashMap<DD> nodeMap = new Long2ObjectOpenHashMap<>();
         DD result = importDD(walker, variablesMap, nodeMap, lowLevel);
-        for (DD entry : nodeMap.valueCollection()) {
+        for (DD entry : nodeMap.values()) {
             if (entry != result) {
                 entry.dispose();
             }
@@ -1089,7 +1097,7 @@ public final class ContextDD implements Closeable {
     }
 
     private DD importDD(Walker walker, int[] variablesMap,
-            TLongObjectMap<DD> nodeMap, LibraryDD lowLevel)
+            Long2ObjectOpenHashMap<DD> nodeMap, LibraryDD lowLevel)
     {
         DD result;
         if (nodeMap.containsKey(walker.uniqueId())) {
@@ -1131,14 +1139,14 @@ public final class ContextDD implements Closeable {
         assert alive();
         assert assertValidDD(dd);
         totalTime.start();
-        TLongSet seen = new TLongHashSet();
+        LongOpenHashSet seen = new LongOpenHashSet();
         Walker walker = dd.walker();
         BigInteger result = countNodes(walker, seen);
         totalTime.stop();
         return result;
     }
 
-    private BigInteger countNodes(Walker walker, TLongSet seen) {
+    private BigInteger countNodes(Walker walker, LongOpenHashSet seen) {
         if (seen.contains(walker.uniqueId())) {
             return BigInteger.ZERO;
         }
@@ -1185,7 +1193,7 @@ public final class ContextDD implements Closeable {
             }
         } else {
             Walker ddWalker = dd.walker();
-            TLongByteMap map = new TLongByteHashMap();
+            Long2ByteOpenHashMap map = new Long2ByteOpenHashMap();
             findSat(ddWalker, map);
             Walker cubeWalker = cube.walker();
             result = newConstant(true);
@@ -1213,7 +1221,7 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    private void findSat(Walker walker, TLongByteMap map) {
+    private void findSat(Walker walker, Long2ByteOpenHashMap map) {
         long variable = walker.variable();
         walker.low();
         boolean found;
@@ -1427,7 +1435,7 @@ public final class ContextDD implements Closeable {
         assert second != null;
         assert first.length == second.length;
         totalTime.start();
-        TIntHashSet seen = new TIntHashSet();
+        IntOpenHashSet seen = new IntOpenHashSet();
         for (int entryNr = 0; entryNr < first.length; entryNr++) {
             assert !seen.contains(first[entryNr]);
             seen.add(first[entryNr]);
@@ -1614,14 +1622,14 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public TIntSet findSatSet(DD dd, DD cube) {
+    public IntOpenHashSet findSatSet(DD dd, DD cube) {
         assert alive();
         assert assertValidDD(dd);
         assert assertValidDD(cube);
         assert TypeBoolean.is(dd.getType());
         assert assertCube(cube);
         totalTime.start();
-        TIntSet result = new TIntHashSet();
+        IntOpenHashSet result = new IntOpenHashSet();
         ValueBoolean cmp = typeBoolean.newValue();
         OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, dd.getType());
         if (dd.isLeaf()) {
@@ -1638,7 +1646,7 @@ public final class ContextDD implements Closeable {
             }
         } else {
             Walker ddWalker = dd.walker();
-            TLongByteMap map = new TLongByteHashMap();
+            Long2ByteOpenHashMap map = new Long2ByteOpenHashMap();
             findSat(ddWalker, map);
             Walker cubeWalker = cube.walker();
             while (!cubeWalker.isLeaf()) {
@@ -1680,7 +1688,7 @@ public final class ContextDD implements Closeable {
             }
         } else {
             Walker ddWalker = dd.walker();
-            TLongByteMap map = new TLongByteHashMap();
+            Long2ByteOpenHashMap map = new Long2ByteOpenHashMap();
             findSat(ddWalker, map);
             while (!cubeWalker.isLeaf()) {
                 int variableNr = cubeWalker.variable();
@@ -1696,7 +1704,7 @@ public final class ContextDD implements Closeable {
         }
     }
 
-    public DD intSetToDD(TIntSet set, DD cube) {
+    public DD intSetToDD(IntOpenHashSet set, DD cube) {
         assert alive();
         assert assertValidIntSet(set, cube);
         totalTime.start();
@@ -1717,22 +1725,19 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    private boolean assertValidIntSet(TIntSet set, DD cube) {
+    private boolean assertValidIntSet(IntOpenHashSet set, DD cube) {
         assert alive();
         assert set != null;
         assert assertValidDD(cube);
         assert cube.assertCube();
         assert assertValidSupport(set);
-        TIntIterator supportIterator = set.iterator();
-        TIntSet support = cube.support();
-        while (supportIterator.hasNext()) {
-            int var = supportIterator.next();
+        IntOpenHashSet support = cube.support();
+        set.forEach((int var) -> {
             assert var >= 0;
             assert var < llVariables.get(lowLevelBinary).size() :
                 var + " " + llVariables.get(lowLevelBinary).size();
             assert support.contains(var);
-        }
-
+        });
         return true;
     }
 
@@ -1761,22 +1766,20 @@ public final class ContextDD implements Closeable {
         Type ddType = dd.getType();
         OperatorEvaluator evaluator = ContextValue.get().getEvaluator(identifier, ddType, ddType);
         Type type = evaluator.resultType();
-        Map<LongTriple,Value> known = new THashMap<>();
+        Map<LongTriple,Value> known = new HashMap<>();
         Value value = applyOverSat(identifier, dd.walker(), support.walker(), known, type, sat.walker());
         totalTime.stop();
         return value;
     }
 
     private boolean applyOverSatSupportOK(DD dd, DD support, DD sat) {
-        TIntSet commonSupport = new TIntHashSet();
+        IntOpenHashSet commonSupport = new IntOpenHashSet();
         commonSupport.addAll(dd.support());
         commonSupport.addAll(sat.support());
-        TIntSet supportSet = support.support();
-        TIntIterator it = commonSupport.iterator();
-        while (it.hasNext()) {
-            int var = it.next();
+        IntOpenHashSet supportSet = support.support();
+        supportSet.forEach((int var) -> {
             assert supportSet.contains(var) : var;
-        }
+        });
         return true;
     }
 
@@ -1973,29 +1976,27 @@ public final class ContextDD implements Closeable {
         return result;
     }
 
-    public DD intSetToCube(TIntSet support) {
+    public DD intSetToCube(IntOpenHashSet support) {
         assert alive();
         assert assertValidSupport(support);
         totalTime.start();
-        DD result = newConstant(true);
-        TIntIterator supportIterator = support.iterator();
-        while (supportIterator.hasNext()) {
-            DD resultOld = result;
-            result = result.and(variable(supportIterator.next()));
+        DD[] result = new DD[1];
+        result[0] = newConstant(true);
+        support.forEach((int var) -> {
+            DD resultOld = result[0];
+            result[0] = result[0].and(variable(var));
             resultOld.dispose();
-        }
+        });
         totalTime.stop();
-        return result;
+        return result[0];
     }
 
-    private boolean assertValidSupport(TIntSet support) {
+    private boolean assertValidSupport(IntOpenHashSet support) {
         assert support != null;
-        TIntIterator supportIterator = support.iterator();
-        while (supportIterator.hasNext()) {
-            int var = supportIterator.next();
+        support.forEach((int var) -> {
             assert var >= 0;
             assert var < llVariables.get(lowLevelMulti).size();
-        }
+        });
         return true;
     }
 
@@ -2017,7 +2018,7 @@ public final class ContextDD implements Closeable {
             assert variable >= 0 : variable;
             assert variable < llVariables.get(lowLevelMulti).size() : variable;
         }
-        TIntSet contained = new TIntHashSet(array);
+        IntOpenHashSet contained = new IntOpenHashSet(array);
         assert contained.size() == llVariables.get(lowLevelMulti).size();
         return true;
     }
@@ -2598,7 +2599,7 @@ public final class ContextDD implements Closeable {
         assert !sat.isFalse();
         totalTime.start();
         DD support = dd.supportDD().andWith(sat.supportDD());
-        Set<LongTriple> seen = new THashSet<>();
+        Set<LongTriple> seen = new ObjectOpenHashSet<>();
         Value result = getSomeLeafValue(dd.walker(), sat.walker(), support.walker(), seen);
         assert result != null;
         totalTime.stop();

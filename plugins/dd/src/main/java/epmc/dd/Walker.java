@@ -21,7 +21,6 @@
 package epmc.dd;
 
 import epmc.value.Value;
-import epmc.value.ValueAlgebra;
 import epmc.value.ValueBoolean;
 
 public final class Walker {

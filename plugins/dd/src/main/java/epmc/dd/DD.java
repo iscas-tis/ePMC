@@ -20,7 +20,7 @@
 
 package epmc.dd;
 
-import gnu.trove.set.TIntSet;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 
 import java.math.BigInteger;
 import java.util.Collection;
@@ -185,7 +185,7 @@ public final class DD implements Cloneable {
         return Util.stackTraceToString(disposeTrace);
     }
 
-    TIntSet support() {
+    IntOpenHashSet support() {
         assert alive() : alreadyDeadMessage();
         return getContext().support(this);
     }
@@ -885,7 +885,7 @@ public final class DD implements Cloneable {
     }
 
     // TODO get rid of dependency to TIntSet
-    public TIntSet findSatSet(DD cube) {
+    public IntOpenHashSet findSatSet(DD cube) {
         return getContext().findSatSet(this, cube);
     }
 

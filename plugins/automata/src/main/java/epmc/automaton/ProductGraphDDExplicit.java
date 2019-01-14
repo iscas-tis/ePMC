@@ -45,12 +45,10 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeObject;
 import epmc.value.UtilValue;
 import epmc.value.Value;
-import gnu.trove.list.array.TIntArrayList;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.set.TIntSet;
+import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public final class ProductGraphDDExplicit implements ProductGraphDD {
     private final static String AUTSTATE = "%auttstate";
@@ -62,7 +60,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     private final DD varEqExpressions;
     private final DD exprVarsCube;
     private final DD initial;
-    private final TIntObjectHashMap<Expression> varToExp = new TIntObjectHashMap<>();
+    private final Int2ObjectOpenHashMap<Expression> varToExp = new Int2ObjectOpenHashMap<>();
     private final int[] exprVars;
     private final Expression[] expressions;
     private final Value falseValue;
@@ -76,8 +74,8 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     private final DD presCubeModel;
     private final DD nextCube;
     private final DD actionCube;
-    private final TObjectIntMap<DD> ddToState = new TObjectIntHashMap<>();
-    private final TIntObjectMap<DD> stateToPresDd = new TIntObjectHashMap<>();
+    private final Object2IntOpenHashMap<DD> ddToState = new Object2IntOpenHashMap<>();
+    private final Int2ObjectOpenHashMap<DD> stateToPresDd = new Int2ObjectOpenHashMap<>();
     private final HashMap<Integer,DD> stateToNextDd = new HashMap<>();
     private final DD automatonStatesSame;
     private final DD autInit;
@@ -86,7 +84,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
     private DD transitionsBoolean;
     private DD transitions;
     private DD transStateAut;
-    private final TObjectIntMap<DD> labeling = new TObjectIntHashMap<>();
+    private final Object2IntOpenHashMap<DD> labeling = new Object2IntOpenHashMap<>();
     private final VariableDD stateCounter;
     private boolean closed;
     private DD nodes;
@@ -123,7 +121,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
 
         DD varEqExpressions = contextDD.newConstant(true);
         DD variablesCube = contextDD.newConstant(true);
-        TIntArrayList exprVars = new TIntArrayList();
+        IntArrayList exprVars = new IntArrayList();
         ArrayList<Expression> expressions = new ArrayList<>();
         int exprNr = 0;
         for (Expression expression : automaton.getExpressions()) {
@@ -141,7 +139,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         }
         this.varEqExpressions = varEqExpressions;
         this.exprVarsCube = variablesCube;
-        this.exprVars = exprVars.toArray();
+        this.exprVars = exprVars.toIntArray();
         this.expressions = expressions.toArray(new Expression[0]);
         this.swapPresNext = contextDD.newPermutationListDD(presVars, nextVars);
         this.presCube = contextDD.listToCube(presVars);
@@ -210,7 +208,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         DD nextStates = contextDD.newConstant(false);
         DD modelTrans = model.getTransitions().abstractExist(model.getActionCube());
         while (!assignmentsDD.isFalse()) {
-            TIntSet assignment = assignmentsDD.findSatSet(exprVarsCube);
+            IntOpenHashSet assignment = assignmentsDD.findSatSet(exprVarsCube);
             DD assignmentDD = contextDD.intSetToDD(assignment, exprVarsCube);
             Value[] array = assignmentToArray(assignment);
             DD fromAssignment = fromAndVarEqExprs.and(assignmentDD);
@@ -218,9 +216,9 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
             DD automatonStatesDD = fromAssignment.abstractExist(presCubeModel);
 
             while (!automatonStatesDD.isFalse()) {
-                TIntSet automatonStateSet = automatonStatesDD.findSatSet(presCubeAutomaton);
+                IntOpenHashSet automatonStateSet = automatonStatesDD.findSatSet(presCubeAutomaton);
                 DD automatonStateDD = contextDD.intSetToDD(automatonStateSet, presCubeAutomaton);
-                int automatonState = ddToState.get(automatonStateDD);
+                int automatonState = ddToState.getInt(automatonStateDD);
 
                 automaton.queryState(array, automatonState);
                 int nextAutomatonState = automaton.getSuccessorState();
@@ -268,7 +266,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return trans.abstractAndExist(from, presCube).permuteWith(swap);
     }
 
-    private Value[] assignmentToArray(TIntSet assignment) {
+    private Value[] assignmentToArray(IntOpenHashSet assignment) {
         Value[] result = new Value[expressions.length];
         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
             int variable = exprVars[exprNr];
@@ -306,7 +304,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return swapPresNext;
     }
 
-    public TObjectIntMap<DD> getLabeling() {
+    public Object2IntOpenHashMap<DD> getLabeling() {
         return labeling;        
     }
 
@@ -322,7 +320,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         return presCubeAutomaton;
     }
 
-    public TObjectIntMap<DD> getAutomatonStates() {
+    public Object2IntOpenHashMap<DD> getAutomatonStates() {
         return ddToState;
     }
 
@@ -362,7 +360,7 @@ public final class ProductGraphDDExplicit implements ProductGraphDD {
         }
         transStateAut.dispose();
         contextDD.dispose(labeling.keySet());
-        contextDD.dispose(stateToPresDd.valueCollection());
+        contextDD.dispose(stateToPresDd.values());
         contextDD.dispose(stateToNextDd.values());
     }
 

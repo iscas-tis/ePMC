@@ -35,11 +35,8 @@ import epmc.value.TypeInteger;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import gnu.trove.iterator.TIntIterator;
-import gnu.trove.iterator.TObjectIntIterator;
-import gnu.trove.map.TObjectIntMap;
-import gnu.trove.map.hash.TObjectIntHashMap;
-import gnu.trove.set.TIntSet;
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public final class SupportWalker {
     private final static class LongPair {
@@ -180,13 +177,11 @@ public final class SupportWalker {
     }
 
     private static boolean assertSupport(DD node, DD support) {
-        TIntSet nodeSupport = node.support();
-        TIntSet supportSupport = support.support();
-        TIntIterator iterator = nodeSupport.iterator();
-        while (iterator.hasNext()) {
-            int variable = iterator.next();
+        IntOpenHashSet nodeSupport = node.support();
+        IntOpenHashSet supportSupport = support.support();
+        nodeSupport.forEach((int variable) -> {
             assert supportSupport.contains(variable);
-        }
+        });
         return true;
     }
 
@@ -213,22 +208,20 @@ public final class SupportWalker {
     private void buildDiagram(DD node, DD support) {
         Walker nodeWalker = node.walker();
         Walker supportWalker = support.walker();
-        TObjectIntMap<Value> leafEnumerator = new TObjectIntHashMap<>();
-        TObjectIntMap<LongPair> nodeEnumerator = new TObjectIntHashMap<>();
+        Object2IntOpenHashMap<Value> leafEnumerator = new Object2IntOpenHashMap<>();
+        Object2IntOpenHashMap<LongPair> nodeEnumerator = new Object2IntOpenHashMap<>();
         enumerateNodes(nodeWalker, supportWalker, nodeEnumerator, leafEnumerator);
-        int totalNumNodes = nodeEnumerator.valueCollection().size();
+        int totalNumNodes = nodeEnumerator.values().size();
         diagram = new int[totalNumNodes * NUM_OUT];
-        TObjectIntMap<Value> valueEnumerator = new TObjectIntHashMap<>();
-        int valueNumber = 0;
+        Object2IntOpenHashMap<Value> valueEnumerator = new Object2IntOpenHashMap<>();
+        int[] valueNumber = new int[1];
         leafValues = new Value[leafEnumerator.size()];
-        TObjectIntIterator<Value> iter = leafEnumerator.iterator();
-        while (iter.hasNext()) {
-            iter.advance();
-            Value value = UtilValue.clone(iter.key());
-            valueEnumerator.put(value, valueNumber);
-            leafValues[valueNumber] = value;
-            valueNumber++;
-        }
+        leafEnumerator.forEach((a,b) -> {
+            Value value = UtilValue.clone(a);
+            valueEnumerator.put(value, valueNumber[0]);
+            leafValues[valueNumber[0]] = value;
+            valueNumber[0]++;
+        });
         BitSet seen = UtilBitSet.newBitSetUnbounded();
         buildDiagram(nodeWalker, supportWalker, nodeEnumerator, valueEnumerator, seen);
         ValueBoolean cmp = TypeBoolean.get().newValue();
@@ -257,11 +250,11 @@ public final class SupportWalker {
     }
 
     private void buildDiagram(Walker node, Walker support,
-            TObjectIntMap<LongPair> nodeEnumerator,
-            TObjectIntMap<Value> valueEnumerator, BitSet seen) {
+            Object2IntOpenHashMap<LongPair> nodeEnumerator,
+            Object2IntOpenHashMap<Value> valueEnumerator, BitSet seen) {
         LongPair pair = new LongPair(node.uniqueId(), support.uniqueId());
         assert nodeEnumerator.containsKey(pair);
-        int index = nodeEnumerator.get(pair);
+        int index = nodeEnumerator.getInt(pair);
         if (seen.get(index)) {
             return;
         }
@@ -270,7 +263,7 @@ public final class SupportWalker {
         boolean stopAt = stopHere(node);
         if (stopAt || support.isLeaf()) {
             assert valueEnumerator.containsKey(node.value());
-            int value = valueEnumerator.get(node.value());
+            int value = valueEnumerator.getInt(node.value());
             diagram[index * NUM_OUT] = -(value + 1);
         } else {
             int nodeVar = node.isLeaf() ? LEAF_REACHED : node.variable();
@@ -280,20 +273,20 @@ public final class SupportWalker {
             if (doStep) {
                 node.high();
                 pair.reset(node.uniqueId(), support.uniqueId());
-                int indexHigh = nodeEnumerator.get(pair);
+                int indexHigh = nodeEnumerator.getInt(pair);
                 buildDiagram(node, support, nodeEnumerator, valueEnumerator, seen);
                 node.back();
                 node.low();
                 pair.reset(node.uniqueId(), support.uniqueId());
-                int indexLow = nodeEnumerator.get(pair);
+                int indexLow = nodeEnumerator.getInt(pair);
                 buildDiagram(node, support, nodeEnumerator, valueEnumerator, seen);
                 node.back();
                 diagram[index * NUM_OUT + HIGH_ADD] = indexHigh;
                 diagram[index * NUM_OUT + LOW_ADD] = indexLow;
             } else {
                 pair.reset(node.uniqueId(), support.uniqueId());
-                int indexHigh = nodeEnumerator.get(pair);
-                int indexLow = nodeEnumerator.get(pair);
+                int indexHigh = nodeEnumerator.getInt(pair);
+                int indexLow = nodeEnumerator.getInt(pair);
                 diagram[index * NUM_OUT + HIGH_ADD] = indexHigh;
                 diagram[index * NUM_OUT + LOW_ADD] = indexLow;
                 buildDiagram(node, support, nodeEnumerator, valueEnumerator, seen);
@@ -321,8 +314,8 @@ public final class SupportWalker {
     }
 
     private void enumerateNodes(Walker node, Walker support,
-            TObjectIntMap<LongPair> nodeEnumerator,
-            TObjectIntMap<Value> leafEnumerator) {
+            Object2IntOpenHashMap<LongPair> nodeEnumerator,
+            Object2IntOpenHashMap<Value> leafEnumerator) {
         LongPair pair = new LongPair(node.uniqueId(), support.uniqueId());
         if (nodeEnumerator.containsKey(pair)) {
             return;
@@ -335,7 +328,7 @@ public final class SupportWalker {
                 index = nodeEnumerator.size();
                 leafEnumerator.put(node.value(), index);
             } else {
-                index = leafEnumerator.get(node.value());
+                index = leafEnumerator.getInt(node.value());
             }
             nodeEnumerator.put(pair, index);
         } else {

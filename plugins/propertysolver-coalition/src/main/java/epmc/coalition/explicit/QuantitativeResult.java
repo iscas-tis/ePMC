@@ -23,8 +23,6 @@ package epmc.coalition.explicit;
 import com.google.common.base.MoreObjects;
 
 import epmc.graph.explicit.SchedulerSimple;
-import epmc.value.TypeArray;
-import epmc.value.TypeWeight;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 

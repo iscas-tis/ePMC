@@ -41,8 +41,7 @@ import epmc.value.TypeObject.StorageType;
 import epmc.value.Value;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
-import gnu.trove.map.TLongIntMap;
-import gnu.trove.map.hash.TLongIntHashMap;
+import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 
 public final class ProductGraphExplicit implements GraphExplicit {
 
@@ -358,7 +357,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
     }
 
     private final GraphExplicit model;
-    private final TLongIntMap combinedToNumber = new TLongIntHashMap(10, 0.5f, -1L, -1);
+    private final Long2IntOpenHashMap combinedToNumber = new Long2IntOpenHashMap();
     private long[] numberToCombined = new long[1];
     private int numberToCombinedSize;
     private int numNodes;
@@ -385,6 +384,7 @@ public final class ProductGraphExplicit implements GraphExplicit {
         assert builder != null;
         assert builder.getModel() != null;
         assert builder.getAutomaton() != null;
+        combinedToNumber.defaultReturnValue(-1);
         manualEnumeration = builder.isManual();
         initStates = UtilBitSet.newBitSetUnbounded();
         properties = new GraphExplicitProperties(this);

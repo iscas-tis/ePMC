@@ -72,8 +72,7 @@ import epmc.value.ValueAlgebra;
 import epmc.value.ValueArray;
 import epmc.value.ValueArrayAlgebra;
 import epmc.value.ValueBoolean;
-import gnu.trove.stack.TIntStack;
-import gnu.trove.stack.array.TIntArrayStack;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
 
 /**
  * Explicit-state solver for coalition properties.
@@ -321,7 +320,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         int maxPriority = -1;
 
 
-        TIntStack todo = new TIntArrayStack();
+        IntArrayList todo = new IntArrayList();
         BitSet initStates = product.getInitialNodes();
         BitSet exploredNodes = UtilBitSet.newBitSetUnbounded();
         for (int node = initStates.nextSetBit(0); node >= 0; node = initStates.nextSetBit(node+1)) {
@@ -333,7 +332,7 @@ public final class PropertySolverExplicitCoalition implements PropertySolver {
         // if the according node has not been cached before.
         // Take care when modifying!
         while (todo.size() > 0) {
-            int node = todo.pop();
+            int node = todo.popInt();
             AutomatonParityLabel label = labels.getObject(node);
             assert label != null : labels;
             int priority = label.getPriority();

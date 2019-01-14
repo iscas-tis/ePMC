@@ -20,8 +20,6 @@
 
 package epmc.propertysolver.ltllazy;
 
-import gnu.trove.map.TObjectIntMap;
-
 import static epmc.error.UtilError.ensure;
 
 import java.math.BigInteger;
@@ -81,6 +79,7 @@ import epmc.value.TypeBoolean;
 import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
 import epmc.value.ValueBoolean;
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
 public final class PropertySolverDDLTLLazy implements PropertySolver {
     private enum ComponentDecision {
@@ -599,7 +598,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
 
 
         for (DD which : product.getAutomatonStates().keySet()) {
-            int value = product.getAutomatonStates().get(which);
+            int value = product.getAutomatonStates().getInt(which);
             BitSet state = ((AutomatonStateBuechiSubset) product.getAutomaton().numberToState(value)).getStates();
             if (!map.containsKey(state)) {
                 map.put(state, getContextDD().newConstant(false));
@@ -831,7 +830,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         return reachProbs;
     }
 
-    private void computeSymbStabAcc(AutomatonRabin automaton, TObjectIntMap<DD> tObjectIntMap,
+    private void computeSymbStabAcc(AutomatonRabin automaton, Object2IntOpenHashMap<DD> tObjectIntMap,
             DD nonStates, int numLabels, List<DD> stable, List<DD> accepting)
     {
         assert tObjectIntMap != null;
@@ -848,7 +847,7 @@ public final class PropertySolverDDLTLLazy implements PropertySolver {
         }
 
         for (DD key : tObjectIntMap.keySet()) {
-            int value = tObjectIntMap.get(key);
+            int value = tObjectIntMap.getInt(key);
             AutomatonRabinLabel label = (AutomatonRabinLabel) automaton.numberToLabel(value);
             BitSet labelStable = label.getStable();
             BitSet labelAccepting = label.getAccepting();
