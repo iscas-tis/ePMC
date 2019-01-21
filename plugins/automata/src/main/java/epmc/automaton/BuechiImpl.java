@@ -163,8 +163,7 @@ public class BuechiImpl implements Buechi {
         }
         trueState = findTrueState();
         HanoiHeader header = automaton.getGraphPropertyObject(GraphPreparator.Properties.HANOI_HEADER);
-//        header.getAps();
-        this.expressions =  header.getAps().toArray(new Expression[0]);
+        this.expressions = header.getAps().toArray(new Expression[0]);
         expressionTypes = new Type[expressions.length];
         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
             expressionTypes[exprNr] = TypeBoolean.get();
@@ -268,7 +267,7 @@ public class BuechiImpl implements Buechi {
             }
             this.numLabels = ValueInteger.as(automaton.getGraphProperty(CommonProperties.NUM_LABELS)).getInt();
             final String[] detExecArr = {ltl2tgba, SPOT_PARAM_FORMULA, spotFn,
-                    "--stats", "%d", "--low"};
+                    "--stats", "%d", SPOT_PARAM_LOW_OPTIMISATIONS};
             final Process detProcess = Runtime.getRuntime().exec(detExecArr);
             int detResult = detProcess.getInputStream().read();
             ensure(detResult != -1, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO);

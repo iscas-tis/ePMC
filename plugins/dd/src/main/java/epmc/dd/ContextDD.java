@@ -1671,7 +1671,8 @@ public final class ContextDD implements Closeable {
         assert assertCube(cube);
         totalTime.start();
         Walker cubeWalker = cube.walker();
-        BitSet result = UtilBitSet.newBitSetBounded(cubeSize(cubeWalker));
+//        BitSet result = UtilBitSet.newBitSetBounded(cubeSize(cubeWalker));
+        BitSet result = UtilBitSet.newBitSetUnbounded();
         ValueBoolean cmp = typeBoolean.newValue();
         OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, dd.getType());
         if (dd.isLeaf()) {

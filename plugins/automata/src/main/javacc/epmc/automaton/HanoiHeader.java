@@ -29,7 +29,7 @@ import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
 
-final class HanoiHeader {
+public final class HanoiHeader {
     private final Map<String,Expression> ap2expr;
     private int numStates;
     private final BitSet startStates = new BitSetUnboundedLongArray();

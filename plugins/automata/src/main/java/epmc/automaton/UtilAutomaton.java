@@ -20,6 +20,7 @@
 
 package epmc.automaton;
 
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -41,6 +42,7 @@ import epmc.expression.standard.ExpressionTemporalRelease;
 import epmc.expression.standard.ExpressionTemporalUntil;
 import epmc.expression.standard.TimeBound;
 import epmc.expression.standard.evaluatorexplicit.UtilEvaluatorExplicit;
+import epmc.graph.explicit.GraphExplicit;
 import epmc.messages.Message;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
@@ -497,5 +499,10 @@ public final class UtilAutomaton {
      * Private constructor to prevent instantiation of this class.
      */
     private UtilAutomaton() {
+    }
+
+    public static GraphExplicit parseHOAAutomaton(Reader reader, Map<String, Expression> ap2expr) {
+        SpotParser spotParser = new SpotParser(reader);
+        return spotParser.parseAutomaton(ap2expr);
     }
 }

@@ -36,8 +36,8 @@ import epmc.value.TypeObject;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 
-final class GraphPreparator {
-    enum Properties {
+public final class GraphPreparator {
+    public enum Properties {
         HANOI_HEADER
     }
     
