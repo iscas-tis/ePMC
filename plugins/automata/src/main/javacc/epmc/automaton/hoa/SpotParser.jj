@@ -250,6 +250,8 @@ void AccName(HanoiHeader header) :
   AcceptanceName name = new AcceptanceName();
   String minMax;
   String oddEven;
+  Token identifier;
+  int intParameter;
 }
 {
   <ACC_NAME> <COLON> (
@@ -263,6 +265,7 @@ void AccName(HanoiHeader header) :
   | (<PARITY> numPairs = parseInt() (<MIN> {minMax = "min";} | <MAX> {minMax = "max";} ) (<ODD> {oddEven = "odd";} | <EVEN> {oddEven = "even";} ) numPairs = parseInt() { name.setName("Parity"); name.addParameter(minMax); name.addParameter(oddEven); name.addParameter(numPairs); } )
   | (<ALL> { name.setName("all"); })
   | (<NONE> { name.setName("none"); })
+  | (identifier = <IDENTIFIER> { name.setName(identifier.toString()); } ( (identifier = <IDENTIFIER> { name.addParameter(identifier.toString()); } ) | (intParameter = parseInt() { name.addParameter(intParameter); }) )* )
  )
  {
    header.setAcceptanceName(name);
