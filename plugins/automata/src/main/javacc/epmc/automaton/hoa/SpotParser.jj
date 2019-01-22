@@ -80,7 +80,7 @@ public class SpotParser {
 | < STREETT : "Streett" >
 | < RABIN : "Rabin" >
 | < GENERALIZED_RABIN : "generalized-Rabin" >
-| < PARITY : "Parity" >
+| < PARITY : "parity" >
 | < ALL : "all" >
 | < NONE : "none" >
 | < MIN : "min" >
