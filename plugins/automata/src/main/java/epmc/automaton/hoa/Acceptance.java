@@ -1,4 +1,4 @@
-package epmc.automaton;
+package epmc.automaton.hoa;
 
 public interface Acceptance {
 }

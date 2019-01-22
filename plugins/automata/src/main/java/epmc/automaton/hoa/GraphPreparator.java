@@ -18,13 +18,15 @@
 
  *****************************************************************************/
 
-package epmc.automaton;
+package epmc.automaton.hoa;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import epmc.automaton.BuechiTransition;
+import epmc.automaton.BuechiTransitionImpl;
 import epmc.expression.Expression;
 import epmc.graph.CommonProperties;
 import epmc.graph.explicit.EdgeProperty;

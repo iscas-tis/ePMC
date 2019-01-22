@@ -1,4 +1,4 @@
-package epmc.automaton;
+package epmc.automaton.hoa;
 
 public final class AcceptanceBoolean implements Acceptance {
     public final static String TRUE = "t";

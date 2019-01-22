@@ -1,4 +1,4 @@
-package epmc.automaton;
+package epmc.automaton.hoa;
 
 public final class AcceptanceSet implements Acceptance {
     public final static String FIN = "fin(";

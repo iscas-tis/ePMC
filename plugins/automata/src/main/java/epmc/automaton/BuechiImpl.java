@@ -35,7 +35,9 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.automaton.SpotParser;
+import epmc.automaton.hoa.GraphPreparator;
+import epmc.automaton.hoa.HanoiHeader;
+import epmc.automaton.hoa.SpotParser;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionIdentifier;

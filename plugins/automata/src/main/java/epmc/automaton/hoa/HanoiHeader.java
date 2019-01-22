@@ -18,7 +18,7 @@
 
  *****************************************************************************/
 
-package epmc.automaton;
+package epmc.automaton.hoa;
 
 import java.util.ArrayList;
 import java.util.Collections;

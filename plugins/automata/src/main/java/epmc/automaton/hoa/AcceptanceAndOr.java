@@ -1,4 +1,4 @@
-package epmc.automaton;
+package epmc.automaton.hoa;
 
 public final class AcceptanceAndOr implements Acceptance {
     private final static String AND = "&";

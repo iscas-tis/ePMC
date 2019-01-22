@@ -4,7 +4,7 @@ options
   LOOKAHEAD = 1;
   STATIC = false;
 }
-PARSER_BEGIN(SpotParser)package epmc.automaton;
+PARSER_BEGIN(SpotParser)package epmc.automaton.hoa;
 
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;

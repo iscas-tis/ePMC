@@ -24,12 +24,12 @@ import epmc.expression.Expression;
 import epmc.util.BitSet;
 import epmc.value.ValueBoolean;
 
-final class BuechiTransitionImpl implements BuechiTransition {
+public final class BuechiTransitionImpl implements BuechiTransition {
     private final Expression expression;
     private final BitSet labeling;
     private ValueBoolean result;
 
-    BuechiTransitionImpl(Expression expression, BitSet labeling) {
+    public BuechiTransitionImpl(Expression expression, BitSet labeling) {
         this.expression = expression;
         this.labeling = labeling;
     }
