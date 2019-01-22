@@ -3,3 +3,5 @@
 /SpotParserConstants.java
 /Token.java
 /TokenMgrError.java
+/SpotParser.java
+/SpotParserTokenManager.java
