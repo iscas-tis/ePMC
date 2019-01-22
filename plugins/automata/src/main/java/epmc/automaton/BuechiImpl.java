@@ -35,7 +35,6 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import epmc.automaton.hoa.GraphPreparator;
 import epmc.automaton.hoa.HanoiHeader;
 import epmc.automaton.hoa.SpotParser;
 import epmc.expression.Expression;
@@ -164,7 +163,7 @@ public class BuechiImpl implements Buechi {
             fixNoLabels();
         }
         trueState = findTrueState();
-        HanoiHeader header = automaton.getGraphPropertyObject(GraphPreparator.Properties.HANOI_HEADER);
+        HanoiHeader header = automaton.getGraphPropertyObject(HanoiHeader.class);
         this.expressions = header.getAps().toArray(new Expression[0]);
         expressionTypes = new Type[expressions.length];
         for (int exprNr = 0; exprNr < expressions.length; exprNr++) {

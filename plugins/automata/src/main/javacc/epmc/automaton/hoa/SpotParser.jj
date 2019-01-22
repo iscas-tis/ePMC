@@ -18,6 +18,7 @@ import epmc.operator.OperatorOr;
 import epmc.operator.OperatorAnd;
 import epmc.operator.OperatorNot;
 import epmc.graph.explicit.GraphExplicitWrapper;
+import static epmc.error.UtilError.ensure;
 
 public class SpotParser {
 
@@ -116,6 +117,7 @@ HanoiHeader Header(Map<String,Expression> ap2expr) :
   Token toolName;
   Token toolVersion;
   Acceptance acceptance;
+  int numSets;
 }
 {
 (  <HOA> <COLON> <V1>
@@ -123,10 +125,10 @@ HanoiHeader Header(Map<String,Expression> ap2expr) :
 | <START> <COLON> startState = parseInt() { header.setStartState(startState); }
 | <AP> <COLON> parseInt() ( ap = <QUOTED> { header.addAP(ap.toString()); } )*
 // TODO alias
-| <ACCEPTANCE> <COLON> parseInt() acceptance = Acceptance() { header.setAcceptance(acceptance); }
+| <ACCEPTANCE> <COLON> numSets = parseInt() acceptance = Acceptance(numSets) { header.setAcceptance(acceptance); }
 | <ACC_NAME> <COLON> (
     <BUCHI>  { header.setNumAcc(1); }
-  | <GENERALIZED_BUCHI > numAccs = parseInt() { header.setNumAcc(numAccs); }
+  | <GENERALIZED_BUCHI> numAccs = parseInt() { header.setNumAcc(numAccs); }
   | <ALL> { header.setNumAcc(0); }
 )
 | <TOOL> <COLON> toolName = <QUOTED> { header.setToolName(toolName.toString()); }(toolVersion = <QUOTED> { header.setToolVersion(toolVersion.toString()); })? 
@@ -136,45 +138,45 @@ HanoiHeader Header(Map<String,Expression> ap2expr) :
   { return header; }
 }
 
-Acceptance Acceptance() :
+Acceptance Acceptance(int numSets) :
 {
   Acceptance acceptance;
 }
 {
-  acceptance = AcceptanceOr()
+  acceptance = AcceptanceOr(numSets)
   { return acceptance; }
 }
 
-Acceptance AcceptanceOr() :
+Acceptance AcceptanceOr(int numSets) :
 {
   Acceptance p;
   Acceptance nextProp;
 }
 {
-  p = AcceptanceAnd()
+  p = AcceptanceAnd(numSets)
   (
-    <OR> nextProp = AcceptanceAnd()
+    <OR> nextProp = AcceptanceAnd(numSets)
     { p = new AcceptanceAndOr(AndOr.OR, p, nextProp); }
   )*
   { return p; }
 }
 
-Acceptance AcceptanceAnd() :
+Acceptance AcceptanceAnd(int numSets) :
 {
   Acceptance p;
   Acceptance nextProp;
 }
 {
-  ( p = AcceptanceSet() | p = AcceptanceBoolean() )
+  ( p = AcceptanceSet(numSets) | p = AcceptanceBoolean(numSets) )
   (
     <AND>
-    ( nextProp = AcceptanceSet() | nextProp = AcceptanceBoolean() )
+    ( nextProp = AcceptanceSet(numSets) | nextProp = AcceptanceBoolean(numSets) )
     { p = new AcceptanceAndOr(AndOr.AND, p, nextProp); }
   )*
   { return p; }
 }
 
-Acceptance AcceptanceSet() :
+Acceptance AcceptanceSet(int numSets) :
 {
   boolean negated = false;
   InfFin infFin;
@@ -182,10 +184,13 @@ Acceptance AcceptanceSet() :
 }
 {
   (<INF> { infFin = InfFin.INF; } | <FIN> { infFin = InfFin.FIN; } ) <LPARENTH> (<NOT> { negated = true; } )? set = parseInt() <RPARENTH>
-  { return new AcceptanceSet(infFin, negated, set); }
+  {
+    ensure(set < numSets, ProblemsHoa.HOA_INVALID_ACC_SET, set, numSets);
+    return new AcceptanceSet(infFin, negated, set);
+  }
 }
 
-Acceptance AcceptanceBoolean() :
+Acceptance AcceptanceBoolean(int numSets) :
 {
   boolean value;
 }

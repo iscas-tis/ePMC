@@ -38,11 +38,7 @@ import epmc.value.TypeObject;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
 
-public final class GraphPreparator {
-    public enum Properties {
-        HANOI_HEADER
-    }
-    
+final class GraphPreparator {
     private final static class Transition {
         private final int to;
         private final Expression guard;
@@ -121,8 +117,8 @@ public final class GraphPreparator {
         TypeObject typeHeader = new TypeObject.Builder()
                 .setClazz(HanoiHeader.class)
                 .build();
-        graph.addSettableGraphProperty(Properties.HANOI_HEADER, typeHeader);
-        graph.setGraphProperty(Properties.HANOI_HEADER, header);
+        graph.addSettableGraphProperty(HanoiHeader.class, typeHeader);
+        graph.setGraphProperty(HanoiHeader.class, header);
         return graph;
     }
 
