@@ -73,9 +73,20 @@ public class SpotParser {
 | < START : "Start" >
 | < AP : "AP" >
 | < ACC_NAME : "acc-name" >
-| < GENERALIZED_BUCHI : "generalized-Buchi" >
 | < BUCHI : "Buchi" >
+| < GENERALIZED_BUCHI : "generalized-Buchi" >
+| < CO_BUCHI : "co-Buchi" >
+| < GENERALIZED_CO_BUCHI : "generalized-co-Buchi" >
+| < STREETT : "Streett" >
+| < RABIN : "Rabin" >
+| < GENERALIZED_RABIN : "generalized-Rabin" >
+| < PARITY : "Parity" >
 | < ALL : "all" >
+| < NONE : "none" >
+| < MIN : "min" >
+| < MAX : "max" >
+| < ODD : "odd" >
+| < EVEN : "even" >
 | < ACCEPTANCE : "Acceptance" >
 | < INF : "Inf" >
 | < FIN : "Fin" >
@@ -107,44 +118,75 @@ public class SpotParser {
 
 HanoiHeader Header(Map<String,Expression> ap2expr) :
 {
-  Token name;
   HanoiHeader header = new HanoiHeader(ap2expr);
-  int numStates;
-  int startState;
-  Token ap;
-  int numAccs;
-  Token property;
-  Token toolName;
-  Token toolVersion;
-  Acceptance acceptance;
-  int numSets;
+  boolean statesSpecified = false;
+  boolean apSpecified = false;
+  boolean acceptanceSpecified = false;
+  boolean accNameSpecified = false;
+  boolean toolSpecified = false;
+  boolean nameSpecified = false;
 }
 {
-(  <HOA> <COLON> <V1>
-| <STATES> <COLON> numStates = parseInt() { header.setNumStates(numStates); }
-| <START> <COLON> startState = parseInt() { header.setStartState(startState); }
-| <AP> <COLON> parseInt() ( ap = <QUOTED> { header.addAP(ap.toString()); } )*
-// TODO alias
-| <ACCEPTANCE> <COLON> numSets = parseInt() acceptance = Acceptance(numSets) { header.setAcceptance(acceptance); }
-| <ACC_NAME> <COLON> (
-    <BUCHI>  { header.setNumAcc(1); }
-  | <GENERALIZED_BUCHI> numAccs = parseInt() { header.setNumAcc(numAccs); }
-  | <ALL> { header.setNumAcc(0); }
-)
-| <TOOL> <COLON> toolName = <QUOTED> { header.setToolName(toolName.toString()); }(toolVersion = <QUOTED> { header.setToolVersion(toolVersion.toString()); })? 
-| <NAME> <COLON> name = <QUOTED> { header.setName(name.toString()); }
-| <PROPERTIES> <COLON> ( property = <IDENTIFIER> { header.addProperty(property.toString()); })*
+  <HOA> <COLON> <V1>
+(
+  ( { ensure(!statesSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_STATES); statesSpecified = true; } States(header) )
+| Start(header)
+| ( { ensure(!apSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_AP); apSpecified = true; } AP(header) )// TODO alias
+| ( { ensure(!acceptanceSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_ACCEPTANCE); acceptanceSpecified = true; } Acceptance(header))
+| ( { ensure(!accNameSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_ACCEPTANCE); accNameSpecified = true; } AccName(header) )
+| ( { ensure(!toolSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_TOOL); toolSpecified = true; } Tool(header) )
+| ( { ensure(!nameSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_NAME); nameSpecified = true; } Name(header) )
+| Properties(header)
 )*
-  { return header; }
+  {
+    ensure(acceptanceSpecified, ProblemsHoa.HOA_MISSING_ITEM_ACCEPTANCE);
+    BitSet startStates = header.getStartStates();
+    for (int state = startStates.nextSetBit(0); state >= 0; state = startStates.nextSetBit(state + 1)) {
+      ensure(state < header.getNumStates(), ProblemsHoa.HOA_INVALID_START_STATE, state, header.getNumStates());
+    }
+    return header;
+  }
 }
 
-Acceptance Acceptance(int numSets) :
+void States(HanoiHeader header) :
 {
+  int numStates;
+}
+{
+  <STATES> <COLON> numStates = parseInt() { header.setNumStates(numStates); }
+}
+
+void Start(HanoiHeader header) :
+{
+  int startState;
+}
+{
+ <START> <COLON> startState = parseInt() { header.setStartState(startState); }
+}
+
+void AP(HanoiHeader header) :
+{
+  Token ap;
+  int numAPs;
+  int numAPsAdded = 0;
+}
+{
+ <AP> <COLON> numAPs = parseInt() { header.setNumAPs(numAPs); } ( ap = <QUOTED>
+  {
+    ensure(numAPsAdded < numAPs, ProblemsHoa.HOA_TOO_MANY_APS, numAPs, ap);
+    numAPsAdded++;
+    header.addAP(ap.toString());
+  } )*
+}
+
+void Acceptance(HanoiHeader header) :
+{
+  int numSets;
   Acceptance acceptance;
 }
 {
-  acceptance = AcceptanceOr(numSets)
-  { return acceptance; }
+ <ACCEPTANCE> <COLON> numSets = parseInt() { header.setNumAccSets(numSets); } acceptance = AcceptanceOr(numSets) { header.setAcceptance(acceptance); }
+ { header.setAcceptance(acceptance); }
 }
 
 Acceptance AcceptanceOr(int numSets) :
@@ -199,32 +241,107 @@ Acceptance AcceptanceBoolean(int numSets) :
   { return new AcceptanceBoolean(value); }
 }
 
+void AccName(HanoiHeader header) :
+{
+  int numAccs;
+  int numPairs;
+  int numParsedPairs = 0;
+  int genParameter;
+  AcceptanceName name = new AcceptanceName();
+  String minMax;
+  String oddEven;
+}
+{
+  <ACC_NAME> <COLON> (
+    (<BUCHI> { name.setName("Buchi"); })
+  | (<GENERALIZED_BUCHI> numAccs = parseInt() { name.setName("generalized-Buchi"); name.addParameter(numAccs); })
+  | (<CO_BUCHI> { name.setName("co-Buchi"); })
+  | (<GENERALIZED_CO_BUCHI> numAccs = parseInt() { name.setName("generalized-co-Buchi"); name.addParameter(numAccs); })
+  | (<STREETT> numAccs = parseInt() { name.setName("Streett"); name.addParameter(numAccs); })
+  | (<RABIN> numAccs = parseInt() { name.setName("Rabin"); name.addParameter(numAccs); })
+  | (<GENERALIZED_RABIN> numPairs = parseInt() { name.setName("generalized-Rabin"); name.addParameter(numPairs); } (genParameter = parseInt() {name.addParameter(genParameter);})*)
+  | (<PARITY> numPairs = parseInt() (<MIN> {minMax = "min";} | <MAX> {minMax = "max";} ) (<ODD> {oddEven = "odd";} | <EVEN> {oddEven = "even";} ) numPairs = parseInt() { name.setName("Parity"); name.addParameter(minMax); name.addParameter(oddEven); name.addParameter(numPairs); } )
+  | (<ALL> { name.setName("all"); })
+  | (<NONE> { name.setName("none"); })
+ )
+ {
+   header.setAcceptanceName(name);
+ }
+}
+
+void Tool(HanoiHeader header) :
+{
+  Token toolName;
+  Token toolVersion;
+}
+{
+ <TOOL> <COLON> toolName = <QUOTED> { header.setToolName(toolName.toString()); }(toolVersion = <QUOTED> { header.setToolVersion(toolVersion.toString()); })? 
+}
+
+void Name(HanoiHeader header) :
+{
+  Token name;
+}
+{
+ <NAME> <COLON> name = <QUOTED> { header.setName(name.toString()); }
+}
+
+void Properties(HanoiHeader header) :
+{
+  Token property;
+}
+{
+ <PROPERTIES> <COLON> ( property = <IDENTIFIER> { header.addProperty(property.toString()); })*
+}
+
 GraphExplicitWrapper Body(HanoiHeader header)  :
 {
   GraphPreparator graph = new GraphPreparator(header);
 }
 {
   <BODY>
-  (State(graph))*
+  (State(header, graph))*
   <END>
   { return graph.toGraph(); }
 }
 
-void State(GraphPreparator graph)  :
+void State(HanoiHeader header, GraphPreparator graph)  :
 {
   int from;
   Expression guard;
   int to;
   BitSet acc;
-  int accState;
 }
 {
   <STATE> <COLON> from = parseInt()
-  (	<LBRACK>guard = Guard(graph.getHeader())<RBRACK> to = parseInt()
-	{ acc = new BitSetUnboundedLongArray(); }
-	(<LCURLY> (accState = parseInt() { acc.set(accState); })* <RCURLY>)?
+  {
+      ensure(from < header.getNumStates(), ProblemsHoa.HOA_INVALID_FROM_STATE,
+          from, header.getNumStates());
+  }
+  (	<LBRACK>guard = Guard(graph.getHeader())<RBRACK>
+	to = parseInt()
+    {
+        ensure(to < header.getNumStates(), ProblemsHoa.HOA_INVALID_TO_STATE,
+            to, header.getNumStates());
+    }
+    acc = AcceptanceSets(header)
 	{ graph.addTransition(from, to, guard, acc); }
   )*
+}
+
+BitSet AcceptanceSets(HanoiHeader header) :
+{
+  BitSet acc;
+  int accState;
+}
+{
+  { acc = new BitSetUnboundedLongArray(); }
+  (<LCURLY> (accState = parseInt()
+    { ensure(accState < header.getNumAcc(), ProblemsHoa.HOA_INVALID_ACC_NUMBER,
+        accState, header.getNumAcc());
+      acc.set(accState); }
+    )* <RCURLY>)?
+  { return acc; }
 }
 
 String Identifiers() :
@@ -296,6 +413,7 @@ Expression ExpressionNot(HanoiHeader header) :
     { p = not(p); }
   | <LPARENTH> p = ExpressionOr(header) <RPARENTH>
   | p = ExpressionTrue(header)
+  | p = ExpressionFalse(header)
   | p = ExpressionIdentifier(header)
   )
   { return p; }
@@ -303,10 +421,16 @@ Expression ExpressionNot(HanoiHeader header) :
 
 Expression ExpressionTrue(HanoiHeader header) :
 {
-  Token literal;
 }
 {
   <T> { return ExpressionLiteral.getTrue(); }
+}
+
+Expression ExpressionFalse(HanoiHeader header) :
+{
+}
+{
+  <F> { return ExpressionLiteral.getFalse(); }
 }
 
 Expression ExpressionIdentifier(HanoiHeader header) :
@@ -315,7 +439,7 @@ Expression ExpressionIdentifier(HanoiHeader header) :
 }
 {
   id = parseInt()
-  {
+  { ensure(id < header.getNumAPs(), ProblemsHoa.HOA_INVALID_AP_NUMBER);
     return header.numberToIdentifier(id);
   }
 }

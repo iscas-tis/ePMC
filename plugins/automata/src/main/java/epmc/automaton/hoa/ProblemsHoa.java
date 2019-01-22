@@ -28,7 +28,21 @@ public final class ProblemsHoa {
     private final static String PROBLEMS_HOA = "ProblemsHoa";
 
     public final static Problem HOA_INVALID_ACC_SET = newProblem("hoa-invalid-acc-set");
-
+    public final static Problem HOA_INVALID_FROM_STATE = newProblem("hoa-invalid-from-state");
+    public final static Problem HOA_INVALID_TO_STATE = newProblem("hoa-invalid-to-state");
+    public final static Problem HOA_TOO_MANY_APS = newProblem("hoa-too-many-aps");
+    public final static Problem HOA_INVALID_START_STATE = newProblem("hoa-invalid-start-state");
+    public final static Problem HOA_MULTIPLE_ITEMS_STATES = newProblem("hoa-multiple-items-states");
+    public final static Problem HOA_MULTIPLE_ITEMS_AP = newProblem("hoa-multiple-items-ap");
+    public final static Problem HOA_MULTIPLE_ITEMS_ACCEPTANCE = newProblem("hoa-multiple-items-acceptance");
+    public final static Problem HOA_MULTIPLE_ITEMS_ACC_NAME = newProblem("hoa-multiple-items-acc-name");
+    public final static Problem HOA_MULTIPLE_ITEMS_TOOL = newProblem("hoa-multiple-items-tool");
+    public final static Problem HOA_MULTIPLE_ITEMS_NAME = newProblem("hoa-multiple-items-name");
+    public final static Problem HOA_MULTIPLE_ITEMS_PROPERTIES = newProblem("hoa-multiple-items-properties");
+    public final static Problem HOA_MISSING_ITEM_ACCEPTANCE = newProblem("hoa-missing-item-acceptance");
+    public final static Problem HOA_INVALID_AP_NUMBER = newProblem("hoa-invalid-ap-number");
+    public final static Problem HOA_INVALID_ACC_NUMBER = newProblem("hoa-invalid-acc-number");
+    
     private static Problem newProblem(String name) {
         assert name != null;
         return UtilError.newProblem(PROBLEMS_HOA, name);

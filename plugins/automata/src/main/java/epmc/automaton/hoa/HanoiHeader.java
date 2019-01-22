@@ -39,11 +39,13 @@ public final class HanoiHeader {
     private final Map<String,Expression> ap2expr;
     private int numStates;
     private final BitSet startStates = new BitSetUnboundedLongArray();
+    private int numAPs;
     private final List<Expression> aps = new ArrayList<>();
     private int numAcc;
     private final LinkedHashSet<String> properties = new LinkedHashSet<>();
     private final Set<String> propertiesReadonly = Collections.unmodifiableSet(properties);
     private Acceptance acceptance;
+    private AcceptanceName acceptanceName;
 
     HanoiHeader(Map<String,Expression> ap2expr) {
         this.ap2expr = ap2expr;
@@ -77,12 +79,28 @@ public final class HanoiHeader {
         properties.add(property);
     }
 
+    void setNumAccSets(int numAccSets) {
+        this.numAcc = numAccSets;
+    }
+    
+    public int getNumAccSets() {
+        return numAcc;
+    }
+    
     void setAcceptance(Acceptance acceptance) {
         this.acceptance = acceptance;
     }
     
     public Acceptance getAcceptance() {
         return acceptance;
+    }
+    
+    void setAcceptanceName(AcceptanceName acceptanceName) {
+        this.acceptanceName = acceptanceName;
+    }
+    
+    public AcceptanceName getAcceptanceName() {
+        return acceptanceName;
     }
     
     public Set<String> getProperties() {
@@ -105,6 +123,14 @@ public final class HanoiHeader {
         return startStates;
     }
 
+    void setNumAPs(int numAPs) {
+        this.numAPs = numAPs;
+    }
+    
+    public int getNumAPs() {
+        return numAPs;
+    }
+    
     void addAP(String name) {
         assert name != null;
         name = name.substring(1, name.length() - 1);
