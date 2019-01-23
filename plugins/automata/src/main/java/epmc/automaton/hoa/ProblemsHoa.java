@@ -41,8 +41,15 @@ public final class ProblemsHoa {
     public final static Problem HOA_MULTIPLE_ITEMS_PROPERTIES = newProblem("hoa-multiple-items-properties");
     public final static Problem HOA_MISSING_ITEM_ACCEPTANCE = newProblem("hoa-missing-item-acceptance");
     public final static Problem HOA_INVALID_AP_NUMBER = newProblem("hoa-invalid-ap-number");
+    public final static Problem HOA_NEGATIVE_AP_NUMBER = newProblem("hoa-negative-ap-number");
     public final static Problem HOA_INVALID_ACC_NUMBER = newProblem("hoa-invalid-acc-number");
-    
+    public final static Problem HOA_NEGATIVE_ACC_NUMBER = newProblem("hoa-negative-acc-number");
+    public final static Problem HOA_NEGATIVE_FROM_STATE_NUMBER = newProblem("hoa-negative-from-state-number");
+    public final static Problem HOA_NEGATIVE_TO_STATE_NUMBER = newProblem("hoa-negative-to-state-number");
+    public final static Problem HOA_ANAME_SPECIFIED_TWICE = newProblem("hoa-aname-specified-twice");
+    public final static Problem HOA_ANAME_UNKNOWN = newProblem("hoa-aname-unknown");
+    public final static Problem HOA_INCONSISTENT_ACCEPTANCE_NAME = newProblem("hoa-inconsistent-acceptance-name");
+
     private static Problem newProblem(String name) {
         assert name != null;
         return UtilError.newProblem(PROBLEMS_HOA, name);

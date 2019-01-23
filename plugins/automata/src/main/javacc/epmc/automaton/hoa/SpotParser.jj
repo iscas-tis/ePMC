@@ -67,6 +67,7 @@ public class SpotParser {
 | < QUOTE : "\"" >| < ACC : "acc" >
 | < HOA : "HOA" >
 | < V1 : "v1" >
+| < ALIAS : "Alias" >
 | < NAME : "name" >
 | < TOOL : "tool" >
 | < STATES : "States" >
@@ -98,6 +99,7 @@ public class SpotParser {
 | < F : "f" >
 | < NUM_INT : (["1"-"9"](["0"-"9"])*)|("0") >
 | < IDENTIFIER : (["a"-"z","A"-"Z","0"-"9","_","-"])+ >
+| < ANAME : ("@"["a"-"z","A"-"Z","0"-"9","_","-"])+ >
 // https://stackoverflow.com/questions/24156948/javacc-quote-with-escape-character
 | <QUOTED: 
     "\"" 
@@ -131,8 +133,8 @@ HanoiHeader Header(Map<String,Expression> ap2expr) :
 (
   ( { ensure(!statesSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_STATES); statesSpecified = true; } States(header) )
 | Start(header)
-| ( { ensure(!apSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_AP); apSpecified = true; } AP(header) )// TODO alias
-| ( { ensure(!acceptanceSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_ACCEPTANCE); acceptanceSpecified = true; } Acceptance(header))
+| ( { ensure(!apSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_AP); apSpecified = true; } AP(header) )
+| Alias(header)| ( { ensure(!acceptanceSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_ACCEPTANCE); acceptanceSpecified = true; } Acceptance(header))
 | ( { ensure(!accNameSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_ACCEPTANCE); accNameSpecified = true; } AccName(header) )
 | ( { ensure(!toolSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_TOOL); toolSpecified = true; } Tool(header) )
 | ( { ensure(!nameSpecified, ProblemsHoa.HOA_MULTIPLE_ITEMS_NAME); nameSpecified = true; } Name(header) )
@@ -144,6 +146,7 @@ HanoiHeader Header(Map<String,Expression> ap2expr) :
     for (int state = startStates.nextSetBit(0); state >= 0; state = startStates.nextSetBit(state + 1)) {
       ensure(state < header.getNumStates(), ProblemsHoa.HOA_INVALID_START_STATE, state, header.getNumStates());
     }
+    header.checkAcceptanceName();
     return header;
   }
 }
@@ -166,16 +169,16 @@ void Start(HanoiHeader header) :
 
 void AP(HanoiHeader header) :
 {
-  Token ap;
+  String ap;
   int numAPs;
   int numAPsAdded = 0;
 }
 {
- <AP> <COLON> numAPs = parseInt() { header.setNumAPs(numAPs); } ( ap = <QUOTED>
+ <AP> <COLON> numAPs = parseInt() { header.setNumAPs(numAPs); } ( ap = parseQuoted()
   {
     ensure(numAPsAdded < numAPs, ProblemsHoa.HOA_TOO_MANY_APS, numAPs, ap);
     numAPsAdded++;
-    header.addAP(ap.toString());
+    header.addAP(ap);
   } )*
 }
 
@@ -237,7 +240,7 @@ Acceptance AcceptanceBoolean(int numSets) :
   boolean value;
 }
 {
-  <T> { value = true; } | <F> { value = false; }
+  ((<T> { value = true; }) | (<F> { value = false; }))
   { return new AcceptanceBoolean(value); }
 }
 
@@ -272,21 +275,35 @@ void AccName(HanoiHeader header) :
  }
 }
 
-void Tool(HanoiHeader header) :
+void Alias(HanoiHeader header) :
 {
-  Token toolName;
-  Token toolVersion;
+  String aname;
+  Expression expr;
 }
 {
- <TOOL> <COLON> toolName = <QUOTED> { header.setToolName(toolName.toString()); }(toolVersion = <QUOTED> { header.setToolVersion(toolVersion.toString()); })? 
+ <ALIAS> aname = parseAname() <COLON> expr = ExpressionOr(header)
+ {
+   ensure(!header.containsAname(aname), ProblemsHoa.HOA_ANAME_SPECIFIED_TWICE,
+     aname);
+   header.putAname(aname, expr);
+ }
+}
+
+void Tool(HanoiHeader header) :
+{
+  String toolName;
+  String toolVersion;
+}
+{
+ <TOOL> <COLON> toolName = parseQuoted() { header.setToolName(toolName); }(toolVersion = parseQuoted() { header.setToolVersion(toolVersion); })? 
 }
 
 void Name(HanoiHeader header) :
 {
-  Token name;
+  String name;
 }
 {
- <NAME> <COLON> name = <QUOTED> { header.setName(name.toString()); }
+ <NAME> <COLON> name = parseQuoted() { header.setName(name); }
 }
 
 void Properties(HanoiHeader header) :
@@ -310,61 +327,56 @@ GraphExplicitWrapper Body(HanoiHeader header)  :
 
 void State(HanoiHeader header, GraphPreparator graph)  :
 {
+  String stateName = null;
   int from;
   Expression guard;
   int to;
-  BitSet acc;
+  BitSet stateAcc;
+  BitSet transAcc;
 }
 {
-  <STATE> <COLON> from = parseInt()
+  <STATE> <COLON> from = parseInt() (stateName = parseQuoted())? stateAcc = AcceptanceSets(header)
   {
-      ensure(from < header.getNumStates(), ProblemsHoa.HOA_INVALID_FROM_STATE,
-          from, header.getNumStates());
+      ensure(from >= 0, ProblemsHoa.HOA_NEGATIVE_FROM_STATE_NUMBER, from);
+      ensure(header.getNumStates() == -1 || from < header.getNumStates(),
+        ProblemsHoa.HOA_INVALID_FROM_STATE, from, header.getNumStates());
+      graph.setStateName(from, stateName);
   }
   (	<LBRACK>guard = Guard(graph.getHeader())<RBRACK>
 	to = parseInt()
     {
-        ensure(to < header.getNumStates(), ProblemsHoa.HOA_INVALID_TO_STATE,
-            to, header.getNumStates());
+        ensure(to >= 0, ProblemsHoa.HOA_NEGATIVE_TO_STATE_NUMBER, to);
+        ensure(header.getNumStates() == -1 || to < header.getNumStates(),
+          ProblemsHoa.HOA_INVALID_TO_STATE, to, header.getNumStates());
     }
-    acc = AcceptanceSets(header)
-	{ graph.addTransition(from, to, guard, acc); }
+    transAcc = AcceptanceSets(header)
+	{
+      if (transAcc == null) {
+        transAcc = new BitSetUnboundedLongArray();
+      }
+      if (stateAcc != null) {
+        transAcc.or(stateAcc);
+      }
+	  graph.addTransition(from, to, guard, transAcc);
+	}
   )*
 }
 
 BitSet AcceptanceSets(HanoiHeader header) :
 {
-  BitSet acc;
+  BitSet acc = null;
   int accState;
 }
 {
-  { acc = new BitSetUnboundedLongArray(); }
-  (<LCURLY> (accState = parseInt()
-    { ensure(accState < header.getNumAcc(), ProblemsHoa.HOA_INVALID_ACC_NUMBER,
+  (<LCURLY>
+    { acc = new BitSetUnboundedLongArray(); }
+    (accState = parseInt()
+    { ensure(accState >= 0, ProblemsHoa.HOA_NEGATIVE_ACC_NUMBER, accState);
+      ensure(accState < header.getNumAcc(), ProblemsHoa.HOA_INVALID_ACC_NUMBER,
         accState, header.getNumAcc());
       acc.set(accState); }
     )* <RCURLY>)?
   { return acc; }
-}
-
-String Identifiers() :
-{
-  Token literal;
-  String result = "";
-}
-{
-  <QUOTE>
-    (
-      literal = <IDENTIFIER> { result += literal.toString(); }
-      | literal = <AND> { result += literal.toString(); }
-      | literal = <OR> { result += literal.toString(); }
-      | literal = <NOT> { result += literal.toString(); }
-      | literal = <LPARENTH> { result += literal.toString(); }
-      | literal = <RPARENTH> { result += literal.toString(); }
-      | literal = <NUM_INT> { result += literal.toString(); }
-    )*
-    <QUOTE>
-  { return result; }
 }
 
 Expression Guard(HanoiHeader header) :
@@ -439,12 +451,20 @@ Expression ExpressionFalse(HanoiHeader header) :
 Expression ExpressionIdentifier(HanoiHeader header) :
 {
   int id;
+  String aname;
 }
 {
-  id = parseInt()
-  { ensure(id < header.getNumAPs(), ProblemsHoa.HOA_INVALID_AP_NUMBER);
+  (id = parseInt()
+  { ensure(id >= 0, ProblemsHoa.HOA_NEGATIVE_AP_NUMBER, id);
+    ensure(id < header.getNumAPs(), ProblemsHoa.HOA_INVALID_AP_NUMBER,
+      id, id < header.getNumAPs());
     return header.numberToIdentifier(id);
-  }
+  })
+| ( aname = parseAname()
+   { ensure(header.containsAname(aname), ProblemsHoa.HOA_ANAME_UNKNOWN,
+       aname);
+     return header.aname2expr(aname); }
+  )
 }
 
 private int parseInt() :
@@ -454,4 +474,22 @@ private int parseInt() :
 {
 	intg = <NUM_INT>
 	{ return Integer.parseInt(intg.toString()); }
+}
+
+private String parseQuoted() :
+{
+  Token quoted;
+}
+{
+  quoted = <QUOTED>
+  { return quoted.toString().substring(1, quoted.toString().length() - 1); }
+}
+
+private String parseAname() :
+{
+  Token aname;
+}
+{
+  aname = <ANAME>
+  { return aname.toString(); }
 }

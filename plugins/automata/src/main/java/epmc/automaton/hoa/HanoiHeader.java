@@ -22,6 +22,7 @@ package epmc.automaton.hoa;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
@@ -31,13 +32,15 @@ import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifierStandard;
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
+import static epmc.error.UtilError.ensure;
 
 public final class HanoiHeader {
     private String name;
     private String toolName;
     private String toolVersion;
     private final Map<String,Expression> ap2expr;
-    private int numStates;
+    private final Map<String,Expression> anameToExpr = new LinkedHashMap<>();
+    private int numStates = -1;
     private final BitSet startStates = new BitSetUnboundedLongArray();
     private int numAPs;
     private final List<Expression> aps = new ArrayList<>();
@@ -52,7 +55,7 @@ public final class HanoiHeader {
     }
 
     void setName(String name) {
-        this.name = name.substring(1, name.length() - 1);
+        this.name = name;
     }
     
     public String getName() {
@@ -60,7 +63,7 @@ public final class HanoiHeader {
     }
     
     void setToolName(String toolName) {
-        this.toolName = toolName.substring(1, toolName.length() - 1);
+        this.toolName = toolName;
     }
 
     public String getToolName() {
@@ -68,7 +71,7 @@ public final class HanoiHeader {
     }
 
     void setToolVersion(String toolVersion) {
-        this.toolVersion = toolVersion.substring(1, toolVersion.length() - 1);
+        this.toolVersion = toolVersion;
     }
 
     public String getToolVersion() {
@@ -133,7 +136,6 @@ public final class HanoiHeader {
     
     void addAP(String name) {
         assert name != null;
-        name = name.substring(1, name.length() - 1);
         assert ap2expr == null || ap2expr.containsKey(name);
         if (ap2expr != null) {
             aps.add(ap2expr.get(name));
@@ -159,5 +161,139 @@ public final class HanoiHeader {
     
     public List<Expression> getAps() {
         return aps;
+    }
+    
+    void putAname(String aname, Expression expr) {
+        assert aname != null;
+        assert expr != null;
+        anameToExpr.put(name, expr);
+    }
+    
+    boolean containsAname(String name) {
+        assert name != null;
+        return anameToExpr.containsKey(name);
+    }
+    
+    Expression aname2expr(String name) {
+        return anameToExpr.get(name);
+    }
+    
+    void checkAcceptanceName() {
+        if (acceptanceName == null) {
+            return;
+        }
+        String name = acceptanceName.getName();
+        if (name.equals("Buchi")) {
+            checkBuechi();
+        } else if (name.equals("co-Buchi")) {
+            checkCoBuechi();
+        } else if (name.equals("generalized-Buchi")) {
+            checkGeneralisedBuechi(false);
+        } else if (name.equals("generalized-co-Buchi")) {
+            checkGeneralisedBuechi(true);            
+        } else if (name.equals("Streett")) {
+            
+        } else if (name.equals("Rabin")) {
+            
+        } else if (name.equals("generalized-Rabin")) {
+            
+        } else if (name.equals("all")) {
+            
+        } else if (name.equals("none")) {
+            
+        } else {
+            
+        }
+        // TODO
+    }
+
+    private void checkBuechi() {
+        ensureAcceptance(numAcc == 1);
+        ensureAcceptance(acceptanceName.getNumParameters() == 0);
+        ensureAcceptance(AcceptanceSet.is(acceptance));
+        ensureAcceptance(!AcceptanceSet.as(acceptance).isNegated());
+        ensureAcceptance(AcceptanceSet.as(acceptance).getInfFin() == InfFin.INF);
+    }
+
+    private void checkCoBuechi() {
+        ensureAcceptance(numAcc == 1);
+        ensureAcceptance(acceptanceName.getNumParameters() == 0);
+        ensureAcceptance(AcceptanceSet.is(acceptance));
+        ensureAcceptance(!AcceptanceSet.as(acceptance).isNegated());
+        ensureAcceptance(AcceptanceSet.as(acceptance).getInfFin() == InfFin.FIN);            
+    }
+
+    private void checkGeneralisedBuechi(boolean coBuechi) {
+        Acceptance accPtr = acceptance;
+        ensureAcceptance(acceptanceName.getNumParameters() == 1);
+        ensureAcceptance(acceptanceName.getParameterType(0) == AcceptanceNameParameterType.INTEGER);
+        ensureAcceptance(acceptanceName.getParameterInteger(0) == numAcc);
+        for (int i = numAcc - 1; i >= 0; i--) {
+            ensureAcceptance(accPtr != null);
+            AcceptanceSet acc = null;
+            if (AcceptanceSet.is(accPtr)) {
+                acc = AcceptanceSet.as(accPtr);
+            } else if (AcceptanceAndOr.is(accPtr)) {
+                ensureAcceptance(AcceptanceAndOr.as(accPtr).getAndOr() == AndOr.AND);
+                Acceptance accRight = AcceptanceAndOr.as(accPtr).getRight();
+                ensureAcceptance(AcceptanceSet.is(accRight));
+                acc = AcceptanceSet.as(accRight);
+            } else {
+                ensureAcceptance(false);
+            }
+            ensureAcceptance(!acc.isNegated());
+            ensureAcceptance(i == acc.getSet());
+            if (!coBuechi) {
+                ensureAcceptance(acc.getInfFin() == InfFin.INF);
+            } else {
+                ensureAcceptance(acc.getInfFin() == InfFin.FIN);
+            }
+            if (AcceptanceAndOr.is(accPtr)) {
+                ensureAcceptance(AcceptanceAndOr.as(accPtr).getAndOr() == AndOr.AND);
+                accPtr = AcceptanceAndOr.as(accPtr).getLeft();
+            } else {
+                accPtr = null;
+            }
+        }
+    }
+
+    private void checkStreett() {
+        Acceptance accPtr = acceptance;
+        ensureAcceptance(acceptanceName.getNumParameters() == 1);
+        ensureAcceptance(acceptanceName.getParameterType(0) == AcceptanceNameParameterType.INTEGER);
+        ensureAcceptance(acceptanceName.getParameterInteger(0) == numAcc);
+        for (int i = numAcc - 1; i >= 0; i--) {
+            ensureAcceptance(accPtr != null);
+            AcceptanceAndOr acc = null;
+            if (AcceptanceAndOr.is(accPtr) && AcceptanceAndOr.as(accPtr).getAndOr() == AndOr.OR) {
+                acc = AcceptanceAndOr.as(accPtr);
+            } else if (AcceptanceAndOr.is(accPtr)) {
+                ensureAcceptance(AcceptanceAndOr.as(accPtr).getAndOr() == AndOr.AND);
+                Acceptance accRight = AcceptanceAndOr.as(accPtr).getRight();
+                ensureAcceptance(AcceptanceSet.is(accRight));
+                acc = AcceptanceAndOr.as(accRight);
+            } else {
+                ensureAcceptance(false);
+            }
+            ensureStreettPair(acc, i);
+            if (AcceptanceAndOr.is(accPtr)) {
+                ensureAcceptance(AcceptanceAndOr.as(accPtr).getAndOr() == AndOr.AND);
+                accPtr = AcceptanceAndOr.as(accPtr).getLeft();
+            } else {
+                accPtr = null;
+            }
+        }
+    }
+
+    private void ensureStreettPair(AcceptanceAndOr acc, int i) {
+        // TODO
+        
+        // TODO Auto-generated method stub
+        
+    }
+
+    private void ensureAcceptance(boolean condition) {
+        ensure(condition, ProblemsHoa.HOA_INCONSISTENT_ACCEPTANCE_NAME,
+                acceptanceName, numAcc + " " + acceptance);
     }
 }

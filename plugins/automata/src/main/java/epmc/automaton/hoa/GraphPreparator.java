@@ -63,6 +63,7 @@ final class GraphPreparator {
         }
     }
 
+    private final ArrayList<String> stateNames = new ArrayList<>();
     private final HanoiHeader header;
     private final List<Set<Transition>> transitions;
 
@@ -77,7 +78,9 @@ final class GraphPreparator {
 
     void addTransition(int from, int to, Expression guard, BitSet label) {
         assert from >= 0;
-        assert from < transitions.size();
+        while (transitions.size() <= from) {
+            transitions.add(new LinkedHashSet<>());
+        }
         if (label == null) {
             label = new BitSetUnboundedLongArray();
         }
@@ -124,5 +127,12 @@ final class GraphPreparator {
 
     HanoiHeader getHeader() {
         return header;
+    }
+    
+    void setStateName(int state, String name) {
+        while (stateNames.size() <= state) {
+            stateNames.add(null);
+        }
+        stateNames.set(state, name);
     }
 }
