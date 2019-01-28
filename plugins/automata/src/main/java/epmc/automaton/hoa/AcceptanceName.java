@@ -33,10 +33,10 @@ public final class AcceptanceName {
         assert parameterNumber < parameters.size() : parameterNumber + SPACE + parameters.size();
         if (parameters.get(parameterNumber) instanceof String) {
             return AcceptanceNameParameterType.IDENTIFIER;
-        } else if (parameters.get(parameterNumber) instanceof String) {
+        } else if (parameters.get(parameterNumber) instanceof Integer) {
             return AcceptanceNameParameterType.INTEGER;
         } else {
-            throw new RuntimeException();
+            throw new RuntimeException(parameters.get(parameterNumber).getClass().toString());
         }
     }
     

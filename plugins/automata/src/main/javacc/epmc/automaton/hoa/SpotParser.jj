@@ -201,7 +201,7 @@ Acceptance AcceptanceOr(int numSets) :
   p = AcceptanceAnd(numSets)
   (
     <OR> nextProp = AcceptanceAnd(numSets)
-    { p = new AcceptanceAndOr(AndOr.OR, p, nextProp); }
+    { p = new AcceptanceOr(p, nextProp); }
   )*
   { return p; }
 }
@@ -216,7 +216,7 @@ Acceptance AcceptanceAnd(int numSets) :
   (
     <AND>
     ( nextProp = AcceptanceSet(numSets) | nextProp = AcceptanceBoolean(numSets) )
-    { p = new AcceptanceAndOr(AndOr.AND, p, nextProp); }
+    { p = new AcceptanceAnd(p, nextProp); }
   )*
   { return p; }
 }
@@ -258,16 +258,16 @@ void AccName(HanoiHeader header) :
 }
 {
   <ACC_NAME> <COLON> (
-    (<BUCHI> { name.setName("Buchi"); })
-  | (<GENERALIZED_BUCHI> numAccs = parseInt() { name.setName("generalized-Buchi"); name.addParameter(numAccs); })
-  | (<CO_BUCHI> { name.setName("co-Buchi"); })
-  | (<GENERALIZED_CO_BUCHI> numAccs = parseInt() { name.setName("generalized-co-Buchi"); name.addParameter(numAccs); })
-  | (<STREETT> numAccs = parseInt() { name.setName("Streett"); name.addParameter(numAccs); })
-  | (<RABIN> numAccs = parseInt() { name.setName("Rabin"); name.addParameter(numAccs); })
-  | (<GENERALIZED_RABIN> numPairs = parseInt() { name.setName("generalized-Rabin"); name.addParameter(numPairs); } (genParameter = parseInt() {name.addParameter(genParameter);})*)
-  | (<PARITY> numPairs = parseInt() (<MIN> {minMax = "min";} | <MAX> {minMax = "max";} ) (<ODD> {oddEven = "odd";} | <EVEN> {oddEven = "even";} ) numPairs = parseInt() { name.setName("Parity"); name.addParameter(minMax); name.addParameter(oddEven); name.addParameter(numPairs); } )
-  | (<ALL> { name.setName("all"); })
-  | (<NONE> { name.setName("none"); })
+    (<BUCHI> { name.setName(HanoiHeader.BUCHI); })
+  | (<GENERALIZED_BUCHI> numAccs = parseInt() { name.setName(HanoiHeader.GENERALIZED_BUCHI); name.addParameter(numAccs); })
+  | (<CO_BUCHI> { name.setName(HanoiHeader.CO_BUCHI); })
+  | (<GENERALIZED_CO_BUCHI> numAccs = parseInt() { name.setName(HanoiHeader.GENERALIZED_CO_BUCHI); name.addParameter(numAccs); })
+  | (<STREETT> numAccs = parseInt() { name.setName(HanoiHeader.STREETT); name.addParameter(numAccs); })
+  | (<RABIN> numAccs = parseInt() { name.setName(HanoiHeader.RABIN); name.addParameter(numAccs); })
+  | (<GENERALIZED_RABIN> numPairs = parseInt() { name.setName(HanoiHeader.GENERALIZED_RABIN); name.addParameter(numPairs); } (genParameter = parseInt() {name.addParameter(genParameter);})*)
+  | (<PARITY> numPairs = parseInt() (<MIN> {minMax = HanoiHeader.PARITY_MIN;} | <MAX> {minMax = HanoiHeader.PARITY_MAX;} ) (<ODD> {oddEven = HanoiHeader.PARITY_ODD;} | <EVEN> {oddEven = HanoiHeader.PARITY_EVEN;} ) numPairs = parseInt() { name.setName(HanoiHeader.PARITY); name.addParameter(minMax); name.addParameter(oddEven); name.addParameter(numPairs); } )
+  | (<ALL> { name.setName(HanoiHeader.ALL); })
+  | (<NONE> { name.setName(HanoiHeader.NONE); })
   | (identifier = <IDENTIFIER> { name.setName(identifier.toString()); } ( (identifier = <IDENTIFIER> { name.addParameter(identifier.toString()); } ) | (intParameter = parseInt() { name.addParameter(intParameter); }) )* )
  )
  {

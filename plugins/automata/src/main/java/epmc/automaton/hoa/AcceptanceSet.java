@@ -21,6 +21,30 @@ public final class AcceptanceSet implements Acceptance {
         return null;
     }
 
+    public static boolean isFin(Acceptance acceptance) {
+        if (!is(acceptance)) {
+            return false;
+        }
+        AcceptanceSet acceptanceSet = as(acceptance);
+        return acceptanceSet.getInfFin() == InfFin.FIN;
+    }
+
+    public static boolean isInf(Acceptance acceptance) {
+        if (!is(acceptance)) {
+            return false;
+        }
+        AcceptanceSet acceptanceSet = as(acceptance);
+        return acceptanceSet.getInfFin() == InfFin.INF;
+    }
+
+    public static boolean isNegated(Acceptance acceptance) {
+        if (!is(acceptance)) {
+            return false;
+        }
+        AcceptanceSet acceptanceSet = as(acceptance);
+        return acceptanceSet.isNegated();
+    }
+
     public AcceptanceSet(InfFin infFin, boolean negated, int set) {
         assert infFin != null;
         assert set >= 0 : set;

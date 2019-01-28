@@ -1,36 +1,28 @@
 package epmc.automaton.hoa;
 
-public final class AcceptanceAndOr implements Acceptance {
+public final class AcceptanceAnd implements Acceptance {
     private final static String AND = "&";
-    private final static String OR = "|";
     private final static String LBRACE = "(";
     private final static String RBRACE = ")";
-    private final AndOr andOr;
     private final Acceptance left;
     private final Acceptance right;
 
     public static boolean is(Acceptance acceptance) {
-        return acceptance instanceof AcceptanceAndOr;
+        return acceptance instanceof AcceptanceAnd;
     }
     
-    public static AcceptanceAndOr as(Acceptance acceptance) {
+    public static AcceptanceAnd as(Acceptance acceptance) {
         if (is(acceptance)) {
-            return (AcceptanceAndOr) acceptance;
+            return (AcceptanceAnd) acceptance;
         }
         return null;
     }
     
-    AcceptanceAndOr(AndOr andOr, Acceptance left, Acceptance right) {
-        assert andOr != null;
+    AcceptanceAnd(Acceptance left, Acceptance right) {
         assert left != null;
         assert right != null;
-        this.andOr = andOr;
         this.left = left;
         this.right = right;
-    }
-    
-    public AndOr getAndOr() {
-        return andOr;
     }
     
     public Acceptance getLeft() {
@@ -45,18 +37,13 @@ public final class AcceptanceAndOr implements Acceptance {
     public String toString() {
         String leftString = left.toString();
         String rightString = right.toString();
-        String operatorString = andOr == AndOr.OR ? OR : AND;
-        if (andOr == AndOr.AND
-                && AcceptanceAndOr.is(left)
-                && AcceptanceAndOr.as(left).getAndOr() == AndOr.OR) {
+        if (AcceptanceOr.is(left)) {
             leftString = addBraces(leftString);
         }
-        if (andOr == AndOr.AND
-                && AcceptanceAndOr.is(right)
-                && AcceptanceAndOr.as(right).getAndOr() == AndOr.OR) {
+        if (AcceptanceOr.is(right)) {
             rightString = addBraces(rightString);
         }
-        return leftString + operatorString + rightString;
+        return leftString + AND + rightString;
     }
     
     private static String addBraces(String string) {
