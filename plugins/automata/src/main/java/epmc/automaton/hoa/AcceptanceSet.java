@@ -45,6 +45,13 @@ public final class AcceptanceSet implements Acceptance {
         return acceptanceSet.isNegated();
     }
 
+    public static int getSet(Acceptance acceptance) {
+        if (!is(acceptance)) {
+            return -1;
+        }
+        return as(acceptance).getSet();
+    }
+    
     public AcceptanceSet(InfFin infFin, boolean negated, int set) {
         assert infFin != null;
         assert set >= 0 : set;

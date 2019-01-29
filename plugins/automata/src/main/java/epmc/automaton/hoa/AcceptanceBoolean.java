@@ -16,6 +16,19 @@ public final class AcceptanceBoolean implements Acceptance {
         return null;
     }
 
+    public static boolean isFalse(Acceptance acceptance) {
+        if (!is(acceptance)) {
+            return false;
+        }
+        return as(acceptance).isValue();
+    }
+
+    public static boolean isTrue(Acceptance acceptance) {
+        if (!is(acceptance)) {
+            return false;
+        }
+        return !as(acceptance).isValue();
+    }
 
     public AcceptanceBoolean(boolean value) {
         this.value = value;

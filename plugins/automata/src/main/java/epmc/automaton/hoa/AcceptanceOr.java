@@ -2,8 +2,6 @@ package epmc.automaton.hoa;
 
 public final class AcceptanceOr implements Acceptance {
     private final static String OR = "|";
-    private final static String LBRACE = "(";
-    private final static String RBRACE = ")";
     private final Acceptance left;
     private final Acceptance right;
 
@@ -38,9 +36,5 @@ public final class AcceptanceOr implements Acceptance {
         String leftString = left.toString();
         String rightString = right.toString();
         return leftString + OR + rightString;
-    }
-    
-    private static String addBraces(String string) {
-        return LBRACE + string + RBRACE;
     }
 }
