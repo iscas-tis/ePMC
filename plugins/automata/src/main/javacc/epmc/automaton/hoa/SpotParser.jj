@@ -328,20 +328,55 @@ void State(HanoiHeader header, GraphPreparator graph)  :
 {
   String stateName = null;
   int from;
+  Expression stateGuard = null;
   Expression guard;
   int to;
   BitSet stateAcc;
   BitSet transAcc;
+  Boolean implicitLabels = null;
+  int numTransitions = 0;
 }
 {
-  <STATE> from = Int() (stateName = Quoted())? stateAcc = AcceptanceSets(header)
+  <STATE> (<LBRACK>stateGuard = Guard(header) <RBRACK>)? from = Int() (stateName = Quoted())? stateAcc = AcceptanceSets(header)
   {
       ensure(from >= 0, ProblemsHoa.HOA_NEGATIVE_FROM_STATE_NUMBER, from);
       ensure(header.getNumStates() == -1 || from < header.getNumStates(),
         ProblemsHoa.HOA_INVALID_FROM_STATE, from, header.getNumStates());
       graph.setStateName(from, stateName);
   }
-  (	<LBRACK>guard = Guard(graph.getHeader())<RBRACK>
+  (
+    { guard = null; }	(<LBRACK>guard = Guard(header) <RBRACK>)?
+	{
+	  ensure(stateGuard == null || guard == null,
+	    ProblemsHoa.HOA_BOTH_STATE_AND_EDGE_LABEL, from);
+	  if (stateGuard != null) {
+	    guard = stateGuard;
+	  }
+	  if (implicitLabels == null) {
+	    implicitLabels = guard == null ? true : false;
+	  } else {
+	    ensure(implicitLabels == (guard == null),
+	      ProblemsHoa.HOA_LABELS_EITHER_IMPLICIT_OR_EXPLICIT, from);
+	  }
+	  if (implicitLabels) {
+	    int bit = 1;
+	    for (int apNr = 0; apNr < header.getNumAPs(); apNr++) {
+	      Expression lit = header.numberToIdentifier(apNr);
+	      if ((numTransitions & bit) == 0) {
+	        lit = not(lit);
+	      }
+	      if (guard == null) {
+	        guard = lit;
+	      } else {
+	        guard = and(guard, lit);
+	      }
+	      bit <<= 1;
+	    }
+	    if (guard == null) {
+	      guard = ExpressionLiteral.getTrue();
+	    }
+	  }
+	}
 	to = Int()
     {
         ensure(to >= 0, ProblemsHoa.HOA_NEGATIVE_TO_STATE_NUMBER, to);
@@ -357,8 +392,15 @@ void State(HanoiHeader header, GraphPreparator graph)  :
         transAcc.or(stateAcc);
       }
 	  graph.addTransition(from, to, guard, transAcc);
+	  numTransitions++;
 	}
   )*
+  {
+    if (implicitLabels != null) {
+      ensure(!implicitLabels || numTransitions == (2 << (header.getNumAPs() - 1)),
+        ProblemsHoa.HOA_TRANSITION_NUMBER_INCORRECT_IMPLICIT_LABELS, from);
+    }
+  }
 }
 
 BitSet AcceptanceSets(HanoiHeader header) :

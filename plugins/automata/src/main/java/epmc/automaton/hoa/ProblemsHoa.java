@@ -49,6 +49,10 @@ public final class ProblemsHoa {
     public final static Problem HOA_ANAME_SPECIFIED_TWICE = newProblem("hoa-aname-specified-twice");
     public final static Problem HOA_ANAME_UNKNOWN = newProblem("hoa-aname-unknown");
     public final static Problem HOA_INCONSISTENT_ACCEPTANCE_NAME = newProblem("hoa-inconsistent-acceptance-name");
+    public final static Problem HOA_BOTH_STATE_AND_EDGE_LABEL = newProblem("hoa-both-state-and-edge-label");
+    public final static Problem HOA_LABELS_EITHER_IMPLICIT_OR_EXPLICIT = newProblem("hoa-labels-either-implicit-or-explicit");
+    public final static Problem HOA_TRANSITION_NUMBER_INCORRECT_IMPLICIT_LABELS = newProblem("hoa-transition-number-incorrect-implicit-labels");
+    
 
     private static Problem newProblem(String name) {
         assert name != null;
