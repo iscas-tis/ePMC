@@ -18,7 +18,6 @@ import epmc.operator.OperatorOr;
 import epmc.operator.OperatorAnd;
 import epmc.operator.OperatorNot;
 import epmc.graph.explicit.GraphExplicitWrapper;
-import static epmc.error.UtilError.ensure;
 
 public class SpotParser {
 
@@ -63,7 +62,7 @@ public class SpotParser {
 | < RBRACK : "]" >
 | < LCURLY : "{" >
 | < RCURLY : "}" >
-| < QUOTE : "\"" >| < ACC : "acc" >
+| < ACC : "acc" >
 | < HOA : "HOA:" >
 | < V1 : "v1" >
 | < ALIAS : "Alias" >
@@ -247,12 +246,11 @@ void AccName(HanoiHeader header) :
 {
   int numAccs;
   int numPairs;
-  int numParsedPairs = 0;
   int genParameter;
   AcceptanceName name = new AcceptanceName();
   String minMax;
   String oddEven;
-  Token identifier;
+  String identifier;
   int intParameter;
 }
 {
@@ -267,7 +265,7 @@ void AccName(HanoiHeader header) :
   | (<PARITY> numPairs = Int() (<MIN> {minMax = HanoiHeader.PARITY_MIN;} | <MAX> {minMax = HanoiHeader.PARITY_MAX;} ) (<ODD> {oddEven = HanoiHeader.PARITY_ODD;} | <EVEN> {oddEven = HanoiHeader.PARITY_EVEN;} ) numPairs = Int() { name.setName(HanoiHeader.PARITY); name.addParameter(minMax); name.addParameter(oddEven); name.addParameter(numPairs); } )
   | (<ALL> { name.setName(HanoiHeader.ALL); })
   | (<NONE> { name.setName(HanoiHeader.NONE); })
-  | (identifier = <IDENTIFIER> { name.setName(identifier.toString()); } ( (identifier = <IDENTIFIER> { name.addParameter(identifier.toString()); } ) | (intParameter = Int() { name.addParameter(intParameter); }) )* )
+  | (identifier = Identifier() { name.setName(identifier); } ( (identifier = Identifier() { name.addParameter(identifier); } ) | (intParameter = Int() { name.addParameter(intParameter); }) )* )
  )
  {
    header.setAcceptanceName(name);
@@ -307,10 +305,10 @@ void Name(HanoiHeader header) :
 
 void Properties(HanoiHeader header) :
 {
-  Token property;
+  String property;
 }
 {
- <PROPERTIES> ( property = <IDENTIFIER> { header.addProperty(property.toString()); })*
+ <PROPERTIES> ( property = Identifier() { header.addProperty(property); })*
 }
 
 GraphExplicitWrapper Body(HanoiHeader header)  :
@@ -533,4 +531,13 @@ private String Aname() :
 {
   aname = <ANAME>
   { return aname.toString(); }
+}
+
+private String Identifier() :
+{
+  Token identifier;
+}
+{
+  identifier = <IDENTIFIER>
+  { return identifier.toString(); }
 }
