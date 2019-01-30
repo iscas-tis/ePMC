@@ -18,6 +18,7 @@ import epmc.operator.OperatorOr;
 import epmc.operator.OperatorAnd;
 import epmc.operator.OperatorNot;
 import epmc.graph.explicit.GraphExplicitWrapper;
+import epmc.util.UtilEscape;
 
 public class SpotParser {
 
@@ -521,7 +522,7 @@ private String Quoted() :
 }
 {
   quoted = <QUOTED>
-  { return quoted.toString().substring(1, quoted.toString().length() - 1); }
+  { return UtilEscape.unescapeC(quoted.toString().substring(1, quoted.toString().length() - 1)); }
 }
 
 private String Aname() :

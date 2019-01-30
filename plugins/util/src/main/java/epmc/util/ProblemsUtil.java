@@ -28,6 +28,7 @@ public final class ProblemsUtil {
     private final static String PROBLEMS_UTIL = "ProblemsUtil";
     /** Native memory allocation shall be performed but not enough memory is available. */
     public final static Problem INSUFFICIENT_NATIVE_MEMORY = newProblem("insufficient-native-memory");
+    public final static Problem CANNOT_UNESCAPE = newProblem("cannot-unescape");
 
     /**
      * Generate new problem reading descriptions from plugin property bundle.
