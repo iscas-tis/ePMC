@@ -96,6 +96,16 @@ final class GraphPreparator {
         return header;
     }
     
+    void prepareState(int from) {
+        assert from >= 0;
+        while (transitions.size() <= from) {
+            transitions.add(null);
+        }
+        if (transitions.get(from) == null) {
+            transitions.set(from, new LinkedHashSet<>());
+        }
+    }
+    
     void setStateName(int state, String name) {
         while (stateNames.size() <= state) {
             stateNames.add(null);

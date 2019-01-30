@@ -344,6 +344,7 @@ void State(HanoiHeader header, GraphPreparator graph)  :
       ensure(from >= 0, ProblemsHoa.HOA_NEGATIVE_FROM_STATE_NUMBER, from);
       ensure(header.getNumStates() == -1 || from < header.getNumStates(),
         ProblemsHoa.HOA_INVALID_FROM_STATE, from, header.getNumStates());
+      graph.prepareState(from);
       graph.setStateName(from, stateName);
   }
   (
