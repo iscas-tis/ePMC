@@ -26,7 +26,7 @@ public class SpotParser {
     try {
       return Automaton(ap2expr);
     } catch (ParseException e) {
-      ensure(false, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_PARSE, e, e.toString());
+      ensure(false, ProblemsHoa.HOA_PARSING_ERROR, e, e.toString());
       return null;
     }
   }

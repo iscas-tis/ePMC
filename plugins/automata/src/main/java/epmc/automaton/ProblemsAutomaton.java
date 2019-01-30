@@ -47,8 +47,6 @@ public final class ProblemsAutomaton {
 
     /** An I/O problem called while calling SPOT or reading its output. */
     public final static Problem LTL2BA_SPOT_PROBLEM_IO = newProblem("ltl2ba-spot-problem-io");
-    /** A problem occurred while trying to parse the output of SPOT. */
-    public final static Problem LTL2BA_SPOT_PROBLEM_PARSE = newProblem("ltl2ba-spot-problem-parse");
     /** SPOT produced a non-zero error code at termination. */
     public final static Problem LTL2BA_SPOT_PROBLEM_EXIT_CODE = newProblem("ltl2ba-spot-problem-exit-code");
 

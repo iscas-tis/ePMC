@@ -27,6 +27,7 @@ public final class ProblemsHoa {
     /** Base name of file containing problem descriptors. */
     private final static String PROBLEMS_HOA = "ProblemsHoa";
 
+    public final static Problem HOA_PARSING_ERROR = newProblem("hoa-parsing-error");
     public final static Problem HOA_INVALID_ACC_SET = newProblem("hoa-invalid-acc-set");
     public final static Problem HOA_INVALID_FROM_STATE = newProblem("hoa-invalid-from-state");
     public final static Problem HOA_INVALID_TO_STATE = newProblem("hoa-invalid-to-state");
