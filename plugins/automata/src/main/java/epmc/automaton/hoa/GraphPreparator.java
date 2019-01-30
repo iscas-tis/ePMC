@@ -37,6 +37,7 @@ import epmc.value.TypeInteger;
 import epmc.value.TypeObject;
 import epmc.value.ValueInteger;
 import epmc.value.ValueObject;
+import static epmc.error.UtilError.ensure;
 
 final class GraphPreparator {
     private final static class Transition {
@@ -72,14 +73,17 @@ final class GraphPreparator {
         this.header = header;
         transitions = new ArrayList<>();
         for (int i = 0; i < header.getNumStates(); i++) {
-            transitions.add(new LinkedHashSet<>());
+            transitions.add(null);
         }
     }
 
     void addTransition(int from, int to, Expression guard, BitSet label) {
         assert from >= 0;
         while (transitions.size() <= from) {
-            transitions.add(new LinkedHashSet<>());
+            transitions.add(null);
+        }
+        if (transitions.get(from) == null) {
+            transitions.set(from, new LinkedHashSet<>());
         }
         if (label == null) {
             label = new BitSetUnboundedLongArray();
@@ -88,6 +92,47 @@ final class GraphPreparator {
         stateTransitions.add(new Transition(to, guard, label));
     }
 
+    HanoiHeader getHeader() {
+        return header;
+    }
+    
+    void setStateName(int state, String name) {
+        while (stateNames.size() <= state) {
+            stateNames.add(null);
+        }
+        stateNames.set(state, name);
+    }
+    
+    void ensureStates() {
+        int numStates = header.getNumStates();
+        if (numStates >= 0) {
+            ensure(transitions.size() >= numStates,
+                    ProblemsHoa.HOA_NUM_STATES_DECLARED_STATE_MISSING,
+                    transitions.size(), header.getNumStates());
+            for (int state = 0; state < numStates; state++) {
+                ensure(transitions.get(state) != null,
+                        ProblemsHoa.HOA_NUM_STATES_DECLARED_STATE_MISSING,
+                        state, header.getNumStates());
+            }
+        } else {
+            numStates = transitions.size();
+            for (int state = 0; state < numStates; state++) {
+                ensure(transitions.get(state) != null,
+                        ProblemsHoa.HOA_NUM_STATES_UNDECLARED_STATE_GAP,
+                        state, numStates - 1);
+            }
+            for (int state = 0; state < numStates; state++) {
+                Set<Transition> stateTransitions = transitions.get(state);
+                for (Transition transition : stateTransitions) {
+                    int to = transition.getTo();
+                    ensure(to < numStates,
+                            ProblemsHoa.HOA_NUM_STATES_UNDECLARED_INVALID_TO,
+                            state, to);
+                }
+            }
+        }
+    }
+    
     GraphExplicitWrapper toGraph() {
         GraphExplicitWrapper graph = new GraphExplicitWrapper();
         TypeInteger typeInteger = TypeInteger.get();
@@ -123,16 +168,5 @@ final class GraphPreparator {
         graph.addSettableGraphProperty(HanoiHeader.class, typeHeader);
         graph.setGraphProperty(HanoiHeader.class, header);
         return graph;
-    }
-
-    HanoiHeader getHeader() {
-        return header;
-    }
-    
-    void setStateName(int state, String name) {
-        while (stateNames.size() <= state) {
-            stateNames.add(null);
-        }
-        stateNames.set(state, name);
     }
 }

@@ -320,7 +320,10 @@ GraphExplicitWrapper Body(HanoiHeader header)  :
   <BODY>
   (State(header, graph))*
   <END>
-  { return graph.toGraph(); }
+  {
+    graph.ensureStates();
+    return graph.toGraph();
+  }
 }
 
 void State(HanoiHeader header, GraphPreparator graph)  :

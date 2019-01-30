@@ -52,7 +52,9 @@ public final class ProblemsHoa {
     public final static Problem HOA_BOTH_STATE_AND_EDGE_LABEL = newProblem("hoa-both-state-and-edge-label");
     public final static Problem HOA_LABELS_EITHER_IMPLICIT_OR_EXPLICIT = newProblem("hoa-labels-either-implicit-or-explicit");
     public final static Problem HOA_TRANSITION_NUMBER_INCORRECT_IMPLICIT_LABELS = newProblem("hoa-transition-number-incorrect-implicit-labels");
-    
+    public final static Problem HOA_NUM_STATES_DECLARED_STATE_MISSING = newProblem("hoa-num-states-declared-state-missing");
+    public final static Problem HOA_NUM_STATES_UNDECLARED_STATE_GAP = newProblem("hoa-num-states-undeclared-state-gap");
+    public final static Problem HOA_NUM_STATES_UNDECLARED_INVALID_TO = newProblem("hoa-num-states-undeclared-invalid-to");
 
     private static Problem newProblem(String name) {
         assert name != null;
