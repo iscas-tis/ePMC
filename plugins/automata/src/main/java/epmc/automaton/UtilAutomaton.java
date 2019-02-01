@@ -142,9 +142,9 @@ public final class UtilAutomaton {
         return buechi;
     }
 
-    public static GraphExplicit newBuechi(String property) {
+    public static GraphExplicit newBuechi(String property, List<String> spotParameters) {
         assert property != null;
-        return BuechiImpl.createSpotAutomaton(property, null);
+        return BuechiImpl.createSpotAutomaton(property, spotParameters, null);
     }
     
     public static Buechi computeBuechi(Expression property, Expression[] expressions) {

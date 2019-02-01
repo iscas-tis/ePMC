@@ -65,5 +65,5 @@ public enum CommonProperties {
     TRANSITION_LABEL,
     /** identifies command/edge/etc in high-level model */
     DECISION,
-    AUTOMATON_NAME,
+    AUTOMATON_NAME,    
 }

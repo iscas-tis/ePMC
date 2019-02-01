@@ -27,6 +27,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
@@ -201,16 +202,21 @@ public class BuechiImpl implements Buechi {
         for (Entry<Expression,String> entry : expr2str.entrySet()) {
             ap2expr.put(entry.getValue(), entry.getKey());
         }
-        return createSpotAutomaton(spotFn, ap2expr);
+        return createSpotAutomaton(spotFn, null, ap2expr);
     }
 
-    public static GraphExplicit createSpotAutomaton(String spotFn, Map<String, Expression> ap2expr) {
+    public static GraphExplicit createSpotAutomaton(String spotFn, List<String> additionalSpotParamerters, Map<String, Expression> ap2expr) {
         String ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
         try {
-            final String[] autExecArgs = {ltl2tgba,
+            ArrayList<String> autExecArgsList = new ArrayList<>();
+            autExecArgsList.addAll(Arrays.asList(new String[]{ltl2tgba,
                     SPOT_PARAM_FORMULA, spotFn,
                     SPOT_PARAM_LOW_OPTIMISATIONS,
-                    SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE};
+                    SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE}));
+            if (additionalSpotParamerters != null) {
+                autExecArgsList.addAll(additionalSpotParamerters);
+            }
+            final String[] autExecArgs = autExecArgsList.toArray(new String[0]);
             final Process autProcess = Runtime.getRuntime().exec(autExecArgs);
             final BufferedReader autIn = new BufferedReader
                     (new InputStreamReader(autProcess.getInputStream()));
