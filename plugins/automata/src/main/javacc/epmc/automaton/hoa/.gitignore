@@ -1,7 +1,8 @@
 /ParseException.java
 /SimpleCharStream.java
-/SpotParserConstants.java
+/HoaParserConstants.java
 /Token.java
 /TokenMgrError.java
-/SpotParser.java
-/SpotParserTokenManager.java
+/HoaParser.java
+/HoaParserTokenManager.java
+/HoaParserConstants.java

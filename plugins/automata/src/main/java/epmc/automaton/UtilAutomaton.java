@@ -28,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import epmc.automaton.hoa.SpotParser;
+import epmc.automaton.hoa.HoaParser;
 import epmc.error.Positional;
 import epmc.expression.Expression;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -142,18 +142,9 @@ public final class UtilAutomaton {
         return buechi;
     }
 
-    public static Buechi newBuechi(String property) {
+    public static GraphExplicit newBuechi(String property) {
         assert property != null;
-        Options options = Options.get();
-        Buechi buechi = null;
-        Log log = options.get(OptionsMessages.LOG);
-        log.send(MessagesAutomaton.COMPUTING_ORIG_BUECHI);
-        buechi = new BuechiImpl(property);
-        Message buechiDone = buechi.isDeterministic() ?
-                MessagesAutomaton.COMPUTING_BUECHI_DONE_DET
-                : MessagesAutomaton.COMPUTING_BUECHI_DONE_NONDET;
-        log.send(buechiDone, buechi.getNumLabels(), buechi.getNumStates());
-        return buechi;
+        return BuechiImpl.createSpotAutomaton(property, null);
     }
     
     public static Buechi computeBuechi(Expression property, Expression[] expressions) {
@@ -496,14 +487,14 @@ public final class UtilAutomaton {
                 .equals(OperatorNot.NOT);
     }
 
+    public static GraphExplicit parseHOAAutomaton(Reader reader, Map<String, Expression> ap2expr) {
+        HoaParser spotParser = new HoaParser(reader);
+        return spotParser.parseAutomaton(ap2expr);
+    }
+    
     /**
      * Private constructor to prevent instantiation of this class.
      */
     private UtilAutomaton() {
-    }
-
-    public static GraphExplicit parseHOAAutomaton(Reader reader, Map<String, Expression> ap2expr) {
-        SpotParser spotParser = new SpotParser(reader);
-        return spotParser.parseAutomaton(ap2expr);
     }
 }

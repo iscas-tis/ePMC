@@ -4,7 +4,7 @@ options
   LOOKAHEAD = 1;
   STATIC = false;
 }
-PARSER_BEGIN(SpotParser)package epmc.automaton.hoa;
+PARSER_BEGIN(HoaParser)package epmc.automaton.hoa;
 
 import epmc.util.BitSet;
 import epmc.util.BitSetUnboundedLongArray;
@@ -20,7 +20,7 @@ import epmc.operator.OperatorNot;
 import epmc.graph.explicit.GraphExplicitWrapper;
 import epmc.util.UtilEscape;
 
-public class SpotParser {
+public class HoaParser {
 
   public GraphExplicitWrapper parseAutomaton(Map<String,Expression> ap2expr) {
     try {
@@ -51,7 +51,7 @@ public class SpotParser {
         	.setOperands(expression)
         	.build();
     }
-}PARSER_END(SpotParser)SKIP :{  " "| "\r"| "\t"| "\n"
+}PARSER_END(HoaParser)SKIP :{  " "| "\r"| "\t"| "\n"
 }TOKEN :{  < COMMA : "," >
 | < EQUALS : "=" >
 | < NOT : "!" >

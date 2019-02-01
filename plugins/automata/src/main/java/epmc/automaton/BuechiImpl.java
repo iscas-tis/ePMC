@@ -36,7 +36,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import epmc.automaton.hoa.HanoiHeader;
-import epmc.automaton.hoa.SpotParser;
+import epmc.automaton.hoa.HoaParser;
 import epmc.expression.Expression;
 import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.ExpressionIdentifier;
@@ -66,15 +66,14 @@ import epmc.value.Type;
 import epmc.value.TypeBoolean;
 import epmc.value.Value;
 import epmc.value.ValueBoolean;
-import epmc.value.ValueInteger;
 
 public class BuechiImpl implements Buechi {
     private final static String SPOT_PARAM_FORMULA = "-f";
     private final static String SPOT_PARAM_LOW_OPTIMISATIONS = "--low";
     private final static String SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE = "-Ht";
+    private final static String DETERMINISTIC = "deterministic";
 
     private final static String IDENTIFIER = "buechi-spot";
-    private final String ltl2tgba;
     private final GraphExplicit automaton;
     private int numLabels;
     private final int trueState;
@@ -96,11 +95,18 @@ public class BuechiImpl implements Buechi {
         //        if (options.getBoolean(OptionsAutomaton.AUTOMATA_REPLACE_NE)) {
         //          expression = replaceNeOperator(expression);
         //    }
-        this.ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
         OptionsAutomaton.Ltl2BaAutomatonBuilder builder = Options.get().getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
         Set<Expression> expressionsSeen = new HashSet<>();
         if (builder == OptionsAutomaton.Ltl2BaAutomatonBuilder.SPOT) {
             automaton = createSpotAutomaton(expression, expressionsSeen);
+            deterministic = false;
+            HanoiHeader header = automaton.getGraphPropertyObject(HanoiHeader.class);
+            for (String automatonPropert : header.getProperties()) {
+                if (automatonPropert.equals(DETERMINISTIC)) {
+                    deterministic = true;
+                    break;
+                }
+            }
         } else {
             automaton = null;
         }
@@ -150,54 +156,6 @@ public class BuechiImpl implements Buechi {
         }
     }
     
-    public BuechiImpl(String property) {
-        name = property;
-        this.ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
-        OptionsAutomaton.Ltl2BaAutomatonBuilder builder = Options.get().getEnum(OptionsAutomaton.AUTOMATON_BUILDER);
-        if (builder == OptionsAutomaton.Ltl2BaAutomatonBuilder.SPOT) {
-            automaton = createSpotAutomaton(property, null);
-        } else {
-            automaton = null;
-        }
-        if (this.numLabels == 0) {
-            fixNoLabels();
-        }
-        trueState = findTrueState();
-        HanoiHeader header = automaton.getGraphPropertyObject(HanoiHeader.class);
-        this.expressions = header.getAps().toArray(new Expression[0]);
-        expressionTypes = new Type[expressions.length];
-        for (int exprNr = 0; exprNr < expressions.length; exprNr++) {
-            expressionTypes[exprNr] = TypeBoolean.get();
-        }
-        int totalSize = 0;
-        for (int node = 0; node < automaton.getNumNodes(); node++) {
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
-                totalSize++;
-            }
-        }
-        this.evaluators = new EvaluatorExplicit[totalSize];
-        totalSize = 0;
-        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
-        for (int node = 0; node < automaton.getNumNodes(); node++) {
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
-                BuechiTransition trans = labels.getObject(node, succNr);
-                Expression guard = trans.getExpression();
-                evaluators[totalSize] = UtilEvaluatorExplicit.newEvaluator(guard,
-                        new ExpressionToTypeBoolean(expressions), expressions);
-                totalSize++;
-            }
-        }
-        totalSize = 0;
-        for (int node = 0; node < automaton.getNumNodes(); node++) {
-            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
-                BuechiTransition trans = labels.getObject(node, succNr);
-                ((BuechiTransitionImpl) trans).setResult(ValueBoolean.as(evaluators[totalSize].getResultValue()));
-                totalSize++;
-            }
-        }
-    }
-
-
     @Override
     public Expression[] getExpressions() {
         return expressions;
@@ -228,7 +186,7 @@ public class BuechiImpl implements Buechi {
         return trueState;
     }
 
-    private GraphExplicit createSpotAutomaton(Expression expression, Set<Expression> expressionsSeen) {
+    private static GraphExplicit createSpotAutomaton(Expression expression, Set<Expression> expressionsSeen) {
         assert expression != null;
         assert expressionsSeen != null;
         Map<Expression,String> expr2str = new HashMap<>();
@@ -246,11 +204,9 @@ public class BuechiImpl implements Buechi {
         return createSpotAutomaton(spotFn, ap2expr);
     }
 
-    private GraphExplicit createSpotAutomaton(String spotFn, Map<String, Expression> ap2expr) {
+    public static GraphExplicit createSpotAutomaton(String spotFn, Map<String, Expression> ap2expr) {
+        String ltl2tgba = Options.get().getString(OptionsAutomaton.AUTOMATON_SPOT_LTL2TGBA_CMD);
         try {
-            // TODO it seems that one cannot produce both the automaton and the
-            // statistics in a single call. Quite annoying. Check whether this
-            // is possible once a new version of SPOT appears.
             final String[] autExecArgs = {ltl2tgba,
                     SPOT_PARAM_FORMULA, spotFn,
                     SPOT_PARAM_LOW_OPTIMISATIONS,
@@ -259,20 +215,13 @@ public class BuechiImpl implements Buechi {
             final BufferedReader autIn = new BufferedReader
                     (new InputStreamReader(autProcess.getInputStream()));
             GraphExplicit automaton;
-            SpotParser spotParser = new SpotParser(autIn);
+            HoaParser spotParser = new HoaParser(autIn);
             automaton = spotParser.parseAutomaton(ap2expr);
             try {
                 ensure(autProcess.waitFor() == 0, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_EXIT_CODE);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            this.numLabels = ValueInteger.as(automaton.getGraphProperty(CommonProperties.NUM_LABELS)).getInt();
-            final String[] detExecArr = {ltl2tgba, SPOT_PARAM_FORMULA, spotFn,
-                    "--stats", "%d", SPOT_PARAM_LOW_OPTIMISATIONS};
-            final Process detProcess = Runtime.getRuntime().exec(detExecArr);
-            int detResult = detProcess.getInputStream().read();
-            ensure(detResult != -1, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO);
-            deterministic = ((char) detResult) == '1';
             return automaton;
         } catch (IOException e) {
             fail(ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO, e, ltl2tgba);
