@@ -1243,6 +1243,8 @@ public final class ContextDD implements Closeable {
             walker.high();
             if (!walker.isLeaf()) {
                 findSat(walker, map);                
+            } else {
+                assert walker.isTrue();
             }
             walker.back();
         }
@@ -1670,24 +1672,13 @@ public final class ContextDD implements Closeable {
         assert TypeBoolean.is(dd.getType());
         assert assertCube(cube);
         totalTime.start();
-        Walker cubeWalker = cube.walker();
 //        BitSet result = UtilBitSet.newBitSetBounded(cubeSize(cubeWalker));
         BitSet result = UtilBitSet.newBitSetUnbounded();
-        ValueBoolean cmp = typeBoolean.newValue();
-        OperatorEvaluator isZero = ContextValue.get().getEvaluatorOrNull(OperatorIsZero.IS_ZERO, dd.getType());
         if (dd.isLeaf()) {
-            if (isZero != null) {
-                isZero.apply(cmp, dd.value());
-            }
-            if (ValueAlgebra.is(dd.value()) && cmp.getBoolean()) {
-                totalTime.stop();
-                assert false;
-                return null;
-            } else {
-                totalTime.stop();
-                return result;
-            }
+            totalTime.stop();
+            return result;
         } else {
+            Walker cubeWalker = cube.walker();
             Walker ddWalker = dd.walker();
             Long2ByteOpenHashMap map = new Long2ByteOpenHashMap();
             findSat(ddWalker, map);
