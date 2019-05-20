@@ -11,8 +11,7 @@ function build_plugin {
 	echo 'Plugin directory ' $1 ' does not exist. Exiting.'
 	exit
     fi
-    mvn clean
-    mvn package
+    mvn clean package
     if [ $? -ne 0 ]
     then
 	echo 'Plugin ' $1 ' failed to build. Exiting.'
