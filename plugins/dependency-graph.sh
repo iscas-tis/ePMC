@@ -3,6 +3,7 @@
 outputFormat="pdf"
 graphvizFilter="dot"
 writeFile="0"
+onlyBlack="0"
 filename="dependency-graph"
 
 function help {
