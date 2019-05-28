@@ -2,6 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="main/src/main/java"/>
 	<classpathentry kind="src" path="main/src/main/resources"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/ant-contrib-1.0b3.jar"/>
 	<classpathentry kind="lib" path="lib/guava-18.0-javadoc.jar"/>
 	<classpathentry kind="lib" path="lib/guava-18.0.jar"/>
@@ -9,12 +14,7 @@
 	<classpathentry kind="lib" path="plugins/dd-beedeedee/lib/beedeedee-1.0.7.jar"/>
 	<classpathentry kind="lib" path="plugins/dd-jdd/lib/minijdd-1.04.jar"/>
 	<classpathentry kind="lib" path="plugins/jani-interaction/lib/sqlite-jdbc-3.8.11.2.jar"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
-		<attributes>
-			<attribute name="module" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="lib" path="lib/jna-4.2.2.jar"/>
-	<classpathentry kind="lib" path="lib/jna-platform-4.2.2.jar"/>
+	<classpathentry kind="lib" path="lib/jna-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jna-platform-5.3.1.jar"/>
 	<classpathentry kind="output" path="main/target/classes"/>
 </classpath>

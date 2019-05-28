@@ -74,6 +74,9 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 
 public final class LibraryDDCUDDMTBDD implements LibraryDD {
+    private final static int POINTER_SIZE = System.getProperty("sun.arch.data.model")
+            .equals("32") ? 4 : 8;
+
     private final static class IdentityHash implements Hash.Strategy<Object> {
         
         @Override
@@ -359,7 +362,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     /** maximal number of variables possible */
     static final long CUDD_MAXINDEX;
     static {
-        if (Pointer.SIZE == 8) {
+        if (POINTER_SIZE == 8) {
             CUDD_MAXINDEX = ((~0) >>> 1);
         } else {
             CUDD_MAXINDEX = ((short) ~0);
@@ -611,7 +614,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     @Override
     public Value value(long dd) {
         Pointer node = new Pointer(dd);
-        long value = node.getLong(Pointer.SIZE * 2 - cmplBit(dd));
+        long value = node.getLong(POINTER_SIZE * 2 - cmplBit(dd));
         return numberToValue(value);
     }
 
@@ -669,7 +672,7 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
 
     private int variable(Pointer node) {
         int index;
-        if (Pointer.SIZE == 8) {
+        if (POINTER_SIZE == 8) {
             index = node.getInt(-cmplBit(node));
         } else {
             index = node.getShort(-cmplBit(node));            
@@ -702,14 +705,14 @@ public final class LibraryDDCUDDMTBDD implements LibraryDD {
     public long walkerLow(long uniqueId) {
         Pointer node = new Pointer(uniqueId);
         assert !isLeaf(node);
-        return node.getLong(3*Pointer.SIZE - cmplBit(uniqueId));
+        return node.getLong(3*POINTER_SIZE - cmplBit(uniqueId));
     }
 
     @Override
     public long walkerHigh(long uniqueId) {
         Pointer node = new Pointer(uniqueId);
         assert !isLeaf(node);
-        return node.getLong(2*Pointer.SIZE - cmplBit(uniqueId));
+        return node.getLong(2*POINTER_SIZE - cmplBit(uniqueId));
     }
 
     @Override

@@ -6,9 +6,9 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-constraintsolver"/>
-	<classpathentry kind="lib" path="/epmc/lib/jna-4.2.2.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-expression-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
+	<classpathentry kind="lib" path="/epmc/lib/jna-5.3.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

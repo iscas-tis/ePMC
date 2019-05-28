@@ -2,19 +2,19 @@
 <classpath>
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8">
 		<accessrules>
 			<accessrule kind="accessible" pattern="**"/>
 		</accessrules>
 	</classpathentry>
-	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
-	<classpathentry kind="lib" path="/epmc/lib/jna-4.2.2.jar"/>
-	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
 	<classpathentry kind="lib" path="/epmc/lib/guava-18.0.jar">
 		<attributes>
 			<attribute name="javadoc_location" value="jar:platform:/resource/epmc/lib/guava-18.0-javadoc.jar!/com"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="/epmc/lib/fastutil-8.2.2.jar"/>
+	<classpathentry kind="lib" path="/epmc/lib/jna-5.3.1.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

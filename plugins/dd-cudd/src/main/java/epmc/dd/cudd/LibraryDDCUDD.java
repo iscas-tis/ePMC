@@ -67,6 +67,9 @@ import epmc.value.ValueBoolean;
  * @author Ernst Moritz Hahn
  */
 public final class LibraryDDCUDD implements LibraryDD {
+    private final static int POINTER_SIZE = System.getProperty("sun.arch.data.model")
+            .equals("32") ? 4 : 8;
+
     /** Identifier of the CUDD DD library. */
     public final static String IDENTIFIER = "cudd";
     /** Prefix used for loading the native CUDD dynamic library. */
@@ -197,7 +200,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     static {
         /* The value depends on whether we run EPMC on a 32 bit or 64 bit
          * system. */
-        if (Pointer.SIZE == 8) {
+        if (POINTER_SIZE == 8) {
             CUDD_MAXINDEX = ((~0) >>> 1);
         } else {
             CUDD_MAXINDEX = ((short) ~0);
@@ -483,7 +486,7 @@ public final class LibraryDDCUDD implements LibraryDD {
 
     private int variable(Pointer node) {
         int index;
-        if (Pointer.SIZE == 8) {
+        if (POINTER_SIZE == 8) {
             index = node.getInt(-cmplBit(node));
         } else {
             index = node.getShort(-cmplBit(node));            
@@ -524,14 +527,14 @@ public final class LibraryDDCUDD implements LibraryDD {
     public long walkerLow(long uniqueId) {
         Pointer node = new Pointer(uniqueId);
         assert !isLeaf(node);
-        return node.getLong(3*Pointer.SIZE - cmplBit(uniqueId));
+        return node.getLong(3*POINTER_SIZE - cmplBit(uniqueId));
     }
 
     @Override
     public long walkerHigh(long uniqueId) {
         Pointer node = new Pointer(uniqueId);
         assert !isLeaf(node);
-        return node.getLong(2*Pointer.SIZE - cmplBit(uniqueId));
+        return node.getLong(2*POINTER_SIZE - cmplBit(uniqueId));
     }
 
     void setReorderMethod(int reorderMethod) {
