@@ -104,6 +104,7 @@ public final class ValueIntegerJava implements ValueInteger, ValueEnumerable, Va
     public void write(BitStream writer) {
         assert writer != null;
         if (bothBounded) {
+            int value = this.value;
             value -= getBoundLower();
             writer.writeInt(value, getNumBits());
         } else {
