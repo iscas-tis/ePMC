@@ -26,7 +26,7 @@ public final class OperatorEvaluatorInterval implements OperatorEvaluator {
         }
 
         @Override
-        public void setTypes(Type[] types) {
+        public void setTypes(Type... types) {
             assert !built;
             this.types = types;
         }

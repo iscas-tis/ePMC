@@ -22,11 +22,8 @@ package epmc.value;
 
 import epmc.value.ContextValue;
 import epmc.value.Type;
-import epmc.value.TypeArray;
 
-public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
-    private final static String BOOL = "bool";
-    
+public interface TypeBoolean extends TypeEnumerable, TypeNumBitsKnown {
     public static boolean is(Type type) {
         return type instanceof TypeBoolean;
     }
@@ -49,51 +46,20 @@ public final class TypeBoolean implements TypeEnumerable, TypeNumBitsKnown {
     }
 
     @Override
-    public String toString() {
-        StringBuilder builder = new StringBuilder();
-        builder.append(BOOL);
-        return builder.toString();
-    }
+    ValueBoolean newValue();
+
+    public ValueBoolean newValue(boolean i);
 
     @Override
-    public ValueBoolean newValue() {
-        return new ValueBoolean(this);
-    }
-
-    public ValueBoolean newValue(boolean i) {
-        ValueBoolean result = newValue();
-        result.set(i);
-        return result;
-    }
-
-    @Override
-    public int getNumBits() {
+    default int getNumBits() {
         return 1;
     }
 
     @Override
-    public int getNumValues() {
+    default int getNumValues() {
         return 2;
     }
 
     @Override
-    public int hashCode() {
-        int hash = 0;
-        hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-        return hash;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        assert obj != null;
-        if (this.getClass() != obj.getClass()) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public TypeArray getTypeArray() {
-        return ContextValue.get().makeUnique(new TypeArrayBoolean(this));
-    }
+    TypeArrayBoolean getTypeArray();
 }

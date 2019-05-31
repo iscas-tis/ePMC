@@ -20,12 +20,9 @@
 
 package epmc.value;
 
-import static epmc.error.UtilError.fail;
-
-import epmc.util.BitStream;
 import epmc.value.Value;
 
-public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, ValueSetString {
+public interface ValueBoolean extends ValueEnumerable, ValueBitStoreable, ValueSetString {
     public static boolean is(Value value) {
         return value instanceof ValueBoolean;
     }
@@ -60,102 +57,20 @@ public final class ValueBoolean implements ValueEnumerable, ValueBitStoreable, V
         return false;
     }
 
-    private final static String TRUE = "true";
-    private final static String FALSE = "false";
+    boolean getBoolean();
 
-    private boolean value;
-    private final TypeBoolean type;
-    private boolean immutable;
+    void set(boolean value);
 
-    ValueBoolean(TypeBoolean type, boolean value) {
-        assert type != null;
-        this.type = type;
-        this.value = value;
-    }
+    @Override
+    TypeBoolean getType();
 
-    ValueBoolean(TypeBoolean type) {
-        this(type, false);
-    }
-
-    public boolean getBoolean() {
-        return value;
-    }
-
-    public void set(boolean value) {
-        assert !isImmutable();
-        this.value = value;
+    @Override
+    default int getValueNumber() {
+        return getBoolean() ? 1 : 0;
     }
 
     @Override
-    public TypeBoolean getType() {
-        return type;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        assert obj != null;
-        if (!(obj instanceof ValueBoolean)) {
-            return false;
-        }
-        ValueBoolean other = (ValueBoolean) obj;
-        return this.value == other.value;
-    }
-
-    @Override
-    public int hashCode() {
-        int hash = 0;
-        hash = getClass().hashCode() + (hash << 6) + (hash << 16) - hash;
-        hash = value ? 1 : 0 + (hash << 6) + (hash << 16) - hash;
-        return hash;
-    }
-
-    @Override
-    public String toString() {
-        return Boolean.toString(value);
-    }
-
-    @Override
-    public void read(BitStream reader) {
-        assert !isImmutable();
-        assert reader != null;
-        set(reader.read());
-    }
-
-    @Override
-    public void write(BitStream writer) {
-        assert writer != null;
-        writer.write(getBoolean());
-    }
-
-    @Override
-    public void set(String string) {
-        assert string != null;
-        string = string.toLowerCase();
-        string = string.trim();
-        if (string.equals(TRUE)) {
-            value = true;
-        } else if (string.equals(FALSE)) {
-            value = false;
-        } else {
-            fail(ProblemsValueBasic.VALUES_STRING_INVALID_VALUE, value, type);
-        }
-    }
-
-    void setImmutable() {
-        this.immutable = true;
-    }
-
-    boolean isImmutable() {
-        return immutable;
-    }
-
-    @Override
-    public int getValueNumber() {
-        return value ? 1 : 0;
-    }
-
-    @Override
-    public void setValueNumber(int number) {
+    default void setValueNumber(int number) {
         assert number >= 0 : number;
         assert number < 2 : number;
         set(number == 1);
