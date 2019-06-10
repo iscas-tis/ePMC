@@ -3,8 +3,11 @@
 	<classpathentry kind="src" path="src/main/java"/>
 	<classpathentry kind="src" path="src/main/resources"/>
 	<classpathentry kind="src" path="src/main/javacc"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/epmc/lib/trove-141006211716.jar"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-jani-model"/>
@@ -15,10 +18,10 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-prism-format"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
-        <classpathentry kind="lib" path="/epmc/lib/guava-18.0.jar">
-                <attributes>
-                        <attribute name="javadoc_location" value="jar:platform:/resource/epmc/lib/guava-18.0-javadoc.jar!/com"/>
-                </attributes>
-        </classpathentry>
+	<classpathentry kind="lib" path="/epmc/lib/guava-18.0.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="jar:platform:/resource/epmc/lib/guava-18.0-javadoc.jar!/com"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
