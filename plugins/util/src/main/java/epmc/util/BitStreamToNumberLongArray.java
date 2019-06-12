@@ -82,8 +82,6 @@ final class BitStreamToNumberLongArray implements BitStoreableToNumber {
 
         @Override
         public boolean equals(long[] arg0, long[] arg1) {
-            assert arg0 != null;
-            assert arg1 != null;
             return Arrays.equals(arg0, arg1);
         }
     }

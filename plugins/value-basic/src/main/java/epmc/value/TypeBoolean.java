@@ -48,7 +48,11 @@ public interface TypeBoolean extends TypeEnumerable, TypeNumBitsKnown {
     @Override
     ValueBoolean newValue();
 
-    public ValueBoolean newValue(boolean i);
+    default ValueBoolean newValue(boolean i) {
+        ValueBoolean value = newValue();
+        value.set(i);
+        return value;
+    }
 
     @Override
     default int getNumBits() {

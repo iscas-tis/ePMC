@@ -203,8 +203,8 @@ public final class ExplorerJANI implements Explorer {
         nonDet = SemanticsNonDet.isNonDet(model.getSemantics());
         prepareGlobalVariables(model);
         buildTransientValues(nodeProperties, edgeProperties);
-        extensions = prepareExtensions(model);
         system = prepareSystem(model);
+        extensions = prepareExtensions(model);
         afterSystemCreation();
         initialNodes = computeInitialNodes();
         fixDeadlocks = Options.get().getBoolean(OptionsJANIModel.JANI_FIX_DEADLOCKS);
