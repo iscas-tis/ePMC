@@ -50,7 +50,9 @@ import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeAlgebra;
 import epmc.value.TypeBoolean;
+import epmc.value.TypeReal;
 import epmc.value.TypeWeight;
+import epmc.value.TypeWeightTransition;
 import epmc.value.UtilValue;
 import epmc.value.Value;
 import epmc.value.ValueAlgebra;
@@ -95,7 +97,12 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     public boolean canHandle() {
         Semantics semantics = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
         GraphExplicit graph = objective.getGraph();
-
+        if (!TypeReal.is(TypeWeightTransition.get())) {
+            return false;
+        }
+        if (!TypeReal.is(TypeWeight.get())) {
+            return false;
+        }
         // TODO check
         if ((SemanticsDTMC.isDTMC(semantics) || SemanticsMDP.isMDP(semantics)) &&
                 (objective instanceof GraphSolverObjectiveExplicitUnboundedReachability)) {
