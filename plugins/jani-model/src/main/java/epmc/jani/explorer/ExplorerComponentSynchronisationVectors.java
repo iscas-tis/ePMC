@@ -136,7 +136,8 @@ public final class ExplorerComponentSynchronisationVectors implements ExplorerCo
         List<SynchronisationVectorSync> syncVectors = new ArrayList<>();
         syncVectors.addAll(componentSynchronisationVectors.getSyncs());
         Map<Action, Integer> actionMap = UtilExplorer.computeActionToInteger(explorer.getModel());
-        syncVectors.addAll(computeSilentVectors(actionMap));
+        // TODO ??
+//        syncVectors.addAll(computeSilentVectors(actionMap));
         numVectors = syncVectors.size();
         vectorSizes = new int[syncVectors.size()];
         vectorResult = new int[syncVectors.size()];
