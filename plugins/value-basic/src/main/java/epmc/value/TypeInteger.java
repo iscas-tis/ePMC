@@ -20,12 +20,22 @@
 
 package epmc.value;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
+
 import epmc.value.ContextValue;
 import epmc.value.Type;
 
 public interface TypeInteger extends TypeNumber, TypeBounded, TypeNumBitsKnown {
     public static TypeInteger get(int lowerBound, int upperBound) {
-        return ContextValue.get().makeUnique(new TypeIntegerJava(lowerBound, upperBound));
+        try {
+            TypeInteger unbounded = get();
+            Constructor<? extends TypeInteger> constructor = unbounded.getClass().getConstructor(int.class, int.class);
+            TypeInteger result = constructor.newInstance(lowerBound, upperBound);
+            return ContextValue.get().makeUnique(result);
+        } catch (NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public static TypeInteger get() {
