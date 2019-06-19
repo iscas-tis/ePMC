@@ -20,7 +20,9 @@
 
 package epmc.error;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * Exception class to be used by EPMC and its plugins.
@@ -48,7 +50,7 @@ public final class EPMCException extends RuntimeException {
         /** Positional information relating to the exception. */
         private Positional positional;
         /** Further information specifying the problem. */
-        private Object[] arguments;
+        private ArrayList<Object> arguments = new ArrayList<>();
 
         /**
          * Set the type of problem causing the exception.
@@ -126,7 +128,14 @@ public final class EPMCException extends RuntimeException {
          */
         public Builder setArguments(Object... arguments) {
             assert !built;
-            this.arguments = arguments;
+            this.arguments.clear();
+            this.arguments.addAll(List.of(arguments));
+            return this;
+        }
+
+        public Builder addArgument(Object argument) {
+            assert !built;
+            arguments.add(argument);
             return this;
         }
 
@@ -136,7 +145,7 @@ public final class EPMCException extends RuntimeException {
          * @return additional information to be used for exception
          */
         private Object[] getArguments() {
-            return arguments;
+            return arguments.toArray();
         }
 
         /**
