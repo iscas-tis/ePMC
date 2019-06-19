@@ -96,6 +96,18 @@ import epmc.value.UtilValue;
  * @author Ernst Moritz Hahn
  */
 public final class ModelJANI implements Model, JANINode, ExpressionToType {
+    public static boolean is(Model model) {
+        return model instanceof ModelJANI;
+    }
+    
+    public static ModelJANI as(Model model) {
+        if (is(model)) {
+            return (ModelJANI) model;
+        } else {
+            return null;
+        }
+    }
+    
     /** Identifier of this model class. */
     public final static String IDENTIFIER = "jani";
     /** Identifies the part of a model where its system components are given. */
