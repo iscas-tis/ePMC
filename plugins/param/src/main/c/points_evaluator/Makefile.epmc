@@ -22,7 +22,7 @@ HEADERS := $(wildcard *.h)
 LIB_THERE:=$(CLASSDIR)/$(OSDIRPART)/$(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
 ifeq ("$(wildcard $(LIB_THERE))","")
 build: $(OBJECTS) $(HEADERS)
-	$(CC) -O3 -o evaluator_double.o -c evaluator_double.c -I.
+	$(CC) $(XCFLAGS) -O3 -o evaluator_double.o -c evaluator_double.c -I.
 	mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
 	$(CC) $(XCFLAGS) -shared -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) evaluator_double.o $(START_LIB_ADD_ALL) -L.  $(END_LIB_ADD_ALL)
 	cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)/; \

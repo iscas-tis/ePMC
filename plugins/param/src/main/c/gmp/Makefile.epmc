@@ -23,8 +23,8 @@ HEADERS := $(wildcard *.h)
 LIB_THERE:=$(CLASSDIR)/$(OSDIRPART)/$(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT)
 ifeq ("$(wildcard $(LIB_THERE))","")
 build: $(OBJECTS) $(HEADERS)
-	$(CC) -o util_gmp.o -c util_gmp.c -I.
-	$(CC) -o evaluator_gmp.o -c evaluator_gmp.c -I.
+	$(CC) $(XCFLAGS) -o util_gmp.o -c util_gmp.c -I.
+	$(CC) $(XCFLAGS) -o evaluator_gmp.o -c evaluator_gmp.c -I.
 	mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
 	$(CC) $(XCFLAGS) -shared -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) util_gmp.o evaluator_gmp.o $(START_LIB_ADD_ALL) -L. -lgmp-$(OSDIRPART) -lmpfr-$(OSDIRPART) $(END_LIB_ADD_ALL)
 	cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)/; \
