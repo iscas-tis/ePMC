@@ -412,6 +412,14 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         return restrictInitial;
     }
 
+    public Expression getInitialStatesExpressionOrNull() {
+        if (restrictInitial == null) {
+            return null;
+        } else {
+            return restrictInitial.getExp();
+        }
+    }
+    
     public Expression getInitialStatesExpressionOrTrue() {
         Expression initial;
         if (restrictInitial == null) {

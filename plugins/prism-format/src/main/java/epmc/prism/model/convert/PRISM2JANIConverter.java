@@ -672,7 +672,11 @@ public final class PRISM2JANIConverter {
         InitialStates initialStates = new InitialStates();
         initialStates.setModel(modelJANI);
         Expression expInit = modelPRISM.getInitialNodes();
-        initialStates.setExp(expInit == null ? null : prism2jani(expInit));
+        initialStates.setExp(expInit == null || !modelPRISM.isMultipleInit()
+                ? null : prism2jani(expInit));
+        if (!modelPRISM.isMultipleInit()) {
+            return null;
+        }
         return initialStates;
     }
 

@@ -599,7 +599,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         this.modules.addAll(newModules);
     }
 
-    boolean isMultipleInit() {
+    public boolean isMultipleInit() {
         return multipleInit;
     }
 
