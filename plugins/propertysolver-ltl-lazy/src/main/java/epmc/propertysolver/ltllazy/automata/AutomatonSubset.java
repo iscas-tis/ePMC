@@ -319,7 +319,7 @@ public final class AutomatonSubset implements Automaton {
         reduceSuccs(succs);
         succLabel = makeUnique(lab);
         succState = (AutomatonStateBuechiImpl) numberToState(getState(succs));
-        insertCache();
+//        insertCache();
     }
 
     private void lookupCache(AutomatonStateBuechiImpl rabinState) {
