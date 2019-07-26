@@ -119,6 +119,13 @@ public class BuechiImpl implements Buechi {
                 index++;
             }
         }
+        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
+        for (int node = 0; node < automaton.getNumNodes(); node++) {
+            for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
+                BuechiTransition trans = labels.getObject(node, succNr);
+                numLabels = Math.max(numLabels, trans.getLabeling().length());
+            }
+        }
         if (this.numLabels == 0) {
             fixNoLabels();
         }
@@ -137,7 +144,6 @@ public class BuechiImpl implements Buechi {
         }
         this.evaluators = new EvaluatorExplicit[totalSize];
         totalSize = 0;
-        EdgeProperty labels = automaton.getEdgeProperty(CommonProperties.AUTOMATON_LABEL);
         for (int node = 0; node < automaton.getNumNodes(); node++) {
             for (int succNr = 0; succNr < automaton.getNumSuccessors(node); succNr++) {
                 BuechiTransition trans = labels.getObject(node, succNr);
