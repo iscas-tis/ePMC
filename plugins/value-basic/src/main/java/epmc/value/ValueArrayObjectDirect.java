@@ -47,7 +47,7 @@ final class ValueArrayObjectDirect implements ValueArray {
         assert value != null;
         assert ValueObject.is(value);
         assert index >= 0;
-        assert index < size();
+        assert index < size() : index;
         Object entry = content[index];
         ValueObject.as(value).set(entry);
     }

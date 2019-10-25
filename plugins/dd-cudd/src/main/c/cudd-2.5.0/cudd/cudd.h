@@ -917,7 +917,7 @@ extern DdNode * Cudd_SubsetCompress (DdManager *dd, DdNode *f, int nvars, int th
 extern DdNode * Cudd_SupersetCompress (DdManager *dd, DdNode *f, int nvars, int threshold);
 extern MtrNode * Cudd_MakeTreeNode (DdManager *dd, unsigned int low, unsigned int size, unsigned int type);
 extern int Cudd_addHarwell (FILE *fp, DdManager *dd, DdNode **E, DdNode ***x, DdNode ***y, DdNode ***xn, DdNode ***yn_, int *nx, int *ny, int *m, int *n, int bx, int sx, int by, int sy, int pr);
-//extern DdManager * Cudd_Init (unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int cacheSize, unsigned long maxMemory);
+extern DdManager * Cudd_Init (unsigned int numVars, unsigned int numVarsZ, unsigned int numSlots, unsigned int cacheSize, unsigned long maxMemory);
 extern void Cudd_Quit (DdManager *unique);
 extern int Cudd_PrintLinear (DdManager *table);
 extern int Cudd_ReadLinear (DdManager *table, int x, int y);
