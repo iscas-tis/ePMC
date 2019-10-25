@@ -23,11 +23,6 @@ package epmc.jani.error;
 import epmc.error.Problem;
 import epmc.error.UtilError;
 
-/**
- * Class collecting problems potentially occurring in JANI plugin.
- * 
- * @author Ernst Moritz Hahn
- */
 public final class ProblemsJANI {
     /** Base name of resource file containing plugin problem descriptions. */
     private final static String PROBLEMS_JANI = "ProblemsJANI";
