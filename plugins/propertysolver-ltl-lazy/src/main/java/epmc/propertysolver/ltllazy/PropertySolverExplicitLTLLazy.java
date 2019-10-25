@@ -208,7 +208,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
                 }
             }
 
-            ComponentDecision decision = null;
+            ComponentDecision decision = ComponentDecision.UNDECIDED;
             switch (method) {
             case SUBSET:
                 decision = decideComponentSubset(leafSCC, graph, buechi.getNumLabels());
@@ -303,8 +303,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         return prodToOrigResult(prepareAndIterate(prodWrapper, acc), prodGraph);
     }
 
-    private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc)
-    {
+    private ValueArrayAlgebra prepareAndIterate(GraphExplicit graph, BitSet acc) {
         GraphSolverConfigurationExplicit configuration = UtilGraphSolver.newGraphSolverConfigurationExplicit();
         GraphSolverObjectiveExplicitUnboundedReachability objective = new GraphSolverObjectiveExplicitUnboundedReachability();
         objective.setMin(false);
@@ -390,8 +389,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
 
     private void decideComponents(Buechi buechi,
             EndComponents endComponents,
-            int numLabels, BitSet acc, GraphExplicit graph)
-    {
+            int numLabels, BitSet acc, GraphExplicit graph) {
         int numComponents = 0;
         BitSet undecided = UtilBitSet.newBitSetUnbounded();
         BitSet init = graph.getInitialNodes().clone();
@@ -460,8 +458,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         ensure(undecided.isEmpty(), ProblemsLTLLazy.LTL_LAZY_COULDNT_DECIDE);
     }
 
-    private ComponentDecision decideComponentSubset(BitSet ecc, GraphExplicit graph, int numLabels)
-    {
+    private ComponentDecision decideComponentSubset(BitSet ecc, GraphExplicit graph, int numLabels) {
         log.send(MessagesLTLLazy.LTL_LAZY_DECIDING_SUBSET);
         BitSet labelsFoundLower = UtilBitSet.newBitSetUnbounded(numLabels);
         BitSet labelsFoundOver = UtilBitSet.newBitSetUnbounded(numLabels);
@@ -842,6 +839,7 @@ public class PropertySolverExplicitLTLLazy implements PropertySolver {
         ValueBoolean negate = TypeBoolean.get().newValue(this.negate);
         Expression[] expressions = UtilLTL.collectLTLInner(property).toArray(new Expression[0]);
         Buechi buechi = UtilAutomaton.newBuechi(property, expressions, nonDet, negate);
+
         StateMapExplicit innerResult;
         if (options.getBoolean(OptionsLTLLazy.LTL_LAZY_INCREMENTAL)) {
             innerResult = checkTemporalLTLIncremental(buechi);
