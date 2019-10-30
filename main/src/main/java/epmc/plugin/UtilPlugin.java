@@ -102,11 +102,9 @@ public final class UtilPlugin {
     public static void loadPlugins(Options options) {
         assert options != null;
         List<String> plugins = getPluginList(options);
-
         assert plugins != null;
-        PluginLoader pluginLoader = new PluginLoader(plugins);
-
-        options.set(OptionsPlugin.PLUGIN_INTERFACE_CLASS, pluginLoader.getPluginInterfaceClasses());
+        List<Class<? extends PluginInterface>> pluginClasses = loadPlugins(plugins);
+        options.set(OptionsPlugin.PLUGIN_INTERFACE_CLASS, pluginClasses);
 
         for (Class<? extends AfterOptionsCreation> clazz : getPluginInterfaceClasses(options, AfterOptionsCreation.class)) {
             AfterOptionsCreation object = Util.getInstance(clazz);
@@ -117,6 +115,7 @@ public final class UtilPlugin {
     public static List<Class<? extends PluginInterface>> loadPlugins(List<String> plugins) {
         assert plugins != null;
         PluginLoader pluginLoader = new PluginLoader(plugins);
+        PluginLoader.set(pluginLoader);
         return pluginLoader.getPluginInterfaceClasses();
     }
 

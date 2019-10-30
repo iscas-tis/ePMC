@@ -57,7 +57,7 @@ import epmc.util.Util;
  * 
  * @author Ernst Moritz Hahn
  */
-final class PluginLoader {
+public final class PluginLoader {
     /* Be careful when changing anything in this class. It is very easy to break
      * its functionality without even noticing it. In particular, if you
      * perform any changes, please check whether the class still works on other
@@ -126,6 +126,8 @@ final class PluginLoader {
     private final static String EMPTY = "";
     private final static String SLASH = "/";
     
+    private static PluginLoader pluginLoader;
+    
     /** Class loader constructed by this plugin loader. */
     private final ClassLoader classLoader;
     /** List of all plugins loaded. */
@@ -133,9 +135,18 @@ final class PluginLoader {
     /** List of all plugin classes loaded. */
     private final List<Class<? extends PluginInterface>> classes = new ArrayList<>();
     private final boolean checkSanity;
+    private List<Path> allPluginPaths;
 
     PluginLoader(List<String> pluginPathStrings) {
         this(pluginPathStrings, true);
+    }
+    
+    static void set(PluginLoader pluginLoader) {
+        PluginLoader.pluginLoader = pluginLoader;
+    }
+
+    public static PluginLoader get() {
+        return pluginLoader;
     }
     
     private PluginLoader(List<String> pluginPathStrings, boolean checkSanity) {
@@ -146,6 +157,7 @@ final class PluginLoader {
         this.checkSanity = checkSanity;
         List<Path> pluginFiles = stringsToPaths(pluginPathStrings);
         List<Path> allPluginPaths = buildAllPluginPaths(pluginFiles);
+        this.allPluginPaths = allPluginPaths;
         this.classLoader = buildClassLoader(allPluginPaths);
         this.plugins.addAll(loadPlugins(this.classLoader, allPluginPaths));
         this.classes.addAll(extractClasses(this.plugins));        
@@ -650,5 +662,9 @@ final class PluginLoader {
             result.add(clazz.getName());
         }
         Files.write(out, result);
+    }
+    
+    public List<Path> getAllPluginPaths() {
+        return allPluginPaths;
     }
 }
