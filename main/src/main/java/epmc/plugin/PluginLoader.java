@@ -293,7 +293,7 @@ public final class PluginLoader {
 
     private List<String> tryReadClassNamesJAR(Path directory) {
         List<String> result = null;
-        try (FileSystem fs = FileSystems.newFileSystem(directory, null)) {
+        try (FileSystem fs = FileSystems.newFileSystem(directory)) {
             for (Path root : fs.getRootDirectories()) {
                 if (result == null) {
                     result = tryReadClassNames(false, root);
@@ -356,7 +356,7 @@ public final class PluginLoader {
 
     private void readClassesJAR(Path path, boolean isJAR, Plugin plugin,
             Path directory) {
-        try (FileSystem fs = FileSystems.newFileSystem(path, null)) {
+        try (FileSystem fs = FileSystems.newFileSystem(path)) {
             for (Path root : fs.getRootDirectories()) {
                 readClassesRecursively(root, isJAR, plugin, directory);
             }
