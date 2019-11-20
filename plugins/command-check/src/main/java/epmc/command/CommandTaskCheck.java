@@ -46,9 +46,6 @@ import epmc.options.Options;
 import epmc.util.Util;
 
 public class CommandTaskCheck implements CommandTask {
-    /** String ": ".*/
-    private final static String SPACE_COLON = ": ";
-
     public final static String IDENTIFIER = "check";
     private ModelChecker modelChecker;
 
@@ -101,7 +98,7 @@ public class CommandTaskCheck implements CommandTask {
             }
             if (resultOutput != null && index < resultOutput.size()) {
                 String filename = resultOutputFiles.get(index);
-                System.out.println(exprString + SPACE_COLON + filename);
+                log.send(MessagesCommandCheck.COMMAND_CHECK_RESULT_IS, filename, exprString);
                 OutputStream out = resultOutput.get(index);
                 OutputStreamWriter writer = new OutputStreamWriter(out, Charsets.UTF_8);
                 try {
@@ -111,7 +108,7 @@ public class CommandTaskCheck implements CommandTask {
                     UtilError.fail(ProblemsEPMC.ERROR_WRITING_RESULT_OUTPUT, e);
                 }
             } else {
-                System.out.println(exprString + SPACE_COLON + resultString);
+                log.send(MessagesCommandCheck.COMMAND_CHECK_RESULT_IS, resultString, exprString);
             }
             Scheduler scheduler = log.getScheduler(property);
             LowLevel lowLevel = log.getLowLevel(property);
