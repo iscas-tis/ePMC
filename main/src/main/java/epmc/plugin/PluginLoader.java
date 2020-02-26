@@ -173,6 +173,10 @@ public final class PluginLoader {
             Path pluginPath = pluginPaths.get(pluginNr);
             try {
                 String urlString = pluginPath.toUri().toURL().toString();
+		if (urlString.endsWith(".jar")) {
+		    urlString = urlString.replace("file:/", "jar:file:///");
+		    urlString += "!/";
+		}
                 /* since Java 9 or 10, separator at end might get lost :-| */
                 if (!urlString.endsWith(SEPARATOR)) {
                     urlString = urlString + SEPARATOR;
