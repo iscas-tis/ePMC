@@ -146,7 +146,7 @@ public final class PRISM2JANIConverter {
     /** Empty string. */
     final static String EMPTY = "";
     /** Name of silent identifier. */
-    private final static String TAU = ""; //"τ";
+    private final static String TAU = "τ";
     /** JANI version to which the converter converts. */
     private final static int JANI_VERSION = 1;
     /** Initial states identifier name. */
@@ -743,7 +743,7 @@ public final class PRISM2JANIConverter {
             for (Command command : moduleCommands.getCommands()) {
                 String exprActName = ((ExpressionIdentifierStandard) command.getAction()).getName();
                 if (!result.containsKey(exprActName)) {
-                    if (exprActName.equals(silentName)) {
+                    if (exprActName.equals(silentName) || exprActName.equals("")) {
                         result.addAction(silentAction);
                     } else {
                         Action action = new Action();
@@ -797,6 +797,9 @@ public final class PRISM2JANIConverter {
             Edge edge = new Edge();
             edge.setModel(modelJANI);
             Action action = actions.get(((ExpressionIdentifierStandard) (command.getAction())).getName());
+            if (action != null && action.getName().equals("")) {
+                action = null;
+            }
             if (action == null) {
                 action = silentAction;
             }
