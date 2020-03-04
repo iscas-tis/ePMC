@@ -692,7 +692,8 @@ public final class PRISM2JANIConverter {
         globalVariables.setModel(modelJANI);
 
         for (Entry<Expression, JANIType> entry : modelPRISM.getGlobalVariables().entrySet()) {
-            Variable variable = convertVariable((ExpressionIdentifierStandard) entry.getKey(), entry.getValue(), null);
+            Expression varInit = modelPRISM.getGlobalInitValues().get(entry.getKey());
+            Variable variable = convertVariable((ExpressionIdentifierStandard) entry.getKey(), entry.getValue(), varInit);
             variable.setModel(modelJANI);
             globalVariables.addVariable(variable);
         }

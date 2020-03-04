@@ -224,7 +224,7 @@ public final class ModelPRISM implements ModelJANIConverter {
     private final List<PlayerDefinition> players = new ArrayList<>();
     private Expression rateIdentifier;
     private Expression rateLabel;
-
+   
     public void build(Builder builder) {
         assert builder != null;
         assert builder.getSemantics() != null;
@@ -331,7 +331,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         }
         createProperties();
     }
-
+    
     /**
      * Postprocessing steps for Markov automata.
      * Subsumes all commands labelled with "rate" to a single module, such that
@@ -985,7 +985,7 @@ public final class ModelPRISM implements ModelJANIConverter {
         return formulas;
     }
 
-    Map<Expression,Expression> getGlobalInitValues() {
+    public Map<Expression,Expression> getGlobalInitValues() {
         return publicGlobalInitValues;
     }
 
