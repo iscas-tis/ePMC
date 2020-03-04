@@ -92,10 +92,6 @@ final class BitStreamToNumberLongArray implements BitStoreableToNumber {
     private ArrayList<long[]> numberToNode = new ArrayList<>();
     private int size;
 
-    BitStreamToNumberLongArray() {
-        nodeToNumber.defaultReturnValue(-1);
-    }
-    
     private void setNumber(int number) {
         set(numberToNode.get(number));
     }
@@ -120,6 +116,7 @@ final class BitStreamToNumberLongArray implements BitStoreableToNumber {
         assert numBits >=0;
         this.size = numBits / Long.SIZE + (numBits % Long.SIZE > 0 ? 1 : 0);
         testLongArray = new long[size];
+        nodeToNumber.defaultReturnValue(-1);
     }
 
     @Override
