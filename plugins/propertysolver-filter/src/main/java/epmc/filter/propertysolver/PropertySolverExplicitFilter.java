@@ -179,11 +179,11 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         }
 
         ValueArray resultValues = null;
-        OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
         if (propertyFilter.isSameResultForAllStates()) {
             resultValues = UtilValue.newArray(new TypeArrayConstant(resultValue.getType()), forStates.size());
             resultValues.set(resultValue, 0);
         } else if (propertyFilter.isArgMin() || propertyFilter.isArgMax()) {
+            OperatorEvaluator eq = ContextValue.get().getEvaluator(OperatorEq.EQ, prop.getType(), resultValue.getType());
             resultValues = UtilValue.newArray(typeProperty.getTypeArray(), forStates.size());
             ValueBoolean compare = ValueBoolean.as(typeProperty.newValue());
             int allStatesNr = 0;
@@ -273,7 +273,7 @@ public final class PropertySolverExplicitFilter implements PropertySolver {
         }
         case COUNT: {
             return new OperatorEvaluator() {
-                private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), value.getType());
+                private final OperatorEvaluator add = ContextValue.get().getEvaluator(OperatorAdd.ADD, resultValue.getType(), resultValue.getType());
                 private Value zero = UtilValue.newValue(TypeAlgebra.as(resultValue.getType()), 0);
                 
                 @Override
