@@ -90,8 +90,8 @@ public final class Variables implements JANINode, Iterable<Variable>, Map<String
             Variable variable = new Variable();
             variable.setAutomaton(automaton);
             variable.setModel(model);
-            variable.parse(var);
             variable.setIdentifiers(identifiers);
+            variable.parse(var);
             variables.put(variable.getName(), variable);
         }
         return this;

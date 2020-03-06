@@ -289,19 +289,19 @@ public final class ModelJANI implements Model, JANINode, ExpressionToType {
         ensure(janiVersion == 1, ProblemsJANIParser.JANI_PARSER_VERSION_NUMBER_WRONG,
                 janiVersion);
 
-        metadata = UtilModelParser.parseOptional(this, Metadata.class, object, METADATA);
-        actions = UtilModelParser.parseOptional(this, Actions.class, object, ACTIONS);
+        metadata = UtilModelParser.parseOptional(this, Metadata.class, object, METADATA, null);
+        actions = UtilModelParser.parseOptional(this, Actions.class, object, ACTIONS, null);
         // the silent action is always available
 //        actions.addAction(silentAction);
 
-        modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS);
+        modelConstants = UtilModelParser.parseOptional(this, Constants.class, object, CONSTANTS, null);
         constants = computeConstants();
         Map<String, JANIIdentifier> validIdentifiers = new LinkedHashMap<>();
         if (modelConstants != null) {
             validIdentifiers.putAll(modelConstants.getConstants());
         }
 
-        variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES);
+        variables = UtilModelParser.parseOptional(this, Variables.class, object, VARIABLES, validIdentifiers);
         ensure(variables == null || constants == null
                 || Collections.disjoint(constants.keySet(), variables.keySet()),
                 ProblemsJANIParser.JANI_PARSER_DISJOINT_GLOBALS_CONSTANTS);

@@ -20,6 +20,8 @@
 
 package epmc.jani.model;
 
+import java.util.Map;
+
 import javax.json.Json;
 import javax.json.JsonObject;
 import javax.json.JsonObjectBuilder;
@@ -176,7 +178,8 @@ public final class UtilModelParser {
         return result;
     }
 
-    public static <T extends JANINode> T parseOptional(ModelJANI model, Class<T> resultClass, JsonObject object, String key) {
+    public static <T extends JANINode> T parseOptional(ModelJANI model, Class<T> resultClass, JsonObject object, String key,
+            Map<String, ? extends JANIIdentifier> identifiers) {
         assert resultClass != null;
         assert object != null;
         assert key != null;
@@ -185,6 +188,7 @@ public final class UtilModelParser {
         if (got != null) {
             result = Util.getInstance(resultClass);
             result.setModel(model);
+            result.setIdentifiers(identifiers);
             result.parse(object.get(key));			
         }
         return result;
