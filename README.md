@@ -35,6 +35,6 @@ Andrea Turrini
 (family_name_AT_ios_DOT_ac_DOT_cn)
 
 ## Other projects
-The following links to projects that use ePMC:
+The following are projects that use ePMC:
 
 [EPMC-PAMC](http://faculty.sist.shanghaitech.edu.cn/faculty/songfu/Projects/pamc/epmc-pamc/): A model checker for probabilistic alternating-time Mu-Calculus. 
