@@ -33,3 +33,7 @@ Comments and feedback about any aspect of ePMC are very welcome. Please contact:
 Andrea Turrini
 
 (family_name_AT_ios_DOT_ac_DOT_cn)
+
+## Other projects
+The following links to projects that use ePMC:
+[EPMC-PAMC](http://faculty.sist.shanghaitech.edu.cn/faculty/songfu/Projects/pamc/epmc-pamc/)
