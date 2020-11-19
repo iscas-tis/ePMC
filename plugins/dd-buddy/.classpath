@@ -13,6 +13,6 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="/epmc/lib/jna-5.3.1.jar"/>
+	<classpathentry kind="lib" path="/epmc/lib/jna-5.6.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

@@ -10,6 +10,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-value-basic"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc-util"/>
 	<classpathentry kind="lib" path="/epmc/lib/fastutil-8.2.2.jar"/>
-	<classpathentry kind="lib" path="/epmc/lib/jna-5.3.1.jar"/>
+	<classpathentry kind="lib" path="/epmc/lib/jna-5.6.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>

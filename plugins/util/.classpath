@@ -12,7 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/epmc"/>
 	<classpathentry kind="lib" path="/epmc/lib/javax.json-1.0.jar"/>
 	<classpathentry kind="lib" path="/epmc/lib/fastutil-8.2.2.jar"/>
-	<classpathentry kind="lib" path="/epmc/lib/jna-5.3.1.jar"/>
-	<classpathentry kind="lib" path="/epmc/lib/jna-platform-5.3.1.jar"/>
+	<classpathentry kind="lib" path="/epmc/lib/jna-5.6.0.jar"/>
+	<classpathentry kind="lib" path="/epmc/lib/jna-platform-5.6.0.jar"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
