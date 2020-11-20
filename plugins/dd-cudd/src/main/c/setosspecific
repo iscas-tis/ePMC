@@ -4,9 +4,11 @@ ifeq ($(OSDIRPART),darwin)
 endif
 ifeq ($(OSDIRPART),linux-x86)
 	XCFLAGS := $(LINUX_X86_XCFLAGS)
+	MUSLLINK := -nostdlib -lgcc 
 endif
 ifeq ($(OSDIRPART),linux-x86-64)
 	XCFLAGS := $(LINUX_X86_64_XCFLAGS)
+	MUSLLINK := -nostdlib -lgcc 
 endif
 ifeq ($(OSDIRPART),win32-x86)
 	XCFLAGS := $(WINDOWS_X86_XCFLAGS)

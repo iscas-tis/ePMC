@@ -27,6 +27,7 @@ LIB_NAME=cudd-modified
 # OS specific flags for CUDD
 DARWIN_XCFLAGS=-DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8 -fPIC
 LINUX_X86_XCFLAGS=-m32 -malign-double -DHAVE_IEEE_754 -DBSD -static -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
+#LINUX_X86_64_XCFLAGS=-m64 -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8 -fPIC -static --static -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
 LINUX_X86_64_XCFLAGS=-m64 -DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8 -fPIC -static-libgcc -std=c99 -Wl,-soname,$(LIB_NAME)
 WINDOWS_X86_XCFLAGS=-UUNIX -DHAVE_IEEE_754 -DSIZEOF_VOID_P=4 -DSIZEOF_LONG=4 -DSIZEOF_INT=4 -static-libgcc -std=c99
 WINDOWS_X86_64_XCFLAGS=-UUNIX -DHAVE_IEEE_754 -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=4 -DSIZEOF_INT=4 -static-libgcc -std=c99
@@ -42,7 +43,7 @@ ifeq ("$(wildcard $(LIB_THERE))","")
 		echo Making $$dir ...; \
 		make CC=$(CC) RANLIB=$(RANLIB) MFLAG= MNEMLIB= ICFLAGS="$(ICFLAGS)" XCFLAGS="$(XCFLAGS)" DDDEBUG="$(DDDEBUG)" MTRDEBUG="$(MTRDEBUG)" LDFLAGS="$(LDFLAGS)" PURE="$(PURE)" EXE="$(EXE)" )\
 	done; \
-    $(CC) $(XCFLAGS) -shared cudd/*.o mtr/*.o st/*.o util/*.o epd/*.o -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT); \
+    $(CC) $(XCFLAGS) -shared $(MUSLLINK) cudd/*.o mtr/*.o st/*.o util/*.o epd/*.o -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT); \
     $(STRIP) -x $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) ; \
     mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
     cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)/; \

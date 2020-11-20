@@ -51,7 +51,7 @@ ifeq ("$(wildcard $(LIB_THERE))","")
 		echo Making $$dir ...; \
 		make CC=$(CC) RANLIB=$(RANLIB) MFLAG= MNEMLIB= ICFLAGS="$(ICFLAGS)" XCFLAGS="$(XCFLAGS)" DDDEBUG="$(DDDEBUG)" MTRDEBUG="$(MTRDEBUG)" LDFLAGS="$(LDFLAGS)" PURE="$(PURE)" EXE="$(EXE)" )\
 	done; \
-    $(CC) $(XCFLAGS) -shared cudd/*.o mtr/*.o st/*.o util/*.o epd/*.o -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT); \
+    $(CC) $(XCFLAGS) -shared $(MUSLLINK) cudd/*.o mtr/*.o st/*.o util/*.o epd/*.o -o $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT); \
     $(STRIP) -x $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) ; \
     mkdir -p $(CLASSDIR)/$(OSDIRPART)/; \
     cp $(DYN_PREFIX)$(LIB_NAME).$(DYN_EXT) $(CLASSDIR)/$(OSDIRPART)/; \
