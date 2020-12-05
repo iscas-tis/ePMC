@@ -247,7 +247,7 @@ public final class ExportPRISMToJaniModels {
         export(ZEROCONF_TIME_BOUNDED_MODEL, ZEROCONF_TIME_BOUNDED_PROPERTY);
     }
 
-    //    @Test
+    @Test
     public void convertPRISMHomepage() {
         //    	export(BROADCAST_COLL_ASYNC_MODEL);
         //    	export(BROADCAST_COLL_SYNC_MODEL);

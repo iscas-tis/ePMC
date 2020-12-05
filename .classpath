@@ -14,7 +14,7 @@
 	<classpathentry kind="lib" path="plugins/dd-beedeedee/lib/beedeedee-1.0.7.jar"/>
 	<classpathentry kind="lib" path="plugins/dd-jdd/lib/minijdd-1.04.jar"/>
 	<classpathentry kind="lib" path="plugins/jani-interaction/lib/sqlite-jdbc-3.8.11.2.jar"/>
-	<classpathentry kind="lib" path="lib/jna-5.3.1.jar"/>
-	<classpathentry kind="lib" path="lib/jna-platform-5.3.1.jar"/>
+	<classpathentry kind="lib" path="lib/jna-5.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/jna-platform-5.6.0.jar"/>
 	<classpathentry kind="output" path="main/target/classes"/>
 </classpath>
