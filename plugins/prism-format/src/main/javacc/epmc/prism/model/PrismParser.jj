@@ -784,7 +784,6 @@ private void parseRewards(List<RewardStructure> rewards)  :
 {
 	<REWARDSBEGIN>
 	( 
-		LOOKAHEAD(<QUOTE>) 
 		<QUOTE>
 		t = <IDENTIFIER>
 		<QUOTE>
@@ -827,6 +826,24 @@ private void parseRewards(List<RewardStructure> rewards)  :
 			t = <FALSE>
 		|
 			t = <IDENTIFIER>
+		|
+			t = <CEIL>
+		|
+			t = <FLOOR>
+		|
+			t = <FUNCTION>
+		|
+			t = <LOG>
+		|
+			t = <MAX>
+		|
+			t = <MIN>
+		|
+			t = <MOD>
+		|
+			t = <POW>
+		|
+			t = <SQRT>
 		|
 			t = <LPAR>
 		|
