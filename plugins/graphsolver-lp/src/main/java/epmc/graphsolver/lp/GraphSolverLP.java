@@ -28,6 +28,7 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
+import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDTMC;
@@ -86,17 +87,25 @@ public final class GraphSolverLP implements GraphSolverExplicit {
     public void setGraphSolverObjective(
             GraphSolverObjectiveExplicit obj) {
         this.objective = obj;
-        //        this.min = configuration.isMin();            /* do not know what is this*/
-        GraphSolverObjectiveExplicitUnboundedReachability objective = (GraphSolverObjectiveExplicitUnboundedReachability) obj;
-        this.graph = objective.getGraph();
-        this.targets = objective.getTarget();
+        //        this.min = configuration.isMin();            /* do not know what this is*/
+        if(obj instanceof GraphSolverObjectiveExplicitUnboundedReachability)
+        {
+        	GraphSolverObjectiveExplicitUnboundedReachability objective = (GraphSolverObjectiveExplicitUnboundedReachability) obj;
+            this.graph = objective.getGraph();
+            this.targets = objective.getTarget();
+        }else
+        {
+        	throw new RuntimeException("Unsupported request to LP-solver. Expect GraphSolverObjectiveExplicitUnboundedReachability but got " + obj.getClass());
+        }
+        
+        //this.targets = objective.getComputeFor();
         //        this.scheduler = configuration.getInputScheduler();
     }
 
     @Override
     public boolean canHandle() {
         Semantics semantics = graph.getGraphPropertyObject(CommonProperties.SEMANTICS);
-        GraphExplicit graph = objective.getGraph();
+        //GraphExplicit graph = objective.getGraph();
         if (!TypeReal.is(TypeWeightTransition.get())) {
             return false;
         }
@@ -135,8 +144,9 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         //        for()
     }
 
-    /** computed ZERO states in DTMC, that is, they can not reach target states with positive probability
-     * could also be used in MDP, may contain actions */
+    /** Compute ZERO states in DTMC.
+     * ZERO states are states that can not reach target states with positive probability
+     */
     private BitSet computeProb0() {
         graph.computePredecessors();
         BitSet oldPrev = targets.clone();
@@ -163,7 +173,7 @@ public final class GraphSolverLP implements GraphSolverExplicit {
         return nodes;
     }
 
-    /** for MCs, every state is state in MC, no need to check whether it is state */
+    /** for MCs, every state is a state in MC, no need to check whether it is state */
     private ValueArray solveMCLP(GraphExplicit graph, BitSet acc) 
     {
         Options options = Options.get();
