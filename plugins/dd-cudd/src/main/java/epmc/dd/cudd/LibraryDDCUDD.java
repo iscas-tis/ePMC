@@ -73,7 +73,7 @@ public final class LibraryDDCUDD implements LibraryDD {
     /** Identifier of the CUDD DD library. */
     public final static String IDENTIFIER = "cudd";
     /** Prefix used for loading the native CUDD dynamic library. */
-    private final static String CUDD_LIBRARY_PREFIX = "cudd";
+    private final static String CUDD_LIBRARY_PREFIX = "cuddepmc";
 
     private final static class LowLevelPermutationCUDD
     implements PermutationLibraryDD {

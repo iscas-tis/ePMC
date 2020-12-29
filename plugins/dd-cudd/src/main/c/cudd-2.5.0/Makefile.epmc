@@ -31,7 +31,7 @@ DIRS    = $(BDIRS)
 .PHONY : clean
 .PHONY : distclean
 
-LIB_NAME=cudd
+LIB_NAME=cuddepmc
 
 # OS specific flags for CUDD
 DARWIN_XCFLAGS=-DHAVE_IEEE_754 -DBSD -DSIZEOF_VOID_P=8 -DSIZEOF_LONG=8 -fPIC
