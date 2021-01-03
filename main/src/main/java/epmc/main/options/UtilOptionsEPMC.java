@@ -81,6 +81,8 @@ public final class UtilOptionsEPMC {
             .setType(typeFileList).setCommandLine().build();
         options.addOption().setIdentifier(OptionsEPMC.PRINT_STACKTRACE)
             .setType(typeBoolean).setDefault(false).build();
+        options.addOption().setIdentifier(OptionsEPMC.DISABLE_GREETING_MESSAGE)
+            .setType(typeBoolean).setDefault(false).build();
 
         Map<String,Class<?>> commands = new HashMap<>();
         String commandTaskClassString = CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_HYPHEN, OptionsEPMC.COMMAND_CLASS.name());

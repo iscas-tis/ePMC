@@ -71,10 +71,10 @@ public final class Analyse {
         if (revision != null) {
             revision = revision.trim();
         }
-        if (revision != null && !revision.equals(EMPTY)) {
+        if (revision != null && !revision.equals(EMPTY) && !options.getBoolean(OptionsEPMC.DISABLE_GREETING_MESSAGE)) {
             log.send(MessagesEPMC.RUNNING_EPMC_REVISION, revision);
         }
-        sendAssertionsMessage(log);
+        sendAssertionsMessage(log, options);
         try {
             ContextValue.set(new ContextValue());
             processBeforeModelCreations();
@@ -159,7 +159,7 @@ public final class Analyse {
      * 
      * @param log log to send message to
      */
-    private static void sendAssertionsMessage(Log log) {
+    private static void sendAssertionsMessage(Log log, Options options) {
         assert log != null;
         boolean assertionsEnabled = false;
         try {
@@ -167,10 +167,12 @@ public final class Analyse {
         } catch (AssertionError e) {
             assertionsEnabled = true;
         }
-        if (assertionsEnabled) {
-            log.send(MessagesEPMC.ASSERTIONS_ENABLED);
-        } else {
-            log.send(MessagesEPMC.ASSERTIONS_DISABLED);
+        if (!options.getBoolean(OptionsEPMC.DISABLE_GREETING_MESSAGE)) {
+            if (assertionsEnabled) {
+                log.send(MessagesEPMC.ASSERTIONS_ENABLED);
+            } else {
+                log.send(MessagesEPMC.ASSERTIONS_DISABLED);
+            }
         }
     }
 

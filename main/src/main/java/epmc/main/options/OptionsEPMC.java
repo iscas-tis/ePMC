@@ -43,4 +43,6 @@ public enum OptionsEPMC {
     COMMAND_CLASS,
     /** file(s) to write result(s) to*/
     RESULT_OUTPUT_FILES,
+    /** Disable greeting message */
+    DISABLE_GREETING_MESSAGE,
 }
