@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import epmc.automaton.hoa.HanoiHeader;
 import epmc.automaton.hoa.HoaParser;
@@ -226,14 +227,26 @@ public class BuechiImpl implements Buechi {
             final Process autProcess = Runtime.getRuntime().exec(autExecArgs);
             final BufferedReader autIn = new BufferedReader
                     (new InputStreamReader(autProcess.getInputStream()));
-            GraphExplicit automaton;
+            final BufferedReader autErr = new BufferedReader(
+                    new InputStreamReader(autProcess.getErrorStream()));
+            GraphExplicit automaton = null;
+            HoaParser spotParser = new HoaParser(autIn);
             try {
-                ensure(autProcess.waitFor() == 0, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_EXIT_CODE);
+                automaton = spotParser.parseAutomaton(ap2expr);
+            } catch (Exception e) {
+                // avoid throwing exception in case SPOT fails to generate HOA
+            }
+            // we have to start parsing the input before waiting, otherwise
+            // we will block
+            try {
+                int errCode = autProcess.waitFor();
+                if (errCode != 0) {
+                    String result = autErr.lines().collect(Collectors.joining("\n"));
+                    fail(ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_EXIT_CODE, result);                    
+                }
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
-            HoaParser spotParser = new HoaParser(autIn);
-            automaton = spotParser.parseAutomaton(ap2expr);
             return automaton;
         } catch (IOException e) {
             fail(ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO, e, ltl2tgba);
