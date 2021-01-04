@@ -227,13 +227,13 @@ public class BuechiImpl implements Buechi {
             final BufferedReader autIn = new BufferedReader
                     (new InputStreamReader(autProcess.getInputStream()));
             GraphExplicit automaton;
-            HoaParser spotParser = new HoaParser(autIn);
-            automaton = spotParser.parseAutomaton(ap2expr);
             try {
                 ensure(autProcess.waitFor() == 0, ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_EXIT_CODE);
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+            HoaParser spotParser = new HoaParser(autIn);
+            automaton = spotParser.parseAutomaton(ap2expr);
             return automaton;
         } catch (IOException e) {
             fail(ProblemsAutomaton.LTL2BA_SPOT_PROBLEM_IO, e, ltl2tgba);
