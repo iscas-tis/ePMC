@@ -328,7 +328,7 @@ public final class SolverQuantitativeSchewe implements SolverQuantitative {
         int numDirectImprovements = 0;
         int numIndirectImprovements = 0;
         OperatorEvaluator distance = ContextValue.get().getEvaluator(OperatorDistance.DISTANCE, succValue.getType(), value.getType());
-        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get());
+        OperatorEvaluator lt = ContextValue.get().getEvaluator(OperatorLt.LT, TypeReal.get(), TypeReal.get());
         Value distanceVal = TypeReal.get().newValue();
         ValueBoolean cmpLt = TypeBoolean.get().newValue();
         ValueBoolean cmpGt = TypeBoolean.get().newValue();
