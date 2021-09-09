@@ -1,0 +1,248 @@
+options
+{
+  JDK_VERSION = "1.8";
+  LOOKAHEAD = 1;
+  STATIC = false;
+}
+
+PARSER_BEGIN(EquivalenceRelationsParser)
+package epmc.petl.relation;
+import epmc.petl.model.EquivalenceRelations;
+import epmc.error.Positional;
+import static epmc.error.UtilError.ensure;
+import epmc.error.EPMCException;
+import epmc.expression.Expression;
+import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expression.standard.ExpressionLiteral;
+import epmc.options.Options;
+import epmc.value.TypeInteger;
+import epmc.value.ValueInteger;
+import epmc.value.UtilValue;
+import epmc.petl.property.UtilPETLExpressionParser;
+import epmc.petl.property.PETLExpressionParser;
+import epmc.expression.standard.ExpressionTypeInteger;
+
+import java.io.StringReader;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
+import java.util.HashMap;
+import java.io.Reader;
+
+public final class EquivalenceRelationsParser {
+  EquivalenceRelations er;
+  public EquivalenceRelations parseRelations() throws Exception{
+    er = new EquivalenceRelations();
+    parse();
+    return er;
+  }
+}
+
+PARSER_END(EquivalenceRelationsParser)
+
+TOKEN_MGR_DECLS : {
+	int nestingLevel;
+}
+
+<*> SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : // RESERVED KEYWORDS
+{
+  	< EQUIV : "equiv">
+| 	< EQUIV_END : "equiv end">
+| 	< START : "--">
+| 	< A : "A" >
+|	< BOOL : "bool" >
+|	< CEIL : "ceil" >
+|	< CLOCK : "clock" >
+|	< CONSTANT : "const" >
+|	< CTMC : "ctmc" >
+|	< CTMDP : "ctmdp" >
+|	< C : "C" >
+|	< DOUBLE : "double" >
+|	< DTMC : "dtmc" >
+|	< E : "E" >
+|	< FALSE : "false" >
+|	< FORMULA : "formula" >
+|	< FILTER : "filter" >
+|	< FLOOR : "floor" >
+|	< FUNCTION : "func" >
+|	< F : "F" >
+|	< GLOBAL : "global" >
+|	< G : "G" >
+|	< INIT : "init" >
+|	< I : "I" >
+|	< IMC : "imc" >
+|	< INT : "int" >
+|	< LABEL : "label" >
+|	< LOG : "log" >
+|	< MA : "ma" >
+|	< MAX : "max" >
+|	< MDP : "mdp" >
+|	< MIN : "min" >
+|	< MOD : "mod" >
+|	< MODULEBEGIN : "module" >
+|	< MODULEEND : "endmodule" >
+|	< MULTIOBJECTIVE : "multi" >
+|	< NONDETERMINISTIC:	"nondeterministic" >
+|	< P : "P" >
+|	< PMAX : "Pmax" >
+|	< PMIN : "Pmin" >
+|	< POW : "pow" >
+|	< PROBABILISTIC : "probabilistic" >
+|	< PROB : "prob" >
+|	< PTA : "pta" >
+|	< R : "R" >
+|	< RATE : "rate" >
+|	< REWARDSBEGIN : "rewards" >
+|	< REWARDSEND : "endrewards" >
+|	< RMAX : "Rmax" >
+|	< RMIN : "Rmin" >
+|	< S : "S" >
+|	< SMAX : "Smax" >
+|	< SMIN : "Smin" >
+|	< SQRT : "sqrt" >
+|	< STOCHASTIC : "stochastic" >
+|	< SYSTEMBEGIN : "system" >
+|	< SYSTEMEND : "endsystem" >
+|	< TRUE : "true" >
+|	< U : "U" >
+|	< W : "W" >
+|	< X : "X" >
+|	< COND : "given" >
+|	< PLUS : "+" >
+|	< MINUS : "-" >
+|	< TIMES : "*" >
+|	< DIVIDE : "/" >
+|	< LBRACKET : "[" >
+|	< RBRACKET : "]" >
+|	< LPAR : "(" >
+|	< RPAR : ")" >
+|	< LCURL : "{" >
+|	< RCURL : "}" >
+|	< RENAME : "<-" >
+|	< SEMICOLON : ";" >
+|	< COLON : ":" >
+|	< COMMA : "," >
+|	< AND : "&" >
+|	< OR : "|" >
+|	< NOT : "!" >
+|	< IMPLIES : "=>" >
+|	< IFF : "<=>" >
+|	< QUESTION : "?" >
+|	< PRIME : "'" >
+|	< EQ : "=" >
+|	< NEQ : "!=" >
+|	< LEQ : "<=" >
+|	< LT : "<" >
+|	< GT : ">" >
+|	< GEQ : ">=" >
+|	< QUOTE : "\"" >
+// game stuff
+|	< SMG : "smg" >
+|	< COALITION_OPEN : "<<" >
+|	< COALITION_CLOSE : ">>" >
+|	< PLAYERBEGIN : "player" >
+|	< PLAYEREND : "endplayer" >
+|	< IDENTIFIER : [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","_","0"-"9" ] )* >
+|	< NUM_INT : (["1"-"9"](["0"-"9"])*)|("0") >
+|	< NUM_REAL : (["0"-"9"])+(".")?(["0"-"9"])+(["e","E"](["-","+"])?(["0"-"9"])+)? >
+}
+
+< NESTING_SEMICOLON > TOKEN : {
+	< NESTING_SEMICOLON_SEMICOLON : ";" > : DEFAULT
+|	< NESTING_SEMICOLON_OTHER : (~[";","["])+ >
+|	< NESTING_SEMICOLON_BRACKET_OPEN : "[" > { nestingLevel++; } : NESTING_SEMICOLON_INNER
+}
+
+< NESTING_SEMICOLON_INNER > TOKEN : {
+	< NESTING_SEMICOLON_INNER_OTHER : (~["[","]"])+ >
+|	< NESTING_SEMICOLON_INNER_BRACKET_OPEN : "[" > { nestingLevel++; }
+|	< NESTING_SEMICOLON_INNER_BRACKET_CLOSE : "]" > { nestingLevel--; if (nestingLevel <= 0) SwitchTo(NESTING_SEMICOLON); }
+}
+
+< NESTING_BRACKET > TOKEN : {
+	< NESTING_BRACKET_RBRACKET : "]" > : DEFAULT
+|	< NESTING_BRACKET_OTHER : (~["]","["])+ >
+|	< NESTING_BRACKET_BRACKET_OPEN : "[" > { nestingLevel++; } : NESTING_BRACKET_INNER
+}
+
+< NESTING_BRACKET_INNER > TOKEN : {
+	< NESTING_BRACKET_INNER_OTHER : (~["[","]"])+ >
+|	< NESTING_BRACKET_INNER_BRACKET_OPEN : "[" > { nestingLevel++; }
+|	< NESTING_BRACKET_INNER_BRACKET_CLOSE : "]" > { nestingLevel--; if (nestingLevel <= 0) SwitchTo(NESTING_BRACKET); }
+}
+
+
+private void parse() :
+{
+	Token t;
+}
+{
+	(
+	  parseLabel()	)*
+	t = < EOF>
+}
+
+private void parseLabel()  :
+{
+	Expression value;
+	Token t, tid;
+	String moduleName;
+}
+{	
+	<EQUIV>
+	tid = <IDENTIFIER> 
+	{ moduleName = tid.toString();}
+	(
+	  < START>
+	  value = parseExpSemicolon()
+	  <NESTING_SEMICOLON_SEMICOLON>
+	  {
+	    er.addRelation(moduleName, value);
+	  }	)*
+	< EQUIV_END>
+}
+
+
+private Expression parseExpSemicolon()  : 
+{
+	Token t, expressionToken;
+	StringBuilder exp = new StringBuilder();
+	Expression expression = null;
+	token_source.nestingLevel = 0; 
+	token_source.SwitchTo(NESTING_SEMICOLON);
+}
+{
+	{ expressionToken = getToken(1); } 
+	(
+		t = <NESTING_SEMICOLON_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_BRACKET_OPEN>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_INNER_OTHER>
+		{ exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_INNER_BRACKET_OPEN>
+		{exp.append(t.toString()); }
+	|
+		t = <NESTING_SEMICOLON_INNER_BRACKET_CLOSE>
+		{ exp.append(t.toString()); }
+	)*
+	{
+		PETLExpressionParser ep = new PETLExpressionParser(new StringReader(exp.toString()));
+		return ep.parseExpression(expressionToken.beginLine, expressionToken.beginColumn, exp.toString());
+	}
+}
+
+
