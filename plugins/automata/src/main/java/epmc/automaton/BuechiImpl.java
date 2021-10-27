@@ -73,6 +73,7 @@ public class BuechiImpl implements Buechi {
     private final static String SPOT_PARAM_FORMULA = "-f";
     private final static String SPOT_PARAM_LOW_OPTIMISATIONS = "--low";
     private final static String SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE = "-Ht";
+    private final static String SPOT_PARAM_FORCE_COMPLETE = "--complete";
     private final static String DETERMINISTIC = "deterministic";
 
     private final static String IDENTIFIER = "buechi-spot";
@@ -219,7 +220,8 @@ public class BuechiImpl implements Buechi {
             autExecArgsList.addAll(Arrays.asList(new String[]{ltl2tgba,
                     SPOT_PARAM_FORMULA, spotFn,
                     SPOT_PARAM_LOW_OPTIMISATIONS,
-                    SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE}));
+                    SPOT_PARAM_FORCE_TRANSITION_BASED_ACCEPTANCE,
+                    SPOT_PARAM_FORCE_COMPLETE}));
             if (additionalSpotParamerters != null) {
                 autExecArgsList.addAll(additionalSpotParamerters);
             }
