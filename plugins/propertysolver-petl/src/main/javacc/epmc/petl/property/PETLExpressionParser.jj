@@ -1,0 +1,1826 @@
+options
+{
+  JDK_VERSION = "1.8";
+  LOOKAHEAD = 1;
+  STATIC = false;
+  COMMON_TOKEN_ACTION = true;
+  TOKEN_EXTENDS = "MyToken";
+}
+
+PARSER_BEGIN(PETLExpressionParser)
+package epmc.petl.property;
+import epmc.petl.error.ProblemsPETL;
+import static epmc.error.UtilError.ensure;
+import epmc.error.EPMCException;
+import epmc.operator.Operator;
+import epmc.operator.OperatorIte;
+import epmc.operator.OperatorEq;
+import epmc.operator.OperatorNe;
+import epmc.operator.OperatorAdd;
+import epmc.operator.OperatorSubtract;
+import epmc.operator.OperatorLe;
+import epmc.operator.OperatorLt;
+import epmc.operator.OperatorGe;
+import epmc.operator.OperatorGt;
+import epmc.operator.OperatorMultiply;
+import epmc.operator.OperatorDivide;
+import epmc.operator.OperatorMax;
+import epmc.operator.OperatorMin;
+import epmc.operator.OperatorCeil;
+import epmc.operator.OperatorFloor;
+import epmc.operator.OperatorLog;
+import epmc.operator.OperatorMod;
+import epmc.expression.*;
+import epmc.expression.standard.ExpressionIdentifierStandard;
+import epmc.expression.standard.ExpressionFilter;
+import epmc.expression.standard.ExpressionMultiObjective;
+import epmc.expression.standard.ExpressionCoalition;
+import epmc.expression.standard.ExpressionQuantifier;
+import epmc.expression.standard.ExpressionSteadyState;
+import epmc.expression.standard.ExpressionLiteral;
+import epmc.expression.standard.ExpressionOperator;
+import epmc.expression.standard.FilterType;
+import epmc.expression.standard.TimeBound;
+import epmc.expression.standard.CmpType;
+import epmc.expression.standard.DirType;
+import static epmc.petl.property.UtilPETLExpressionParser.*;
+import epmc.expression.standard.ExpressionTypeReal;
+import epmc.expression.standard.ExpressionTypeBoolean;
+import epmc.expression.standard.ExpressionTypeInteger;
+import epmc.petl.model.KnowledgeType;
+import epmc.petl.model.ExpressionKnowledge;
+import epmc.prism.operator.OperatorPRISMPow;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public final class PETLExpressionParser {
+	private static enum UnType {
+		NEXT,
+		FINALLY,
+		GLOBALLY
+	};
+
+	private static enum BinType {
+		UNTIL,
+		RELEASE,
+		WEAK
+	};
+
+	private final static class OldSchoolFilter {
+		private final FilterType type;
+		private final Expression states;
+		private final InfoExpression info;
+
+		OldSchoolFilter(FilterType type, Expression states, InfoExpression info) {
+			this.type = type;
+			this.states = states;
+			this.info = info;
+		}
+
+		FilterType getType() {
+			return type;
+		}
+
+		Expression getStates() {
+			return states;
+		}
+
+		InfoExpression getInfo() {
+		  return info;
+		}
+	};
+
+	private int initialLine;
+	private int initialColumn;
+	private String string;
+	private int errorLine;
+	private int errorColumn;
+
+	private void computeErrorPosition(int tline, int tcolumn) {
+		errorLine = tline + initialLine - 1;
+		errorColumn = tcolumn;
+		if (tline == 1) {
+			errorColumn += initialColumn - 1;
+		}
+	}
+
+	public Expression parseExpression(int line, int column, String string)  {
+		this.initialLine = line;
+		this.initialColumn = column;
+		this.string = string;
+
+		try {
+			return parseCompleteExp();
+		} catch (ParseException pe) {
+			Token errorToken = getToken(1);
+			if (errorToken.kind == UNEXPECTED_CHAR) {
+				computeErrorPosition(errorToken.endLine, errorToken.endColumn);
+				ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_CHARACTER, newPositional(errorLine, errorColumn), errorToken.image);
+			} else {
+				computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+				ensure(false, ProblemsPETL.EXPRESSION_PARSER_SYNTAX_ERROR, newPositional(errorLine, errorColumn), errorToken.toString());
+			}
+			return null;
+        } catch (EPMCException e) {
+		   throw e;
+		}
+		catch (Throwable t) {
+		  ensure(false, ProblemsPETL.EXPRESSION_PARSER_GENERAL_ERROR, t, t);
+		  return null;
+		}
+	}
+
+	public Expression parseExpressionAsProperty(int line, int column, String string)  {
+		this.initialLine = line;
+		this.initialColumn = column;
+		this.string = string;
+
+		try {
+			return parseCompleteProp();
+		} catch (ParseException pe) {
+			Token errorToken = getToken(1);
+			if (errorToken.kind == UNEXPECTED_CHAR) {
+				computeErrorPosition(errorToken.endLine, errorToken.endColumn);
+				ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_CHARACTER, newPositional(errorLine, errorColumn), errorToken.image);
+			} else {
+				computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+				ensure(false, ProblemsPETL.EXPRESSION_PARSER_SYNTAX_ERROR, newPositional(errorLine, errorColumn), errorToken.toString());
+			}
+			return null;
+		} catch (EPMCException e) {
+		   throw e;
+		} catch (Throwable t) {
+			  ensure(false, ProblemsPETL.EXPRESSION_PARSER_GENERAL_ERROR, t, t);
+			  return null;
+		}
+	}
+
+	private void beginExpression(InfoExpression info) {
+	  assert info != null;
+	  info.setStart(getToken(1).offset);
+	}
+
+	private void endExpression(InfoExpression info) {
+	  assert info != null;
+	  info.setEnd(getToken(0).offset + getToken(0).toString().length());
+	}
+}
+
+PARSER_END(PETLExpressionParser)
+
+SKIP :
+{
+  " "
+| "\r"
+| "\t"
+| "\n"
+}
+
+TOKEN : // RESERVED KEYWORDS
+{
+	< A : "A" >
+|	< BOOL : "bool" >
+|	< CEIL : "ceil" >
+|	< CLOCK : "clock" >
+|	< CONSTANT : "const" >
+|	< CTMC : "ctmc" >
+|	< CTMDP : "ctmdp" >
+|	< K : "K" >
+|	< E : "E" >
+|	< C : "C" >
+|   < D : "D" >
+|	< DISCOUNT : "DISCOUNT" >
+|	< DOUBLE : "double" >
+|	< DTMC : "dtmc" >
+|	< FALSE : "false" >
+|	< FORMULA : "formula" >
+|	< FILTER : "filter" >
+|	< FLOOR : "floor" >
+|	< FUNCTION : "func" >
+|	< F : "F" >
+|	< GLOBAL : "global" >
+|	< G : "G" >
+|	< INIT : "init" >
+|	< INITEND : "endinit" >
+|	< INVARIANT_OPEN : "invariant" >
+|	< INVARIANT_CLOSE : "endinvariant" >
+|	< I : "I" >
+|	< IMC : "imc" >
+|	< INT : "int" >
+|	< LABEL : "label" >
+|	< LOG : "log" >
+|	< MA : "ma" >
+|	< MAX : "max" >
+|	< MDP : "mdp" >
+|	< MIN : "min" >
+|	< MOD : "mod" >
+|	< MODULEBEGIN : "module" >
+|	< MODULEEND : "endmodule" >
+|	< MULTIOBJECTIVE : "multi" >
+|	< NONDETERMINISTIC:	"nondeterministic" >
+|	< P : "P" >
+|	< PMAX : "Pmax" >
+|	< PMIN : "Pmin" >
+|	< POW : "pow" >
+|	< PROBABILISTIC : "probabilistic" >
+|	< PROB : "prob" >
+|	< PTA : "pta" >
+|	< R : "R" >
+|	< RATE : "rate" >
+|	< REWARDSBEGIN : "rewards" >
+|	< REWARDSEND : "endrewards" >
+|	< RMAX : "Rmax" >
+|	< RMIN : "Rmin" >
+|	< S : "S" >
+|	< SMAX : "Smax" >
+|	< SMIN : "Smin" >
+|	< SQRT : "sqrt" >
+|	< STOCHASTIC : "stochastic" >
+|	< SYSTEMBEGIN : "system" >
+|	< SYSTEMEND : "endsystem" >
+|	< TRUE : "true" >
+|	< U : "U" >
+|	< W : "W" >
+|	< X : "X" >
+|	< COND : "given" >
+|	< PLUS : "+" >
+|	< MINUS : "-" >
+|	< TIMES : "*" >
+|	< DIVIDE : "/" >
+|	< ARROW : "->" >
+|	< LBRACKET : "[" >
+|	< RBRACKET : "]" >
+|	< LPAR : "(" >
+|	< RPAR : ")" >
+|	< LCURL : "{" >
+|	< RCURL : "}" >
+|	< RENAME : "<-" >
+|	< SEMICOLON : ";" >
+|	< COLON : ":" >
+|	< COMMA : "," >
+|	< AND : "&" >
+|	< OR : "|" >
+|	< NOT : "!" >
+|	< IMPLIES : "=>" >
+|	< IFF : "<=>" >
+|	< QUESTION : "?" >
+|	< PRIME : "'" >
+|	< EQ : "=" >
+|	< NEQ : "!=" >
+|	< LEQ : "<=" >
+|	< LT : "<" >
+|	< GT : ">" >
+|	< GEQ : ">=" >
+|	< QUOTE : "\"" >
+|	< SEPINTERVAL : ".." >
+// game stuff
+|	< SMG : "smg" >
+|	< COALITION_OPEN : "<<" >
+|	< COALITION_CLOSE : ">>" >
+|	< PLAYERBEGIN : "player" >
+|	< PLAYEREND : "endplayer" >
+|	< IDENTIFIER : [ "A"-"Z","a"-"z","_" ] ( [ "A"-"Z","a"-"z","_","0"-"9" ] )* >
+|	< NUM_INT : (["1"-"9"](["0"-"9"])*)|("0") >
+|	< NUM_REAL : (["0"-"9"])+(".")?(["0"-"9"])+(["e","E"](["-","+"])?(["0"-"9"])+)? >
+}
+
+SPECIAL_TOKEN :
+{
+//	< COMMENT : "//"(~["\n","\r"])*("\n"|"\r"|"\r\n") >
+	< COMMENT : "//"(~["\n","\r"])* >
+}
+
+TOKEN :
+{
+	< UNEXPECTED_CHAR : ~[] >
+}
+
+TOKEN_MGR_DECLS:
+{
+    void CommonTokenAction(Token t)
+    {
+        MyToken token = (MyToken) t;
+        token.offset = input_stream.tokenBegin;
+    }
+}
+
+private Expression parseCompleteExp()  :
+{
+	Expression e;
+}
+{
+	e = parseExp(true)
+	<EOF>
+	{ return e; }
+}
+
+private Expression parseCompleteProp()  :
+{
+	Expression e;
+	Expression label = null;
+}
+{
+	(
+		LOOKAHEAD(parseLabel() <COLON>)
+		label = parseLabel()
+		<COLON>
+	)?
+	e = parseExp(false)
+	(
+		<SEMICOLON>
+	)?
+	<EOF>
+	{ return e; }
+}
+
+private Expression parseExpTemporal(boolean parseExp)  :
+{
+	Expression e;
+}
+{
+	e = parseTemporalBinary(parseExp)
+	{ return e; }
+}
+
+private Expression parseExp(boolean parseExp)  :
+{
+	Expression e;
+}
+{
+	e = ExpressionITE(parseExp)
+//	e = parseTemporalBinary(parseExp)
+	{ return e; }
+}
+
+private Expression ExpressionITE(boolean parseExp)  :
+{
+	Expression prop;
+	Expression propThen;
+	Expression propElse;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	prop = ExpressionImplies(parseExp)
+	(
+		<QUESTION>
+		propThen = ExpressionImplies(parseExp)
+		<COLON>
+		propElse = ExpressionITE(parseExp)
+    	{ endExpression(info); }
+		{ prop = new ExpressionOperator.Builder()
+			.setOperator(OperatorIte.ITE)
+			.setOperands(prop, propThen, propElse)
+			.setPositional(info.toPositional())
+			.build(); }
+	)?
+	{ return prop; }
+}
+
+private Expression ExpressionImplies(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	p = ExpressionIff(parseExp)
+	(
+		<IMPLIES> 
+		nextProp = ExpressionIff(parseExp)
+		{ endExpression(info); }
+		{ p = implies(p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Expression ExpressionIff(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	p = ExpressionOr(parseExp)
+	(
+		<IFF> 
+		nextProp = ExpressionOr(parseExp)
+		{ endExpression(info);
+		  p = iff(p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Expression ExpressionOr(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+   { beginExpression(info); }
+	p = ExpressionAnd(parseExp)
+	(
+		<OR> 
+		nextProp = ExpressionAnd(parseExp)
+		{ endExpression(info);
+		  p = or(p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Expression ExpressionAnd(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	InfoExpression info = new InfoExpression(string);
+	}
+{
+  { beginExpression(info); }
+	p = ExpressionNot(parseExp)
+	(
+		<AND>
+		nextProp = ExpressionNot(parseExp)
+       { endExpression(info);
+          p = and(p, nextProp, info);
+       }
+	)*
+	{ return p; }
+}
+
+private Expression ExpressionNot(boolean parseExp)  :
+{
+	  Expression p;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	(
+	   { beginExpression(info); }
+		<NOT>
+		p = ExpressionNot(parseExp)
+	   { endExpression(info);
+	     p = not(p, info); }
+	|
+		p = ExpressionEqNe(parseExp)
+//		p = parseTemporalBinary(parseExp)
+	)
+	{ return p; }
+}
+
+private Expression ExpressionEqNe(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	Operator type;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	p = ExpressionROp(parseExp)
+	(
+		type = EqNe() 
+		nextProp = ExpressionROp(parseExp)
+        { endExpression(info);
+         p = newOperator(type, p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Operator EqNe()  :
+{
+}
+{
+	(
+		<EQ> 
+		{ return OperatorEq.EQ; }
+	| 
+		<NEQ> 
+		{ return OperatorNe.NE; }
+	)
+}
+
+private Expression ExpressionROp(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	Operator type;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	p = ExpressionPlusMinus(parseExp)
+	(
+		type = LtGtLeGe()
+		nextProp = ExpressionPlusMinus(parseExp)
+        { endExpression(info);
+          p = newOperator(type, p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Operator LtGtLeGe()  :
+{
+}
+{
+	(
+		<LT> 
+		{ return OperatorLt.LT; }
+	| 
+		<LEQ> 
+		{ return OperatorLe.LE; }
+	| 
+		<GT> 
+		{ return OperatorGt.GT; }
+	| 
+		<GEQ> 
+		{ return OperatorGe.GE; }
+	)
+}
+
+private Expression ExpressionPlusMinus(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	Operator type;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	p = ExpressionTimesDivide(parseExp)
+	(
+		LOOKAHEAD((<PLUS>|<MINUS>))
+		type = PlusMinus()
+		nextProp = ExpressionTimesDivide(parseExp)
+		{ endExpression(info);
+		  p = newOperator(type, p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Operator PlusMinus()  :
+{
+}
+{
+	(
+		<PLUS> 
+		{ return OperatorAdd.ADD; }
+	| 
+		<MINUS> 
+		{ return OperatorSubtract.SUBTRACT; }
+	)
+}
+
+private Expression ExpressionTimesDivide(boolean parseExp)  :
+{
+	Expression p;
+	Expression nextProp;
+	Operator type;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	p = ExpressionUnaryMinus(parseExp)
+	(
+		type = TimesDivide()
+		nextProp = ExpressionUnaryMinus(parseExp)
+		{ endExpression(info);
+		  p = newOperator(type, p, nextProp, info); }
+	)*
+	{ return p; }
+}
+
+private Operator TimesDivide()  :
+{
+}
+{
+	(
+		<TIMES> 
+		{ return OperatorMultiply.MULTIPLY; }
+	| 
+		<DIVIDE> 
+		{ return OperatorDivide.DIVIDE; }
+	)
+}
+
+private Expression ExpressionUnaryMinus(boolean parseExp)  :
+{
+	Expression p;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	( { beginExpression(info); }
+		<MINUS> 
+		p = ExpressionUnaryMinus(parseExp)
+		{ endExpression(info);
+		  p = addInverse(p); }
+	| 
+		p = parseBasic(parseExp)
+	)
+	{ return p; }
+}
+
+private Expression parseBasic(boolean parseExp)  :
+{
+	Expression e;
+}
+{
+	(
+		e = parseBoolean()
+	|
+		e = parseFunction(parseExp)
+	|
+		e = parseIdentifier()
+	|
+		e = parseInt()
+	|
+		e = parseReal()
+	|
+		e = parseCoalition(parseExp)
+	| 
+		e = parseProbQuant(parseExp)
+	| 
+		e = parseRewQuant(parseExp)
+	| 
+		e = parseSteadyQuant(parseExp)
+	| 
+		e = parseParenth(parseExp)
+	| 
+		e = parseLabel()
+	| 
+		e = parseFilter(parseExp)
+	| 
+		e = parseMultiObjective(parseExp)
+	|
+		e = parseKnowledge(parseExp) 
+	)
+	{ return e; }
+}
+
+private Expression parseKnowledge(boolean parseExp) :
+{
+	Expression e;
+	List<String> players = new ArrayList<String>();
+	Token player;
+	KnowledgeType type;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  type = parseKnowledgeType()
+  (
+     <LCURL>
+     (
+       player = <IDENTIFIER>     )
+     { players.add(player.toString());}
+     (
+       <COMMA>
+	   (
+	       player = <IDENTIFIER>
+	   )
+       { players.add(player.toString());}     )*
+     <RCURL>
+     e = parseBasic(parseExp)  )
+  {
+    endExpression(info);
+	Expression result = new ExpressionKnowledge.Builder()
+		.setType(type)
+		.setQuantifier(e)
+		.setPlayers(players)
+		.setPositional(info.toPositional())
+		.build();
+    return result;
+   }
+}
+
+KnowledgeType parseKnowledgeType() :
+{
+}
+{
+	(
+		<K> 
+		{ return KnowledgeType.K; }
+	| 
+		<E> 
+		{ return KnowledgeType.E; }
+	| 
+		<C> 
+		{ return KnowledgeType.C; }
+	| 
+		<D> 
+		{ return KnowledgeType.D; }
+	
+	)
+}
+
+private Expression parseFunction(boolean parseExp)  :
+{
+	Expression e;
+	Expression ne;
+	Operator type;
+}
+{
+	(
+		e = parseSpecialFunction(parseExp)
+	|
+		type = functionMultipleParams()
+		<LPAR>
+		e = parseFunctionN(parseExp, type)
+		<RPAR>
+	|
+		type = functionTwoParams()
+		<LPAR>
+		e = parseFunction2(parseExp, type)
+		<RPAR>
+	|
+		type = functionOneParam()
+		<LPAR>
+		e = parseFunction1(parseExp, type)
+		<RPAR>
+	|
+		<FUNCTION> 
+		<LPAR>
+		(
+			e = parseSqrt(parseExp)
+		|
+			type = functionMultipleParams()
+			<COMMA>
+			e = parseFunctionN(parseExp, type)
+		|
+			type = functionTwoParams()
+			<COMMA>
+			e = parseFunction2(parseExp, type)
+		|
+			type = functionOneParam()
+			<COMMA>
+			e = parseFunction1(parseExp, type)
+		)
+		<RPAR>
+	)
+	{ return e; }
+}
+
+private Expression parseSpecialFunction(boolean parseExp)  :
+{
+	Expression e;
+}
+{
+	(
+		e = parseSqrt(parseExp)
+	)
+	{ return e; }
+}
+
+private Expression parseSqrt(boolean parseExp)  :
+{
+	Expression e;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	//sqrt(e) is just pow(e, 0.5), but it has to be managed independently...
+	<SQRT>
+	<LPAR>
+	e = parseExp(parseExp)
+	<RPAR>
+	{ endExpression(info);
+	  return newOperator(OperatorPRISMPow.PRISM_POW, e,
+		new ExpressionLiteral.Builder()
+			.setValue("0.5")
+			.setType(ExpressionTypeReal.TYPE_REAL)
+			.build(), info); }
+}
+
+private Expression parseFunctionN(boolean parseExp, Operator type)  :
+{
+	Expression e;
+	Expression ne;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	e = parseExp(parseExp)
+	(
+		<COMMA>
+		ne = parseExp(parseExp)
+		{ endExpression(info);
+		  e = newOperator(type, e, ne, info);}
+	)+
+	{ return e; }
+}
+
+private Expression parseFunction2(boolean parseExp, Operator type)  :
+{
+	Expression e;
+	Expression ne;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	e = parseExp(parseExp)
+	<COMMA>
+	ne = parseExp(parseExp)
+	{ endExpression(info);
+	  return newOperator(type, e, ne, info);}
+}
+
+private Expression parseFunction1(boolean parseExp, Operator type)  :
+{
+	Expression e;
+}
+{
+	e = parseExp(parseExp)
+	{ return newOperator(type, e);}
+}
+
+private Operator functionMultipleParams()  :
+{
+}
+{
+	(
+		<MAX> 
+		{ return OperatorMax.MAX; }
+	| 
+		<MIN> 
+		{ return OperatorMin.MIN; }
+	)
+}
+
+private Operator functionOneParam()  :
+{
+}
+{
+	(
+//		//sqrt(e) is just pow(e, 0.5), but it has to be managed independently...
+//		<SQRT> 
+//	|
+		<FLOOR> 
+		{ return OperatorFloor.FLOOR; }
+	| 
+		<CEIL> 
+		{ return OperatorCeil.CEIL; }
+	)
+}
+
+private Operator functionTwoParams()  :
+{
+}
+{
+	(
+		<POW> 
+		{ return OperatorPRISMPow.PRISM_POW; }
+	| 
+		<MOD> 
+		{ return OperatorMod.MOD; }
+	| 
+		<LOG> 
+		{ return OperatorLog.LOG; }
+	)
+}
+
+private Expression parseParenth(boolean parseExp)  :
+{
+	Expression p;
+}
+{
+	<LPAR>
+	p = parseExpTemporal(parseExp)
+	<RPAR>
+	{ return p; }
+}
+
+private Expression parseIdentifier()  :
+{
+	Token literal;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	literal = <IDENTIFIER>
+	{ endExpression(info);
+	  return new ExpressionIdentifierStandard.Builder()
+		.setName(literal.toString())
+		.build(); }
+}
+
+private Expression parseLabel()  :
+{
+	Token literal;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	<QUOTE> 
+	(
+		literal = <IDENTIFIER> 
+	|
+		literal = <INIT>
+	)
+	<QUOTE>
+  { endExpression(info); }
+	{ return new ExpressionIdentifierStandard.Builder()
+		.setName("\"" + literal.toString() + "\"")
+//		.setPositional(info.toPositional())
+		.build(); }
+}
+
+private Expression parseReal()  :
+{
+	Token real;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	real = <NUM_REAL>
+	{ endExpression(info);
+	return new ExpressionLiteral.Builder()
+		.setValue(real.toString())
+		.setType(ExpressionTypeReal.TYPE_REAL)
+		.setPositional(info.toPositional())
+		.build(); }
+}
+
+private Expression parseInt()  :
+{
+	Token intg;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	intg = <NUM_INT>
+	{ endExpression(info);
+	    return new ExpressionLiteral.Builder()
+	    .setValue(intg.toString())
+	    .setType(ExpressionTypeInteger.TYPE_INTEGER)
+		.setPositional(info.toPositional())
+		.build(); }
+}
+
+private Expression parseBoolean()  :
+{
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	( { beginExpression(info); }
+		<TRUE> 
+		{ endExpression(info);
+		  return new ExpressionLiteral.Builder()
+		  	.setValue("true")
+		  	.setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
+			.setPositional(info.toPositional())
+			.build();  } 
+	| { beginExpression(info); }
+		<FALSE> 
+		{ endExpression(info);
+		return new ExpressionLiteral.Builder()
+		  	.setValue("false")
+		  	.setType(ExpressionTypeBoolean.TYPE_BOOLEAN)
+			.setPositional(info.toPositional())
+			.build(); }
+	)
+}
+
+private OldSchoolFilter OldSchoolFilter()  :
+{
+	Expression states;
+	boolean min = false;
+	boolean max = false;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	<LCURL> 
+	states = parseExpTemporal(false) 
+	<RCURL>
+	(
+		<LCURL>
+		(
+			<MAX> 
+			<RCURL> 
+			{ max = true; }
+		| 
+			<MIN> 
+			<RCURL> 
+			{ min = true; } 
+			( 
+				<LCURL> 
+				<MAX> 
+				<RCURL> 
+				{ max = true; } 
+			)?
+		)  
+	)?
+	{
+		endExpression(info);
+		FilterType type = null;
+		if (!min && !max) {
+			type = FilterType.STATE;
+		} else if (min && !max) {
+			type = FilterType.MIN;
+		} else if (!min && max) {
+			type = FilterType.MAX;
+		} else if (min && max) {
+			type = FilterType.RANGE;
+		}
+		return new OldSchoolFilter(type, states, info);
+	}
+}
+
+private Expression parseCoalition(boolean parseExp)  :
+{
+	Expression innerFormula;
+	List<Expression> players = new ArrayList<Expression>();
+	Token coal;
+	Expression player;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+  { beginExpression(info); }
+	coal = <COALITION_OPEN>
+	(
+		player = parseIdentifier()
+	|
+		player = parseInt()
+	)
+	{ players.add(player); }
+	(
+		<COMMA>
+		(
+			player = parseIdentifier()
+		|
+			player = parseInt()
+		)
+		{ players.add(player); }
+	)*
+	<COALITION_CLOSE>
+	(
+		innerFormula = parseProbQuant(parseExp)
+	| 
+		innerFormula = parseRewQuant(parseExp)
+	)
+	{ endExpression(info);
+	  return new ExpressionCoalition.Builder()
+		.setQuantifier(innerFormula).setPlayers(players)
+		.setPositional(info.toPositional())
+		.build();
+	}
+}
+
+private Expression parseProbQuant(boolean parseExp)  :
+{
+	Expression prop;
+	Expression cmp;
+	Expression cond = getTrue();
+	DirType dirType;
+	CmpType cmpType;
+	OldSchoolFilter filter = null;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	{ 
+		if (parseExp) {
+			Token errorToken = getToken(1);
+			computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+			ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken);
+			return null;
+		}
+		beginExpression(info);
+	}
+	dirType = PropQuantProbDirType()
+	(
+		(
+			<EQ>
+			(
+				<QUESTION> 
+				{ 
+					cmpType = CmpType.IS;
+					cmp = getTrue(); 
+				}
+			|
+				cmp = parseExpTemporal(parseExp)
+				{ cmpType = CmpType.EQ; }
+			)
+			<LBRACKET>
+			prop = parseExpTemporal(parseExp)
+			(
+				<COND>
+				cond = parseExpTemporal(parseExp)
+			)?
+			( 
+				filter = OldSchoolFilter() 
+			)?
+			<RBRACKET>
+		)
+	|
+		cmpType = PropQuantCmpType()
+		cmp = parseExpTemporal(parseExp)
+		<LBRACKET>
+		prop = parseExpTemporal(parseExp)
+		(
+			<COND>
+			cond = parseExpTemporal(parseExp)
+		)?
+		( 
+			filter = OldSchoolFilter() 
+		)?
+		<RBRACKET>
+	)
+	{
+	    endExpression(info);
+		Expression result = new ExpressionQuantifier.Builder()
+			.setDirType(dirType)
+			.setCmpType(cmpType)
+			.setQuantified(prop)
+			.setCompare(cmp)
+			.setCondition(cond)
+			.setPositional(info.toPositional())
+			.build();
+		if (filter != null) {
+		  result = new ExpressionFilter.Builder()
+		  		.setFilterType(filter.getType())
+		  		.setProp(result)
+		  		.setStates(filter.getStates())
+		  		.setPositional(filter.getInfo().toPositional())
+		  		.build();
+		}
+		return result;
+	}
+}
+
+private Expression parseSteadyQuant(boolean parseExp)  :
+{
+	Expression prop;
+	Expression cmp;
+	Expression cond = getTrue();
+	DirType dirType;
+	CmpType cmpType;
+	OldSchoolFilter filter = null;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	{ 
+		if (parseExp) {
+			Token errorToken = getToken(1);
+			computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+			ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
+			return null;
+		}
+		beginExpression(info);
+	}
+	dirType = SteadyQuantProbDirType()
+	(
+		<EQ>
+		(
+			<QUESTION> 
+			{ 
+				cmpType = CmpType.IS;
+				cmp = getTrue(); 
+			}
+		|
+			cmp = parseExpTemporal(parseExp)
+			{ cmpType = CmpType.EQ; }
+		)
+		<LBRACKET>
+		prop = parseExpTemporal(parseExp)
+		(
+			<COND>
+			cond = parseExpTemporal(parseExp)
+		)?
+		( 
+			filter = OldSchoolFilter() 
+		)?
+		<RBRACKET>
+	|
+		cmpType = PropQuantCmpType()
+		cmp = parseExpTemporal(parseExp)
+		<LBRACKET>
+		prop = parseExpTemporal(parseExp)
+		(
+			<COND>
+			cond = parseExpTemporal(parseExp)
+		)?
+		( 
+			filter = OldSchoolFilter() 
+		)?
+		<RBRACKET>
+	)
+	{
+		prop = new ExpressionSteadyState.Builder()
+			.setStates(prop)
+			.build();
+		Expression result = new ExpressionQuantifier.Builder()
+			.setDirType(dirType)
+			.setCmpType(cmpType)
+			.setQuantified(prop)
+			.setCompare(cmp)
+			.setCondition(cond)
+			.setPositional(info.toPositional())
+			.build();
+		if (filter != null) {
+			result = new ExpressionFilter.Builder()
+				.setFilterType(filter.getType())
+				.setProp(result)
+				.setStates(filter.getStates())
+				.setPositional(filter.getInfo().toPositional())
+				.build();
+		}
+		return result;
+	}
+}
+
+
+private CmpType PropQuantCmpType() :
+{
+}
+{
+	(
+		<LEQ> 
+		{ return CmpType.LE; }
+	| 
+		<LT> 
+		{ return CmpType.LT; }
+	| 
+		<GEQ> 
+		{ return CmpType.GE; }
+	| 
+		<GT> 
+		{ return CmpType.GT; }
+	)
+}
+
+private Expression parseRewardPath(boolean parseExp, Expression rewardStructure)  :
+{
+	Expression prop;
+	Expression timebound;
+	Expression discount;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	( { beginExpression(info); }
+		<F> 
+		prop = parseExpTemporal(parseExp)
+		{ endExpression(info);
+		  return newRewardReachability(rewardStructure, prop, info); }
+	| 
+		<C> 
+		{
+		  timebound = ExpressionLiteral.getPosInf();
+		  discount = null;
+		}
+		(
+			<LEQ> 
+			timebound = parseExpTemporal(parseExp)
+		)?
+		(
+			<COMMA> <DISCOUNT> <EQ>
+			discount = parseExpTemporal(parseExp)
+		)?
+		{
+			if (discount == null) {
+				return newRewardCumulative(rewardStructure, timebound);
+			} else {
+				return newRewardDiscounted(rewardStructure, timebound, discount);
+			}
+		}
+	| 
+		<I> 
+		<EQ>
+		prop = parseExpTemporal(parseExp)
+		{ return newRewardInstantaneous(rewardStructure, prop); }
+	| 
+		<S> 
+		{ return newRewardSteadyState(rewardStructure); }
+	)
+}
+
+private Expression parseRewardStructure(boolean parseExp)  :
+{
+	Expression rewardStructure = null;
+	Token literal;
+}
+{
+	<LCURL>
+	( 
+		LOOKAHEAD(<QUOTE>)
+		<QUOTE> 
+		literal = <IDENTIFIER> 
+		<QUOTE>
+		{ rewardStructure = new ExpressionIdentifierStandard.Builder()
+			.setName("\"" + literal.toString() + "\"")
+			.build(); }
+	| 
+		rewardStructure = parseExp(true)
+	)
+	<RCURL>
+	{ return rewardStructure; }
+}
+
+private Expression parseRewQuant(boolean parseExp)  :
+{
+	Expression prop;
+	Expression cmp;
+	Expression cond = getTrue();
+	DirType dirType;
+	CmpType cmpType;
+	Expression rewardStructure = getTrue();
+	OldSchoolFilter filter = null;
+	Token oper;
+}
+{
+	{ oper = getToken(1); } 
+	{ 
+		if (parseExp) {
+		    ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(oper.beginLine, oper.beginColumn),  oper.toString());
+		    return null;
+		}
+	}
+	(
+		<R> 
+		{ dirType = DirType.NONE; }
+		( 
+			rewardStructure = parseRewardStructure(parseExp) 
+		)?
+		(
+			<MIN> 
+			{ dirType = DirType.MIN; }
+		| 
+			<MAX> 
+			{ dirType = DirType.MAX; }
+		)?
+	|
+		<RMIN> 
+		{ dirType = DirType.MIN; }
+	| 
+		<RMAX> 
+		{ dirType = DirType.MAX; }
+	)
+	(
+		{ 
+			cmpType = CmpType.IS;
+			cmp = getTrue(); 
+		}
+		<EQ>
+		(
+			<QUESTION> 
+			{ 
+				cmpType = CmpType.IS; 
+				cmp = getTrue(); 
+			}
+		|
+			cmp = parseExpTemporal(parseExp) 
+			{ cmpType = CmpType.EQ; }
+		)
+	|
+		cmpType = PropQuantCmpType()
+		cmp = parseExpTemporal(parseExp)
+	)
+	<LBRACKET>
+	prop = parseRewardPath(parseExp, rewardStructure)
+	( 
+		<COND> 
+		cond = parseExpTemporal(parseExp) 
+	)?
+	( 
+		filter = OldSchoolFilter() 
+	)?
+	<RBRACKET>
+	{
+		Expression result = new ExpressionQuantifier.Builder()
+			.setDirType(dirType)
+			.setCmpType(cmpType)
+			.setQuantified(prop)
+			.setCompare(cmp)
+			.setCondition(cond)
+			.build();
+		if (filter != null) {
+			result = new ExpressionFilter.Builder()
+				.setFilterType(filter.getType())
+				.setProp(result)
+				.setStates(filter.getStates())
+				.build();
+		}
+		return result;
+	}
+}
+
+DirType PropQuantProbDirType() :
+{
+}
+{
+	(
+		<P> 
+		{ return DirType.NONE; }
+	| 
+		<PMAX> 
+		{ return DirType.MAX; }
+	| 
+		<PMIN> 
+		{ return DirType.MIN; }
+	)
+}
+
+private DirType SteadyQuantProbDirType() :
+{
+}
+{
+	(
+		<S> 
+		{ return DirType.NONE; }
+	| 
+		<SMAX> 
+		{ return DirType.MAX; }
+	| 
+		<SMIN> 
+		{ return DirType.MIN; }
+	)
+}
+
+private FilterType ExpressionFilterType()  :
+{
+	FilterType type = null;
+	Token id;
+}
+{
+	(
+		<MIN> 
+		{ type = FilterType.MIN; }
+	| 
+		<MAX> 
+		{ type = FilterType.MAX; }
+	| 
+		<PLUS> 
+		{ type = FilterType.SUM; }
+	|
+		<AND> 
+		{ type = FilterType.FORALL; }
+	| 
+		<OR> 
+		{ type = FilterType.EXISTS; }
+	| 
+		id = <IDENTIFIER>
+		{
+			switch (id.image) {
+				case "count" :
+					type = FilterType.COUNT;
+					break;
+				case "sum" :
+					type = FilterType.SUM;
+					break;
+				case "avg":
+					type = FilterType.AVG;
+					break;
+				case "first":
+					type = FilterType.FIRST;
+					break;
+				case "range":
+					type = FilterType.RANGE;
+					break;
+				case "forall":
+					type = FilterType.FORALL;
+					break;
+				case "exists":
+					type = FilterType.EXISTS;
+					break;
+				case "state":
+					type = FilterType.STATE;
+					break;
+				case "argmin":
+					type = FilterType.ARGMIN;
+					break;
+				case "argmax":
+					type = FilterType.ARGMAX;
+					break;
+				case "print":
+					type = FilterType.PRINT;
+					break;
+				case "printall":
+					type = FilterType.PRINTALL;
+					break;
+				default: 
+					computeErrorPosition(id.beginLine, id.beginColumn);
+					ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNKNOWN_FILTER_TYPE, newPositional(errorLine, errorColumn), id.toString());
+			}
+		}
+	)
+	{ return type; }
+}
+
+private Expression parseFilter(boolean parseExp)  :
+{
+	FilterType type;
+	Expression prop;
+	Expression states = getTrue();
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	{ 
+		if (parseExp) {
+			Token errorToken = getToken(1);
+			computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+			ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
+		}
+	}
+	{ beginExpression(info); }
+	<FILTER>
+	<LPAR>
+	type = ExpressionFilterType()
+	<COMMA>
+	prop = parseExpTemporal(parseExp)
+	(
+		<COMMA>
+		states = parseExpTemporal(parseExp)
+	)?
+	<RPAR>
+	{ endExpression(info);
+	  return new ExpressionFilter.Builder()
+		.setFilterType(type)
+		.setProp(prop)
+		.setStates(states)
+		.setPositional(info.toPositional())
+		.build(); }
+}
+
+private Expression parseMultiObjective(boolean parseExp)  :
+{
+	Expression formula;
+	List<Expression> list = new ArrayList<Expression>();
+}
+{
+	{ 
+		if (parseExp) {
+			Token errorToken = getToken(1);
+			computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+			ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
+		}
+	}
+	<MULTIOBJECTIVE>
+	<LPAR>
+	(
+		formula = parseProbQuant(parseExp)
+	| 
+		formula = parseRewQuant(parseExp)
+	)
+	{ list.add(formula); }
+	(
+		<COMMA>
+	(
+		formula = parseProbQuant(parseExp)
+	| 
+		formula = parseRewQuant(parseExp)
+	)
+		{ list.add(formula); }
+	)*
+	<RPAR>
+	{ return new ExpressionMultiObjective.Builder()
+		.setOperands(list)
+		.build(); }
+}
+
+//private Expression parseExpAsProp(boolean parseExp)  :
+//{
+//	Expression p;
+//}
+//{
+//	p = parseTemporalBinary(parseExp)
+//	{ return p; }
+//}
+
+TimeBound TimeBound()  :
+{
+	Expression left;
+	Expression right;
+	TimeBound timeBound = newTimeBound();
+	boolean leftOpen = true;
+	boolean rightOpen = true;
+}
+{
+	(
+		<LT> 
+//		right = parseExpForTimeBound(true)
+		right = parseExp(true)
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, true); }
+	|
+		<LEQ> 
+//		right = parseExpForTimeBound(true)
+		right = parseExp(true)
+		{ timeBound = newTimeBound(ExpressionLiteral.getZero(), right, false, false); }
+	|
+		<GT> 
+//		left = parseExpForTimeBound(true)
+		left = parseExp(true)
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), true, true); }
+	|
+		<GEQ> 
+//		left = parseExpForTimeBound(true)
+		left = parseExp(true)
+		{ timeBound = newTimeBound(left, ExpressionLiteral.getPosInf(), false, true); }
+	|
+//		LOOKAHEAD((<LBRACKET>|<RBRACKET>) parseExp(true) <COMMA> parseExp(true) (<LBRACKET>|<RBRACKET>) <LPAR>)
+		(
+			<LBRACKET>
+			{ leftOpen = false; }
+		|
+			<RBRACKET>
+			{ leftOpen = true; }
+		)
+		left = parseExp(true) 
+		<COMMA> 
+		right = parseExp(true) 
+		(
+			<RBRACKET>
+			{ rightOpen = false; }
+		|
+			<LBRACKET>
+			{ rightOpen = true; }
+		)
+		{ timeBound = newTimeBound(left, right, leftOpen, rightOpen); }
+
+//		LOOKAHEAD(<LBRACKET> parseExpAsProp(true) <COMMA> parseExpAsProp(true) <RBRACKET>)
+//		<LBRACKET> 
+//		left = parseExpAsProp(true) 
+//		<COMMA> 
+//		right = parseExpAsProp(true) 
+//		<RBRACKET>
+//		{ timeBound = newTimeBound(left, right, false, false); }
+//	|
+//		LOOKAHEAD(<LBRACKET> parseExp(true) <COMMA> parseExp(true) <LBRACKET>)
+//		<LBRACKET> 
+//		left = parseExp(true) 
+//		<COMMA> 
+//		right = parseExp(true) 
+//		<LBRACKET>
+//		{ timeBound = newTimeBound(left, right, false, true); }
+//	|
+//		LOOKAHEAD(<RBRACKET> parseExp(true) <COMMA> parseExp(true) <RBRACKET>)
+//		<RBRACKET> 
+//		left = parseExp(true) 
+//		<COMMA> 
+//		right = parseExp(true) 
+//		<RBRACKET>
+//		{ timeBound = newTimeBound(left, right, true, false); }
+//	|
+//		LOOKAHEAD(<RBRACKET> parseExp(true) <COMMA> parseExp(true) <LBRACKET>)
+//		<RBRACKET> 
+//		left = parseExp(true) 
+//		<COMMA> 
+//		right = parseExp(true) 
+//		<LBRACKET>
+//		{ timeBound = newTimeBound(left, right, true, true); }
+	)?
+	{ return timeBound; }
+}
+
+//private Expression parseExpForTimeBound(boolean parseExp)  :
+//{
+//	Expression exp;
+//}
+//{
+//	(
+//		exp = parseReal() 
+//	| 
+//		exp = parseInt()
+//	| 
+//		exp = parseIdentifier()
+//	| 
+//		exp = parseParenth(parseExp)
+//	)
+//	{ return exp; }
+//}
+
+private Expression parseTemporalBinary(boolean parseExp)  :
+{
+	ArrayList<Expression> expressions = new ArrayList<Expression>();
+	ArrayList<TimeBound> timeBounds = new ArrayList<TimeBound>();
+	Expression p;
+	TimeBound timeBound;
+	BinType lastType = null;
+	BinType type = null;
+	Token oper;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+    { beginExpression(info); }
+	p = parseTemporalUnary(parseExp)
+	{ expressions.add(p); }
+	(
+		{ oper = getToken(1); }
+		{ 
+			if (parseExp) {
+				Token errorToken = getToken(1);
+				computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+				ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
+			}
+		}
+		type = TempBinType()
+		{
+			if (lastType != null) {
+				if (lastType != BinType.UNTIL || type != BinType.UNTIL) {
+				  ensure(false, ProblemsPETL.PARSE_ERROR_MULTI_UNTIL, newPositional(token.endLine, token.endColumn), token.image);
+				}
+			}
+			lastType = type;
+		}
+		timeBound = TimeBound()
+		{ timeBounds.add(timeBound); }
+//		<LPAR>
+		p = parseTemporalBinary(parseExp)
+//		<RPAR>
+		{ expressions.add(p); }
+	)?
+	{ endExpression(info); }
+	{
+		if (expressions.size() == 1) {
+			return p;
+		} else {
+			switch (type) {
+			case RELEASE:
+				return newTemporalRelease(expressions.get(0), expressions.get(1), timeBounds.get(0), info);
+			case UNTIL:
+				return newTemporalUntil(expressions.get(0), expressions.get(1), timeBounds.get(0), info);
+			case WEAK: {
+				Expression or = or(expressions.get(0), expressions.get(1), null);
+				return newTemporalRelease(expressions.get(1), or, timeBounds.get(0), info);
+			}
+			default:
+				assert(false);
+				return null;
+			}
+		}
+	}
+}
+
+private BinType TempBinType() :
+{
+}
+{
+	(
+		<W> 
+		{ return BinType.WEAK; }
+	| 
+		<R> 
+		{ return BinType.RELEASE; }
+	| 
+		<U> 
+		{ return BinType.UNTIL; }
+	)
+}
+
+private Expression parseTemporalUnary(boolean parseExp)  :
+{
+	Expression p;
+	UnType type;
+	TimeBound timeBound;
+	InfoExpression info = new InfoExpression(string);
+}
+{
+	(
+	{ beginExpression(info); }
+		{ 
+			if (parseExp) {
+				Token errorToken = getToken(1);
+				computeErrorPosition(errorToken.beginLine, errorToken.beginColumn);
+				ensure(false, ProblemsPETL.EXPRESSION_PARSER_UNEXPECTED_LOGIC_OPERATOR, newPositional(errorLine, errorColumn), errorToken.toString());
+			}
+		}
+		type = TempUnType()
+		timeBound = TimeBound()
+//		<LPAR>
+		p = parseTemporalUnary(parseExp)
+//		<RPAR>
+	{ endExpression(info); }
+
+		{
+			switch (type) {
+			case NEXT:
+				p = newTemporalNext(p, timeBound, info);
+				break;
+			case FINALLY:
+				p = newTemporalFinally(p, timeBound, info);
+				break;
+			case GLOBALLY:
+				p = newTemporalGlobally(p, timeBound, info);
+				break;
+			}
+		}
+	|
+		p = ExpressionITE(parseExp)
+	)
+	{ return p; }
+}
+
+private UnType TempUnType() :
+{
+}
+{
+	(
+		<X> 
+		{ return UnType.NEXT; }
+	| 
+		<F> 
+		{ return UnType.FINALLY; }
+	| 
+		<G> 
+		{ return UnType.GLOBALLY; }
+	)
+}

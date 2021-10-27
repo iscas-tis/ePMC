@@ -150,6 +150,8 @@ public final class UtilCoalition {
     public static boolean isTrivialTrue(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
+        if(compareTo == null)
+            return false;
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
         ValueBoolean cmpZero = TypeBoolean.get().newValue();
         OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
@@ -163,6 +165,8 @@ public final class UtilCoalition {
     public static boolean isTrivialFalse(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
+        if(compareTo == null)
+            return false;
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
         ValueBoolean cmpZero = TypeBoolean.get().newValue();
         OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
@@ -181,6 +185,8 @@ public final class UtilCoalition {
     public static boolean isQualitative(ExpressionCoalition property) {
         assert property != null;
         ValueAlgebra compareTo = getValue(property);
+        if(compareTo == null)
+            return false;
         ValueBoolean cmpOne = TypeBoolean.get().newValue();
         ValueBoolean cmpZero = TypeBoolean.get().newValue();
         OperatorEvaluator isOne = ContextValue.get().getEvaluator(OperatorIsOne.IS_ONE, compareTo.getType());
