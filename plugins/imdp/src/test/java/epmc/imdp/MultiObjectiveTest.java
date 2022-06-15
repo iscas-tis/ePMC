@@ -7,7 +7,6 @@ import org.junit.Test;
 import epmc.graph.CommonProperties;
 import epmc.graph.SchedulerPrinter;
 import epmc.graphsolver.OptionsGraphsolver;
-import epmc.imdp.IntervalPlayer;
 import epmc.imdp.model.ModelIMDP;
 import epmc.imdp.model.PropertyIMDP;
 import epmc.imdp.options.OptionsIMDP;

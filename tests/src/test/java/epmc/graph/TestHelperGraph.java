@@ -27,8 +27,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 import epmc.dd.DD;
-import epmc.graph.CommonProperties;
-import epmc.graph.SemanticsSMG;
 import epmc.graph.dd.GraphDD;
 import epmc.graph.explicit.GraphExplicit;
 import epmc.graph.explicit.NodeProperty;

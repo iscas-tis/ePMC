@@ -22,9 +22,6 @@ package epmc.sexpression;
 
 import org.junit.Test;
 
-import epmc.sexpression.SExpressionParser;
-import epmc.sexpression.UtilSExpression;
-
 public class SExpressionParserTest {
     @Test
     public void parserText() {

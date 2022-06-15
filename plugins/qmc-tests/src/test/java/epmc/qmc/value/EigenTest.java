@@ -15,7 +15,6 @@ import epmc.operator.OperatorSet;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
 import epmc.qmc.model.ModelPRISMQMC;
-import epmc.qmc.value.Eigen;
 import epmc.value.ContextValue;
 import epmc.value.OperatorEvaluator;
 import epmc.value.TypeInteger;

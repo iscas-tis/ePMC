@@ -28,7 +28,6 @@ import epmc.automaton.AutomatonExporter;
 import epmc.automaton.AutomatonExporterDot;
 import epmc.automaton.AutomatonExporterFormat;
 import epmc.automaton.AutomatonExporterFormatDOT;
-import epmc.command.OptionsCommandExpression2Automaton;
 import epmc.error.EPMCException;
 import epmc.error.UtilError;
 import epmc.expression.Expression;

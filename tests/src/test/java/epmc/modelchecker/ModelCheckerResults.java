@@ -27,8 +27,6 @@ import java.util.Map.Entry;
 
 import epmc.graph.LowLevel;
 import epmc.graph.Scheduler;
-import epmc.modelchecker.ModelCheckerResult;
-import epmc.modelchecker.RawProperty;
 
 // TODO continue documentation
 

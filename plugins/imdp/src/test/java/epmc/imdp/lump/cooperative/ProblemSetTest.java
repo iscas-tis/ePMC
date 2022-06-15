@@ -6,8 +6,6 @@ import static epmc.value.UtilValue.newValue;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import epmc.imdp.lump.cooperative.ProblemSet;
-import epmc.imdp.lump.cooperative.ProblemSetNormaliser;
 import epmc.imdp.model.ModelIMDP;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.options.Options;

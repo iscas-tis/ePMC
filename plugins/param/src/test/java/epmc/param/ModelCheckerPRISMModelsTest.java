@@ -3,7 +3,6 @@ package epmc.param;
 import static epmc.modelchecker.TestHelper.loadModel;
 import static epmc.modelchecker.TestHelper.prepare;
 import static epmc.modelchecker.TestHelper.processAfterModelLoading;
-import epmc.param.ModelNames;
 import static epmc.param.PARAMTestHelper.preparePARAMOptions;
 
 import java.io.IOException;

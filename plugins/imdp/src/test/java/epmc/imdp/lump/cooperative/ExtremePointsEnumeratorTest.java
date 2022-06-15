@@ -10,7 +10,6 @@ import static epmc.modelchecker.TestHelper.prepare;
 import static epmc.modelchecker.TestHelper.prepareOptions;
 import static org.junit.Assert.*;
 
-import epmc.imdp.lump.cooperative.ExtremePointsEnumerator;
 import epmc.imdp.model.ModelIMDP;
 import epmc.main.options.UtilOptionsEPMC;
 import epmc.operator.OperatorEq;

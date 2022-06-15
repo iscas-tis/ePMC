@@ -35,7 +35,6 @@ import org.junit.Test;
 
 import epmc.ModelNamesPRISM;
 import epmc.dd.DD;
-import epmc.graph.CommonProperties;
 import epmc.graph.dd.GraphDD;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;

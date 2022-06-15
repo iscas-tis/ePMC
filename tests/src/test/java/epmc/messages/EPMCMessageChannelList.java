@@ -26,9 +26,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import epmc.messages.Message;
-import epmc.messages.MessageInstance;
-
 public final class EPMCMessageChannelList implements EPMCMessageChannel {
     public static class LogEntry {
         private final long time;

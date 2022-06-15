@@ -27,8 +27,6 @@ import java.util.List;
 import javax.json.JsonObjectBuilder;
 import javax.json.JsonValue;
 
-import epmc.jani.interaction.communication.Backend;
-import epmc.jani.interaction.communication.BackendFeedback;
 import epmc.options.Options;
 import epmc.plugin.OptionsPlugin;
 import epmc.plugin.PluginInterface;
