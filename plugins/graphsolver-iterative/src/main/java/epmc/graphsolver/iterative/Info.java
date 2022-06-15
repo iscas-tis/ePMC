@@ -56,10 +56,10 @@ public final class Info implements SendInformation {
     @Override
     public void call() {
         Integer numIterations = numIterationsMemory != null
-                ? new Integer(numIterationsMemory.getInt(0))
+                ? Integer.valueOf(numIterationsMemory.getInt(0))
                 : this.numIterations;
         Double difference = differenceMemory != null
-                ? new Double(differenceMemory.getDouble(0))
+                ? Double.valueOf(differenceMemory.getDouble(0))
                 : this.difference;
         if (numIterations != null && difference != null) {
             log.send(MessagesGraphSolverIterative.ITERATING_PROGRESS_UNBOUNDED,

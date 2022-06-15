@@ -681,7 +681,7 @@ public class JANIComponentRegistrar {
     public static void registerInitialRestriction(InitialStates initialStates) {
         JANIComponentRegistrar.initialStates = initialStates;
         if (usesInitialConditions == null) {
-            usesInitialConditions = new Boolean(initialStates != null);
+            usesInitialConditions = Boolean.valueOf(initialStates != null);
         } else {
             usesInitialConditions |= initialStates != null;
         }
@@ -693,7 +693,7 @@ public class JANIComponentRegistrar {
 
         initialLocations.put(automaton, locations);
         if (usesInitialConditions == null) {
-            usesInitialConditions = new Boolean(locations.size() > 1);
+            usesInitialConditions = Boolean.valueOf(locations.size() > 1);
         } else {
             usesInitialConditions |= locations.size() > 1;
         }
