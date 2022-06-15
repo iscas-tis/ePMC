@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueContentDoubleArray { // extends Value
     static boolean isDoubleArray(Value value) {
         return value instanceof ValueContentDoubleArray;

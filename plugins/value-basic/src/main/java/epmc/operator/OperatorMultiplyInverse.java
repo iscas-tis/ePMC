@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Multiplicative inverse, 1/a, unary operator. */
 public enum OperatorMultiplyInverse implements Operator {
     MULTIPLY_INVERSE

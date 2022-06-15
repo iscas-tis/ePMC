@@ -28,7 +28,6 @@ import epmc.constraintsolver.ConstraintSolverResult;
 import epmc.constraintsolver.ConstraintType;
 import epmc.constraintsolver.Direction;
 import epmc.constraintsolver.Feature;
-import epmc.error.EPMCException;
 import epmc.graph.CommonProperties;
 import epmc.graph.Semantics;
 import epmc.graph.SemanticsDTMC;

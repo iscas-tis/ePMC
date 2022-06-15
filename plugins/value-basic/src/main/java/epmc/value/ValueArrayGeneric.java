@@ -21,9 +21,6 @@
 package epmc.value;
 
 import epmc.operator.OperatorSet;
-import epmc.value.Type;
-import epmc.value.Value;
-import epmc.value.ValueArray;
 
 public final class ValueArrayGeneric implements ValueArray {
     private final static String SPACE = " ";

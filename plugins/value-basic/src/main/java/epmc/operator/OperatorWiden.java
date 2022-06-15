@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 public enum OperatorWiden implements Operator {
     WIDEN
 }

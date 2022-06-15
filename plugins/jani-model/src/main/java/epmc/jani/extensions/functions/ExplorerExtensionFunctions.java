@@ -1,9 +1,7 @@
 package epmc.jani.extensions.functions;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import epmc.expression.Expression;
 import epmc.jani.explorer.ExplorerExtension;
 import epmc.jani.explorer.ExplorerJANI;
 import epmc.jani.model.ModelExtension;

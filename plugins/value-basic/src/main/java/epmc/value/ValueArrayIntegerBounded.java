@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 final class ValueArrayIntegerBounded implements ValueArrayInteger {
     /** Log2 of {@link Long#SIZE}. */
     private static final int LOG2LONGSIZE = 6;

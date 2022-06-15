@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Logical OR, binary operator. */
 public enum OperatorOr implements Operator {
     OR

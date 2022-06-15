@@ -23,9 +23,6 @@ package epmc.value;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-
 public interface TypeInteger extends TypeNumber, TypeBounded, TypeNumBitsKnown {
     public static TypeInteger get(int lowerBound, int upperBound) {
         try {

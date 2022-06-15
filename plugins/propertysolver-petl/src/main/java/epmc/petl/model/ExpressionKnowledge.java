@@ -5,8 +5,6 @@ import java.util.List;
 
 import epmc.error.Positional;
 import epmc.expression.Expression;
-import epmc.expression.standard.ExpressionIdentifier;
-import epmc.expression.standard.ExpressionLiteral;
 
 public class ExpressionKnowledge implements Expression{
 	public final static class Builder {

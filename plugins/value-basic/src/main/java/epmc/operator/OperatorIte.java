@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** If-then-else, ternary operator. */
 public enum OperatorIte implements Operator {
     ITE

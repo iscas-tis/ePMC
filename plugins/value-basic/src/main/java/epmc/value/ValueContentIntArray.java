@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueContentIntArray { // extends Value
     static boolean isIntArray(Value value) {
         return value instanceof ValueContentIntArray;

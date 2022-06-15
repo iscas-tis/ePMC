@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Type;
-
 public interface TypeAlgebra extends Type {
     static boolean is(Type type) {
         return type instanceof TypeAlgebra;

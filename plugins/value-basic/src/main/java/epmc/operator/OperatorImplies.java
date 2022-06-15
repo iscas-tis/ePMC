@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Logical IMPLIES, unary operator. */
 public enum OperatorImplies implements Operator {
     IMPLIES

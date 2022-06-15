@@ -25,7 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.expression.Expression;
-import epmc.expression.evaluatorexplicit.EvaluatorExplicit;
 import epmc.expression.standard.CmpType;
 import epmc.expression.standard.DirType;
 import epmc.expression.standard.ExpressionQuantifier;

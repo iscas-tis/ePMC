@@ -20,10 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-import epmc.value.TypeArray;
-
 public final class TypeObject implements TypeNumBitsKnown {
     public static boolean is(Type type) {
         return type instanceof TypeObject;

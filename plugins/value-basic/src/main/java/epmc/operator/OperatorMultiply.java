@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Multiplication, a * b, binary operator. */
 public enum OperatorMultiply implements Operator {
     MULTIPLY

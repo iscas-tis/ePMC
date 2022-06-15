@@ -36,7 +36,6 @@ import epmc.graphsolver.iterative.OptionsGraphSolverIterative;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.Log;
-import epmc.multiobjective.graphsolver.GraphSolverObjectiveExplicitMultiObjectiveScheduled;
 import epmc.options.Options;
 import epmc.util.StopWatch;
 import epmc.value.Type;

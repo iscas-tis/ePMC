@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 public enum OperatorDivideIgnoreZero implements Operator {
     DIVIDE_IGNORE_ZERO
 }

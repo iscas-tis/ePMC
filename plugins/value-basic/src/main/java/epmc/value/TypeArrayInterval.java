@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.TypeArray;
-
 public final class TypeArrayInterval implements TypeArrayAlgebra {
     private final static String ARRAY_INDICATOR = "[](interval)";
     private final TypeInterval entryType;

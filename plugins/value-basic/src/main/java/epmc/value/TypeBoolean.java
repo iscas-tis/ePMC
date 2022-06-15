@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-
 public interface TypeBoolean extends TypeEnumerable, TypeNumBitsKnown {
     public static boolean is(Type type) {
         return type instanceof TypeBoolean;

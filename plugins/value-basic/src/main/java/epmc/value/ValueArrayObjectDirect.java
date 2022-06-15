@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-import epmc.value.ValueArray;
-
 final class ValueArrayObjectDirect implements ValueArray {
     private final TypeArrayObjectDirect type;
     private Object[] content;

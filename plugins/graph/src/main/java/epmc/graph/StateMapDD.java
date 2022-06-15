@@ -25,8 +25,6 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 
 import epmc.dd.DD;
-import epmc.graph.StateMap;
-import epmc.graph.StateSet;
 import epmc.graph.dd.StateSetDD;
 import epmc.operator.Operator;
 import epmc.operator.OperatorAnd;

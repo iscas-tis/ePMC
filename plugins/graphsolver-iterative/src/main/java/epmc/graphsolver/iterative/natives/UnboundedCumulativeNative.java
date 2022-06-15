@@ -50,7 +50,6 @@ import epmc.modelchecker.Log;
 import epmc.operator.OperatorAdd;
 import epmc.operator.OperatorDivide;
 import epmc.operator.OperatorSet;
-import epmc.operator.OperatorSubtract;
 import epmc.options.Options;
 import epmc.util.BitSet;
 import epmc.util.ProblemsUtil;

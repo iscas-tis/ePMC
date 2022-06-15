@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-import epmc.value.ValueArray;
-
 public interface ValueArrayAlgebra extends ValueArray {
     public static boolean is(Value value) {
         return value instanceof ValueArrayAlgebra;

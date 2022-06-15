@@ -58,8 +58,6 @@ import epmc.value.ValueReal;
 
 import static epmc.graphsolver.iterative.UtilGraphSolverIterative.startWithInfoBounded;
 
-import java.util.Arrays;
-
 // TODO reward-based stuff should be moved to rewards plugin
 
 /**

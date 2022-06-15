@@ -20,7 +20,6 @@
 
 package epmc.graphsolver;
 
-import epmc.graphsolver.GraphSolverConfigurationExplicit;
 import epmc.graphsolver.objective.GraphSolverObjectiveExplicit;
 import epmc.util.BitSet;
 import epmc.util.BitSetBoundedLongArray;

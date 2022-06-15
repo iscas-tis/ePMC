@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /**
  * Operator of first argument with base of second argument
  * 

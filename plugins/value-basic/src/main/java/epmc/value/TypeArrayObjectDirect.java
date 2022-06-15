@@ -20,10 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.TypeArray;
-import epmc.value.ValueArray;
-
 final class TypeArrayObjectDirect implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](object-direct)";
     private final TypeObject entryType;

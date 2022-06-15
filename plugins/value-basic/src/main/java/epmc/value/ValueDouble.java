@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueDouble extends ValueReal, ValueSetString, ValueBitStoreable, ValueNumBitsKnown {
     public static boolean is(Value value) {
         return value instanceof ValueDouble;

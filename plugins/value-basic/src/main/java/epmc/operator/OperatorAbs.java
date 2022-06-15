@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /**
  * Operator to compute absolute value of a value.
  * 

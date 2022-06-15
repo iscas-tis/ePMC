@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-
 public interface TypeDouble extends TypeWeight, TypeWeightTransition, TypeReal, TypeBounded, TypeNumBitsKnown {
     public static TypeDouble get() {
         return ContextValue.get().getType(TypeDouble.class);

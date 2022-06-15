@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-
 public final class TypeInterval implements TypeWeightTransition, TypeWeight {
     public static boolean is(Type type) {
         return type instanceof TypeInterval;

@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.util.BitStream;
-import epmc.value.Value;
 
 final class ValueArrayIntegerJava implements ValueArrayInteger, ValueContentIntArray, ValueBitStoreable {
     private final static String SPACE = " ";

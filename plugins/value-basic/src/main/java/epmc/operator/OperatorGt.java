@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Greater than, a > b, binary operator. */
 public enum OperatorGt implements Operator {
     GT

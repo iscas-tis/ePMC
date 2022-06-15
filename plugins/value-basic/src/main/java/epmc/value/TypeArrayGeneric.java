@@ -20,10 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-import epmc.value.TypeArray;
-
 public final class TypeArrayGeneric implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](generic)";
     private final Type entryType;

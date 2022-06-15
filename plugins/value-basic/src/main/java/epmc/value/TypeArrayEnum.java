@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.TypeArray;
-
 final class TypeArrayEnum implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](enum)";
     private final Class<? extends Enum<?>> type;

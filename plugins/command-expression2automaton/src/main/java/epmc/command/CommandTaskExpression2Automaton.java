@@ -27,7 +27,6 @@ import java.util.Set;
 import epmc.automaton.Automaton;
 import epmc.automaton.AutomatonExporter;
 import epmc.automaton.AutomatonExporterDot;
-import epmc.automaton.AutomatonExporterFormat;
 import epmc.automaton.AutomatonExporterFormatDOT;
 import epmc.error.EPMCException;
 import epmc.expression.Expression;

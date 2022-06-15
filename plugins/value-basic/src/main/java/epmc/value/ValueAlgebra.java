@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueAlgebra extends Value {
     @Override
     TypeAlgebra getType();

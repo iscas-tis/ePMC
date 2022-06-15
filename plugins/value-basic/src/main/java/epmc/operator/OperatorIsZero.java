@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /**
  * Checks whether a given value is exactly zero.
  * Evaluators for this operator should evaluate to boolen.

@@ -31,7 +31,6 @@ import epmc.jani.explorer.OptionsJANIExplorer;
 import epmc.jani.model.OptionsJANIModel;
 import epmc.jani.type.ctmc.OptionsJANICTMC;
 import epmc.jani.type.dtmc.OptionsJANIDTMC;
-import epmc.main.options.OptionsEPMC;
 import epmc.messages.OptionsMessages;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.Options;

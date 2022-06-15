@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Type;
-
 public interface TypeNumBitsKnown extends Type {
     static int UNKNOWN = Integer.MAX_VALUE;
 

@@ -6,7 +6,6 @@ import epmc.operator.OperatorSet;
 import epmc.param.value.FunctionEvaluator;
 import epmc.param.value.ValueFunction;
 import epmc.param.value.dag.TypeDag;
-import epmc.param.value.dag.UtilDag;
 import epmc.param.value.dag.ValueDag;
 import epmc.param.value.dag.microcode.Microcode;
 import epmc.param.value.rational.TypeRational;

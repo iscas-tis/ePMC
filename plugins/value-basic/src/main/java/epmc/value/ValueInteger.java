@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueInteger extends ValueNumber, ValueNumBitsKnown, ValueBitStoreable, ValueSetString {
     public static boolean is(Value value) {
         return value instanceof ValueInteger;

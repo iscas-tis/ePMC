@@ -20,8 +20,6 @@
 
 package epmc.modelchecker;
 
-import epmc.modelchecker.Engine;
-
 // TODO move outside main part
 
 /**

@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Logical if-and-only-if, unary operator. */
 public enum OperatorIff implements Operator {
     IFF

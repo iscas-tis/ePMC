@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueNumber extends ValueAlgebra {
 
     static boolean is(Value value) {

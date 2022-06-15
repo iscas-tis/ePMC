@@ -41,7 +41,6 @@ import epmc.operator.OperatorGt;
 import epmc.operator.OperatorIff;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorLe;
-import epmc.operator.OperatorLn;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorMax;
 import epmc.operator.OperatorMin;

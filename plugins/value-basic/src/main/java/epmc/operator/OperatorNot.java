@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Logical NOT, unary operator. */
 public enum OperatorNot implements Operator {
     NOT

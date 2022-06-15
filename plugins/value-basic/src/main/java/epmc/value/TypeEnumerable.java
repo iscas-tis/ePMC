@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Type;
-
 public interface TypeEnumerable extends Type {
     final static int UNBOUNDED_VALUES = Integer.MAX_VALUE;
 

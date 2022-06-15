@@ -20,10 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-import epmc.value.TypeArray;
-
 /**
  * Type allowing to store ternary truth values.
  * 

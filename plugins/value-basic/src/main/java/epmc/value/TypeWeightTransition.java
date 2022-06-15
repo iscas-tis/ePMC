@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-
 public interface TypeWeightTransition extends TypeAlgebra {
     static TypeWeightTransition get() {
         return ContextValue.get().getType(TypeWeightTransition.class);

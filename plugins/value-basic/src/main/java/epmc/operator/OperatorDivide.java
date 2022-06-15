@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Division, a / b, binary operator. */
 public enum OperatorDivide implements Operator {
     DIVIDE

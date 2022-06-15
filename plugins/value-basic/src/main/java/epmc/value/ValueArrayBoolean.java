@@ -22,9 +22,6 @@ package epmc.value;
 
 import java.util.Arrays;
 
-import epmc.value.Value;
-import epmc.value.ValueArray;
-
 final class ValueArrayBoolean implements ValueArray {
     private final static String SPACE = " ";
     private static final int LOG2LONGSIZE = 6;

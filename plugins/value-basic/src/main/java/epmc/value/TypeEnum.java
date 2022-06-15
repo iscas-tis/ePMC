@@ -22,11 +22,6 @@ package epmc.value;
 
 import java.util.Arrays;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-import epmc.value.TypeArray;
-import epmc.value.Value;
-
 public final class TypeEnum implements TypeEnumerable, TypeNumBitsKnown {
     public static TypeEnum get(Class<? extends Enum<?>> enumClass) {
         return ContextValue.get().makeUnique(new TypeEnum(enumClass));

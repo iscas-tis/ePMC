@@ -20,8 +20,6 @@
 
 package epmc.graph;
 
-import epmc.graph.Semantics;
-
 public interface SemanticsTimed extends Semantics {
     /**
      * Checks whether this is a timed semantics type.

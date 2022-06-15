@@ -4,11 +4,8 @@ import com.sun.jna.Memory;
 
 import epmc.operator.Operator;
 import epmc.operator.OperatorSet;
-import epmc.param.points.Side;
-import epmc.param.points.UtilPoints;
 import epmc.param.value.gmp.GMP;
 import epmc.param.value.gmp.MPFRSingleMemory;
-//import epmc.param.value.gmp.GMP;
 import epmc.param.value.gmp.TypeMPQ;
 import epmc.param.value.gmp.ValueMPQ;
 import epmc.value.OperatorEvaluator;

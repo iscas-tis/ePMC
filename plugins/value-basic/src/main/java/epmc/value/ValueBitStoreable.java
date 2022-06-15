@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.util.BitStoreable;
-import epmc.value.Value;
 
 public interface ValueBitStoreable extends Value, BitStoreable {
     static boolean is(Value value) {

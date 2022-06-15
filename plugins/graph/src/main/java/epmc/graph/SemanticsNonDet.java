@@ -20,8 +20,6 @@
 
 package epmc.graph;
 
-import epmc.graph.Semantics;
-
 public interface SemanticsNonDet extends Semantics {
     /**
      * Checks whether this semantics contains nondeterminism.

@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-
 public interface TypeReal extends TypeNumber, TypeWeight, TypeWeightTransition {
     static TypeReal get() {
         return ContextValue.get().getType(TypeReal.class);

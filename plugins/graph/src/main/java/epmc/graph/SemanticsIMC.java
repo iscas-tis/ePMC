@@ -20,8 +20,6 @@
 
 package epmc.graph;
 
-import epmc.graph.Semantics;
-
 /**
  * Semantics type for interactive Markov chains (IMCs).
  */

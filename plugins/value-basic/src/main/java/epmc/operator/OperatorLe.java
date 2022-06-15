@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Less or equal, a <= b, binary operator. */
 public enum OperatorLe implements Operator {
     LE

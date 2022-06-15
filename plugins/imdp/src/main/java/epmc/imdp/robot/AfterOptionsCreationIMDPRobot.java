@@ -1,6 +1,5 @@
 package epmc.imdp.robot;
 
-import epmc.imdp.options.OptionsIMDP;
 import epmc.modelchecker.options.OptionsModelChecker;
 import epmc.options.OptionTypeInteger;
 import epmc.options.OptionTypeMap;

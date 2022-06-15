@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-import epmc.value.ValueArray;
-
 final class ValueArrayEnum implements ValueArray {
     private static final int LOG2LONGSIZE = 6;
     private long[] content;

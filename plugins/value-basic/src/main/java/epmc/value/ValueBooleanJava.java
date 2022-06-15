@@ -23,7 +23,6 @@ package epmc.value;
 import static epmc.error.UtilError.fail;
 
 import epmc.util.BitStream;
-import epmc.value.Value;
 
 public final class ValueBooleanJava implements ValueBoolean {
     public static boolean is(Value value) {

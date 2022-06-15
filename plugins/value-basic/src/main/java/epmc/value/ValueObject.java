@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public final class ValueObject implements Value {
     public static boolean is(Value value) {
         return value instanceof ValueObject;

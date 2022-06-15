@@ -20,8 +20,6 @@
 
 package epmc.graph;
 
-import epmc.graph.Semantics;
-
 public interface SemanticsContinuousTime extends Semantics {
     /**
      * Checks whether this is a continuous-time semantics type.

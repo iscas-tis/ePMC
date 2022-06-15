@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Value;
-
 public interface ValueNumBitsKnown extends Value {
     static boolean is(Value value) {
         if (!(value instanceof ValueNumBitsKnown)) {

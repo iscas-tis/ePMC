@@ -20,7 +20,6 @@
 
 package epmc.automaton;
 
-import static epmc.error.UtilError.ensure;
 import static epmc.error.UtilError.fail;
 
 import java.io.BufferedReader;

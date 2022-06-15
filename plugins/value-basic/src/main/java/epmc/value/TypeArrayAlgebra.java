@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.Type;
-import epmc.value.TypeArray;
-
 public interface TypeArrayAlgebra extends TypeArray {
     static boolean is(Type type) {
         return type instanceof TypeArrayAlgebra;

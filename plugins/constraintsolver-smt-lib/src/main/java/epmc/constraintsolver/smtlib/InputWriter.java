@@ -49,7 +49,6 @@ import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorIsNegInf;
 import epmc.operator.OperatorIsPosInf;
 import epmc.operator.OperatorLe;
-import epmc.operator.OperatorLn;
 import epmc.operator.OperatorLt;
 import epmc.operator.OperatorMax;
 import epmc.operator.OperatorMin;

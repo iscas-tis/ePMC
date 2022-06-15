@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.util.BitStream;
-import epmc.value.Value;
 
 public final class ValueArrayDoubleJava implements ValueArrayDouble, ValueContentDoubleArray, ValueBitStoreable {
     public static boolean is(Value value) {

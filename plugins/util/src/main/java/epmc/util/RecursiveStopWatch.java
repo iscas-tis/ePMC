@@ -24,8 +24,6 @@ import java.util.concurrent.TimeUnit;
 
 import com.google.common.base.MoreObjects;
 
-import epmc.util.StopWatch;
-
 /**
  * Stop watch counting how many time it was started.
  * <p>

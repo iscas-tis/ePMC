@@ -21,7 +21,6 @@
 package epmc.value;
 
 import epmc.operator.OperatorSet;
-import epmc.value.Value;
 
 public final class ValueArrayGenericAlgebra implements ValueArrayAlgebra {
     private final static String SPACE = " ";

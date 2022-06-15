@@ -20,9 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-
 public final class TypeIntegerJava implements TypeInteger, TypeEnumerable {
     public static TypeIntegerJava get(int lowerBound, int upperBound) {
         return ContextValue.get().makeUnique(new TypeIntegerJava(lowerBound, upperBound));

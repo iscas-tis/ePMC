@@ -20,8 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-
 public final class TypeArrayGenericAlgebra implements TypeArrayAlgebra {
     private final static String ARRAY_INDICATOR = "[](generic-algebra)";
     private final TypeAlgebra entryType;

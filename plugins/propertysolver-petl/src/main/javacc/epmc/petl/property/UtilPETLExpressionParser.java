@@ -20,7 +20,6 @@ import epmc.operator.OperatorIff;
 import epmc.operator.OperatorImplies;
 import epmc.operator.OperatorNot;
 import epmc.operator.OperatorOr;
-import epmc.prism.expression.UtilPrismExpressionParser.InfoExpression;
 
 public class UtilPETLExpressionParser {
 	public final static class InfoExpression {

@@ -28,8 +28,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 
-import epmc.value.Value;
-
 final class ValueArrayIntegerMappedByteBuffer implements ValueArrayInteger {
     private final static String TMP_PREFIX = "valueArrayIntegerMappedByteBuffer";
     private final static String TMP_ENDING = "dat";

@@ -20,11 +20,6 @@
 
 package epmc.value;
 
-import epmc.value.ContextValue;
-import epmc.value.Type;
-import epmc.value.TypeArray;
-import epmc.value.ValueArray;
-
 public final class TypeArrayConstant implements TypeArray {
     private final static String ARRAY_INDICATOR = "[](array-constant)";
     private final Type entryType;

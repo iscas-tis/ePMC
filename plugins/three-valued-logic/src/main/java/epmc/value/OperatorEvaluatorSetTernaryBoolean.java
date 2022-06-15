@@ -2,9 +2,6 @@ package epmc.value;
 
 import epmc.operator.Operator;
 import epmc.operator.OperatorSet;
-import epmc.value.OperatorEvaluator;
-import epmc.value.Type;
-import epmc.value.Value;
 
 public enum OperatorEvaluatorSetTernaryBoolean implements OperatorEvaluator {
     IDENTIFIER,;

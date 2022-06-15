@@ -28,8 +28,6 @@ import com.google.common.base.CaseFormat;
 import epmc.messages.UtilMessages;
 import epmc.modelchecker.UtilModelChecker;
 import epmc.options.OptionTypeBoolean;
-import epmc.options.OptionTypeInteger;
-import epmc.options.OptionTypeString;
 import epmc.options.OptionTypeStringList;
 import epmc.options.Options;
 import epmc.options.UtilOptions;

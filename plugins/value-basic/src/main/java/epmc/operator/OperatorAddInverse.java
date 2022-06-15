@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Additive inverse, -a, unary operator. */
 public enum OperatorAddInverse implements Operator {
     ADD_INVERSE

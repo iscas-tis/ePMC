@@ -1,10 +1,5 @@
 package epmc.graph;
 
-import epmc.graph.Semantics;
-import epmc.graph.SemanticsDTMC;
-import epmc.graph.SemanticsDiscreteTime;
-import epmc.graph.SemanticsMarkovChain;
-
 /**
  * Semantics type for quantum Markov chains (QMCs).
  */

@@ -22,8 +22,6 @@ package epmc.value;
 
 import java.util.Arrays;
 
-import epmc.value.Value;
-import epmc.value.ValueArray;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenCustomHashMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;

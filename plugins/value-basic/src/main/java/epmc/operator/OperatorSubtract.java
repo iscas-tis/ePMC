@@ -20,8 +20,6 @@
 
 package epmc.operator;
 
-import epmc.operator.Operator;
-
 /** Subtraction, a - b, binary operator. */
 public enum OperatorSubtract implements Operator {
     SUBTRACT
