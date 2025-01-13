@@ -123,6 +123,7 @@ public final class EvaluatorExplicitOperatorShortcutImplies implements Evaluator
         assert builder.getExpression() != null;
         assert builder.getVariables() != null;
         this.expression = (ExpressionOperator) builder.getExpression();
+        this.variables = builder.getVariables();
         operands = new EvaluatorExplicitBoolean[expression.getOperands().size()];
         operandValues = new Value[expression.getOperands().size()];
         Type[] types = new Type[expression.getOperands().size()];

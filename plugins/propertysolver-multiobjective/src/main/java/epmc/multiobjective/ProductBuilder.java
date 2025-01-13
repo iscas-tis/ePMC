@@ -81,6 +81,7 @@ final class ProductBuilder {
     private ExpressionMultiObjective property;
     private GraphExplicit graph;
     private BitSet invertedRewards;
+    private BitSet rewardProperties;
 
     ProductBuilder() {
     }
@@ -102,6 +103,11 @@ final class ProductBuilder {
 
     ProductBuilder setInvertedRewards(BitSet invertedRewards) {
         this.invertedRewards = invertedRewards;
+        return this;
+    }
+
+    ProductBuilder setRewardProperties(BitSet rewardProperties) {
+        this.rewardProperties = rewardProperties;
         return this;
     }
 
@@ -278,6 +284,7 @@ final class ProductBuilder {
         for (int prop = 0; prop < numAutomata; prop++) {
             initBitSet.set(prop);
         }
+        initBitSet.andNot(rewardProperties);
         todo.add(initBitSet);
         GraphExplicit prodWrapper = builder.getInputGraph();
         BitSet todoBS = UtilBitSet.newBitSetUnbounded();

@@ -187,6 +187,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         property = propertyMultiObjective = normaliser.getNormalisedProperty();
         Expression subtractNumericalFrom = normaliser.getSubtractNumericalFrom();
         BitSet invertedRewards = normaliser.getInvertedRewards();
+        BitSet rewardProperties = normaliser.getRewardProperties();
         getLog().send(MessagesMultiObjective.DONE_NORMALISING_FORMULA);
         getLog().send(MessagesMultiObjective.STARTING_NESTED_FORMULAS);
         prepareRequiredPropositionals();
@@ -198,6 +199,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
                 .setModelChecker(modelChecker)
                 .setGraph(graph)
                 .setInvertedRewards(invertedRewards)
+                .setRewardProperties(rewardProperties)
                 .build();
         getLog().send(MessagesMultiObjective.DONE_PRODUCT);
         StateMap result = mainLoop(product, subtractNumericalFrom);
@@ -369,7 +371,7 @@ public final class PropertySolverExplicitMultiObjective implements PropertySolve
         boolean numerical = MultiObjectiveUtils.isNumericalQuery(propertyMultiObjective);
         ValueArray resultValues;
         if (numerical) {
-            //            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
+            ensure(feasible, ProblemsMultiObjective.MULTI_OBJECTIVE_UNEXPECTED_INFEASIBLE);
             resultValues = newValueArrayWeight(forStates.size());
             ValueAlgebra entry = newValueWeight();
             bounds.get(entry, 0);
